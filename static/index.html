@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.maateen.me/kalpurush/font.css" rel="stylesheet">
 <style>
 :root{
   --bg:#F3F5F0; --surface:#FFFFFF; --surface2:#EAEFE6; --ink:#15271D; --muted:#5E6E63; --line:#DCE3D7;
@@ -27,7 +28,7 @@
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hind Siliguri","Noto Sans Bengali","Kohinoor Bangla","Vrinda",system-ui,sans-serif;font-size:16px;line-height:1.55}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Kalpurush","Hind Siliguri","Noto Sans Bengali","Kohinoor Bangla","Vrinda",system-ui,sans-serif;font-size:16px;line-height:1.55}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 a{color:var(--blue)}
@@ -45,7 +46,7 @@ img{max-width:100%;display:block}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-
+ 
 .btn{border:0;border-radius:10px;padding:10px 16px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;text-decoration:none;line-height:1.3}
 .btn-green{background:var(--green);color:#fff} .btn-red{background:var(--red);color:#fff} .btn-blue{background:var(--blue);color:#fff}
 .btn-ink{background:var(--ink);color:var(--surface)} .btn-soft{background:var(--surface2);color:var(--ink)}
@@ -64,7 +65,7 @@ img{max-width:100%;display:block}
 .good{background:var(--green-soft);color:var(--green);border-radius:12px;padding:10px 14px;font-size:.93rem;font-weight:600}
 .demo-tag{display:inline-block;background:var(--gold-soft);color:var(--gold);border-radius:6px;padding:0 6px;font-size:.75rem;font-weight:700}
 hr{border:0;border-top:1px solid var(--line);margin:12px 0}
-
+ 
 /* header & nav */
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--surface);border-bottom:1px solid var(--line)}
 .hrow{display:flex;align-items:center;gap:10px;min-height:60px}
@@ -96,7 +97,7 @@ main{padding:20px 0 70px;min-height:72vh}
 .tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;scrollbar-width:none}
 .tabs button{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:600;white-space:nowrap}
 .tabs button.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-
+ 
 /* minimal home */
 .hero{min-height:calc(100vh - 200px);display:grid;place-items:center;text-align:center;padding:30px 0}
 .hero h1{font-size:clamp(2rem,6vw,3.4rem);letter-spacing:-.01em}
@@ -106,7 +107,7 @@ main{padding:20px 0 70px;min-height:72vh}
 .hero .feat{display:flex;gap:18px;justify-content:center;margin-top:34px;flex-wrap:wrap;color:var(--muted);font-weight:600}
 .hero .feat span{display:flex;gap:6px;align-items:center}
 .hero .logo-big{font-size:3.4rem;line-height:1;margin-bottom:12px}
-
+ 
 /* forms */
 .field{display:block;margin-top:12px}
 .field>span{display:block;font-size:.88rem;color:var(--muted);margin-bottom:4px;font-weight:600}
@@ -125,7 +126,7 @@ main{padding:20px 0 70px;min-height:72vh}
 .thumbs div{position:relative}
 .thumbs img{width:84px;height:84px;object-fit:cover;border-radius:10px}
 .thumbs button{position:absolute;top:2px;right:2px;border:0;border-radius:50%;width:24px;height:24px;background:rgba(0,0,0,.6);color:#fff;font-size:.8rem}
-
+ 
 /* cards & listings */
 .lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
 .lcard{background:var(--surface);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;text-decoration:none;color:var(--ink)}
@@ -159,7 +160,7 @@ main{padding:20px 0 70px;min-height:72vh}
 .chips{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
 .chip{flex:none;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-weight:600;font-size:.9rem}
 .chip.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-
+ 
 /* lists, rows, tables */
 .item{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
 .item:first-child{border-top:0}
@@ -182,7 +183,7 @@ main{padding:20px 0 70px;min-height:72vh}
 .todo .ic{font-size:1.5rem}
 .alert{display:flex;gap:10px;align-items:center;border-radius:12px;padding:10px 12px;margin-bottom:8px;font-weight:600;font-size:.93rem}
 .alert.spoil{background:var(--red-soft);color:var(--red)} .alert.low{background:var(--gold-soft);color:var(--gold)}
-
+ 
 /* trackers */
 .track{display:flex;margin:12px 0 4px}
 .track .st{flex:1;text-align:center;font-size:.74rem;color:var(--muted);position:relative;padding:0 2px}
@@ -200,7 +201,7 @@ main{padding:20px 0 70px;min-height:72vh}
 .bars i{display:block;height:13px;border-radius:7px;background:var(--gold)}
 .bars i.best{background:var(--green)} .bars i.base{background:var(--muted)}
 .bars b{text-align:right}
-
+ 
 /* modal, toast, banners */
 .overlay{position:fixed;inset:0;background:rgba(10,20,14,.55);display:none;align-items:center;justify-content:center;z-index:60;padding:16px}
 .overlay.on{display:flex}
@@ -217,7 +218,7 @@ main{padding:20px 0 70px;min-height:72vh}
 .big-ic{font-size:3rem;text-align:center}
 footer{border-top:1px solid var(--line);padding:16px 0 26px;color:var(--muted);font-size:.86rem}
 footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
-
+ 
 @media (max-width:900px){
   .grid2,.grid3{grid-template-columns:1fr} .grid4{grid-template-columns:1fr 1fr}
   .filters{grid-template-columns:1fr 1fr}
@@ -285,7 +286,7 @@ const ORDER_STEPS = ['অফার','বিক্রেতা রাজি','প
 const ORDER_IDX = {awaiting_payment:1,confirmed:2,handed_over:3,completed:4};
 const BOOK_STEPS = ['বুকিং অনুরোধ','বুকিং নিশ্চিত','মাল তোলার সময়','পথে','পৌঁছেছে'];
 const BOOK_IDX = {requested:0,confirmed:1,pickup_scheduled:2,in_transit:3,delivered:4};
-
+ 
 /* ---------- formatting ---------- */
 const $ = s => document.querySelector(s);
 const nf = (n,d=0) => Number(n||0).toLocaleString('bn-BD',{maximumFractionDigits:d});
@@ -298,7 +299,7 @@ const dateBn = t => { const d=new Date(t); return `${bd(d.getDate())} ${MONTHS[d
 function ago(t){ const m=Math.round((Date.now()-t)/6e4); if(m<60) return `${nf(Math.max(1,m))} মিনিট আগে`; const h=Math.round(m/60); if(h<24) return `${nf(h)} ঘণ্টা আগে`; const d=Math.round(h/24); return d<30?`${nf(d)} দিন আগে`:`${nf(Math.round(d/30))} মাস আগে`; }
 const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pill = ([t,c]) => `<span class="pill ${c}">${t}</span>`;
-
+ 
 /* ---------- state from the server ---------- */
 let S = {users:[],listings:[],trucks:[],me:null,notifs:[]}, TOKEN=null, lastJSON='', FD=null;
 try{ TOKEN = localStorage.getItem('reroute-token'); }catch(e){}
@@ -324,7 +325,7 @@ const user = id => (S.users||[]).find(u=>u.id===id) || ((S.admin&&S.admin.users)
 const listing = id => (S.listings||[]).find(l=>l.id===id);
 const dispName = u => u.role==='paikar' ? u.biz : u.name;
 const roleBn = r => ({farmer:'কৃষক',paikar:'পাইকার',admin:'অপারেশন টিম'}[r]);
-
+ 
 /* ---------- small UI pieces ---------- */
 let tT;
 function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(tT); tT=setTimeout(()=>t.classList.remove('on'),3000); }
@@ -340,7 +341,7 @@ function freshCls(d){ return d<=1?'low':d<=2?'mid':'ok'; }
 function freshTxt(d){ return d<=0?'নষ্ট হওয়া শুরু':`${nf(d)} দিন তাজা থাকবে`; }
 function track(steps, idx, bad){ return `<div class="track ${bad?'bad':''}">${steps.map((s,i)=>`<div class="st ${i<=idx?'done':''} ${i===idx?'now':''}"><i></i>${s}</div>`).join('')}</div>`; }
 function bill(rows){ return `<div class="bill">${rows.filter(Boolean).map(([k,v,cls])=>`<div class="${cls||''}"><span>${k}</span><b>${v}</b></div>`).join('')}</div>`; }
-
+ 
 /* ---------- pricing mirrors of the server (same formulas) ---------- */
 function km(a,b){ if(a===b) return 15; const A=PLACES[a],B=PLACES[b],R=6371,dl=(B.lat-A.lat)*Math.PI/180,dn=(B.lon-A.lon)*Math.PI/180;
   const h=Math.sin(dl/2)**2+Math.cos(A.lat*Math.PI/180)*Math.cos(B.lat*Math.PI/180)*Math.sin(dn/2)**2; return Math.round(2*R*Math.asin(Math.sqrt(h))*1.35); }
@@ -356,7 +357,7 @@ function quote(src,dst,kg,plus,bulk){
 const myQuote = (src,dst,kg) => quote(src,dst,kg, S.me&&S.me.plus_active, S.me&&S.me.bulk);
 const platformFee = goods => Math.round(Math.min(S.config.fee_max, Math.max(S.config.fee_min, goods*S.config.fee_rate)));
 const daysLeft = l => l.days_left;
-
+ 
 /* ---------- modal & confirmation ---------- */
 let MODAL_RESOLVE=null;
 function modal(html){ $('#modal').innerHTML=`<button class="x" data-act="close" aria-label="বন্ধ">✕</button>`+html; $('#overlay').classList.add('on'); }
@@ -377,7 +378,7 @@ function drawConfirm(){
       ${o.reason?`<button class="btn btn-line grow" data-act="conf-skip">কারণ ছাড়া ${o.okShort||'নিশ্চিত'}</button>`:''}
       <button class="btn ${o.danger?'btn-red':'btn-green'} grow" data-act="conf-yes">${o.ok||'নিশ্চিত করুন'}</button></div></div>`);
 }
-
+ 
 /* ---------- online payment (demo gateway) ---------- */
 let PAY=null;
 function payFlow(purpose, ref, amount, title, after){
@@ -408,14 +409,14 @@ function drawPay(){
       <div class="row" style="margin-top:16px"><button class="btn btn-soft grow" data-act="close">পরে করব</button><button class="btn btn-green grow" data-act="pay-retry">আবার চেষ্টা</button></div></div>`);
   }
 }
-
+ 
 /* ---------- photo helper: shrink before upload ---------- */
 function shrinkImage(file, max=900){
   return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>{ const img=new Image(); img.onload=()=>{
     const s=Math.min(1,max/Math.max(img.width,img.height)), c=document.createElement('canvas'); c.width=Math.round(img.width*s); c.height=Math.round(img.height*s);
     c.getContext('2d').drawImage(img,0,0,c.width,c.height); res(c.toDataURL('image/jpeg',0.72)); }; img.onerror=rej; img.src=r.result; }; r.onerror=rej; r.readAsDataURL(file); });
 }
-
+ 
 /* ---------- chrome: header, navigation ---------- */
 const LOGO = `<a class="logo" href="#/"><svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="19" r="12" fill="#D93D27"/><path d="M17 7c-2-3-5-3-7-2 3 0 5 1 7 3 2-2 4-3 7-3-2-1-5-1-7 2z" fill="#1E8A4C"/><path d="M10 21c2 4 9 5 13 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M21 18l2.4 3-3.6.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Reroute <span class="full">Agro</span></span></a>`;
 const NAV_TRADER = [['#/home','🏠','ড্যাশবোর্ড'],['#/market','🛒','বাজার'],['#/listings','🧺','আমার লিস্টিং'],['#/deals','🤝','অফার ও অর্ডার'],['#/transport','🚚','পরিবহন'],['#/books','📒','মজুদ ও হিসাব'],['#/prices','💡','দাম ও পরামর্শ'],['#/rewards','⭐','পয়েন্ট ও ওয়ালেট'],['#/account','👤','অ্যাকাউন্ট']];
@@ -459,7 +460,7 @@ function banners(){
     <button class="x2" data-act="notif-x" data-id="${n.id}" aria-label="সরান">✕</button></div>`).join('');
 }
 const V = {};
-
+ 
 /* ---------- minimal home (before login) ---------- */
 V.home = () => `<section class="hero"><div>
   <div class="logo-big">🍅</div>
@@ -470,7 +471,7 @@ V.home = () => `<section class="hero"><div>
   <p style="margin-top:16px"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন</a></p>
   <div class="feat"><span>🤝 সরাসরি দরদাম</span><span>🔒 নিরাপদ পেমেন্ট</span><span>🚚 নিজস্ব ট্রাক</span></div>
 </div></section>`;
-
+ 
 /* ---------- login & register ---------- */
 let loginRole='farmer';
 V.login = () => {
@@ -505,7 +506,7 @@ V.register = () => `<div style="max-width:520px;margin:10px auto"><h1>নতু�
     <label class="field"><span>উপজেলা / বাজার</span><input id="rg-area"></label></div>
     <button class="btn btn-green btn-wide" style="margin-top:14px" data-act="register">অ্যাকাউন্ট খুলুন</button>
     <p class="muted sm" style="margin-top:8px">শুধু কৃষক ও পাইকারদের জন্য পাইকারি প্ল্যাটফর্ম। সর্বনিম্ন অর্ডার ${monTxt(S.config.min_order)}।</p></div></div>`;
-
+ 
 /* ---------- market: all public listings with search & filters ---------- */
 const F = {q:'',crop:'all',place:'all',max:'',min:'',seller:'all',sold:false,sort:'new'};
 function listingPic(l){
@@ -557,7 +558,7 @@ V.market = () => {
     <p class="muted sm" style="margin-bottom:8px">${nf(list.length)}টি লিস্টিং</p>
     <div class="lgrid">${list.map(lcard).join('')||'<div class="empty" style="grid-column:1/-1">এই খোঁজে কিছু পাওয়া যায়নি। ফিল্টার বদলান।</div>'}</div>`;
 };
-
+ 
 /* ---------- listing detail ---------- */
 V.listing = id => {
   const l=listing(id); if(!l) return `<div class="empty">লিস্টিং পাওয়া যায়নি বা বন্ধ হয়ে গেছে। <a href="#/market">বাজারে ফিরুন</a></div>`;
@@ -601,7 +602,7 @@ V.listing = id => {
           <p class="muted sm" style="margin-top:8px">অফার দিলে বিক্রেতা রাজি না হওয়া পর্যন্ত কিছু নিশ্চিত হয় না, টাকাও কাটে না।</p>`}
     </div>${tq}</div></div>`;
 };
-
+ 
 /* ---------- public profile ---------- */
 let PROFILE=null;
 V.profile = id => {
@@ -620,7 +621,7 @@ V.profile = id => {
     <div class="panel"><h3>চালু লিস্টিং (${nf(p.listings.length)})</h3>${p.listings.map(l=>`<a class="item" href="#/listing/${l.id}" style="text-decoration:none;color:inherit">${cropIco(l.crop)}<div class="grow"><b>${CROPS[l.crop].n}</b><div class="muted sm">${monTxt(l.available)} · ${tk(l.eff_price,1)}/কেজি · ${freshTxt(l.days_left)}</div></div><span>›</span></a>`).join('')||'<p class="muted" style="margin-top:8px">এখন কোনো লিস্টিং নেই</p>'}</div>
     <div class="panel"><h3>রিভিউ (${nf(u.reviews)})</h3>${p.reviews.map(r=>`<div class="item" style="display:block"><span class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span> <b>${esc(r.from_role==='paikar'?r.from_biz:r.from_name)}</b>${r.text?`<div>${esc(r.text)}</div>`:''}<div class="muted xs">${ago(r.at)}</div></div>`).join('')||'<p class="muted" style="margin-top:8px">এখনো রিভিউ নেই</p>'}</div></div>`;
 };
-
+ 
 /* ---------- AI model page (real data, for judges) ---------- */
 const AIS={market:'rajshahi',product:'lentils'};
 const PROD_BN={rice:'চাল',lentils:'মসুর ডাল',oil:'ভোজ্য তেল',wheat_flour:'আটা'};
@@ -697,7 +698,7 @@ V.dash = () => {
       <a class="kpi" href="#/transport"><span class="muted sm">🚚 পরিবহন</span><strong style="font-size:1rem">কম খরচে ট্রাক বুক করুন</strong></a>
       <a class="kpi" href="#/books"><span class="muted sm">📦 মজুদ</span><strong style="font-size:1rem">আমার কাছে কী মাল আছে</strong></a></div>`;
 };
-
+ 
 /* ---------- my listings ---------- */
 V.listings = () => {
   const u=me(), mine=(S.listings||[]).filter(l=>l.uid===u.id).sort((a,b)=>({active:0,sold_out:1,paused:2,closed:3}[a.status]-{active:0,sold_out:1,paused:2,closed:3}[b.status])||b.created-a.created);
@@ -718,7 +719,7 @@ V.listings = () => {
         <button class="btn btn-soft btn-sm" data-act="l-status" data-id="${l.id}" data-v="closed">লিস্টিং বন্ধ করুন</button></div>`:''}</div>`; }).join('')
   :`<div class="empty">এখনো কোনো লিস্টিং নেই। <a href="#/listings/new">মাল বিক্রির জন্য দিন</a></div>`}`;
 };
-
+ 
 /* ---------- new listing ---------- */
 let NL=null;
 function nlReset(){ NL={crop:'tomato',mon:25,price:null,moq:5,grade:'A',quality:'',harvest:0,cost:'',photos:[]}; }
@@ -752,7 +753,7 @@ function nlSummary(){
     ${bill([['মোট মালের দাম',tk(goods)],['প্ল্যাটফর্ম ফি (১%, বিক্রি হলে কাটা হবে)','−'+tk(fee),'minus'],['ভাড়া',u.role==='farmer'?'অর্ডার অনুযায়ী (ক্রেতার সাথে ভাগ করা যায়)':'অর্ডার অনুযায়ী'],
       ['সব বিক্রি হলে আনুমানিক হাতে পাবেন',tk(goods-fee),'tot']])}`;
 }
-
+ 
 /* ---------- offer form (buyer) ---------- */
 let OF=null;
 function openOffer(lid){
@@ -789,7 +790,7 @@ function offerBill(c){
     ['আপনি পরিশোধ করবেন',tk(c.total),'tot']])
     + (c.q?`<p class="good sm" style="margin-top:8px">🚚 ${c.q.vehicle_name}${c.q.shared?', শেয়ার্ড':''}, ${nf(c.q.km)} কিমি। বাজারে ট্রাক ভাড়া করলে ${tk(c.q.offline)} লাগত, সাশ্রয় ${tk(c.q.saving)}।</p>`:'');
 }
-
+ 
 /* ---------- inspection request ---------- */
 let IN=null;
 function openInspect(lid){ IN={lid,kind:'video',pref:'আজ বিকেল ৪টা',note:''}; drawInspect(); }
@@ -802,7 +803,7 @@ function drawInspect(){
     <label class="field"><span>কী দেখতে চান (ঐচ্ছিক)</span><input id="in-note" maxlength="200" value="${esc(IN.note)}" placeholder="যেমন: সাইজ, রং, কতটা নরম"></label>
     <button class="btn btn-green btn-wide" style="margin-top:14px" data-act="in-submit">অনুরোধ পাঠান</button></div>`);
 }
-
+ 
 /* ---------- deals: offers, orders, inspections ---------- */
 let DT='offers', DF='all';
 function offerRow(o){
@@ -878,7 +879,7 @@ V.offer = id => {
       <div class="panel"><h3>দরদামের ইতিহাস</h3><div class="timeline">${ev.map(e=>`<div><b>${e.by==='system'?'সিস্টেম':esc(dispName(user(e.by)))}</b> ${EV_BN[e.action]||e.action}${e.price&&['offer','counter','accept'].includes(e.action)?`: ${tk(e.price,1)}/কেজি`:''}${e.note?` · "${esc(e.note)}"`:''}<div class="muted xs">${ago(e.at)}</div></div>`).join('')}</div></div>
       ${l?`<div class="panel"><a href="#/listing/${l.id}">লিস্টিং দেখুন ›</a></div>`:''}</div></div>`;
 };
-
+ 
 /* ---------- order detail ---------- */
 V.order = id => {
   const o=(S.orders||[]).find(x=>x.id===id); if(!o) return `<div class="empty">অর্ডার পাওয়া যায়নি</div>`;
@@ -928,7 +929,7 @@ V.order = id => {
         :bill([['মালের দাম',tk(P.goods)],['ট্রাক ভাড়া',tk(P.transport)],['মোট কেনা খরচ',tk(P.landed),'tot'],['প্রতি কেজি খরচ',tk(P.per_kg,1)]])
           + `<p class="muted sm" style="margin-top:8px">আপনার বাজারে আজকের দর আনুমানিক ${tk(MARKET_DEMO[me().place][o.crop])}/কেজি <span class="demo-tag">ডেমো</span>। এই দামে বেচলে আনুমানিক লাভ ${tk((MARKET_DEMO[me().place][o.crop]-P.per_kg)*o.qty)}।</p>`}</div>`:''}</div></div>`;
 };
-
+ 
 /* ---------- inspection detail ---------- */
 V.inspection = id => {
   const i=(S.inspections||[]).find(x=>x.id===id); if(!i) return `<div class="empty">পাওয়া যায়নি</div>`;
@@ -946,7 +947,7 @@ V.inspection = id => {
     <dl class="kv" style="margin-top:12px"><dt>ক্রেতার পছন্দের সময়</dt><dd>${esc(i.pref)}</dd>${i.note?`<dt>যা দেখতে চান</dt><dd>${esc(i.note)}</dd>`:''}${i.reply?`<dt>বিক্রেতার উত্তর</dt><dd>${esc(i.reply)}</dd>`:''}</dl>
     <div style="margin-top:14px">${acts}</div></div>`;
 };
-
+ 
 /* ---------- transport: our own truck service ---------- */
 let BK=null;
 function bkReset(){ const u=me(); BK={src:u?u.place:'rajshahi',srcAddr:u&&u.area||'',dst:u&&u.place==='dhaka'?'rajshahi':'dhaka',dstAddr:'',crop:'tomato',mon:25,date:'আগামীকাল'}; }
@@ -1081,7 +1082,7 @@ function calcView(){
     <div id="calc-out" style="margin-top:12px">${bill([['বিক্রি',tk(rev)],cost!=null?['মালের খরচ','−'+tk(cost),'minus']:null,['ট্রাক ভাড়া (Reroute)','−'+tk(tr),'minus'],['প্ল্যাটফর্ম ফি ১%','−'+tk(fee),'minus'],other?['অন্যান্য','−'+tk(other),'minus']:null,[cost!=null?'লাভ / ক্ষতি':'খরচ বাদে হাতে থাকবে (মালের খরচ ছাড়া)',tk(profit),'tot']])}
     ${cost==null?'<p class="warn sm" style="margin-top:6px">মালের খরচ দিলে আসল লাভ দেখাবে।</p>':''}</div>`;
 }
-
+ 
 /* ---------- price advice in plain language (দাম ও পরামর্শ) ---------- */
 const PR={crop:'tomato',mon:25,cost:null};
 V.prices = () => {
@@ -1124,7 +1125,7 @@ V.prices = () => {
         <td class="num b" style="color:var(--${x.profit>=0?'green':'red'})">${tk(x.profit)}</td><td><a class="btn btn-soft btn-sm" href="#/listing/${x.l.id}">দেখুন</a></td></tr>`).join('')||'<tr><td colspan="6" class="muted">এখন এই ফসলের লিস্টিং নেই</td></tr>'}</table></div>
       <p class="muted sm" style="margin-top:8px">লাভ = (আপনার বাজারদর − কেনা দাম − ট্রাক ভাড়ার অর্ধেক) × পরিমাণ। Reroute ফি বিক্রেতা দেন।</p></div>`;
 };
-
+ 
 /* ---------- points & wallet ---------- */
 V.rewards = () => {
   const u=me(), R=S.config.redeem;
@@ -1148,7 +1149,7 @@ V.rewards = () => {
     <div class="panel"><h3>ওয়ালেটের লেনদেন</h3>${(S.wallet_tx||[]).map(w=>`<div class="item"><div class="grow"><b>${wtxBn[w.kind]||w.kind}</b><div class="muted sm">${esc(w.note||'')} · ${dateBn(w.at)}</div></div><b style="color:var(--${w.amount>=0?'green':'red'})">${w.amount>=0?'+':''}${tk(w.amount)}</b></div>`).join('')||'<p class="muted">কিছু নেই</p>'}</div>
     <div class="panel"><h3>পয়েন্টের ইতিহাস</h3>${(S.points_tx||[]).map(p=>`<div class="item"><div class="grow"><b>${ptxBn[p.kind]||p.kind}</b><div class="muted sm">${esc(p.note&&p.note.length>4?p.note:'')} ${dateBn(p.at)}</div></div><b style="color:var(--${p.pts>=0?'green':'red'})">${p.pts>=0?'+':''}${nf(p.pts)}</b></div>`).join('')||'<p class="muted">কিছু নেই</p>'}</div></div></div>`;
 };
-
+ 
 /* ---------- account & Plus ---------- */
 let AC=null;
 V.account = () => {
@@ -1277,7 +1278,7 @@ function renderKeepFocus(){
   if(key){ const el=document.querySelector(`[${key.name}="${key.value}"]`); if(el){ el.focus(); try{ el.setSelectionRange(sel,sel); }catch(e){} } }
 }
 window.addEventListener('hashchange',()=>{ closeModal(); $('#npanel').classList.remove('on'); closeSheet(); PROFILE=null; render(); window.scrollTo(0,0); const f=AFTER_NAV; AFTER_NAV=null; if(f) f(); });
-
+ 
 /* =====================================================================
    Actions
    ===================================================================== */
@@ -1447,7 +1448,7 @@ function drawRate(){
     <input id="rt-text" maxlength="120" placeholder="ছোট মন্তব্য (ঐচ্ছিক)" style="width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px;background:var(--surface)">
     <button class="btn btn-green btn-wide" style="margin-top:12px" data-act="rate-send">রেটিং দিন</button></div>`);
 }
-
+ 
 /* =====================================================================
    Events
    ===================================================================== */
@@ -1481,7 +1482,7 @@ document.addEventListener('change',async e=>{
   if(a==='ac-photo'&&t.files[0]){ try{ AC.photo=await shrinkImage(t.files[0],400); render(); }catch(err){ toast('ছবি পড়া যায়নি'); } }
 });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); $('#npanel').classList.remove('on'); closeSheet(); } });
-
+ 
 /* every 5 s: new offers / payments / truck updates from other phones show up here */
 setInterval(async()=>{
   if(document.hidden) return;
@@ -1491,7 +1492,7 @@ setInterval(async()=>{
     if(r.fresh.length) toast('🔔 '+r.fresh[0].text.slice(0,80)+(r.fresh[0].text.length>80?'…':''));
   }catch(e){}
 },5000);
-
+ 
 (async function init(){
   $('#view').innerHTML='<div class="empty">লোড হচ্ছে...</div>';
   try{ await load(); }catch(e){ $('#view').innerHTML='<div class="empty">সার্ভার চালু হচ্ছে, কয়েক সেকেন্ড পরে পাতাটি রিফ্রেশ করুন।</div>'; return; }
