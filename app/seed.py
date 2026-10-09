@@ -198,3 +198,4 @@ def seed():
     at(minutes=10)
     S.make_offer(U("p3"), lf9["id"], 600, 37, transport="self")
     S._clock[0] = None
+    db.run("INSERT OR REPLACE INTO meta (key, val) VALUES ('seeded_at', ?)", (str(BASE),))

@@ -36,6 +36,34 @@ if db.needs_seed():
     seed()
 AI = PriceAI()
 
+# ---------------------------------------------------------------- keep the public demo fresh
+# Offers expire after 48 h and unpaid orders after 24 h, so a demo left alone for days would
+# look empty to a judge who opens it later. When the demo data is older than DEMO_TTL and nobody
+# has changed anything for DEMO_IDLE, it is rebuilt (never in the middle of someone's session).
+DEMO_TTL = int(os.environ.get("DEMO_TTL_HOURS", "12")) * 3_600_000
+DEMO_IDLE = 30 * 60_000
+_last_write = [0]
+
+
+@app.middleware("http")
+async def track_writes(request, call_next):
+    if request.method != "GET" and request.url.path.startswith("/api/"):
+        _last_write[0] = db.now_ms()
+    return await call_next(request)
+
+
+def refresh_demo_if_stale():
+    if os.environ.get("DEMO_AUTO_REFRESH", "1") != "1":
+        return
+    try:
+        seeded = int(db.val("SELECT val FROM meta WHERE key='seeded_at'") or 0)
+    except Exception:
+        seeded = 0
+    t = db.now_ms()
+    if t - seeded > DEMO_TTL and t - _last_write[0] > DEMO_IDLE:
+        from app.seed import seed
+        seed()
+
 
 # ---------------------------------------------------------------- auth: signed tokens
 # A token is "user-id.signature". It is not stored on the server, so a restart never logs anyone out.
@@ -123,6 +151,7 @@ def health():
 
 @app.get("/api/state")
 def state(u=Depends(get_user)):
+    refresh_demo_if_stale()
     S.housekeeping(u["id"] if u else None)
     if u:
         u = S.user(u["id"])

@@ -1,4 +1,130 @@
-<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Reroute Agro</title><style>body{font-family:system-ui,sans-serif;max-width:640px;margin:60px auto;padding:0 20px;line-height:1.6;color:#15271D}a{color:#1E8A4C;font-weight:700}</style></head>
-<body><h1>🍅 Reroute Agro</h1><p>কৃষক ও পাইকারের পাইকারি বাজার: সরাসরি দরদাম, নিরাপদ পেমেন্ট, নিজস্ব ট্রাক, মজুদ ও লাভ-ক্ষতির হিসাব।</p>
-<p>লাইভ অ্যাপটি সার্ভারে (FastAPI) চলে। লিংক ও বিস্তারিত: <a href="https://github.com/mahirmohtabayman/Reroute-Agro">GitHub README</a></p></body></html>
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reroute Agro | প্রোটোটাইপ</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍅</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<script>
+/* ======== এখানে নিজের লিংক বসান ======== */
+const LIVE_URL  = "https://reroute-agro.onrender.com";   // Render-এর লাইভ লিংক
+const VIDEO_URL = "";                                     // ডেমো ভিডিওর লিংক (না থাকলে ফাঁকা রাখুন)
+const REPO_URL  = "https://github.com/mahirmohtabayman/Reroute-Agro";
+/* ====================================== */
+</script>
+<style>
+:root{--bg:#F3F5F0;--s:#fff;--s2:#EAEFE6;--ink:#15271D;--mu:#5E6E63;--line:#DCE3D7;--g:#1E8A4C;--gs:#DDF1E4;--r:#D93D27;--gold:#B98200;--gold2:#FFF2CC;--b:#245C9E;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1712;--s:#18221C;--s2:#223128;--ink:#E5EEE7;--mu:#9DB0A3;--line:#2D3C33;--g:#3DAA6A;--gs:#1C3527;--gold:#F0BE2E;--gold2:#3A3116;--b:#6FA6E8}}
+:root[data-theme="dark"]{--bg:#0F1712;--s:#18221C;--s2:#223128;--ink:#E5EEE7;--mu:#9DB0A3;--line:#2D3C33;--g:#3DAA6A;--gs:#1C3527;--gold:#F0BE2E;--gold2:#3A3116;--b:#6FA6E8}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:0 18px}
+a{color:var(--b)}
+header{text-align:center;padding:56px 0 28px}
+header .logo{font-size:3rem;line-height:1}
+h1{font-size:clamp(1.9rem,5vw,2.8rem);margin:10px 0 0;line-height:1.2}
+h2{font-size:1.35rem;margin:0 0 12px}
+.lead{color:var(--mu);font-size:1.1rem;max-width:34em;margin:10px auto 0}
+.status{display:inline-flex;align-items:center;gap:10px;margin-top:22px;background:var(--s);border-radius:999px;padding:8px 16px;box-shadow:0 6px 20px -14px rgba(0,0,0,.4);font-weight:600}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--gold);flex:none}
+.dot.ok{background:var(--g)} .dot.down{background:var(--r)}
+.cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.btn{display:inline-block;padding:13px 22px;border-radius:12px;font-weight:700;text-decoration:none;color:#fff;background:var(--g)}
+.btn.alt{background:var(--s);color:var(--ink);border:1.5px solid var(--line)}
+.panel{background:var(--s);border-radius:16px;padding:20px;box-shadow:0 8px 22px -16px rgba(0,0,0,.4);margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+td,th{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+ol{padding-left:20px;margin:0} li{margin:4px 0}
+.note{background:var(--gold2);border-radius:12px;padding:10px 14px;font-size:.93rem;margin-top:10px}
+.gal{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+figure{margin:0;background:var(--s);border-radius:14px;overflow:hidden;box-shadow:0 8px 22px -16px rgba(0,0,0,.4)}
+figure img{width:100%;display:block;border-bottom:1px solid var(--line);aspect-ratio:16/10;object-fit:cover;object-position:top;cursor:zoom-in}
+figure.m img{aspect-ratio:auto;max-height:520px;object-fit:contain;background:var(--s2)}
+figcaption{padding:10px 14px;font-size:.93rem}
+figcaption b{display:block}
+.sec{margin:30px 0 14px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.pills span{background:var(--gs);color:var(--g);border-radius:999px;padding:3px 12px;font-weight:600;font-size:.9rem}
+.zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:16px;z-index:9}
+.zoom.on{display:flex} .zoom img{max-width:100%;max-height:100%;border-radius:10px}
+footer{color:var(--mu);font-size:.88rem;text-align:center;padding:30px 0 40px}
+@media (max-width:760px){.grid2,.gal{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="wrap">
+  <div class="logo">🍅</div>
+  <h1>Reroute Agro</h1>
+  <p class="lead">কৃষক ও পাইকারের পাইকারি বাজার: সরাসরি দরদাম, নিরাপদ পেমেন্ট, নিজস্ব ট্রাকে কম খরচে পরিবহন, আর মজুদ ও লাভ-ক্ষতির হিসাব।</p>
+  <div class="status" id="status"><span class="dot" id="dot"></span><span id="stxt">লাইভ সার্ভার দেখা হচ্ছে...</span></div>
+  <div class="cta"><a class="btn" id="live" href="#">লাইভ প্রোটোটাইপ খুলুন</a><a class="btn alt" id="video" href="#" hidden>▶ ডেমো ভিডিও</a><a class="btn alt" id="repo" href="#">GitHub কোড</a></div>
+  <div class="pills" style="justify-content:center;margin-top:18px"><span>FastAPI + SQLite</span><span>অনলাইন পেমেন্ট (ডেমো)</span><span>নিজস্ব ট্রাক মডিউল</span><span>AI দামের মডেল</span><span>বাংলা, মোবাইল-বান্ধব</span></div>
+</header>
+
+<main class="wrap">
+  <div class="grid2">
+    <div class="panel"><h2>🔑 ডেমো অ্যাকাউন্ট</h2>
+      <p>লাইভ সাইটে <b>লগ ইন</b> পাতায় এক চাপে ঢোকা যায়।</p>
+      <table><tr><th>অ্যাকাউন্ট</th><th>কী দেখবেন</th></tr>
+        <tr><td>রহিম উদ্দিন (কৃষক)</td><td>কম দামের অফার, পরিদর্শনের অনুরোধ</td></tr>
+        <tr><td>ঢাকা ফ্রেশ হাব (পাইকার)</td><td>পাল্টা দামে রাজি হয়ে পেমেন্ট</td></tr>
+        <tr><td>করিম ট্রেডার্স (পাইকার)</td><td>পাল্টা দাম, নিজের লিস্টিং, মজুদ</td></tr>
+        <tr><td>Reroute অপারেশন টিম</td><td>ট্রাক বুকিং, বহর, আয়ের হিসাব</td></tr></table>
+      <p class="note">ডেমো পেমেন্ট পিন <b>১২৩৪৫</b>। অন্য পিন দিলে ব্যর্থ পেমেন্ট দেখায়। সব মানুষ ও ব্যবসা কাল্পনিক।</p></div>
+    <div class="panel"><h2>🧭 ৩ মিনিটের ট্যুর</h2><ol>
+      <li><b>রহিম উদ্দিন</b> → "এখন আপনার কাজ" → অফারে <b>পাল্টা দাম</b>।</li>
+      <li><b>ঢাকা ফ্রেশ হাব</b> → পাল্টা দামে রাজি → বিকাশে পেমেন্ট।</li>
+      <li><b>অপারেশন টিম</b> → ট্রাক দিন → মাল তোলার সময় ঠিক।</li>
+      <li>রহিম → <b>ট্রাকে মাল তুলে দিয়েছি</b>; পাইকার → <b>মাল বুঝে পেয়েছি</b> → রেটিং।</li>
+      <li>রহিম → <b>মজুদ ও হিসাব</b>, <b>দাম ও পরামর্শ</b>।</li></ol>
+      <p class="note">ফ্রি সার্ভার, তাই প্রথমবার খুলতে ৩০–৬০ সেকেন্ড লাগতে পারে। ডেমো কিছুক্ষণ কেউ ব্যবহার না করলে নিজে থেকে নতুন হয়; দরকারে ফুটারের "ডেমো নতুন করে শুরু" চাপুন।</p></div>
+  </div>
+
+  <h2 class="sec">📸 প্রোটোটাইপ দেখতে কেমন</h2>
+  <div class="gal" id="gal"></div>
+</main>
+<footer>Reroute Agro · Hack for Humanity · সবজির বাজারদর ডেমো অনুমান; চাল-ডাল-তেল-আটার AI মডেল আসল ডেটায় (Food Commodity Price Dataset of Bangladesh)</footer>
+<div class="zoom" id="zoom"><img alt=""></div>
+<script>
+const SHOTS = [
+  ['01_home','শুরুর পাতা','লগ ইনের আগে পরিষ্কার, শুধু দরকারি অপশন'],
+  ['02_login_tour','লগ ইন ও ট্যুর','কৃষক, পাইকার, অপারেশন টিম; জাজদের জন্য ট্যুর'],
+  ['03_market','বাজার','খোঁজ ও ফিল্টার: ফসল, জেলা, দাম, পরিমাণ, বিক্রেতা; আনুমানিক ট্রাক ভাড়াসহ'],
+  ['04_listing','লিস্টিংয়ের বিস্তারিত','মান, তোলার তারিখ, কতদিন তাজা, সর্বনিম্ন অর্ডার, বিক্রেতার প্রোফাইল, পরিদর্শনের অনুরোধ'],
+  ['05_offer_form','অফার দেওয়া','তালিকার দামে বা কম দামে, Reroute ট্রাক বা নিজের, ভাড়া কে দেবেন'],
+  ['06_farmer_dashboard','কৃষকের ড্যাশবোর্ড','এখন কী করতে হবে, ওয়ালেট, পয়েন্ট, লাভ-ক্ষতি'],
+  ['07_negotiation','দরদাম','রাজি / পাল্টা দাম / না, রাজি হলে হাতে কত আসবে আগেই দেখায়'],
+  ['08_payment','পেমেন্ট','বিকাশ, নগদ, কার্ড বা ওয়ালেট; টাকা Reroute-এ জমা থাকে'],
+  ['08b_bkash','বিকাশ (ডেমো গেটওয়ে)','সার্ভারে যাচাইয়ের পরই অর্ডার নিশ্চিত'],
+  ['09_order_tracking','অর্ডার ও ট্রাক ট্র্যাকিং','অর্ডার আর পরিবহনের আলাদা ধাপ, চালকের তথ্য, টাকার হিসাব'],
+  ['10_transport','Reroute ট্রাক সার্ভিস','নিজস্ব বহর, ভাড়া বনাম বাজারের ট্রাক, বুকিং'],
+  ['11_operations_trucks','অপারেশন টিম: ট্রাক ব্যবস্থাপনা','বুকিং সারি, ট্রাক দেওয়া, সময় ঠিক, পৌঁছানো'],
+  ['12_prices_farmer','দাম ও পরামর্শ (কৃষক)','আজকের দর → খরচ → কত থাকবে → কোথায় বেশি লাভ'],
+  ['12_prices_paikar','দাম ও পরামর্শ (পাইকার)','কার কাছ থেকে কিনে বেচলে লাভ, সর্বোচ্চ কেনা দাম'],
+  ['13_profit_loss','লাভ-ক্ষতি','বিক্রি − মালের খরচ − পরিবহন − ফি − অন্যান্য, ক্যালকুলেটর'],
+  ['14_admin_overview','প্ল্যাটফর্মের হিসাব','ব্যবহারকারী, অর্ডার, বুকিং, আয়ের উৎস'],
+  ['15_mobile_dashboard','মোবাইল','ফোনে নিচে মেনু, বড় বোতাম', true],
+  ['16_mobile_market','মোবাইলে বাজার','ফোনে খোঁজ ও লিস্টিং', true]
+];
+document.getElementById('gal').innerHTML = SHOTS.map(([f,t,d,m])=>`<figure class="${m?'m':''}"><img src="screenshots/${f}.jpg" alt="${t}" loading="lazy"><figcaption><b>${t}</b>${d}</figcaption></figure>`).join('');
+const live=document.getElementById('live'), repo=document.getElementById('repo'), vid=document.getElementById('video');
+live.href=LIVE_URL; repo.href=REPO_URL; if(VIDEO_URL){ vid.href=VIDEO_URL; vid.hidden=false; }
+async function check(n){
+  const dot=document.getElementById('dot'), t=document.getElementById('stxt');
+  try{ const c=new AbortController(); setTimeout(()=>c.abort(),20000);
+    const r=await fetch(LIVE_URL.replace(/\/$/,'')+'/api/health',{signal:c.signal,cache:'no-store'});
+    if(r.ok){ dot.className='dot ok'; t.textContent='লাইভ প্রোটোটাইপ চালু আছে'; return; } throw 0;
+  }catch(e){ if(n<3){ t.textContent='ফ্রি সার্ভার জাগছে, একটু অপেক্ষা করুন...'; setTimeout(()=>check(n+1),8000); }
+    else { dot.className='dot down'; t.textContent='লাইভ সার্ভারে পৌঁছানো যাচ্ছে না। নিচের ছবি আর ভিডিও দেখুন।'; } }
+}
+check(0);
+const z=document.getElementById('zoom');
+document.addEventListener('click',e=>{ if(e.target.matches('figure img')){ z.querySelector('img').src=e.target.src; z.classList.add('on'); } else if(e.target.closest('#zoom')) z.classList.remove('on'); });
+</script>
+</body>
+</html>

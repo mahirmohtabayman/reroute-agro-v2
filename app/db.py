@@ -48,8 +48,9 @@ CREATE TABLE IF NOT EXISTS notifs (id TEXT PRIMARY KEY, "to" TEXT, text TEXT, ki
   read INTEGER DEFAULT 0);
 CREATE TABLE IF NOT EXISTS ratings (id TEXT PRIMARY KEY, order_id TEXT, "from" TEXT, "to" TEXT, stars INTEGER,
   text TEXT, at INTEGER);
+CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, val TEXT);
 """
-TABLES = ["users", "stock", "listings", "offers", "offer_events", "orders", "bookings", "booking_events", "trucks",
+TABLES = ["meta", "users", "stock", "listings", "offers", "offer_events", "orders", "bookings", "booking_events", "trucks",
           "inspections", "payments", "wallet_tx", "points_tx", "entries", "notifs", "ratings"]
 
 

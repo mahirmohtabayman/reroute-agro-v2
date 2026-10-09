@@ -1,7 +1,16 @@
 # 🍅 Reroute Agro
 
 **কৃষক ও পাইকারের পাইকারি বাজার: সরাসরি দরদাম, নিরাপদ পেমেন্ট, নিজস্ব ট্রাক, মজুদ ও লাভ-ক্ষতির হিসাব।**
-Built for **Hack for Humanity**. Live prototype: see the link in the submission (Render).
+Built for **Hack for Humanity**.
+
+| | |
+|---|---|
+| 🌐 লাইভ প্রোটোটাইপ | Render-এর লিংক (submission ফাইলে) |
+| 📸 শোকেস: ছবি, ডেমো অ্যাকাউন্ট, ট্যুর | GitHub Pages (`docs/`) |
+| 🔑 ডেমো | লগ ইন পাতায় এক চাপে ঢুকুন · পেমেন্ট পিন **১২৩৪৫** |
+
+<p align="center"><img src="docs/screenshots/09_order_tracking.jpg" width="49%"> <img src="docs/screenshots/07_negotiation.jpg" width="49%"></p>
+<p align="center"><img src="docs/screenshots/11_operations_trucks.jpg" width="49%"> <img src="docs/screenshots/12_prices_farmer.jpg" width="49%"></p>
 
 ## সমস্যা
 বাংলাদেশে ফল ও সবজির ২৫–৪০% ফসল তোলার পর নষ্ট হয়। মৌসুমে একই হাটে সবাই মাল আনেন, দাম পড়ে যায়, অথচ কয়েক ঘণ্টা দূরে দাম বেশি। কৃষক জানেন না কে কিনবে, পাইকার জানেন না কার কাছে তাজা মাল আছে, আর ট্রাক ভাড়া বেশি ও অনিশ্চিত।
@@ -95,8 +104,11 @@ uvicorn app.main:app --reload        # http://127.0.0.1:8000   API docs: /docs
 python build.py                      # after editing web/*, rebuild static/index.html
 python -m ml.train                   # retrain the price model
 ```
-## 🌐 Deploy
-Render: **New + → Blueprint →** this repo (`render.yaml`). Free plan sleeps after 15 min; open the link once before a demo. A restart resets the demo data.
+## 🌐 Deploy & keep it available
+- **Render:** New + → Blueprint → this repo (`render.yaml`).
+- **Keep awake:** a free UptimeRobot HTTP monitor on `<live-url>/api/health` every 5 minutes (Render's free 750 h/month covers one service all month).
+- **Demo stays fresh:** when the demo data is older than 12 h and nobody has changed anything for 30 min, it is rebuilt automatically (`DEMO_TTL_HOURS`, `DEMO_AUTO_REFRESH`). Footer button "ডেমো নতুন করে শুরু" resets it any time.
+- **GitHub Pages showcase:** Settings → Pages → branch `main`, folder `/docs`. Set `LIVE_URL` / `VIDEO_URL` at the top of `docs/index.html`; the page shows whether the live server is up and always shows the screenshots.
 
 ## 🗺 Next
 Real bKash/Nagad gateway, DAM vegetable prices, Bangla IVR calls for farmers, GPS truck tracking, more districts and crops.
