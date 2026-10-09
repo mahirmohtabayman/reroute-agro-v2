@@ -1,0 +1,1494 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reroute Agro | কৃষক ও পাইকারের পাইকারি বাজার</title>
+<meta name="description" content="কৃষক ও পাইকারের সরাসরি পাইকারি বাজার: দরদাম, নিরাপদ পেমেন্ট, নিজস্ব ট্রাক, মজুদ ও লাভ-ক্ষতির হিসাব">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍅</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F5F0; --surface:#FFFFFF; --surface2:#EAEFE6; --ink:#15271D; --muted:#5E6E63; --line:#DCE3D7;
+  --green:#1E8A4C; --green-soft:#DDF1E4; --red:#D93D27; --red-soft:#FCE5E0; --gold:#B98200; --gold-soft:#FFF2CC;
+  --blue:#245C9E; --blue-soft:#E2ECF8; --shadow:0 1px 2px rgba(21,39,29,.06),0 8px 22px -16px rgba(21,39,29,.4);
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0F1712; --surface:#18221C; --surface2:#223128; --ink:#E5EEE7; --muted:#9DB0A3; --line:#2D3C33;
+  --green:#3DAA6A; --green-soft:#1C3527; --red:#F2593F; --red-soft:#3A1F1A; --gold:#F0BE2E; --gold-soft:#3A3116;
+  --blue:#6FA6E8; --blue-soft:#1B2B3F; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px -16px rgba(0,0,0,.8); } }
+:root[data-theme="dark"]{
+  --bg:#0F1712; --surface:#18221C; --surface2:#223128; --ink:#E5EEE7; --muted:#9DB0A3; --line:#2D3C33;
+  --green:#3DAA6A; --green-soft:#1C3527; --red:#F2593F; --red-soft:#3A1F1A; --gold:#F0BE2E; --gold-soft:#3A3116;
+  --blue:#6FA6E8; --blue-soft:#1B2B3F; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px -16px rgba(0,0,0,.8); }
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hind Siliguri","Noto Sans Bengali","Kohinoor Bangla","Vrinda",system-ui,sans-serif;font-size:16px;line-height:1.55}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+h1,h2,h3,h4{line-height:1.25;margin:0}
+h1{font-size:1.55rem} h2{font-size:1.25rem} h3{font-size:1.05rem}
+p{margin:0}
+img{max-width:100%;display:block}
+.wrap{max-width:1160px;margin:0 auto;padding-left:18px;padding-right:18px}
+.muted{color:var(--muted)} .sm{font-size:.87rem} .xs{font-size:.78rem}
+.b{font-weight:700}
+.row{display:flex;gap:10px;align-items:center} .row.wrap-it{flex-wrap:wrap} .grow{flex:1;min-width:0}
+.between{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.stack>*+*{margin-top:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+.btn{border:0;border-radius:10px;padding:10px 16px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;text-decoration:none;line-height:1.3}
+.btn-green{background:var(--green);color:#fff} .btn-red{background:var(--red);color:#fff} .btn-blue{background:var(--blue);color:#fff}
+.btn-ink{background:var(--ink);color:var(--surface)} .btn-soft{background:var(--surface2);color:var(--ink)}
+.btn-line{background:var(--surface);border:1.5px solid var(--line);color:var(--ink)}
+.btn-sm{padding:6px 12px;font-size:.88rem} .btn-wide{width:100%;padding:13px;font-size:1.05rem;border-radius:12px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.pill{display:inline-block;border-radius:999px;padding:1px 10px;font-size:.78rem;font-weight:700;white-space:nowrap}
+.p-green{background:var(--green-soft);color:var(--green)} .p-red{background:var(--red-soft);color:var(--red)}
+.p-gold{background:var(--gold-soft);color:var(--gold)} .p-blue{background:var(--blue-soft);color:var(--blue)} .p-grey{background:var(--surface2);color:var(--muted)}
+.panel{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:18px}
+.panel+.panel{margin-top:14px}
+.empty{border:2px dashed var(--line);border-radius:14px;padding:24px;text-align:center;color:var(--muted)}
+.note{background:var(--blue-soft);border-radius:12px;padding:10px 14px;font-size:.93rem}
+.warn{background:var(--gold-soft);border-radius:12px;padding:10px 14px;font-size:.93rem}
+.danger{background:var(--red-soft);color:var(--red);border-radius:12px;padding:10px 14px;font-size:.93rem;font-weight:600}
+.good{background:var(--green-soft);color:var(--green);border-radius:12px;padding:10px 14px;font-size:.93rem;font-weight:600}
+.demo-tag{display:inline-block;background:var(--gold-soft);color:var(--gold);border-radius:6px;padding:0 6px;font-size:.75rem;font-weight:700}
+hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+
+/* header & nav */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--surface);border-bottom:1px solid var(--line)}
+.hrow{display:flex;align-items:center;gap:10px;min-height:60px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.12rem;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.hright{margin-left:auto;display:flex;align-items:center;gap:8px}
+.chip-user{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font-weight:600}
+.role{border-radius:999px;padding:2px 10px;font-size:.75rem;font-weight:700;color:#fff}
+.role.farmer{background:var(--green)} .role.paikar{background:var(--blue)} .role.admin{background:var(--ink)}
+.iconbtn{position:relative;border:0;background:var(--surface2);width:40px;height:40px;border-radius:50%;font-size:1.05rem;display:grid;place-items:center}
+.iconbtn b{position:absolute;top:-3px;right:-3px;background:var(--red);color:#fff;border-radius:10px;min-width:20px;height:20px;font-size:.72rem;display:grid;place-items:center;padding:0 4px}
+.npanel{position:absolute;right:18px;top:58px;width:min(380px,calc(100vw - 24px));background:var(--surface);border-radius:14px;box-shadow:0 20px 40px -10px rgba(0,0,0,.35);border:1px solid var(--line);display:none;max-height:72vh;overflow:auto;z-index:40}
+.npanel.on{display:block}
+.npanel .n{padding:11px 14px;border-top:1px solid var(--line);font-size:.92rem;cursor:pointer}
+.npanel .n:hover{background:var(--surface2)}
+.npanel .n.unread{border-left:4px solid var(--green)}
+.tnav{background:var(--surface);border-bottom:1px solid var(--line)}
+.tnav .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tnav a{padding:10px 12px;text-decoration:none;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap;font-size:.95rem}
+.tnav a.on{color:var(--ink);border-color:var(--green)}
+.cnt{background:var(--red);color:#fff;border-radius:10px;padding:0 6px;font-size:.72rem;margin-left:4px}
+.bnav{display:none}
+.sheet{display:none;position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-radius:20px 20px 0 0;z-index:55;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px));transform:translateY(110%);transition:transform .2s;box-shadow:0 -10px 30px rgba(0,0,0,.2)}
+.sheet.on{transform:none}
+.scrim{position:fixed;inset:0;background:rgba(10,20,14,.45);z-index:54;display:none}
+.scrim.on{display:block}
+.sheet a{display:flex;gap:12px;padding:12px 6px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:600}
+main{padding:20px 0 70px;min-height:72vh}
+.phead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;scrollbar-width:none}
+.tabs button{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:600;white-space:nowrap}
+.tabs button.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+
+/* minimal home */
+.hero{min-height:calc(100vh - 200px);display:grid;place-items:center;text-align:center;padding:30px 0}
+.hero h1{font-size:clamp(2rem,6vw,3.4rem);letter-spacing:-.01em}
+.hero p.lead{font-size:1.15rem;color:var(--muted);margin:14px auto 0;max-width:30em}
+.hero .cta{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+.hero .cta .btn{padding:15px 26px;font-size:1.08rem;border-radius:14px;min-width:190px}
+.hero .feat{display:flex;gap:18px;justify-content:center;margin-top:34px;flex-wrap:wrap;color:var(--muted);font-weight:600}
+.hero .feat span{display:flex;gap:6px;align-items:center}
+.hero .logo-big{font-size:3.4rem;line-height:1;margin-bottom:12px}
+
+/* forms */
+.field{display:block;margin-top:12px}
+.field>span{display:block;font-size:.88rem;color:var(--muted);margin-bottom:4px;font-weight:600}
+.field input,.field select,.field textarea{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px}
+.field textarea{min-height:70px}
+.choice{display:grid;gap:8px}
+.choice.c2{grid-template-columns:1fr 1fr} .choice.c3{grid-template-columns:1fr 1fr 1fr} .choice.c4{grid-template-columns:repeat(4,1fr)}
+.opt{border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:10px;text-align:left}
+.opt.on{border-color:var(--green);background:var(--green-soft)}
+.opt strong{display:block} .opt .muted{font-size:.82rem}
+.cropbtn{text-align:center} .cropbtn b{display:block;font-size:1.8rem;line-height:1.2}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper button{width:48px;height:48px;border-radius:12px;border:0;background:var(--surface2);font-size:1.6rem;font-weight:700;flex:none}
+.stepper input{flex:1;text-align:center;font-size:1.3rem;font-weight:700;border:1.5px solid var(--line);border-radius:10px;padding:8px;min-width:0;background:var(--surface)}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.thumbs div{position:relative}
+.thumbs img{width:84px;height:84px;object-fit:cover;border-radius:10px}
+.thumbs button{position:absolute;top:2px;right:2px;border:0;border-radius:50%;width:24px;height:24px;background:rgba(0,0,0,.6);color:#fff;font-size:.8rem}
+
+/* cards & listings */
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.lcard{background:var(--surface);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;text-decoration:none;color:var(--ink)}
+.lcard:hover{box-shadow:0 0 0 2px var(--green),var(--shadow)}
+.pic{position:relative;height:140px;background:var(--c,#eee);display:grid;place-items:center;overflow:hidden}
+.pic img{width:100%;height:100%;object-fit:cover}
+.pic .emo{font-size:3.3rem}
+.pic .nophoto{position:absolute;bottom:6px;right:6px;background:rgba(255,255,255,.85);color:#444;font-size:.68rem;border-radius:6px;padding:0 6px}
+.rib{position:absolute;top:8px;left:8px;background:var(--red);color:#fff;font-size:.76rem;font-weight:700;border-radius:6px;padding:2px 8px}
+.rib.r2{left:auto;right:8px;background:var(--ink)}
+.fresh{position:absolute;bottom:8px;left:8px;background:var(--surface);font-size:.76rem;font-weight:700;border-radius:999px;padding:1px 9px}
+.fresh.ok{color:var(--green)} .fresh.mid{color:var(--gold)} .fresh.low{color:var(--red)}
+.info{padding:10px 12px 12px;display:flex;flex-direction:column;gap:2px;flex:1}
+.price{font-size:1.25rem;font-weight:700}
+.price small{font-size:.8rem;color:var(--muted);font-weight:500}
+.price s{font-size:.82rem;color:var(--muted);font-weight:500;margin-left:4px}
+.tline{margin-top:6px;font-size:.8rem;background:var(--green-soft);color:var(--green);border-radius:8px;padding:4px 8px;font-weight:600}
+.ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.6rem;flex:none;background:var(--c,#eee)}
+.ico.sm{width:34px;height:34px;font-size:1.2rem;border-radius:10px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pic,:root:not([data-theme="light"]) .ico{background:color-mix(in srgb,var(--c) 16%,var(--surface2))}}
+:root[data-theme="dark"] .pic,:root[data-theme="dark"] .ico{background:color-mix(in srgb,var(--c) 16%,var(--surface2))}
+.av{width:44px;height:44px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-size:1.3rem;overflow:hidden;flex:none}
+.av img{width:100%;height:100%;object-fit:cover}
+.av.lg{width:76px;height:76px;font-size:2.2rem}
+.ver{color:var(--blue);font-weight:700;font-size:.82rem;white-space:nowrap}
+.stars{color:var(--gold);font-weight:700;white-space:nowrap}
+.ulink{color:var(--blue);font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;gap:8px;align-items:end;margin-bottom:10px}
+.filters label{display:block} .filters span{display:block;font-size:.78rem;color:var(--muted);font-weight:600}
+.filters input,.filters select{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
+.chip{flex:none;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-weight:600;font-size:.9rem}
+.chip.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+
+/* lists, rows, tables */
+.item{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:.93rem}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-weight:600;text-align:right}
+.bill{font-size:.94rem}
+.bill div{display:flex;justify-content:space-between;gap:10px;padding:3px 0}
+.bill .minus b{color:var(--red)} .bill .plus b{color:var(--green)}
+.bill .tot{border-top:1.5px solid var(--line);margin-top:4px;padding-top:7px;font-size:1.08rem;font-weight:700}
+.tbl{width:100%;border-collapse:collapse;font-size:.9rem}
+.tbl th{text-align:left;color:var(--muted);font-weight:600;font-size:.8rem;padding:8px 6px;border-bottom:1.5px solid var(--line);white-space:nowrap}
+.tbl td{padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr.click{cursor:pointer} .tbl tr.click:hover td{background:var(--surface2)}
+.num{text-align:right;white-space:nowrap}
+.scroll{overflow-x:auto}
+.kpi{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px;text-decoration:none;color:var(--ink);display:block}
+.kpi strong{display:block;font-size:1.4rem;line-height:1.25}
+.kpi.hl{outline:2px solid var(--red)}
+.todo{display:flex;gap:12px;align-items:center;background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:12px 14px;border-left:5px solid var(--red);margin-bottom:10px;text-decoration:none;color:var(--ink)}
+.todo .ic{font-size:1.5rem}
+.alert{display:flex;gap:10px;align-items:center;border-radius:12px;padding:10px 12px;margin-bottom:8px;font-weight:600;font-size:.93rem}
+.alert.spoil{background:var(--red-soft);color:var(--red)} .alert.low{background:var(--gold-soft);color:var(--gold)}
+
+/* trackers */
+.track{display:flex;margin:12px 0 4px}
+.track .st{flex:1;text-align:center;font-size:.74rem;color:var(--muted);position:relative;padding:0 2px}
+.track .st i{display:block;width:16px;height:16px;border-radius:50%;background:var(--line);margin:0 auto 4px;position:relative;z-index:1}
+.track .st::before{content:"";position:absolute;top:7px;right:50%;width:100%;height:3px;background:var(--line)}
+.track .st:first-child::before{display:none}
+.track .st.done i,.track .st.done::before{background:var(--green)}
+.track .st.now{color:var(--ink);font-weight:700}
+.track .st.now i{box-shadow:0 0 0 4px var(--green-soft)}
+.track.bad .st.done i,.track.bad .st.done::before{background:var(--muted)}
+.timeline{border-left:3px solid var(--line);margin:6px 0 0 8px;padding-left:14px}
+.timeline>div{position:relative;padding:4px 0 10px;font-size:.92rem}
+.timeline>div::before{content:"";position:absolute;left:-21px;top:9px;width:11px;height:11px;border-radius:50%;background:var(--green)}
+.bars .r{display:grid;grid-template-columns:120px 1fr 90px;gap:8px;align-items:center;margin:6px 0;font-size:.9rem}
+.bars i{display:block;height:13px;border-radius:7px;background:var(--gold)}
+.bars i.best{background:var(--green)} .bars i.base{background:var(--muted)}
+.bars b{text-align:right}
+
+/* modal, toast, banners */
+.overlay{position:fixed;inset:0;background:rgba(10,20,14,.55);display:none;align-items:center;justify-content:center;z-index:60;padding:16px}
+.overlay.on{display:flex}
+.modal{background:var(--surface);border-radius:20px;width:100%;max-width:500px;max-height:92vh;overflow:auto;position:relative}
+.modal .body{padding:20px}
+.x{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:var(--surface2);font-size:1rem;z-index:2}
+.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translate(-50%,-14px);background:var(--ink);color:var(--surface);padding:11px 16px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:80;max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.banner{display:flex;gap:10px;align-items:center;border-radius:12px;padding:10px 12px;margin-bottom:10px;background:var(--green-soft);border-left:5px solid var(--green);font-size:.93rem;font-weight:600}
+.banner.cancel{background:var(--red-soft);border-left-color:var(--red)} .banner.pay{background:var(--gold-soft);border-left-color:var(--gold)}
+.banner .x2{border:0;background:transparent;color:var(--muted);font-size:1rem}
+.gateway{border-radius:14px;padding:16px;color:#fff;margin-bottom:12px}
+.gateway.bkash{background:#D12053} .gateway.nagad{background:#EC1C24} .gateway.card{background:#1F3B6E} .gateway.wallet{background:var(--green)}
+.big-ic{font-size:3rem;text-align:center}
+footer{border-top:1px solid var(--line);padding:16px 0 26px;color:var(--muted);font-size:.86rem}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+
+@media (max-width:900px){
+  .grid2,.grid3{grid-template-columns:1fr} .grid4{grid-template-columns:1fr 1fr}
+  .filters{grid-template-columns:1fr 1fr}
+  .filters .q{grid-column:1/-1}
+  .tnav{display:none}
+  .sheet{display:block;visibility:hidden} .sheet.on{visibility:visible}
+  .bnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+  .bnav a,.bnav button{flex:1;text-align:center;text-decoration:none;font-size:.72rem;font-weight:600;color:var(--muted);padding:4px 2px;position:relative;border:0;background:none}
+  .bnav b{display:block;font-size:1.3rem;line-height:1.2}
+  .bnav .on{color:var(--green)}
+  .bnav .cnt{position:absolute;top:0;left:56%}
+  body.authed main{padding-bottom:110px}
+  body.authed footer{padding-bottom:100px}
+  .chip-user .nm{display:none}
+  .lgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .pic{height:110px} .pic .emo{font-size:2.6rem}
+  .price{font-size:1.08rem}
+  .overlay{align-items:flex-end;padding:0}
+  .modal{border-radius:20px 20px 0 0;max-height:94vh;padding-bottom:env(safe-area-inset-bottom,0px)}
+  .bars .r{grid-template-columns:90px 1fr 80px}
+  .hide-m{display:none}
+}
+@media (max-width:420px){ .logo .full{display:none} .choice.c4{grid-template-columns:repeat(2,1fr)} .hero .cta .btn{width:100%} }
+@media (prefers-reduced-motion:reduce){ .sheet,.toast{transition:none} }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap hrow" id="hrow"></div><div class="npanel" id="npanel"></div></header>
+<nav class="tnav" id="tnav"></nav>
+<main><div class="wrap" id="view"></div></main>
+<footer><div class="wrap"><span>Reroute Agro প্রোটোটাইপ · ডেমোর সব মানুষ ও ব্যবসা কাল্পনিক · সবজির দাম ডেমো অনুমান</span>
+  <span class="row"><a href="#/ai">AI মডেল (আসল ডেটা)</a><button class="btn btn-line btn-sm" data-act="reset">ডেমো নতুন করে শুরু</button></span></div></footer>
+<nav class="bnav" id="bnav"></nav>
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet"></div>
+<div class="overlay" id="overlay"><div class="modal" id="modal" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+/* =====================================================================
+   Reroute Agro — web app. All data comes from the FastAPI server.
+   ===================================================================== */
+const MON = 40, DAY = 864e5;
+const CROPS = {
+  tomato:{n:'টমেটো',i:'🍅',c:'#FDE1DB'}, brinjal:{n:'বেগুন',i:'🍆',c:'#ECE1F6'}, chili:{n:'কাঁচা মরিচ',i:'🌶️',c:'#DFF1DA'},
+  cucumber:{n:'শসা',i:'🥒',c:'#E3F3DF'}, carrot:{n:'গাজর',i:'🥕',c:'#FDE8D4'}, onion:{n:'পেঁয়াজ',i:'🧅',c:'#F6E0E8'}, potato:{n:'আলু',i:'🥔',c:'#F2E8D8'}
+};
+const PLACES = {
+  rajshahi:{n:'রাজশাহী',lat:24.37,lon:88.60}, natore:{n:'নাটোর',lat:24.42,lon:89.00}, naogaon:{n:'নওগাঁ',lat:24.80,lon:88.94},
+  chapai:{n:'চাঁপাইনবাবগঞ্জ',lat:24.60,lon:88.27}, bogura:{n:'বগুড়া',lat:24.85,lon:89.37}, dhaka:{n:'ঢাকা',lat:23.81,lon:90.41}
+};
+/* সবজির বাজারদর: ডেমো অনুমান (আসল ডেটা নয়)। পাইলটে কৃষি বিপণন অধিদপ্তরের দৈনিক দাম বসবে। */
+const MARKET_DEMO = {
+  rajshahi:{tomato:24,brinjal:17,chili:42,cucumber:16,carrot:20,onion:35,potato:13},
+  natore:{tomato:26,brinjal:18,chili:44,cucumber:17,carrot:21,onion:35,potato:14},
+  naogaon:{tomato:26,brinjal:18,chili:42,cucumber:16,carrot:21,onion:36,potato:14},
+  chapai:{tomato:25,brinjal:17,chili:41,cucumber:16,carrot:20,onion:36,potato:13},
+  bogura:{tomato:29,brinjal:20,chili:47,cucumber:19,carrot:23,onion:38,potato:15},
+  dhaka:{tomato:34,brinjal:24,chili:53,cucumber:21,carrot:29,onion:44,potato:19}
+};
+const OFFER_ST = {pending:['উত্তরের অপেক্ষা','p-gold'],countered:['পাল্টা দাম এসেছে','p-blue'],accepted:['গৃহীত','p-green'],rejected:['প্রত্যাখ্যাত','p-red'],expired:['মেয়াদ শেষ','p-grey'],cancelled:['বাতিল','p-grey']};
+const ORDER_ST = {awaiting_payment:['পেমেন্ট বাকি','p-gold'],confirmed:['অর্ডার নিশ্চিত','p-blue'],handed_over:['মাল হস্তান্তর হয়েছে','p-blue'],completed:['সম্পূর্ণ','p-green'],cancelled:['বাতিল','p-red']};
+const BOOK_ST = {awaiting_payment:['পেমেন্ট বাকি','p-gold'],requested:['বুকিং অনুরোধ','p-gold'],confirmed:['বুকিং নিশ্চিত','p-blue'],pickup_scheduled:['মাল তোলার সময় ঠিক','p-blue'],in_transit:['পথে আছে','p-blue'],delivered:['পৌঁছে গেছে','p-green'],cancelled:['বাতিল','p-red']};
+const INSP_ST = {requested:['অনুরোধ','p-gold'],scheduled:['সময় ঠিক','p-blue'],done:['দেখা হয়েছে','p-green'],declined:['রাজি হননি','p-red'],cancelled:['বাতিল','p-grey']};
+const ORDER_STEPS = ['অফার','বিক্রেতা রাজি','পেমেন্ট ও অর্ডার নিশ্চিত','মাল হস্তান্তর','সম্পূর্ণ'];
+const ORDER_IDX = {awaiting_payment:1,confirmed:2,handed_over:3,completed:4};
+const BOOK_STEPS = ['বুকিং অনুরোধ','বুকিং নিশ্চিত','মাল তোলার সময়','পথে','পৌঁছেছে'];
+const BOOK_IDX = {requested:0,confirmed:1,pickup_scheduled:2,in_transit:3,delivered:4};
+
+/* ---------- formatting ---------- */
+const $ = s => document.querySelector(s);
+const nf = (n,d=0) => Number(n||0).toLocaleString('bn-BD',{maximumFractionDigits:d});
+const tk = (n,d=0) => '৳' + nf(n,d);
+const bd = x => String(x).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const monTxt = kg => `${nf(kg/MON,1)} মণ`;
+const kgMon = kg => `${nf(kg/MON,1)} মণ (${nf(kg)} কেজি)`;
+const MONTHS = ['জানু','ফেব্রু','মার্চ','এপ্রি','মে','জুন','জুলা','আগ','সেপ্টে','অক্টো','নভে','ডিসে'];
+const dateBn = t => { const d=new Date(t); return `${bd(d.getDate())} ${MONTHS[d.getMonth()]}`; };
+function ago(t){ const m=Math.round((Date.now()-t)/6e4); if(m<60) return `${nf(Math.max(1,m))} মিনিট আগে`; const h=Math.round(m/60); if(h<24) return `${nf(h)} ঘণ্টা আগে`; const d=Math.round(h/24); return d<30?`${nf(d)} দিন আগে`:`${nf(Math.round(d/30))} মাস আগে`; }
+const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pill = ([t,c]) => `<span class="pill ${c}">${t}</span>`;
+
+/* ---------- state from the server ---------- */
+let S = {users:[],listings:[],trucks:[],me:null,notifs:[]}, TOKEN=null, lastJSON='', FD=null;
+try{ TOKEN = localStorage.getItem('reroute-token'); }catch(e){}
+function setToken(t){ TOKEN=t; try{ t?localStorage.setItem('reroute-token',t):localStorage.removeItem('reroute-token'); }catch(e){} }
+async function api(path, method='GET', body){
+  let r, data=null;
+  try{ r = await fetch('/api'+path,{method,headers:{'Content-Type':'application/json',...(TOKEN?{'X-Token':TOKEN}:{})},body:body?JSON.stringify(body):undefined}); try{ data=await r.json(); }catch(e){} }
+  catch(e){ toast('সার্ভারের সাথে যোগাযোগ হচ্ছে না, একটু পরে চেষ্টা করুন'); throw e; }
+  if(r.status===401){ setToken(null); }
+  if(!r.ok){ const d=data&&data.detail; toast(typeof d==='string'?d:(Array.isArray(d)?'তথ্য ঠিকভাবে দিন':'কাজটি হয়নি, আবার চেষ্টা করুন')); throw new Error(d); }
+  return data;
+}
+async function load(){
+  const s = await api('/state'); const j=JSON.stringify(s), changed=j!==lastJSON; lastJSON=j;
+  if(!s.me && TOKEN) setToken(null);
+  const before=new Set((S.notifs||[]).filter(n=>!n.read).map(n=>n.id));
+  S = s; const fresh=(s.notifs||[]).filter(n=>!n.read && !before.has(n.id));
+  return {changed, fresh};
+}
+const me = () => S.me;
+const isTrader = () => S.me && S.me.role!=='admin';
+const user = id => (S.users||[]).find(u=>u.id===id) || ((S.admin&&S.admin.users)||[]).find(u=>u.id===id) || (S.me&&S.me.id===id?S.me:null) || {id,name:'অজানা',role:'farmer',place:'rajshahi'};
+const listing = id => (S.listings||[]).find(l=>l.id===id);
+const dispName = u => u.role==='paikar' ? u.biz : u.name;
+const roleBn = r => ({farmer:'কৃষক',paikar:'পাইকার',admin:'অপারেশন টিম'}[r]);
+
+/* ---------- small UI pieces ---------- */
+let tT;
+function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(tT); tT=setTimeout(()=>t.classList.remove('on'),3000); }
+function say(text){ try{ const v=speechSynthesis.getVoices().find(v=>(v.lang||'').toLowerCase().startsWith('bn')); if(v){ const u=new SpeechSynthesisUtterance(text); u.voice=v; u.lang=v.lang; speechSynthesis.cancel(); speechSynthesis.speak(u); } else toast('🔊 '+text.slice(0,90)); }catch(e){} }
+function avatar(u,lg){ return `<span class="av ${lg?'lg':''}">${u.has_photo?`<img src="/api/users/${u.id}/photo?v=${u.has_photo?1:0}" alt="">`:(u.role==='paikar'?'🏪':'🧑‍🌾')}</span>`; }
+function stars(u){ return u.reviews?`<span class="stars">★ ${nf(u.rating,1)}</span> <span class="muted xs">(${nf(u.reviews)})</span>`:`<span class="muted xs">নতুন</span>`; }
+function verBadge(u){ return u.verified?`<span class="ver">✔ যাচাইকৃত</span>`:''; }
+function ulink(u){ return `<a class="ulink" href="#/u/${u.id}">${esc(dispName(u))}</a>`; }
+function personRow(u, extra=''){ return `<div class="row">${avatar(u)}<div class="grow"><div>${ulink(u)} ${verBadge(u)}</div>
+  <div class="muted sm">${roleBn(u.role)}, ${u.area?esc(u.area)+', ':''}${PLACES[u.place].n} · ${stars(u)}</div>${extra}</div></div>`; }
+function cropIco(c,sm){ return `<span class="ico ${sm?'sm':''}" style="--c:${CROPS[c].c}">${CROPS[c].i}</span>`; }
+function freshCls(d){ return d<=1?'low':d<=2?'mid':'ok'; }
+function freshTxt(d){ return d<=0?'নষ্ট হওয়া শুরু':`${nf(d)} দিন তাজা থাকবে`; }
+function track(steps, idx, bad){ return `<div class="track ${bad?'bad':''}">${steps.map((s,i)=>`<div class="st ${i<=idx?'done':''} ${i===idx?'now':''}"><i></i>${s}</div>`).join('')}</div>`; }
+function bill(rows){ return `<div class="bill">${rows.filter(Boolean).map(([k,v,cls])=>`<div class="${cls||''}"><span>${k}</span><b>${v}</b></div>`).join('')}</div>`; }
+
+/* ---------- pricing mirrors of the server (same formulas) ---------- */
+function km(a,b){ if(a===b) return 15; const A=PLACES[a],B=PLACES[b],R=6371,dl=(B.lat-A.lat)*Math.PI/180,dn=(B.lon-A.lon)*Math.PI/180;
+  const h=Math.sin(dl/2)**2+Math.cos(A.lat*Math.PI/180)*Math.cos(B.lat*Math.PI/180)*Math.sin(dn/2)**2; return Math.round(2*R*Math.asin(Math.sqrt(h))*1.35); }
+function quote(src,dst,kg,plus,bulk){
+  const C=S.config, V=C.vehicles, k=km(src,dst); let vid,n;
+  if(kg>V.truck.cap){ vid='truck'; n=Math.ceil(kg/V.truck.cap); } else { vid=['pickup','mini','truck'].find(v=>V[v].cap>=kg); n=1; }
+  const v=V[vid], trip=v.base+v.km*k, shared=n===1&&kg<C.full_load*v.cap;
+  const fare = shared ? trip*Math.max(kg/v.cap,C.min_share)*C.pool : trip*C.return_load*n;
+  const off = plus?C.plus_off:bulk?C.bulk_off:0, service=fare*C.service*(1-off), offline=trip*C.offline*n;
+  return {vehicle:vid,vehicle_name:v.n,trucks:n,km:k,shared,fare:Math.round(fare),service:Math.round(service),service_off:off,
+          total:Math.round(fare+service),offline:Math.round(offline),saving:Math.round(offline-fare-service),eta:Math.round((k/C.speed+(shared?5:2))*10)/10};
+}
+const myQuote = (src,dst,kg) => quote(src,dst,kg, S.me&&S.me.plus_active, S.me&&S.me.bulk);
+const platformFee = goods => Math.round(Math.min(S.config.fee_max, Math.max(S.config.fee_min, goods*S.config.fee_rate)));
+const daysLeft = l => l.days_left;
+
+/* ---------- modal & confirmation ---------- */
+let MODAL_RESOLVE=null;
+function modal(html){ $('#modal').innerHTML=`<button class="x" data-act="close" aria-label="বন্ধ">✕</button>`+html; $('#overlay').classList.add('on'); }
+function closeModal(v){ $('#overlay').classList.remove('on'); if(MODAL_RESOLVE){ const r=MODAL_RESOLVE; MODAL_RESOLVE=null; r(v===undefined?false:v); } }
+/* confirmBox: every important action asks first. With reason:true it adds an optional reason box and a Skip button. */
+let CONF=null;
+function confirmBox(o){
+  return new Promise(res=>{ CONF={...o,picked:''}; MODAL_RESOLVE=res; drawConfirm(); });
+}
+function drawConfirm(){
+  const o=CONF;
+  modal(`<div class="body"><h2>${o.title}</h2>${o.body?`<div style="margin-top:10px">${o.body}</div>`:''}
+    ${o.penalty?`<div class="danger" style="margin-top:12px">⚠️ এই কাজ করলে আপনার ${nf(o.penalty)} পয়েন্ট কাটা যাবে।</div>`:''}
+    ${o.reason?`<div class="field"><span>কারণ (না দিলেও চলবে)</span>
+      <div class="chips" style="flex-wrap:wrap">${(o.chips||[]).map(c=>`<button class="chip ${o.picked===c?'on':''}" data-act="conf-chip" data-v="${esc(c)}">${c}</button>`).join('')}</div>
+      <textarea id="conf-reason" maxlength="200" placeholder="নিজে লিখুন...">${esc(o.picked&&!(o.chips||[]).includes(o.picked)?o.picked:'')}</textarea></div>`:''}
+    <div class="row" style="margin-top:16px"><button class="btn btn-soft grow" data-act="conf-no">${o.cancel||'ফিরে যান'}</button>
+      ${o.reason?`<button class="btn btn-line grow" data-act="conf-skip">কারণ ছাড়া ${o.okShort||'নিশ্চিত'}</button>`:''}
+      <button class="btn ${o.danger?'btn-red':'btn-green'} grow" data-act="conf-yes">${o.ok||'নিশ্চিত করুন'}</button></div></div>`);
+}
+
+/* ---------- online payment (demo gateway) ---------- */
+let PAY=null;
+function payFlow(purpose, ref, amount, title, after){
+  PAY={purpose,ref,amount,title,after,step:'method',method:null,pid:null,msg:null};
+  drawPay();
+}
+function drawPay(){
+  const P=PAY, w=(S.me&&S.me.wallet)||0;
+  if(P.step==='method'){
+    modal(`<div class="body"><h2>💳 পেমেন্ট</h2><p class="muted" style="margin-top:4px">${P.title}</p>
+      <div class="between" style="margin:14px 0;font-size:1.3rem"><span>মোট</span><b>${tk(P.amount)}</b></div>
+      <div class="choice">${[['bkash','বিকাশ','মোবাইল নম্বর ও পিন'],['nagad','নগদ','মোবাইল নম্বর ও পিন'],['card','ডেবিট/ক্রেডিট কার্ড','ভিসা, মাস্টারকার্ড'],['wallet',`Reroute ওয়ালেট`,`ব্যালান্স ${tk(w)}`]].map(([k,n,d])=>
+        `<button class="opt" data-act="pay-method" data-v="${k}" ${k==='wallet'&&w<P.amount?'disabled':''}><strong>${n}</strong><span class="muted">${k==='wallet'&&w<P.amount?'ব্যালান্স যথেষ্ট নয়':d}</span></button>`).join('')}</div>
+      <p class="note" style="margin-top:12px">🔒 টাকা Reroute-এ জমা থাকে, মাল বুঝে পেলে তবেই বিক্রেতা পান। পেমেন্ট সার্ভারে যাচাই হওয়ার পরই অবস্থা বদলায়।</p></div>`);
+  } else if(P.step==='gateway'){
+    const card=P.method==='card';
+    modal(`<div class="body"><div class="gateway ${P.method}"><div class="sm">${{bkash:'বিকাশ',nagad:'নগদ',card:'কার্ড পেমেন্ট'}[P.method]} (ডেমো গেটওয়ে)</div>
+      <div style="font-size:1.6rem;font-weight:700">${tk(P.amount)}</div><div class="sm">মার্চেন্ট: Reroute Agro</div></div>
+      <label class="field"><span>${card?'কার্ড নম্বর (১৬ সংখ্যা)':'আপনার '+({bkash:'বিকাশ',nagad:'নগদ'}[P.method])+' নম্বর'}</span><input id="pay-acc" inputmode="numeric" placeholder="${card?'4242 4242 4242 4242':'01XXXXXXXXX'}" value="${card?'':(S.me.phone||'')}"></label>
+      <label class="field"><span>${card?'CVV / OTP':'পিন'}</span><input id="pay-pin" type="password" inputmode="numeric" placeholder="•••••"></label>
+      <p class="warn sm" style="margin-top:10px">ডেমো: পিন <b>১২৩৪৫</b> দিলে সফল হবে, অন্য পিন দিলে ব্যর্থ পেমেন্ট দেখাবে।</p>
+      <div class="row" style="margin-top:14px"><button class="btn btn-soft grow" data-act="pay-back">পেছনে</button><button class="btn btn-green grow" data-act="pay-confirm">পেমেন্ট করুন</button></div></div>`);
+  } else if(P.step==='done'){
+    modal(`<div class="body" style="text-align:center"><div class="big-ic">✅</div><h2>পেমেন্ট সফল</h2><p class="muted" style="margin-top:6px">${tk(P.amount)} পরিশোধ হয়েছে। লেনদেন নম্বর ${esc(P.txn||'')}</p>
+      <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="pay-finish">ঠিক আছে</button></div>`);
+  } else if(P.step==='failed'){
+    modal(`<div class="body" style="text-align:center"><div class="big-ic">❌</div><h2>পেমেন্ট হয়নি</h2><p class="danger" style="margin-top:10px">${esc(P.msg)}</p>
+      <div class="row" style="margin-top:16px"><button class="btn btn-soft grow" data-act="close">পরে করব</button><button class="btn btn-green grow" data-act="pay-retry">আবার চেষ্টা</button></div></div>`);
+  }
+}
+
+/* ---------- photo helper: shrink before upload ---------- */
+function shrinkImage(file, max=900){
+  return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>{ const img=new Image(); img.onload=()=>{
+    const s=Math.min(1,max/Math.max(img.width,img.height)), c=document.createElement('canvas'); c.width=Math.round(img.width*s); c.height=Math.round(img.height*s);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height); res(c.toDataURL('image/jpeg',0.72)); }; img.onerror=rej; img.src=r.result; }; r.onerror=rej; r.readAsDataURL(file); });
+}
+
+/* ---------- chrome: header, navigation ---------- */
+const LOGO = `<a class="logo" href="#/"><svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="19" r="12" fill="#D93D27"/><path d="M17 7c-2-3-5-3-7-2 3 0 5 1 7 3 2-2 4-3 7-3-2-1-5-1-7 2z" fill="#1E8A4C"/><path d="M10 21c2 4 9 5 13 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M21 18l2.4 3-3.6.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Reroute <span class="full">Agro</span></span></a>`;
+const NAV_TRADER = [['#/home','🏠','ড্যাশবোর্ড'],['#/market','🛒','বাজার'],['#/listings','🧺','আমার লিস্টিং'],['#/deals','🤝','অফার ও অর্ডার'],['#/transport','🚚','পরিবহন'],['#/books','📒','মজুদ ও হিসাব'],['#/prices','💡','দাম ও পরামর্শ'],['#/rewards','⭐','পয়েন্ট ও ওয়ালেট'],['#/account','👤','অ্যাকাউন্ট']];
+const BNAV_TRADER = [['#/home','🏠','হোম'],['#/market','🛒','বাজার'],['#/deals','🤝','লেনদেন'],['#/transport','🚚','পরিবহন']];
+const NAV_ADMIN = [['#/admin','📊','সারাংশ'],['#/admin/bookings','🚚','ট্রাক বুকিং'],['#/admin/trucks','🛻','ট্রাক বহর'],['#/admin/users','👥','ব্যবহারকারী'],['#/admin/orders','📦','লেনদেন']];
+function todoCount(){
+  if(!isTrader()) return 0; const id=S.me.id;
+  return (S.offers||[]).filter(o=>['pending','countered'].includes(o.status)&&((o.waiting==='seller'&&o.seller===id)||(o.waiting==='buyer'&&o.buyer===id))).length
+    + (S.orders||[]).filter(o=>(o.status==='awaiting_payment'&&o.buyer===id)||(o.status==='handed_over'&&o.buyer===id)||(o.status==='confirmed'&&o.seller===id&&o.transport==='self')).length
+    + (S.inspections||[]).filter(i=>i.status==='requested'&&i.seller===id).length;
+}
+function renderChrome(){
+  const u=me(), r=routeBase();
+  document.body.classList.toggle('authed',!!u);
+  if(!u){
+    $('#hrow').innerHTML = LOGO+`<div class="hright"><a class="btn btn-soft btn-sm" href="#/market">বাজার</a><a class="btn btn-green btn-sm" href="#/login">লগ ইন</a></div>`;
+    $('#tnav').innerHTML=''; $('#bnav').innerHTML=''; return;
+  }
+  const unread=(S.notifs||[]).filter(n=>!n.read).length, todo=todoCount();
+  $('#hrow').innerHTML = LOGO+`<div class="hright">
+    <a class="chip-user" href="${u.role==='admin'?'#/admin':'#/account'}">${avatar(u)}<span class="nm">${esc(dispName(u))}</span><span class="role ${u.role}">${roleBn(u.role)}</span></a>
+    <button class="iconbtn" data-act="bell" aria-label="নোটিফিকেশন">🔔${unread?`<b>${nf(unread)}</b>`:''}</button>
+    <button class="btn btn-line btn-sm hide-m" data-act="logout">বের হন</button></div>`;
+  const nav = u.role==='admin'?NAV_ADMIN:NAV_TRADER;
+  $('#tnav').innerHTML = `<div class="wrap">${nav.map(([h,i,t])=>`<a href="${h}" class="${r===h?'on':''}">${i} ${t}${h==='#/deals'&&todo?`<span class="cnt">${nf(todo)}</span>`:''}</a>`).join('')}</div>`;
+  const bn = u.role==='admin'?NAV_ADMIN.slice(0,4):BNAV_TRADER;
+  $('#bnav').innerHTML = bn.map(([h,i,t])=>`<a href="${h}" class="${r===h?'on':''}"><b>${i}</b>${t}${h==='#/deals'&&todo?`<span class="cnt">${nf(todo)}</span>`:''}</a>`).join('')
+    + `<button data-act="sheet"><b>☰</b>আরও</button>`;
+  $('#sheet').innerHTML = `<div class="between" style="padding:0 6px 6px"><b>মেনু</b><button class="iconbtn" data-act="sheet" aria-label="মেনু বন্ধ">✕</button></div>` + nav.map(([h,i,t])=>`<a href="${h}" data-act="nav" data-to="${h}"><span>${i}</span>${t}</a>`).join('')+`<a href="#/" data-act="logout"><span>🚪</span>বের হন</a>`;
+}
+function renderBell(){
+  const list=(S.notifs||[]).slice(0,25);
+  $('#npanel').innerHTML = `<div class="between" style="padding:12px 14px"><b>নোটিফিকেশন</b><button class="btn btn-soft btn-sm" data-act="read-all">সব পড়া হয়েছে</button></div>`
+    + (list.length?list.map(n=>`<div class="n ${n.read?'':'unread'}" data-act="notif" data-id="${n.id}" data-link="${n.link||''}">${esc(n.text)}<div class="muted xs">${ago(n.at)}</div></div>`).join(''):`<div class="n muted">কোনো নোটিফিকেশন নেই</div>`);
+}
+const KIND_BANNER = {offer:'',pay:'pay',cancel:'cancel',order:'',transport:'',done:'',inspection:'',spoil:'cancel',stock:'pay',urgent:'pay'};
+function banners(){
+  const list=(S.notifs||[]).filter(n=>!n.read && n.kind in KIND_BANNER).slice(0,2);
+  return list.map(n=>`<div class="banner ${KIND_BANNER[n.kind]}"><div class="grow">${esc(n.text)}</div>
+    ${n.link?`<button class="btn btn-sm btn-ink" data-act="notif" data-id="${n.id}" data-link="${n.link}">দেখুন</button>`:''}
+    <button class="x2" data-act="notif-x" data-id="${n.id}" aria-label="সরান">✕</button></div>`).join('');
+}
+const V = {};
+
+/* ---------- minimal home (before login) ---------- */
+V.home = () => `<section class="hero"><div>
+  <div class="logo-big">🍅</div>
+  <h1>কৃষকের মাল, পাইকারের বাজার</h1>
+  <p class="lead">সরাসরি কেনাবেচা ও দরদাম, নিরাপদ পেমেন্ট, আর নিজস্ব ট্রাকে কম খরচে পরিবহন।</p>
+  <div class="cta"><button class="btn btn-green" data-act="pick-role" data-role="farmer">🧑‍🌾 আমি কৃষক</button>
+    <button class="btn btn-blue" data-act="pick-role" data-role="paikar">🚚 আমি পাইকার</button></div>
+  <p style="margin-top:16px"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন</a></p>
+  <div class="feat"><span>🤝 সরাসরি দরদাম</span><span>🔒 নিরাপদ পেমেন্ট</span><span>🚚 নিজস্ব ট্রাক</span></div>
+</div></section>`;
+
+/* ---------- login & register ---------- */
+let loginRole='farmer';
+V.login = () => {
+  const demo = {farmer:['f1','f2','f5'], paikar:['p1','p2','p4'], admin:['a1']}[loginRole];
+  const names = {f1:['রহিম উদ্দিন','কৃষক, রাজশাহী: নতুন অফার ও পরিদর্শনের অনুরোধ আছে'],f2:['করিমা বেগম','কৃষক, নাটোর'],f5:['হালিমা খাতুন','কৃষক, রাজশাহী: জরুরি বিক্রি চলছে'],
+    p1:['করিম ট্রেডার্স','পাইকার, ঢাকা: পাল্টা দামের উত্তর দিতে হবে'],p2:['ঢাকা ফ্রেশ হাব','পাইকার, ঢাকা: প্লাস সদস্য'],p4:['বগুড়া সবজি ঘর','পাইকার, বগুড়া: মাল পথে আছে'],a1:['Reroute অপারেশন টিম','ট্রাক বুকিং, বহর ও প্ল্যাটফর্মের হিসাব']};
+  return `<div style="max-width:520px;margin:10px auto">
+    <h1>লগ ইন</h1><p class="muted" style="margin:4px 0 14px">আপনি কে, বাছুন</p>
+    <div class="choice c3">${[['farmer','🧑‍🌾 কৃষক'],['paikar','🚚 পাইকার'],['admin','🛠️ অপারেশন']].map(([k,t])=>`<button class="opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${t}</strong></button>`).join('')}</div>
+    ${loginRole!=='admin'?`<div class="panel" style="margin-top:14px"><label class="field" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" inputmode="tel" placeholder="01XXXXXXXXX"></label>
+      <button class="btn btn-green btn-wide" style="margin-top:10px" data-act="login-phone">ঢুকুন</button>
+      <p class="muted sm" style="margin-top:8px">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p></div>`:''}
+    <h3 style="margin:18px 0 6px">ডেমো অ্যাকাউন্ট, এক চাপে ঢুকুন</h3>
+    ${demo.map(id=>`<button class="opt" style="width:100%;margin-top:8px" data-act="login" data-id="${id}"><strong>${names[id][0]}</strong><span class="muted">${names[id][1]}</span></button>`).join('')}
+  </div>`;
+};
+V.register = () => `<div style="max-width:520px;margin:10px auto"><h1>নতুন অ্যাকাউন্ট</h1>
+  <div class="choice c2" style="margin-top:12px">${[['farmer','🧑‍🌾 কৃষক'],['paikar','🚚 পাইকার']].map(([k,t])=>`<button class="opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${t}</strong></button>`).join('')}</div>
+  <div class="panel" style="margin-top:12px">
+    <label class="field" style="margin-top:0"><span>নাম</span><input id="rg-name"></label>
+    ${loginRole==='paikar'?`<label class="field"><span>আড়ত / ব্যবসার নাম</span><input id="rg-biz"></label>`:''}
+    <label class="field"><span>মোবাইল নম্বর</span><input id="rg-phone" inputmode="tel" placeholder="01XXXXXXXXX"></label>
+    <div class="grid2" style="gap:10px"><label class="field"><span>জেলা</span><select id="rg-place">${Object.entries(PLACES).map(([k,p])=>`<option value="${k}">${p.n}</option>`).join('')}</select></label>
+    <label class="field"><span>উপজেলা / বাজার</span><input id="rg-area"></label></div>
+    <button class="btn btn-green btn-wide" style="margin-top:14px" data-act="register">অ্যাকাউন্ট খুলুন</button>
+    <p class="muted sm" style="margin-top:8px">শুধু কৃষক ও পাইকারদের জন্য পাইকারি প্ল্যাটফর্ম। সর্বনিম্ন অর্ডার ${monTxt(S.config.min_order)}।</p></div></div>`;
+
+/* ---------- market: all public listings with search & filters ---------- */
+const F = {q:'',crop:'all',place:'all',max:'',min:'',seller:'all',sold:false,sort:'new'};
+function listingPic(l){
+  const c=CROPS[l.crop];
+  return `<div class="pic" style="--c:${c.c}">${l.photo_count?`<img src="/api/listings/${l.id}/photo/0" alt="${c.n}" loading="lazy">`:`<span class="emo">${c.i}</span><span class="nophoto">ছবি দেওয়া হয়নি</span>`}
+    ${l.urgent?`<span class="rib">জরুরি −${nf(l.urgent*100)}%</span>`:''}${l.status==='sold_out'?'<span class="rib r2">বিক্রি শেষ</span>':''}
+    <span class="fresh ${freshCls(l.days_left)}">⏳ ${freshTxt(l.days_left)}</span></div>`;
+}
+function transportHint(l){
+  const u=me(); if(!u||u.role==='admin'||u.id===l.uid) return '';
+  const s=user(l.uid), q=myQuote(s.place,u.place,Math.max(l.moq,Math.min(l.available,2000)));
+  return `<div class="tline">🚚 ${PLACES[u.place].n} পর্যন্ত Reroute ট্রাকে আনুমানিক ${tk(q.total)} (${monTxt(Math.max(l.moq,Math.min(l.available,2000)))}), বাজারে ট্রাক ভাড়া ${tk(q.offline)}</div>`;
+}
+function lcard(l){
+  const c=CROPS[l.crop], s=user(l.uid);
+  return `<a class="lcard" href="#/listing/${l.id}">${listingPic(l)}<div class="info">
+    <div class="between"><b>${c.n}</b><span class="pill p-grey">গ্রেড ${l.grade}</span></div>
+    <div class="price">${tk(l.eff_price,1)}<small>/কেজি</small>${l.urgent?`<s>${tk(l.price,1)}</s>`:''}</div>
+    <div class="muted sm">আছে ${monTxt(l.available)} · সর্বনিম্ন ${monTxt(l.moq)}</div>
+    <div class="sm">${s.role==='paikar'?'🏪':'🧑‍🌾'} ${esc(dispName(s))} ${s.verified?'<span class="ver">✔</span>':''} ${stars(s)}</div>
+    <div class="muted sm">📍 ${s.area?esc(s.area)+', ':''}${PLACES[s.place].n}</div>
+    ${transportHint(l)}</div></a>`;
+}
+V.market = () => {
+  let list=(S.listings||[]).filter(l=>l.status==='active'||(F.sold&&l.status==='sold_out'));
+  list=list.filter(l=>{ const s=user(l.uid), c=CROPS[l.crop];
+    if(F.crop!=='all'&&l.crop!==F.crop) return false;
+    if(F.place!=='all'&&s.place!==F.place) return false;
+    if(F.max&&l.eff_price>+F.max) return false;
+    if(F.min&&l.available<+F.min*MON) return false;
+    if(F.seller!=='all'&&s.role!==F.seller) return false;
+    if(F.q&&!(c.n+dispName(s)+PLACES[s.place].n+(s.area||'')+(l.quality||'')).includes(F.q)) return false;
+    return true; });
+  const sorters={new:(a,b)=>b.created-a.created, cheap:(a,b)=>a.eff_price-b.eff_price, fresh:(a,b)=>b.days_left-a.days_left,
+    near:(a,b)=>me()?km(user(a.uid).place,me().place)-km(user(b.uid).place,me().place):0, big:(a,b)=>b.available-a.available};
+  list.sort(sorters[F.sort]);
+  return `<div class="phead"><div><h1>🛒 বাজার</h1><p class="muted sm">কৃষক ও পাইকারদের তোলা সব মাল। শুধু পাইকারি: সর্বনিম্ন অর্ডার ${monTxt(S.config.min_order)}</p></div>
+    ${isTrader()?`<a class="btn btn-green" href="#/listings/new">+ মাল বিক্রির জন্য দিন</a>`:(!me()?`<a class="btn btn-green" href="#/login">কিনতে বা বেচতে লগ ইন</a>`:'')}</div>
+    <div class="filters">
+      <label class="q"><span>খুঁজুন</span><input data-f="q" value="${esc(F.q)}" placeholder="ফসল, বিক্রেতা, এলাকা..."></label>
+      <label><span>জেলা</span><select data-f="place"><option value="all">সব জেলা</option>${Object.entries(PLACES).map(([k,p])=>`<option value="${k}" ${F.place===k?'selected':''}>${p.n}</option>`).join('')}</select></label>
+      <label><span>সর্বোচ্চ দাম (৳/কেজি)</span><input data-f="max" type="number" min="0" value="${F.max}"></label>
+      <label><span>অন্তত কত মণ</span><input data-f="min" type="number" min="0" value="${F.min}"></label>
+      <label><span>বিক্রেতা</span><select data-f="seller">${[['all','সবাই'],['farmer','কৃষক'],['paikar','পাইকার']].map(([k,t])=>`<option value="${k}" ${F.seller===k?'selected':''}>${t}</option>`).join('')}</select></label>
+      <label><span>সাজান</span><select data-f="sort">${[['new','নতুন আগে'],['cheap','কম দাম আগে'],['fresh','বেশি তাজা আগে'],['near','কাছের আগে'],['big','বেশি পরিমাণ আগে']].map(([k,t])=>`<option value="${k}" ${F.sort===k?'selected':''}>${t}</option>`).join('')}</select></label>
+    </div>
+    <div class="chips">${[['all','সব ফসল'],...Object.entries(CROPS).map(([k,c])=>[k,c.i+' '+c.n])].map(([k,t])=>`<button class="chip ${F.crop===k?'on':''}" data-act="f-crop" data-v="${k}">${t}</button>`).join('')}
+      <label class="chip"><input type="checkbox" data-f="sold" ${F.sold?'checked':''}> বিক্রি শেষ-ও দেখাও</label></div>
+    <p class="muted sm" style="margin-bottom:8px">${nf(list.length)}টি লিস্টিং</p>
+    <div class="lgrid">${list.map(lcard).join('')||'<div class="empty" style="grid-column:1/-1">এই খোঁজে কিছু পাওয়া যায়নি। ফিল্টার বদলান।</div>'}</div>`;
+};
+
+/* ---------- listing detail ---------- */
+V.listing = id => {
+  const l=listing(id); if(!l) return `<div class="empty">লিস্টিং পাওয়া যায়নি বা বন্ধ হয়ে গেছে। <a href="#/market">বাজারে ফিরুন</a></div>`;
+  const c=CROPS[l.crop], s=user(l.uid), u=me(), mine=u&&u.id===l.uid, harvest=Date.now()-(S.config?0:0);
+  const photos=Array.from({length:l.photo_count},(_,i)=>`<img src="/api/listings/${l.id}/photo/${i}" alt="${c.n} ছবি ${bd(i+1)}" style="border-radius:12px;max-height:360px;width:100%;object-fit:cover">`);
+  const market=MARKET_DEMO[s.place][l.crop];
+  let tq='';
+  if(u&&!mine&&u.role!=='admin'){
+    const kg=Math.max(l.moq,Math.min(l.available,2000)), q=myQuote(s.place,u.place,kg);
+    tq=`<div class="panel"><h3>🚚 আপনার কাছে আনার খরচ (আনুমানিক)</h3><p class="muted sm">${PLACES[s.place].n} → ${PLACES[u.place].n}, ${nf(q.km)} কিমি, ${monTxt(kg)} ধরে</p>
+      ${bill([[`${q.vehicle_name}${q.shared?' (শেয়ার্ড)':''}`,tk(q.fare)],['Reroute সেবা চার্জ',tk(q.service)],['মোট ট্রাক ভাড়া',tk(q.total),'tot'],['বাজারে নিজে ট্রাক ভাড়া করলে',tk(q.offline)]])}
+      <div class="good" style="margin-top:8px">সাশ্রয় ${tk(q.saving)}, পৌঁছাতে প্রায় ${nf(q.eta,1)} ঘণ্টা। ভাড়া চাইলে বিক্রেতার সাথে অর্ধেক অর্ধেক ভাগ করা যায়।</div></div>`;
+  }
+  const insp=(S.inspections||[]).find(i=>i.listing===l.id&&u&&i.buyer===u.id&&['requested','scheduled','done'].includes(i.status));
+  return `<p><a href="#/market">← বাজার</a></p>
+  <div class="grid2" style="margin-top:10px;align-items:start">
+    <div>${photos.length?`<div class="stack">${photos.join('')}</div>`:`<div class="pic" style="--c:${c.c};height:260px;border-radius:16px"><span class="emo" style="font-size:6rem">${c.i}</span><span class="nophoto">বিক্রেতা ছবি দেননি</span></div>`}
+      <div class="panel" style="margin-top:14px"><h3>বিক্রেতা</h3><div style="margin-top:8px">${personRow(s)}</div></div></div>
+    <div><div class="panel">
+      <div class="between"><h1>${c.i} ${c.n}</h1><span>${pill(l.status==='active'?['চালু','p-green']:l.status==='sold_out'?['বিক্রি শেষ','p-red']:l.status==='paused'?['বন্ধ রাখা','p-grey']:['বন্ধ','p-grey'])}</span></div>
+      <div class="price" style="font-size:1.8rem;margin-top:6px">${tk(l.eff_price,1)}<small>/কেজি</small>${l.urgent?`<s>${tk(l.price,1)}</s>`:''} <span class="muted sm">(${tk(l.eff_price*MON)}/মণ)</span></div>
+      ${l.urgent?`<div class="danger" style="margin-top:8px">🚨 জরুরি বিক্রি: নষ্ট হওয়ার আগে ${nf(l.urgent*100)}% কম দামে</div>`:''}
+      <dl class="kv" style="margin-top:12px">
+        <dt>বিক্রির জন্য আছে</dt><dd>${kgMon(l.available)}</dd>
+        ${l.reserved?`<dt>অর্ডারে আটকে আছে</dt><dd>${kgMon(l.reserved)}</dd>`:''}
+        <dt>এ পর্যন্ত বিক্রি</dt><dd>${kgMon(l.sold)}</dd>
+        <dt>সর্বনিম্ন অর্ডার</dt><dd>${kgMon(l.moq)}</dd>
+        <dt>গ্রেড</dt><dd>${l.grade}</dd>
+        <dt>তোলা হয়েছে</dt><dd>${dateBn(l.harvest)}</dd>
+        <dt>তাজা থাকবে</dt><dd style="color:var(--${freshCls(l.days_left)==='ok'?'green':freshCls(l.days_left)==='mid'?'gold':'red'})">${freshTxt(l.days_left)}</dd>
+        <dt>জায়গা</dt><dd>${s.area?esc(s.area)+', ':''}${PLACES[s.place].n}</dd>
+        <dt>পরিবহন</dt><dd>Reroute ট্রাক বা নিজের ট্রাক</dd></dl>
+      ${l.quality?`<div class="note" style="margin-top:12px"><b>মান:</b> ${esc(l.quality)}</div>`:''}
+      <p class="muted sm" style="margin-top:8px">${PLACES[s.place].n}-এ আজকের বাজার দর আনুমানিক ${tk(market)}/কেজি <span class="demo-tag">ডেমো অনুমান</span></p>
+      ${mine?`<div class="row wrap-it" style="margin-top:14px"><a class="btn btn-ink" href="#/listings">লিস্টিং পরিচালনা</a></div>`
+        :!u?`<a class="btn btn-green btn-wide" style="margin-top:14px" href="#/login">অফার দিতে লগ ইন করুন</a>`
+        :u.role==='admin'?'':l.status!=='active'?`<div class="warn" style="margin-top:14px">এই মাল এখন বিক্রি হচ্ছে না।</div>`
+        :`<button class="btn btn-green btn-wide" style="margin-top:14px" data-act="offer-open" data-id="${l.id}">অফার / অর্ডার দিন</button>
+          ${insp?`<a class="btn btn-line btn-wide" style="margin-top:8px" href="#/inspection/${insp.id}">পরিদর্শন: ${INSP_ST[insp.status][0]}</a>`
+                :`<button class="btn btn-line btn-wide" style="margin-top:8px" data-act="inspect-open" data-id="${l.id}">🔍 আগে মাল দেখতে চাই (ভিডিও / সরাসরি)</button>`}
+          <p class="muted sm" style="margin-top:8px">অফার দিলে বিক্রেতা রাজি না হওয়া পর্যন্ত কিছু নিশ্চিত হয় না, টাকাও কাটে না।</p>`}
+    </div>${tq}</div></div>`;
+};
+
+/* ---------- public profile ---------- */
+let PROFILE=null;
+V.profile = id => {
+  if(!PROFILE||PROFILE.user.id!==id){ api('/users/'+id).then(p=>{ PROFILE=p; render(); }).catch(()=>{}); return `<div class="empty">লোড হচ্ছে...</div>`; }
+  const p=PROFILE, u=p.user, months=Math.max(1,Math.round((Date.now()-u.joined)/(30*DAY)));
+  return `<div class="panel"><div class="row">${avatar(u,true)}<div class="grow"><h1>${esc(dispName(u))}</h1>
+      <div class="muted">${roleBn(u.role)}${u.role==='paikar'?', মালিক '+esc(u.name):''} · ${u.area?esc(u.area)+', ':''}${PLACES[u.place].n}</div>
+      <div style="margin-top:4px">${verBadge(u)||'<span class="pill p-grey">যাচাই হয়নি</span>'} ${stars(u)}</div></div></div>
+    <div class="grid4" style="margin-top:14px">
+      <div class="kpi"><span class="muted sm">সম্পূর্ণ লেনদেন</span><strong>${nf(p.completed)}টি</strong></div>
+      <div class="kpi"><span class="muted sm">মোট পরিমাণ</span><strong>${monTxt(p.kg)}</strong></div>
+      <div class="kpi"><span class="muted sm">বাতিল করেছেন</span><strong>${nf(p.cancelled)}টি</strong></div>
+      <div class="kpi"><span class="muted sm">Reroute-এ</span><strong>${nf(months)} মাস</strong></div></div>
+    <p class="muted sm" style="margin-top:10px">🔒 ফোন নম্বর ও লেনদেনের বিস্তারিত গোপন। অর্ডারের পেমেন্ট হলে দুজনে নম্বর পান।</p></div>
+  <div class="grid2" style="margin-top:14px;align-items:start">
+    <div class="panel"><h3>চালু লিস্টিং (${nf(p.listings.length)})</h3>${p.listings.map(l=>`<a class="item" href="#/listing/${l.id}" style="text-decoration:none;color:inherit">${cropIco(l.crop)}<div class="grow"><b>${CROPS[l.crop].n}</b><div class="muted sm">${monTxt(l.available)} · ${tk(l.eff_price,1)}/কেজি · ${freshTxt(l.days_left)}</div></div><span>›</span></a>`).join('')||'<p class="muted" style="margin-top:8px">এখন কোনো লিস্টিং নেই</p>'}</div>
+    <div class="panel"><h3>রিভিউ (${nf(u.reviews)})</h3>${p.reviews.map(r=>`<div class="item" style="display:block"><span class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span> <b>${esc(r.from_role==='paikar'?r.from_biz:r.from_name)}</b>${r.text?`<div>${esc(r.text)}</div>`:''}<div class="muted xs">${ago(r.at)}</div></div>`).join('')||'<p class="muted" style="margin-top:8px">এখনো রিভিউ নেই</p>'}</div></div>`;
+};
+
+/* ---------- AI model page (real data, for judges) ---------- */
+const AIS={market:'rajshahi',product:'lentils'};
+const PROD_BN={rice:'চাল',lentils:'মসুর ডাল',oil:'ভোজ্য তেল',wheat_flour:'আটা'};
+V.ai = () => {
+  if(!FD){ api('/ai/summary').then(d=>{FD=d;render();}).catch(()=>{}); return `<div class="empty">লোড হচ্ছে...</div>`; }
+  const M=FD.metrics, s=FD.series[AIS.market][AIS.product], last=s.close[s.close.length-1], ch=(s.forecast.price/last-1)*100;
+  const all=[...s.dates,s.forecast.month], vals=[...s.close,s.forecast.price,...Object.values(s.backtest)];
+  const mn=Math.floor(Math.min(...vals)*.97), mx=Math.ceil(Math.max(...vals)*1.03), W=720,H=260,pl=44,pr=20,pt=12,pb=30;
+  const x=i=>pl+i*(W-pl-pr)/(all.length-1), y=v=>pt+(mx-v)*(H-pt-pb)/(mx-mn);
+  let g=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:520px" role="img" aria-label="দামের চার্ট">`;
+  for(let k=0;k<=4;k++){ const v=mn+(mx-mn)*k/4; g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" style="stroke:var(--line)"/><text x="${pl-6}" y="${y(v)+4}" text-anchor="end" font-size="11" style="fill:var(--muted)">${nf(v)}</text>`; }
+  all.forEach((d,i)=>{ if(i%4===0||i===all.length-1){ const [yy,mm]=d.split('-'); g+=`<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="11" style="fill:var(--muted)">${MONTHS[+mm-1]} ${bd(yy.slice(2))}</text>`; } });
+  g+=`<polyline fill="none" style="stroke:var(--ink)" stroke-width="2.5" points="${s.close.map((v,i)=>`${x(i)},${y(v)}`).join(' ')}"/>`;
+  const bt=s.dates.map((d,i)=>s.backtest[d]!=null?`${x(i)},${y(s.backtest[d])}`:null).filter(Boolean);
+  if(bt.length) g+=`<polyline fill="none" style="stroke:var(--green)" stroke-width="2.5" stroke-dasharray="6 5" points="${bt.join(' ')}"/>`;
+  g+=`<circle cx="${x(all.length-1)}" cy="${y(s.forecast.price)}" r="6" style="fill:var(--red)"/></svg>`;
+  return `<div class="phead"><div><h1>🤖 AI দামের মডেল</h1><p class="muted">আসল ডেটায় প্রশিক্ষিত ও যাচাই করা: Food Commodity Price (OHLC) Dataset of Bangladesh</p></div></div>
+    <div class="grid4"><div class="kpi"><span class="muted sm">প্রশিক্ষণ</span><strong>${nf(M.markets)}টি বাজার</strong><span class="muted sm">২০০৮–২০২২</span></div>
+      <div class="kpi"><span class="muted sm">অদেখা সময়ে পরীক্ষা</span><strong>২০২৩–২০২৫</strong><span class="muted sm">${nf(M.test_rows)}টি পূর্বাভাস</span></div>
+      <div class="kpi"><span class="muted sm">দাম বাড়বে না কমবে</span><strong>${nf(M.direction_accuracy_pct,1)}% সঠিক</strong></div>
+      <div class="kpi"><span class="muted sm">গড় ভুল</span><strong>${nf(M.mape_model,2)}%</strong><span class="muted sm">সাধারণ অনুমানে ${nf(M.mape_naive,2)}%</span></div></div>
+    <div class="panel" style="margin-top:14px"><div class="row wrap-it">
+      <select data-ai="market">${Object.keys(FD.series).map(k=>`<option value="${k}" ${AIS.market===k?'selected':''}>${PLACES[k].n}</option>`).join('')}</select>
+      <select data-ai="product">${Object.keys(PROD_BN).map(k=>`<option value="${k}" ${AIS.product===k?'selected':''}>${PROD_BN[k]}</option>`).join('')}</select></div>
+      <p style="margin:10px 0"><b>${PLACES[AIS.market].n}-এ ${PROD_BN[AIS.product]}:</b> পরের মাসে ${tk(s.forecast.price,1)}/কেজি (এখন ${tk(last,1)}, ${ch>=0?'বাড়বে':'কমবে'} ${nf(Math.abs(ch),1)}%)</p>
+      <div class="scroll">${g}</div><p class="muted sm">কালো: আসল দাম · সবুজ ডটেড: মডেলের পূর্বাভাস (যাচাই) · লাল: পরের মাস</p></div>
+    <p class="warn" style="margin-top:14px">এই ডেটাসেটে সবজি নেই। তাই অ্যাপের সবজির বাজারদর এখন ডেমো অনুমান। পাইলটে কৃষি বিপণন অধিদপ্তরের সবজির দৈনিক দামে এই একই মডেল চলবে।</p>`;
+};
+/* ---------- dashboard ---------- */
+function myTodos(){
+  const id=me().id, T=[];
+  (S.offers||[]).forEach(o=>{ const c=CROPS[o.crop].n;
+    if(o.status==='pending'&&o.waiting==='seller'&&o.seller===id) T.push(['📩',`${dispName(user(o.buyer))} ${monTxt(o.qty)} ${c} কিনতে চান, ${tk(o.price,1)}/কেজি`,'রাজি, পাল্টা দাম বা না বলুন',`#/offer/${o.id}`]);
+    if(o.status==='countered'&&o.waiting==='buyer'&&o.buyer===id) T.push(['↔️',`${dispName(user(o.seller))} পাল্টা দাম দিয়েছেন: ${tk(o.price,1)}/কেজি`,'রাজি হলে পেমেন্ট করুন',`#/offer/${o.id}`]); });
+  (S.orders||[]).forEach(o=>{ const c=CROPS[o.crop].n, b=(S.bookings||[]).find(x=>x.id===o.booking);
+    if(o.status==='awaiting_payment'&&o.buyer===id) T.push(['💳',`${monTxt(o.qty)} ${c}: ${tk(o.buyer_total)} পেমেন্ট করুন`,'পেমেন্ট হলে অর্ডার নিশ্চিত হবে',`#/order/${o.id}`]);
+    if(o.status==='confirmed'&&o.seller===id&&o.transport==='self') T.push(['📦',`${monTxt(o.qty)} ${c} পাইকারকে বুঝিয়ে দিন`,'দিয়ে "হস্তান্তর করেছি" চাপুন',`#/order/${o.id}`]);
+    if(o.status==='confirmed'&&o.seller===id&&b&&b.status==='pickup_scheduled') T.push(['🚚',`ট্রাক আসছে: ${b.pickup_time||''}`,`${monTxt(o.qty)} ${c} তৈরি রাখুন, তুলে দিয়ে নিশ্চিত করুন`,`#/order/${o.id}`]);
+    if(o.status==='handed_over'&&o.buyer===id) T.push(['✅',`${monTxt(o.qty)} ${c} পৌঁছালে বুঝে নিন`,'"মাল বুঝে পেয়েছি" চাপলে বিক্রেতা টাকা পাবেন',`#/order/${o.id}`]);
+    if(o.status==='completed'&&!(S.rated||[]).includes(o.id)&&o.completed_at>Date.now()-14*DAY) T.push(['⭐',`${dispName(user(o.buyer===id?o.seller:o.buyer))}-কে রেটিং দিন`,`${monTxt(o.qty)} ${c}`,`#/order/${o.id}`]); });
+  (S.inspections||[]).forEach(i=>{ if(i.status==='requested'&&i.seller===id) T.push(['🔍',`${dispName(user(i.buyer))} মাল দেখতে চান (${i.kind==='video'?'ভিডিও':'সরাসরি'})`,esc(i.pref),`#/inspection/${i.id}`]); });
+  return T;
+}
+function myAlerts(){
+  const id=me().id, A=[];
+  (S.listings||[]).filter(l=>l.uid===id&&l.status==='active'&&l.available>0).forEach(l=>{ const c=CROPS[l.crop].n;
+    if(l.days_left<=1) A.push(['spoil',`🥀 ${c} ${l.days_left<=0?'নষ্ট হতে শুরু করেছে':'কাল থেকে নষ্ট হতে পারে'}। ${l.urgent?'জরুরি বিক্রি চালু আছে।':'দাম কমিয়ে জরুরি বিক্রি দিন।'}`,l]);
+    else if(l.available<2*l.moq) A.push(['low',`⚠️ ${c}-এর লিস্টিংয়ে আর মাত্র ${monTxt(l.available)} বাকি`,l]); });
+  (S.listings||[]).filter(l=>l.uid===id&&l.status==='sold_out').forEach(l=>A.push(['low',`📦 ${CROPS[l.crop].n} পুরো বিক্রি/বুক হয়ে গেছে। আরও থাকলে পরিমাণ যোগ করুন।`,l]));
+  return A;
+}
+V.dash = () => {
+  const u=me(), T=myTodos(), A=myAlerts(), P=S.pnl, active=(S.listings||[]).filter(l=>l.uid===u.id&&l.status==='active').length;
+  const open=(S.orders||[]).filter(o=>['awaiting_payment','confirmed','handed_over'].includes(o.status)).length;
+  return `<div class="phead"><div><p class="muted">আসসালামু আলাইকুম,</p><h1>${esc(u.name)} ${u.verified?'<span class="ver">✔ যাচাইকৃত</span>':''}</h1>
+    <p class="muted sm">${roleBn(u.role)}${u.role==='paikar'?', '+esc(u.biz):''} · ${u.area?esc(u.area)+', ':''}${PLACES[u.place].n}${u.plus_active?' · ⭐ প্লাস':''}</p></div>
+    <div class="row wrap-it"><a class="btn btn-green" href="#/listings/new">+ মাল বিক্রির জন্য দিন</a><a class="btn btn-blue" href="#/market">🛒 কিনুন</a></div></div>
+    ${A.map(([k,t,l])=>`<div class="alert ${k}"><span class="grow">${t}</span>${k==='spoil'&&!l.urgent?`<button class="btn btn-red btn-sm" data-act="urgent" data-id="${l.id}">জরুরি বিক্রি</button>`:`<a class="btn btn-soft btn-sm" href="#/listings">দেখুন</a>`}</div>`).join('')}
+    <h2 style="margin:6px 0 10px">এখন আপনার কাজ ${T.length?`<span class="cnt">${nf(T.length)}</span>`:''}</h2>
+    ${T.length?T.map(([i,t,d,h])=>`<a class="todo" href="${h}"><span class="ic">${i}</span><div class="grow"><b>${t}</b><div class="muted sm">${d}</div></div><span>›</span></a>`).join('')
+      :`<div class="empty">এখন কোনো কাজ বাকি নেই। নতুন অফার বা অর্ডার এলে এখানে দেখাবে।</div>`}
+    <div class="grid4" style="margin-top:16px">
+      <a class="kpi" href="#/rewards"><span class="muted sm">ওয়ালেট</span><strong>${tk(u.wallet)}</strong></a>
+      <a class="kpi" href="#/rewards"><span class="muted sm">পয়েন্ট</span><strong style="color:var(--gold)">⭐ ${nf(u.pts)}</strong></a>
+      <a class="kpi" href="#/listings"><span class="muted sm">চালু লিস্টিং</span><strong>${nf(active)}টি</strong></a>
+      <a class="kpi" href="#/deals"><span class="muted sm">চলমান অর্ডার</span><strong>${nf(open)}টি</strong></a></div>
+    <div class="panel" style="margin-top:14px"><div class="between"><h3>📒 এ পর্যন্ত লাভ-ক্ষতি</h3><a href="#/books" data-act="books-tab" data-v="pnl">বিস্তারিত</a></div>
+      <div class="grid3" style="margin-top:10px"><div><span class="muted sm">মোট বিক্রি</span><div class="b" style="font-size:1.3rem">${tk(P.revenue)}</div></div>
+      <div><span class="muted sm">মোট খরচ</span><div class="b" style="font-size:1.3rem">${tk(P.expense)}</div></div>
+      <div><span class="muted sm">${P.exact?'লাভ':'আনুমানিক লাভ'}</span><div class="b" style="font-size:1.3rem;color:var(--${P.profit>=0?'green':'red'})">${tk(P.profit+0)}</div></div></div>
+      ${!P.exact?`<p class="warn sm" style="margin-top:8px">${monTxt(P.unknown_cost_qty)} মালের উৎপাদন/কেনা খরচ দেওয়া নেই, তাই লাভ সম্পূর্ণ নয়।</p>`:''}</div>
+    <div class="grid3" style="margin-top:14px">
+      <a class="kpi" href="#/prices"><span class="muted sm">💡 দাম ও পরামর্শ</span><strong style="font-size:1rem">কোথায় বেচলে/কিনলে লাভ</strong></a>
+      <a class="kpi" href="#/transport"><span class="muted sm">🚚 পরিবহন</span><strong style="font-size:1rem">কম খরচে ট্রাক বুক করুন</strong></a>
+      <a class="kpi" href="#/books"><span class="muted sm">📦 মজুদ</span><strong style="font-size:1rem">আমার কাছে কী মাল আছে</strong></a></div>`;
+};
+
+/* ---------- my listings ---------- */
+V.listings = () => {
+  const u=me(), mine=(S.listings||[]).filter(l=>l.uid===u.id).sort((a,b)=>({active:0,sold_out:1,paused:2,closed:3}[a.status]-{active:0,sold_out:1,paused:2,closed:3}[b.status])||b.created-a.created);
+  return `<div class="phead"><div><h1>🧺 আমার লিস্টিং</h1><p class="muted sm">বাজারে আপনার মাল। অর্ডার এলে পরিমাণ নিজে থেকেই কমে যায়।</p></div><a class="btn btn-green" href="#/listings/new">+ নতুন লিস্টিং</a></div>
+  ${mine.length?mine.map(l=>{ const c=CROPS[l.crop], pend=(S.offers||[]).filter(o=>o.listing===l.id&&['pending','countered'].includes(o.status)).length;
+    const st={active:['চালু','p-green'],sold_out:['বিক্রি শেষ','p-red'],paused:['সাময়িক বন্ধ','p-grey'],closed:['বন্ধ','p-grey']}[l.status];
+    return `<div class="panel"><div class="row">${cropIco(l.crop)}<div class="grow"><div class="row wrap-it"><b>${c.n}</b>${pill(st)}${l.urgent?'<span class="pill p-red">জরুরি</span>':''}${pend?`<a class="pill p-blue" href="#/deals">${nf(pend)}টি অফার</a>`:''}</div>
+      <div class="muted sm">${tk(l.eff_price,1)}/কেজি · সর্বনিম্ন ${monTxt(l.moq)} · গ্রেড ${l.grade} · ${l.status==='closed'?'':freshTxt(l.days_left)}</div></div>
+      <a class="btn btn-soft btn-sm" href="#/listing/${l.id}">দেখুন</a></div>
+      <div class="grid4" style="margin-top:10px;gap:8px"><div><span class="muted xs">বিক্রির জন্য আছে</span><div class="b">${monTxt(l.available)}</div></div>
+        <div><span class="muted xs">অর্ডারে আটকে</span><div class="b">${monTxt(l.reserved)}</div></div><div><span class="muted xs">বিক্রি হয়েছে</span><div class="b">${monTxt(l.sold)}</div></div>
+        <div><span class="muted xs">ছবি</span><div class="b">${nf(l.photo_count)}টি</div></div></div>
+      ${l.status!=='closed'?`<div class="row wrap-it" style="margin-top:12px">
+        <button class="btn btn-line btn-sm" data-act="l-price" data-id="${l.id}">দাম বদলান</button>
+        <button class="btn btn-line btn-sm" data-act="l-qty" data-id="${l.id}">পরিমাণ বাড়ান/কমান</button>
+        ${l.status==='active'?`<button class="btn btn-line btn-sm" data-act="l-status" data-id="${l.id}" data-v="paused">সাময়িক বন্ধ</button>`:l.status==='paused'?`<button class="btn btn-line btn-sm" data-act="l-status" data-id="${l.id}" data-v="active">আবার চালু</button>`:''}
+        ${l.status==='active'&&!l.urgent?`<button class="btn btn-red btn-sm" data-act="urgent" data-id="${l.id}">🚨 জরুরি বিক্রি</button>`:''}
+        <button class="btn btn-soft btn-sm" data-act="l-status" data-id="${l.id}" data-v="closed">লিস্টিং বন্ধ করুন</button></div>`:''}</div>`; }).join('')
+  :`<div class="empty">এখনো কোনো লিস্টিং নেই। <a href="#/listings/new">মাল বিক্রির জন্য দিন</a></div>`}`;
+};
+
+/* ---------- new listing ---------- */
+let NL=null;
+function nlReset(){ NL={crop:'tomato',mon:25,price:null,moq:5,grade:'A',quality:'',harvest:0,cost:'',photos:[]}; }
+V.newListing = () => {
+  if(!NL) nlReset();
+  const u=me(), isP=u.role==='paikar', inv=(S.inventory||[]).filter(r=>r.unlisted>0);
+  const crops = isP ? inv.map(r=>r.crop) : Object.keys(CROPS);
+  if(isP&&!crops.length) return `<h1>নতুন লিস্টিং</h1><div class="empty" style="margin-top:12px">পাইকার হিসেবে আপনার মজুদে থাকা মালই বিক্রির জন্য দিতে পারবেন। এখন তালিকার বাইরে কোনো মজুদ নেই।<br><a href="#/books">মজুদ দেখুন</a> বা <a href="#/market">মাল কিনুন</a></div>`;
+  if(!crops.includes(NL.crop)) NL.crop=crops[0];
+  const mk=MARKET_DEMO[u.place][NL.crop]; if(NL.price===null) NL.price=mk;
+  const invRow=(S.inventory||[]).find(r=>r.crop===NL.crop), maxMon=isP?Math.floor(invRow.unlisted/MON):null;
+  return `<div style="max-width:640px;margin:0 auto"><p><a href="#/listings">← আমার লিস্টিং</a></p><h1 style="margin-top:6px">নতুন লিস্টিং</h1>
+  <div class="panel" style="margin-top:12px">
+    <div class="field" style="margin-top:0"><span>কোন ফসল?</span><div class="choice c4">${crops.map(k=>`<button class="opt cropbtn ${NL.crop===k?'on':''}" data-act="nl-crop" data-v="${k}"><b>${CROPS[k].i}</b>${CROPS[k].n}</button>`).join('')}</div></div>
+    <div class="grid2" style="gap:12px">
+      <label class="field"><span>কত মণ বিক্রি করবেন?${isP?` (মজুদে আছে ${nf(maxMon)} মণ)`:''}</span><input data-nl="mon" type="number" min="5" ${isP?`max="${maxMon}"`:''} value="${NL.mon}"></label>
+      <label class="field"><span>দাম (৳ প্রতি কেজি)</span><input data-nl="price" type="number" min="1" step="0.5" value="${NL.price}"></label>
+      <label class="field"><span>সর্বনিম্ন অর্ডার (মণ, অন্তত ৫)</span><input data-nl="moq" type="number" min="5" value="${NL.moq}"></label>
+      <label class="field"><span>গ্রেড</span><select data-nl="grade">${['A','B','C'].map(g=>`<option ${NL.grade===g?'selected':''}>${g}</option>`).join('')}</select></label>
+      <label class="field"><span>${isP?'কত দিন আগে তোলা মাল':'কবে তোলা হয়েছে'}</span><select data-nl="harvest">${[0,1,2,3,5,7].map(d=>`<option value="${d}" ${+NL.harvest===d?'selected':''}>${d===0?'আজ':d===1?'গতকাল':bd(d)+' দিন আগে'}</option>`).join('')}</select></label>
+      ${isP?'':`<label class="field"><span>উৎপাদন খরচ (৳/কেজি, ঐচ্ছিক)</span><input data-nl="cost" type="number" min="0" step="0.5" value="${NL.cost}" placeholder="লাভ-ক্ষতির হিসাবের জন্য"></label>`}</div>
+    <label class="field"><span>মানের বিবরণ (রং, সাইজ, কীভাবে রাখা)</span><textarea data-nl="quality" maxlength="300" placeholder="যেমন: লাল-পাকা, মাঝারি সাইজ, ক্রেটে রাখা">${esc(NL.quality)}</textarea></label>
+    <div class="field"><span>মালের আসল ছবি (৩টি পর্যন্ত)</span><input type="file" accept="image/*" multiple data-act-change="nl-photo">
+      <div class="thumbs">${NL.photos.map((p,i)=>`<div><img src="${p}" alt=""><button data-act="nl-photo-x" data-v="${i}" aria-label="ছবি সরান">✕</button></div>`).join('')}</div></div>
+    <div id="nl-sum" style="margin-top:14px">${nlSummary()}</div>
+    <button class="btn btn-green btn-wide" style="margin-top:14px" data-act="nl-submit">লিস্টিং প্রকাশ করুন</button></div></div>`;
+};
+function nlSummary(){
+  const u=me(), mk=MARKET_DEMO[u.place][NL.crop], kg=NL.mon*MON, goods=NL.price*kg, fee=platformFee(goods);
+  return `<div class="note">💡 ${PLACES[u.place].n}-এ আজ ${CROPS[NL.crop].n}ের বাজার দর আনুমানিক ${tk(mk)}/কেজি <span class="demo-tag">ডেমো অনুমান</span>। ${NL.price>mk*1.1?'আপনার দাম একটু বেশি, বিক্রি দেরি হতে পারে।':NL.price<mk*0.9?'আপনার দাম বাজারের চেয়ে কম।':'আপনার দাম বাজারের কাছাকাছি।'}</div>
+    ${bill([['মোট মালের দাম',tk(goods)],['প্ল্যাটফর্ম ফি (১%, বিক্রি হলে কাটা হবে)','−'+tk(fee),'minus'],['ভাড়া',u.role==='farmer'?'অর্ডার অনুযায়ী (ক্রেতার সাথে ভাগ করা যায়)':'অর্ডার অনুযায়ী'],
+      ['সব বিক্রি হলে আনুমানিক হাতে পাবেন',tk(goods-fee),'tot']])}`;
+}
+
+/* ---------- offer form (buyer) ---------- */
+let OF=null;
+function openOffer(lid){
+  const l=listing(lid); if(!l) return;
+  OF={lid, mon:Math.min(l.available, Math.max(l.moq, 25*MON))/MON, price:l.eff_price, transport:'reroute', split:'half', note:''};
+  drawOffer();
+}
+function offerCalc(){
+  const l=listing(OF.lid), s=user(l.uid), u=me(), kg=OF.mon*MON, goods=OF.price*kg;
+  const q=OF.transport==='reroute'?myQuote(s.place,u.place,kg):null;
+  const share = q ? {buyer:q.total,half:q.total/2,seller:0}[OF.split] : 0;
+  const credit = q ? Math.min(u.transport_credit||0, share*0.5) : 0;
+  return {l,s,kg,goods,q,share,credit,total:goods+share-credit};
+}
+function drawOffer(){
+  const c=offerCalc(), l=c.l;
+  modal(`<div class="body"><h2>${CROPS[l.crop].i} ${CROPS[l.crop].n} কিনতে অফার</h2><div style="margin:8px 0">${personRow(c.s)}</div>
+    <div class="grid2" style="gap:10px"><label class="field"><span>কত মণ? (${monTxt(l.moq)} থেকে ${monTxt(l.available)})</span><input data-of="mon" type="number" min="${l.moq/MON}" max="${l.available/MON}" value="${OF.mon}"></label>
+    <label class="field"><span>দাম ৳/কেজি (তালিকায় ${nf(l.eff_price,1)})</span><input data-of="price" type="number" min="1" max="${l.eff_price}" step="0.5" value="${OF.price}"></label></div>
+    <p class="muted sm">তালিকার দামে দিলে বিক্রেতা দ্রুত রাজি হন। কম দাম দিলে তিনি রাজি, পাল্টা দাম বা না বলতে পারেন।</p>
+    <div class="field"><span>পরিবহন</span><div class="choice c2">
+      <button class="opt ${OF.transport==='reroute'?'on':''}" data-act="of-set" data-k="transport" data-v="reroute"><strong>🚚 Reroute ট্রাক</strong><span class="muted">বাজারের চেয়ে কম ভাড়া, ট্রাক আমরা পাঠাব</span></button>
+      <button class="opt ${OF.transport==='self'?'on':''}" data-act="of-set" data-k="transport" data-v="self"><strong>🚛 নিজে ট্রাক আনব</strong><span class="muted">ভাড়া ও ব্যবস্থা আপনার</span></button></div></div>
+    ${OF.transport==='reroute'?`<div class="field"><span>ট্রাক ভাড়া কে দেবেন?</span><div class="choice c3">${[['buyer','আমি পুরো'],['half','অর্ধেক অর্ধেক'],['seller','বিক্রেতা পুরো']].map(([k,t])=>`<button class="opt ${OF.split===k?'on':''}" data-act="of-set" data-k="split" data-v="${k}"><strong>${t}</strong></button>`).join('')}</div></div>`:''}
+    <label class="field"><span>বিক্রেতাকে বার্তা (ঐচ্ছিক)</span><input data-of="note" maxlength="200" value="${esc(OF.note)}" placeholder="যেমন: গ্রেড A হলে নিয়মিত নেব"></label>
+    <div id="of-bill" style="margin-top:12px">${offerBill(c)}</div>
+    <button class="btn btn-green btn-wide" style="margin-top:12px" data-act="of-submit">অফার পাঠান</button>
+    <p class="muted sm" style="margin-top:6px;text-align:center">বিক্রেতা রাজি হলে তবেই পেমেন্ট করতে হবে।</p></div>`);
+}
+function offerBill(c){
+  return bill([['মালের দাম',`${tk(c.goods)} (${monTxt(c.kg)} × ${tk(OF.price,1)})`],
+    c.q?[`ট্রাক ভাড়া মোট ${tk(c.q.total)}, আপনার ভাগ`,tk(c.share)]:['পরিবহন','নিজে আনবেন'],
+    c.credit?['⭐ পরিবহন ছাড়','−'+tk(c.credit),'plus']:null,
+    ['আপনি পরিশোধ করবেন',tk(c.total),'tot']])
+    + (c.q?`<p class="good sm" style="margin-top:8px">🚚 ${c.q.vehicle_name}${c.q.shared?', শেয়ার্ড':''}, ${nf(c.q.km)} কিমি। বাজারে ট্রাক ভাড়া করলে ${tk(c.q.offline)} লাগত, সাশ্রয় ${tk(c.q.saving)}।</p>`:'');
+}
+
+/* ---------- inspection request ---------- */
+let IN=null;
+function openInspect(lid){ IN={lid,kind:'video',pref:'আজ বিকেল ৪টা',note:''}; drawInspect(); }
+function drawInspect(){
+  const l=listing(IN.lid);
+  modal(`<div class="body"><h2>🔍 কেনার আগে মাল দেখুন</h2><p class="muted" style="margin-top:4px">${CROPS[l.crop].n}, ${esc(dispName(user(l.uid)))}। বিক্রেতা রাজি হলে সময় জানাবেন।</p>
+    <div class="field"><span>কীভাবে দেখবেন?</span><div class="choice c2"><button class="opt ${IN.kind==='video'?'on':''}" data-act="in-kind" data-v="video"><strong>📹 ভিডিও কল</strong><span class="muted">মোবাইলে মাল দেখাবেন</span></button>
+      <button class="opt ${IN.kind==='visit'?'on':''}" data-act="in-kind" data-v="visit"><strong>🚶 সরাসরি গিয়ে</strong><span class="muted">খেত বা গুদামে গিয়ে</span></button></div></div>
+    <label class="field"><span>কখন সুবিধা?</span><input id="in-pref" maxlength="80" value="${esc(IN.pref)}"></label>
+    <label class="field"><span>কী দেখতে চান (ঐচ্ছিক)</span><input id="in-note" maxlength="200" value="${esc(IN.note)}" placeholder="যেমন: সাইজ, রং, কতটা নরম"></label>
+    <button class="btn btn-green btn-wide" style="margin-top:14px" data-act="in-submit">অনুরোধ পাঠান</button></div>`);
+}
+
+/* ---------- deals: offers, orders, inspections ---------- */
+let DT='offers', DF='all';
+function offerRow(o){
+  const id=me().id, sell=o.seller===id, other=user(sell?o.buyer:o.seller), mine=['pending','countered'].includes(o.status)&&((o.waiting==='seller'&&sell)||(o.waiting==='buyer'&&!sell));
+  return `<a class="item" href="#/offer/${o.id}" style="text-decoration:none;color:inherit">${cropIco(o.crop)}<div class="grow">
+    <div class="row wrap-it"><b>${monTxt(o.qty)} ${CROPS[o.crop].n}</b>${pill(OFFER_ST[o.status])}${mine?'<span class="pill p-red">আপনার উত্তর দরকার</span>':''}</div>
+    <div class="muted sm">${sell?'ক্রেতা':'বিক্রেতা'}: ${esc(dispName(other))} · ${tk(o.price,1)}/কেজি ${o.price<o.listed_price?`(তালিকায় ${tk(o.listed_price,1)})`:''} · ${ago(o.updated)}</div></div><span>›</span></a>`;
+}
+function orderRow(o){
+  const id=me().id, sell=o.seller===id, other=user(sell?o.buyer:o.seller);
+  return `<a class="item" href="#/order/${o.id}" style="text-decoration:none;color:inherit">${cropIco(o.crop)}<div class="grow">
+    <div class="row wrap-it"><b>${sell?'বিক্রি':'কেনা'}: ${monTxt(o.qty)} ${CROPS[o.crop].n}</b>${pill(ORDER_ST[o.status])}</div>
+    <div class="muted sm">${sell?'ক্রেতা':'বিক্রেতা'}: ${esc(dispName(other))} · ${tk(o.goods)} · ${dateBn(o.created)}</div></div><span>›</span></a>`;
+}
+V.deals = () => {
+  const id=me().id, offers=(S.offers||[]).filter(o=>DF==='all'||(DF==='in'?o.seller===id:o.buyer===id));
+  const orders=S.orders||[], insp=S.inspections||[];
+  const groups=[['আপনার কাজ আছে',orders.filter(o=>(o.status==='awaiting_payment'&&o.buyer===id)||(o.status==='handed_over'&&o.buyer===id)||(o.status==='confirmed'&&o.seller===id))],
+    ['চলছে',orders.filter(o=>['awaiting_payment','confirmed','handed_over'].includes(o.status)&&!((o.status==='awaiting_payment'&&o.buyer===id)||(o.status==='handed_over'&&o.buyer===id)||(o.status==='confirmed'&&o.seller===id)))],
+    ['সম্পূর্ণ',orders.filter(o=>o.status==='completed')],['বাতিল',orders.filter(o=>o.status==='cancelled')]];
+  return `<div class="phead"><h1>🤝 অফার ও অর্ডার</h1></div>
+    <div class="note" style="margin-bottom:12px">ধাপ: <b>অফার → বিক্রেতা রাজি → পেমেন্ট (অর্ডার নিশ্চিত) → মাল হস্তান্তর → সম্পূর্ণ</b>। টাকা Reroute-এ জমা থাকে, মাল বুঝে পেলে বিক্রেতা পান।</div>
+    <div class="tabs">${[['offers',`অফার (${nf(S.offers.length)})`],['orders',`অর্ডার (${nf(orders.length)})`],['insp',`পরিদর্শন (${nf(insp.length)})`]].map(([k,t])=>`<button class="${DT===k?'on':''}" data-act="dt" data-v="${k}">${t}</button>`).join('')}</div>
+    ${DT==='offers'?`<div class="tabs">${[['all','সব'],['in','আমার মালে এসেছে'],['out','আমি দিয়েছি']].map(([k,t])=>`<button class="${DF===k?'on':''}" data-act="df" data-v="${k}">${t}</button>`).join('')}</div>
+      <div class="panel">${offers.map(offerRow).join('')||'<p class="muted">কোনো অফার নেই</p>'}</div>`:''}
+    ${DT==='orders'?groups.filter(g=>g[1].length).map(([t,l])=>`<h3 style="margin:14px 0 6px">${t} (${nf(l.length)})</h3><div class="panel">${l.map(orderRow).join('')}</div>`).join('')||'<div class="empty">কোনো অর্ডার নেই</div>':''}
+    ${DT==='insp'?`<div class="panel">${insp.map(i=>{ const l=listing(i.listing)||{crop:'tomato'}, other=user(i.seller===id?i.buyer:i.seller);
+      return `<a class="item" href="#/inspection/${i.id}" style="text-decoration:none;color:inherit">${cropIco(l.crop)}<div class="grow"><div class="row"><b>${i.kind==='video'?'📹 ভিডিও':'🚶 সরাসরি'} পরিদর্শন</b>${pill(INSP_ST[i.status])}</div>
+        <div class="muted sm">${i.seller===id?'ক্রেতা':'বিক্রেতা'}: ${esc(dispName(other))} · ${esc(i.pref)}</div></div><span>›</span></a>`; }).join('')||'<p class="muted">কোনো পরিদর্শন নেই</p>'}</div>`:''}`;
+};
+/* ---------- offer detail & negotiation ---------- */
+const EV_BN = {offer:'অফার দিয়েছেন',counter:'পাল্টা দাম দিয়েছেন',accept:'রাজি হয়েছেন',reject:'রাজি হননি',cancel:'অফার তুলে নিয়েছেন',expire:'মেয়াদ শেষ'};
+function sellerPayout(o, price){
+  const u=me(), kg=o.qty, goods=price*kg, fee=platformFee(goods), feeDisc=Math.min(u.fee_credit||0,fee);
+  let share=0, credit=0, q=null;
+  if(o.transport==='reroute'){ q=quote(u.place,user(o.buyer).place,kg,false,false); share={buyer:0,half:q.total/2,seller:q.total}[o.split]; credit=Math.min(u.transport_credit||0,share*.5); }
+  return {goods,fee,feeDisc,share,credit,payout:goods-fee+feeDisc-share+credit,q};
+}
+function buyerTotal(o, price){
+  const u=me(), s=user(o.seller), kg=o.qty, goods=price*kg; let share=0, credit=0, q=null;
+  if(o.transport==='reroute'){ q=myQuote(s.place,u.place,kg); share={buyer:q.total,half:q.total/2,seller:0}[o.split]; credit=Math.min(u.transport_credit||0,share*.5); }
+  return {goods,share,credit,total:goods+share-credit,q};
+}
+V.offer = id => {
+  const o=(S.offers||[]).find(x=>x.id===id); if(!o) return `<div class="empty">অফার পাওয়া যায়নি</div>`;
+  const u=me(), sell=o.seller===u.id, other=user(sell?o.buyer:o.seller), l=listing(o.listing), ev=(S.offer_events||[]).filter(e=>e.offer===id);
+  const myTurn=['pending','countered'].includes(o.status)&&((o.waiting==='seller'&&sell)||(o.waiting==='buyer'&&!sell));
+  const left=Math.max(0,Math.round((o.expires-Date.now())/36e5));
+  let acts='';
+  if(myTurn&&sell) acts=`<div class="row wrap-it"><button class="btn btn-green grow" data-act="o-accept" data-id="${id}">✓ রাজি</button>
+      <button class="btn btn-blue grow" data-act="o-counter" data-id="${id}">↔️ পাল্টা দাম দিন</button><button class="btn btn-soft grow" data-act="o-reject" data-id="${id}">না</button></div>`;
+  if(myTurn&&!sell) acts=`<div class="row wrap-it"><button class="btn btn-green grow" data-act="o-accept" data-id="${id}">✓ রাজি, পেমেন্ট করব</button><button class="btn btn-soft grow" data-act="o-reject" data-id="${id}">না</button></div>`;
+  if(!myTurn&&!sell&&['pending','countered'].includes(o.status)&&o.waiting==='seller') acts=`<button class="btn btn-line" data-act="o-cancel" data-id="${id}">অফার তুলে নিন</button>`;
+  if(o.status==='accepted') acts=`<a class="btn btn-green btn-wide" href="#/order/${o.order_id}">অর্ডার দেখুন ›</a>`;
+  const est = sell ? sellerPayout(o,o.price) : buyerTotal(o,o.price);
+  return `<p><a href="#/deals">← অফার ও অর্ডার</a></p>
+  <div class="grid2" style="margin-top:10px;align-items:start"><div class="panel">
+    <div class="between"><h1>${CROPS[o.crop].i} ${monTxt(o.qty)} ${CROPS[o.crop].n}</h1>${pill(OFFER_ST[o.status])}</div>
+    ${myTurn?`<div class="danger" style="margin-top:10px">আপনার উত্তর দরকার${left?` · ${nf(left)} ঘণ্টার মধ্যে, নইলে মেয়াদ শেষ`:''}</div>`:''}
+    <dl class="kv" style="margin-top:12px"><dt>${o.status==='countered'?'পাল্টা দাম':'প্রস্তাবিত দাম'}</dt><dd>${tk(o.price,1)}/কেজি</dd><dt>তালিকার দাম</dt><dd>${tk(o.listed_price,1)}/কেজি</dd>
+      <dt>পরিমাণ</dt><dd>${kgMon(o.qty)}</dd><dt>মোট মালের দাম</dt><dd>${tk(o.price*o.qty)}</dd>
+      <dt>পরিবহন</dt><dd>${o.transport==='reroute'?'🚚 Reroute ট্রাক, ভাড়া '+{buyer:'ক্রেতা দেবেন',half:'অর্ধেক অর্ধেক',seller:'বিক্রেতা দেবেন'}[o.split]:'🚛 ক্রেতা নিজে আনবেন'}</dd>
+      <dt>ডেলিভারি</dt><dd>${PLACES[user(o.seller).place].n} → ${PLACES[user(o.buyer).place].n}</dd></dl>
+    ${o.note?`<p class="note" style="margin-top:10px">💬 ${esc(o.note)}</p>`:''}
+    <h3 style="margin-top:14px">${sell?'রাজি হলে আপনি পাবেন (আনুমানিক)':'রাজি হলে আপনি দেবেন'}</h3>
+    ${sell?bill([['মালের দাম',tk(est.goods)],['প্ল্যাটফর্ম ফি ১%','−'+tk(est.fee),'minus'],est.feeDisc?['⭐ ফি ছাড়','+'+tk(est.feeDisc),'plus']:null,
+        est.share?['ট্রাক ভাড়া, আপনার ভাগ','−'+tk(est.share),'minus']:null,est.credit?['⭐ পরিবহন ছাড়','+'+tk(est.credit),'plus']:null,['আপনার হাতে আসবে',tk(est.payout),'tot']])
+      :bill([['মালের দাম',tk(est.goods)],est.share?['ট্রাক ভাড়া, আপনার ভাগ',tk(est.share)]:null,est.credit?['⭐ পরিবহন ছাড়','−'+tk(est.credit),'plus']:null,['মোট পেমেন্ট',tk(est.total),'tot']])}
+    ${sell&&l?`<p class="muted sm" style="margin-top:8px">${PLACES[me().place].n}-এ আজকের বাজার দর আনুমানিক ${tk(MARKET_DEMO[me().place][o.crop])}/কেজি <span class="demo-tag">ডেমো</span>। হাটে বেচলে ${tk(MARKET_DEMO[me().place][o.crop]*o.qty)}।</p>`:''}
+    <div style="margin-top:14px">${acts}</div></div>
+    <div><div class="panel"><h3>${sell?'ক্রেতা':'বিক্রেতা'}</h3><div style="margin-top:8px">${personRow(other)}</div>
+      <a class="btn btn-line btn-sm" style="margin-top:10px" href="#/u/${other.id}">পুরো প্রোফাইল ও রিভিউ</a></div>
+      <div class="panel"><h3>দরদামের ইতিহাস</h3><div class="timeline">${ev.map(e=>`<div><b>${e.by==='system'?'সিস্টেম':esc(dispName(user(e.by)))}</b> ${EV_BN[e.action]||e.action}${e.price&&['offer','counter','accept'].includes(e.action)?`: ${tk(e.price,1)}/কেজি`:''}${e.note?` · "${esc(e.note)}"`:''}<div class="muted xs">${ago(e.at)}</div></div>`).join('')}</div></div>
+      ${l?`<div class="panel"><a href="#/listing/${l.id}">লিস্টিং দেখুন ›</a></div>`:''}</div></div>`;
+};
+
+/* ---------- order detail ---------- */
+V.order = id => {
+  const o=(S.orders||[]).find(x=>x.id===id); if(!o) return `<div class="empty">অর্ডার পাওয়া যায়নি</div>`;
+  const u=me(), sell=o.seller===u.id, other=user(sell?o.buyer:o.seller), b=(S.bookings||[]).find(x=>x.id===o.booking);
+  const truck=b&&b.truck?(S.my_trucks||[]).find(t=>t.id===b.truck):null, phone=(S.contacts||{})[other.id];
+  const idx=o.status==='cancelled'?(o.paid_at?2:1):ORDER_IDX[o.status];
+  let acts='';
+  if(o.status==='awaiting_payment'&&!sell) acts=`<button class="btn btn-green btn-wide" data-act="pay-order" data-id="${id}">💳 ${tk(o.buyer_total)} পেমেন্ট করুন</button>`;
+  if(o.status==='awaiting_payment'&&sell) acts=`<div class="warn">ক্রেতার পেমেন্টের অপেক্ষা। ${nf(Math.max(0,Math.round((o.created+24*36e5-Date.now())/36e5)))} ঘণ্টার মধ্যে না দিলে অর্ডার নিজে থেকে বাতিল হবে।</div>`;
+  if(o.status==='confirmed'&&sell){
+    if(o.transport==='self') acts=`<button class="btn btn-green btn-wide" data-act="handover" data-id="${id}">📦 পাইকারকে মাল বুঝিয়ে দিয়েছি</button>`;
+    else if(b&&['pickup_scheduled','in_transit'].includes(b.status)) acts=`<button class="btn btn-green btn-wide" data-act="handover" data-id="${id}">🚚 ট্রাকে মাল তুলে দিয়েছি</button>`;
+    else acts=`<div class="note">🚚 Reroute ট্রাক ঠিক হলে চালকের নাম, নম্বর আর আসার সময় জানানো হবে। মাল তৈরি রাখুন।</div>`;
+  }
+  if(o.status==='confirmed'&&!sell) acts=`<div class="note">💰 আপনার টাকা Reroute-এ জমা আছে। ${o.transport==='reroute'?'ট্রাক মাল নিয়ে রওনা দিলে জানানো হবে।':'নিজের ট্রাকে মাল নিয়ে আসুন।'}</div>`;
+  if(o.status==='handed_over'&&!sell) acts=`<button class="btn btn-green btn-wide" data-act="complete" data-id="${id}">✅ মাল বুঝে পেয়েছি</button><p class="muted sm" style="margin-top:6px">চাপলে বিক্রেতা টাকা পাবেন। মাল না পেলে বা সমস্যা থাকলে চাপবেন না।</p>`;
+  if(o.status==='handed_over'&&sell) acts=`<div class="note">মাল পৌঁছালে ক্রেতা নিশ্চিত করবেন, তখন টাকা আপনার ওয়ালেটে যাবে।</div>`;
+  if(o.status==='completed'&&!(S.rated||[]).includes(id)) acts=`<button class="btn btn-line btn-wide" data-act="rate-open" data-id="${id}">⭐ ${esc(dispName(other))}-কে রেটিং দিন</button>`;
+  const canCancel=['awaiting_payment','confirmed'].includes(o.status);
+  const P=o.pnl;
+  return `<p><a href="#/deals">← অফার ও অর্ডার</a></p>
+  <div class="grid2" style="margin-top:10px;align-items:start"><div>
+    <div class="panel"><div class="between"><h1>${CROPS[o.crop].i} ${sell?'বিক্রি':'কেনা'}: ${monTxt(o.qty)} ${CROPS[o.crop].n}</h1>${pill(ORDER_ST[o.status])}</div>
+      <p class="muted sm">অর্ডার ${o.id} · ${dateBn(o.created)}</p>
+      <h3 style="margin-top:12px">অর্ডারের ধাপ</h3>${track(ORDER_STEPS, idx, o.status==='cancelled')}
+      ${o.status==='cancelled'?`<div class="danger" style="margin-top:8px">❌ ${o.cancelled_by==='system'?'সিস্টেম':o.cancelled_by===u.id?'আপনি':esc(dispName(other))} বাতিল করেছেন${o.reason?`। কারণ: ${esc(o.reason)}`:''}${o.paid_at&&!sell?'। টাকা ওয়ালেটে ফেরত দেওয়া হয়েছে।':''}</div>`:''}
+      <div style="margin-top:14px">${acts}</div>
+      ${canCancel?`<button class="btn btn-soft btn-sm" style="margin-top:10px" data-act="order-cancel" data-id="${id}">অর্ডার বাতিল করুন</button>`:''}</div>
+    ${o.transport==='reroute'&&b?`<div class="panel"><div class="between"><h3>🚚 পরিবহন</h3>${pill(BOOK_ST[b.status])}</div>
+      ${b.status!=='cancelled'&&b.status!=='awaiting_payment'?track(BOOK_STEPS,BOOK_IDX[b.status]):''}
+      ${truck?`<div class="note" style="margin-top:8px">${esc(truck.company)} · ${S.config.vehicles[truck.vehicle].n} · ${esc(truck.number)}<br>চালক ${esc(truck.driver)}, 📞 ${bd(truck.phone)}${b.pickup_time?`<br>মাল তোলা: ${esc(b.pickup_time)}`:''}</div>`:''}
+      <a href="#/booking/${b.id}" class="sm">বুকিংয়ের বিস্তারিত ›</a></div>`:o.transport==='self'?`<div class="panel"><h3>🚛 পরিবহন</h3><p class="muted">ক্রেতা নিজের ট্রাকে মাল নেবেন।</p></div>`:''}</div>
+  <div><div class="panel"><h3>${sell?'ক্রেতা':'বিক্রেতা'}</h3><div style="margin-top:8px">${personRow(other)}</div>
+      ${phone?`<div class="good" style="margin-top:10px">📞 ${bd(phone)}</div>`:`<p class="muted sm" style="margin-top:8px">পেমেন্টের পর ফোন নম্বর দেখা যাবে</p>`}</div>
+    <div class="panel"><h3>💰 টাকার হিসাব</h3>
+      ${sell?bill([['মালের দাম',`${tk(o.goods)} (${tk(o.price,1)}/কেজি)`],o.price<o.listed_price?['তালিকার দাম ছিল',tk(o.listed_price,1)+'/কেজি']:null,['প্ল্যাটফর্ম ফি ১%','−'+tk(o.fee),'minus'],o.fee_disc?['⭐ ফি ছাড়','+'+tk(o.fee_disc),'plus']:null,
+          o.t_seller?['ট্রাক ভাড়া, আপনার ভাগ','−'+tk(o.t_seller),'minus']:null,o.t_cs?['⭐ পরিবহন ছাড়','+'+tk(o.t_cs),'plus']:null,o.cashback?['🎁 ক্যাশব্যাক','+'+tk(o.cashback),'plus']:null,
+          [o.status==='completed'?'ওয়ালেটে জমা হয়েছে':'মাল বুঝে দিলে পাবেন',tk(o.payout+(o.cashback||0)),'tot']])
+        :bill([['মালের দাম',`${tk(o.goods)} (${tk(o.price,1)}/কেজি)`],o.t_buyer?['ট্রাক ভাড়া, আপনার ভাগ',tk(o.t_buyer)]:null,o.t_cb?['⭐ পরিবহন ছাড়','−'+tk(o.t_cb),'plus']:null,
+          [o.paid_at?'পরিশোধ করেছেন':'পরিশোধ করতে হবে',tk(o.buyer_total),'tot']])}
+      ${o.t_total?`<p class="muted sm" style="margin-top:8px">মোট ট্রাক ভাড়া ${tk(o.t_total)} (Reroute সেবা চার্জসহ), ${({buyer:'ক্রেতা দিচ্ছেন',half:'দুজনে অর্ধেক',seller:'বিক্রেতা দিচ্ছেন'})[o.split]}।</p>`:''}
+      ${o.paid_at?`<p class="muted sm">পেমেন্ট: ${dateBn(o.paid_at)}</p>`:''}</div>
+    ${P?`<div class="panel"><h3>📊 এই অর্ডারের লাভ-ক্ষতি</h3>
+      ${P.side==='seller'?bill([['বিক্রি',tk(P.revenue)],P.cost!=null?['মালের খরচ (উৎপাদন/কেনা)','−'+tk(P.cost),'minus']:null,['ট্রাক ভাড়া','−'+tk(P.transport),'minus'],['প্ল্যাটফর্ম ফি','−'+tk(P.fee),'minus'],P.cashback?['ক্যাশব্যাক','+'+tk(P.cashback),'plus']:null,
+          P.profit!=null?['লাভ',tk(P.profit),'tot']:['খরচ বাদে হাতে এসেছে',tk(P.net_before_cost),'tot']])
+        + (P.profit==null?'<p class="warn sm" style="margin-top:8px">মালের খরচ দেওয়া নেই, তাই সঠিক লাভ বলা যাচ্ছে না।</p>':'')
+        :bill([['মালের দাম',tk(P.goods)],['ট্রাক ভাড়া',tk(P.transport)],['মোট কেনা খরচ',tk(P.landed),'tot'],['প্রতি কেজি খরচ',tk(P.per_kg,1)]])
+          + `<p class="muted sm" style="margin-top:8px">আপনার বাজারে আজকের দর আনুমানিক ${tk(MARKET_DEMO[me().place][o.crop])}/কেজি <span class="demo-tag">ডেমো</span>। এই দামে বেচলে আনুমানিক লাভ ${tk((MARKET_DEMO[me().place][o.crop]-P.per_kg)*o.qty)}।</p>`}</div>`:''}</div></div>`;
+};
+
+/* ---------- inspection detail ---------- */
+V.inspection = id => {
+  const i=(S.inspections||[]).find(x=>x.id===id); if(!i) return `<div class="empty">পাওয়া যায়নি</div>`;
+  const u=me(), sell=i.seller===u.id, other=user(sell?i.buyer:i.seller), l=listing(i.listing);
+  let acts='';
+  if(sell&&i.status==='requested') acts=`<label class="field"><span>উত্তর (সময়, কীভাবে)</span><input id="insp-reply" value="${i.kind==='video'?'আজ বিকেল ৪টায় ইমো/হোয়াটসঅ্যাপে ভিডিও কল':'কাল সকাল ১০টায় খেতে আসুন'}"></label>
+    <div class="row" style="margin-top:10px"><button class="btn btn-green grow" data-act="insp" data-id="${id}" data-v="schedule">রাজি, সময় জানান</button><button class="btn btn-soft grow" data-act="insp" data-id="${id}" data-v="decline">রাজি নই</button></div>`;
+  if(!sell&&i.status==='scheduled') acts=`<button class="btn btn-green btn-wide" data-act="insp" data-id="${id}" data-v="done">মাল দেখেছি</button>`;
+  if(!sell&&['requested','scheduled'].includes(i.status)) acts+=`<button class="btn btn-soft btn-sm" style="margin-top:8px" data-act="insp" data-id="${id}" data-v="cancel">অনুরোধ বাতিল</button>`;
+  if(!sell&&i.status==='done'&&l&&l.status==='active') acts=`<button class="btn btn-green btn-wide" data-act="offer-open" data-id="${l.id}">এখন অফার দিন</button>`;
+  return `<p><a href="#/deals" data-act="dt" data-v="insp">← পরিদর্শন</a></p><div class="panel" style="max-width:640px;margin-top:10px">
+    <div class="between"><h1>🔍 ${i.kind==='video'?'ভিডিও কলে':'সরাসরি'} মাল দেখা</h1>${pill(INSP_ST[i.status])}</div>
+    ${l?`<p style="margin-top:6px"><a href="#/listing/${l.id}">${CROPS[l.crop].i} ${CROPS[l.crop].n}, ${monTxt(l.available)}</a></p>`:''}
+    <div style="margin-top:10px">${personRow(other)}</div>
+    <dl class="kv" style="margin-top:12px"><dt>ক্রেতার পছন্দের সময়</dt><dd>${esc(i.pref)}</dd>${i.note?`<dt>যা দেখতে চান</dt><dd>${esc(i.note)}</dd>`:''}${i.reply?`<dt>বিক্রেতার উত্তর</dt><dd>${esc(i.reply)}</dd>`:''}</dl>
+    <div style="margin-top:14px">${acts}</div></div>`;
+};
+
+/* ---------- transport: our own truck service ---------- */
+let BK=null;
+function bkReset(){ const u=me(); BK={src:u?u.place:'rajshahi',srcAddr:u&&u.area||'',dst:u&&u.place==='dhaka'?'rajshahi':'dhaka',dstAddr:'',crop:'tomato',mon:25,date:'আগামীকাল'}; }
+function bkQuote(){ const kg=BK.mon*MON, q=myQuote(BK.src,BK.dst,kg), credit=me()?Math.min(me().transport_credit||0,q.total*.5):0; return {kg,q,credit,pay:q.total-credit}; }
+function bkBill(){
+  const {kg,q,credit,pay}=bkQuote();
+  return bill([[`${q.vehicle_name}${q.trucks>1?' × '+bd(q.trucks):''}${q.shared?' · শেয়ার্ড (অন্যের মালের সাথে)':' · পুরো ট্রাক'}`,''],[`দূরত্ব`,`${nf(q.km)} কিমি, পৌঁছাতে প্রায় ${nf(q.eta,1)} ঘণ্টা`],
+    ['ট্রাক ভাড়া',tk(q.fare)],[`Reroute সেবা চার্জ ৮%${q.service_off?` (${nf(q.service_off*100)}% ছাড়)`:''}`,tk(q.service)],credit?['⭐ পরিবহন ছাড়','−'+tk(credit),'plus']:null,['মোট দিতে হবে',tk(pay),'tot']])
+    + `<div class="grid2" style="gap:8px;margin-top:10px"><div class="panel" style="padding:10px;box-shadow:none;background:var(--surface2)"><span class="muted sm">বাজারে নিজে ট্রাক ভাড়া করলে</span><div class="b">${tk(q.offline)}</div></div>
+      <div class="panel" style="padding:10px;box-shadow:none;background:var(--green-soft)"><span class="sm" style="color:var(--green)">Reroute-এ সাশ্রয়</span><div class="b" style="color:var(--green)">${tk(q.saving)} (${nf(Math.round(q.saving/q.offline*100))}%)</div></div></div>`;
+}
+V.transport = () => {
+  if(!BK) bkReset();
+  const u=me(), V2=S.config.vehicles, trucks=S.trucks||[];
+  const mine=(S.bookings||[]);
+  return `<div class="phead"><div><h1>🚚 Reroute ট্রাক সার্ভিস</h1><p class="muted">আমাদের নিজস্ব ট্রাক। কৃষক ও পাইকার দুজনেই বুক করতে পারেন, অর্ডারের সাথে বা আলাদা।</p></div></div>
+  <div class="grid3">
+    <div class="panel"><h3>কী কী পাবেন</h3><ul style="margin:8px 0 0;padding-left:18px"><li>ছাউনিওয়ালা ট্রাক, প্লাস্টিক ক্রেট</li><li>লোডিংয়ে সাহায্য</li><li>চালকের নাম-নম্বর আগেই জানবেন</li><li>প্রতিটি ধাপে নোটিফিকেশন</li><li>যাচাইকৃত কৃষক ও প্লাস সদস্যরা আগে ট্রাক পান</li></ul></div>
+    <div class="panel"><h3>ভাড়া কীভাবে ঠিক হয়</h3><p class="sm" style="margin-top:8px">দূরত্ব, মালের ওজন আর গাড়ির ধরন দেখে। কম মাল হলে একই রুটের অন্যদের মালের সাথে <b>শেয়ার্ড ট্রাকে</b> যায়, তাই শুধু নিজের ভাগ দেন। পুরো ট্রাক হলেও ফেরার পথে মাল থাকায় ভাড়া কম। ভাড়ার উপর <b>৮% সেবা চার্জ</b>, এর বাইরে কিছু নেই।</p></div>
+    <div class="panel"><h3>এলাকা ও বহর</h3><p class="sm" style="margin-top:8px">রাজশাহী বিভাগ ↔ ঢাকা</p>
+      ${Object.entries(V2).map(([k,v])=>{ const n=trucks.filter(t=>t.vehicle===k), free=n.filter(t=>t.status!=='on_trip'&&t.status!=='maintenance').length;
+        return `<div class="between sm" style="margin-top:6px"><span>${v.n}</span><span><b>${nf(free)}</b>/${nf(n.length)}টি খালি</span></div>`; }).join('')}</div></div>
+  <div class="grid2" style="margin-top:14px;align-items:start">
+    <div class="panel"><h2>ভাড়া দেখুন ও বুক করুন</h2>
+      <div class="grid2" style="gap:10px"><label class="field"><span>কোথা থেকে (জেলা)</span><select data-bk="src">${Object.entries(PLACES).map(([k,p])=>`<option value="${k}" ${BK.src===k?'selected':''}>${p.n}</option>`).join('')}</select></label>
+        <label class="field"><span>মাল তোলার ঠিকানা</span><input data-bk="srcAddr" value="${esc(BK.srcAddr)}" placeholder="গ্রাম/বাজার"></label>
+        <label class="field"><span>কোথায় যাবে (জেলা)</span><select data-bk="dst">${Object.entries(PLACES).map(([k,p])=>`<option value="${k}" ${BK.dst===k?'selected':''}>${p.n}</option>`).join('')}</select></label>
+        <label class="field"><span>পৌঁছানোর ঠিকানা</span><input data-bk="dstAddr" value="${esc(BK.dstAddr)}" placeholder="আড়ত/বাজার"></label>
+        <label class="field"><span>ফসল</span><select data-bk="crop">${Object.entries(CROPS).map(([k,c])=>`<option value="${k}" ${BK.crop===k?'selected':''}>${c.n}</option>`).join('')}</select></label>
+        <label class="field"><span>কত মণ</span><input data-bk="mon" type="number" min="3" value="${BK.mon}"></label>
+        <label class="field"><span>কবে</span><select data-bk="date">${['আজ','আগামীকাল','পরশু'].map(d=>`<option ${BK.date===d?'selected':''}>${d}</option>`).join('')}</select></label></div>
+      <div id="bk-bill" style="margin-top:12px">${bkBill()}</div>
+      ${isTrader()?`<button class="btn btn-green btn-wide" style="margin-top:12px" data-act="bk-submit">ট্রাক বুক করুন ও পেমেন্ট</button>`:`<a class="btn btn-green btn-wide" style="margin-top:12px" href="#/login">বুক করতে লগ ইন করুন</a>`}
+      <p class="muted sm" style="margin-top:6px">মাল কেনাবেচার সময় অফারেই Reroute ট্রাক বাছলে আলাদা বুক করতে হয় না।</p></div>
+    <div class="panel"><h2>আমার বুকিং</h2>${isTrader()?(mine.length?mine.map(b=>`<a class="item" href="#/booking/${b.id}" style="text-decoration:none;color:inherit">${cropIco(b.crop,1)}<div class="grow">
+        <div class="row wrap-it"><b>${PLACES[b.pickup_place].n} → ${PLACES[b.drop_place].n}</b>${pill(BOOK_ST[b.status])}${b.order_id?'<span class="pill p-grey">অর্ডারের</span>':''}</div>
+        <div class="muted sm">${monTxt(b.qty)} ${CROPS[b.crop].n} · ${tk(b.total)} · ${dateBn(b.created)}</div></div><span>›</span></a>`).join(''):'<p class="muted" style="margin-top:8px">এখনো কোনো বুকিং নেই</p>'):'<p class="muted" style="margin-top:8px">লগ ইন করলে এখানে আপনার বুকিং দেখাবে</p>'}</div></div>`;
+};
+V.booking = id => {
+  const b=(S.bookings||[]).find(x=>x.id===id); if(!b) return `<div class="empty">বুকিং পাওয়া যায়নি</div>`;
+  const t=b.truck?(S.my_trucks||[]).find(x=>x.id===b.truck):null, ev=(S.booking_events||[]).filter(e=>e.booking===id), mine=b.uid===me().id&&!b.order_id;
+  return `<p><a href="#/transport">← পরিবহন</a></p><div class="grid2" style="margin-top:10px;align-items:start"><div class="panel">
+    <div class="between"><h1>🚚 ${PLACES[b.pickup_place].n} → ${PLACES[b.drop_place].n}</h1>${pill(BOOK_ST[b.status])}</div>
+    <p class="muted sm">বুকিং ${b.id}${b.order_id?` · <a href="#/order/${b.order_id}">অর্ডারের সাথে যুক্ত</a>`:''}${b.priority?' · ⭐ অগ্রাধিকার':''}</p>
+    ${!['cancelled','awaiting_payment'].includes(b.status)?track(BOOK_STEPS,BOOK_IDX[b.status]):''}
+    <dl class="kv" style="margin-top:12px"><dt>মাল</dt><dd>${kgMon(b.qty)} ${CROPS[b.crop].n}</dd><dt>তোলা হবে</dt><dd>${esc(b.pickup_addr||'')}${b.pickup_addr?', ':''}${PLACES[b.pickup_place].n}</dd>
+      <dt>পৌঁছাবে</dt><dd>${esc(b.drop_addr||'')}${b.drop_addr?', ':''}${PLACES[b.drop_place].n}</dd><dt>দিন</dt><dd>${esc(b.date||'')}</dd><dt>গাড়ি</dt><dd>${S.config.vehicles[b.vehicle].n}${b.trucks_n>1?' × '+bd(b.trucks_n):''}</dd>
+      <dt>দূরত্ব / সময়</dt><dd>${nf(b.km)} কিমি, প্রায় ${nf(b.eta,1)} ঘণ্টা</dd>${b.pickup_time?`<dt>মাল তোলার সময়</dt><dd>${esc(b.pickup_time)}</dd>`:''}</dl>
+    ${t?`<div class="note" style="margin-top:12px"><b>${esc(t.company)}</b> · ${esc(t.number)}<br>চালক ${esc(t.driver)}, 📞 ${bd(t.phone)}</div>`:''}
+    ${mine&&b.status==='awaiting_payment'?`<button class="btn btn-green btn-wide" style="margin-top:12px" data-act="pay-booking" data-id="${b.id}">💳 ${tk(b.total-b.credit_used)} পেমেন্ট করুন</button>`:''}
+    ${mine&&['awaiting_payment','requested','confirmed','pickup_scheduled'].includes(b.status)?`<button class="btn btn-soft btn-sm" style="margin-top:10px" data-act="bk-cancel" data-id="${b.id}">বুকিং বাতিল</button>`:''}</div>
+  <div><div class="panel"><h3>💰 ভাড়ার হিসাব</h3>${bill([['ট্রাক ভাড়া',tk(b.fare)],['Reroute সেবা চার্জ',tk(b.service)],['মোট',tk(b.total),'tot'],b.credit_used?['⭐ পরিবহন ছাড়','−'+tk(b.credit_used),'plus']:null,b.order_id?['ভাগ','অর্ডারের শর্ত অনুযায়ী']:null,['বাজারে নিজে ভাড়া করলে',tk(b.offline)]])}
+    ${b.status==='delivered'?`<p class="muted sm" style="margin-top:8px">ডেলিভারির পর হিসাব চূড়ান্ত: ট্রাক ভাড়া ${tk(b.actual_fare||b.fare)}</p>`:''}</div>
+    <div class="panel"><h3>হালনাগাদ</h3><div class="timeline">${ev.map(e=>`<div><b>${(BOOK_ST[e.status]||[e.status])[0]}</b>${e.note?` · ${esc(e.note)}`:''}<div class="muted xs">${ago(e.at)}</div></div>`).join('')}</div></div></div></div>`;
+};
+/* ---------- stock & accounts (মজুদ ও হিসাব) ---------- */
+let BT='stock';
+const HF={type:'all',crop:'all',status:'all',days:'all',q:''};
+function historyRows(){
+  const id=me().id, rows=[];
+  (S.orders||[]).forEach(o=>{ const sell=o.seller===id, other=user(sell?o.buyer:o.seller);
+    rows.push({at:o.created,type:sell?'sell':'buy',crop:o.crop,qty:o.qty,who:dispName(other),listed:o.listed_price,price:o.price,total:o.goods,
+      transport:sell?o.t_seller-o.t_cs:o.t_buyer-o.t_cb,fee:sell?o.fee-o.fee_disc:0,status:o.status,link:`#/order/${o.id}`}); });
+  (S.entries||[]).filter(e=>e.kind==='sale').forEach(e=>rows.push({at:e.at,type:'sell',crop:e.crop,qty:e.qty,who:'বাজারের বাইরে: '+(e.note||''),listed:null,price:e.amount/e.qty,total:e.amount,transport:0,fee:0,status:'manual',link:null}));
+  return rows.sort((a,b)=>b.at-a.at);
+}
+V.books = () => {
+  const P=S.pnl, inv=S.inventory||[], isP=me().role==='paikar';
+  let body='';
+  if(BT==='stock') body=`<div class="panel"><div class="between"><h2>📦 আমার কাছে কী মাল আছে</h2><div class="row wrap-it"><button class="btn btn-line btn-sm" data-act="entry-open" data-v="stock">+ মজুদ যোগ</button><button class="btn btn-line btn-sm" data-act="entry-open" data-v="sale">বাজারের বাইরে বিক্রি লিখুন</button></div></div>
+    <p class="muted sm" style="margin-top:4px">অর্ডার সম্পূর্ণ হলে মজুদ নিজে থেকে বদলায়। "অর্ডারে আটকে" মানে বিক্রিতে রাজি হয়েছেন কিন্তু এখনো হস্তান্তর হয়নি।</p>
+    <div class="scroll"><table class="tbl" style="margin-top:8px"><tr><th>ফসল</th><th class="num">হাতে আছে</th><th class="num">বাজারে তালিকায়</th><th class="num">অর্ডারে আটকে</th><th class="num">তালিকার বাইরে</th><th class="num">এ পর্যন্ত বিক্রি</th><th class="num">এ পর্যন্ত কেনা</th><th class="num">পথে আসছে</th><th class="num">গড় খরচ/কেজি</th></tr>
+    ${inv.map(r=>`<tr><td>${CROPS[r.crop].i} ${CROPS[r.crop].n}</td><td class="num b">${monTxt(r.in_hand)}</td><td class="num">${monTxt(r.listed)}</td><td class="num">${monTxt(r.reserved)}</td><td class="num">${monTxt(r.unlisted)}</td>
+      <td class="num">${monTxt(r.sold)}</td><td class="num">${monTxt(r.bought)}</td><td class="num">${monTxt(r.incoming)}</td><td class="num">${r.cost!=null?tk(r.cost,1):'<span class="muted">দেওয়া নেই</span>'}</td></tr>`).join('')||'<tr><td colspan="9" class="muted">এখনো কিছু নেই</td></tr>'}</table></div>
+    ${inv.some(r=>r.unlisted>0)?`<a class="btn btn-green btn-sm" style="margin-top:10px" href="#/listings/new">তালিকার বাইরের মাল বাজারে দিন</a>`:''}</div>`;
+  if(BT==='history'){
+    let rows=historyRows(); const cut=HF.days==='all'?0:Date.now()-(+HF.days)*DAY;
+    rows=rows.filter(r=>(HF.type==='all'||r.type===HF.type)&&(HF.crop==='all'||r.crop===HF.crop)&&r.at>=cut&&(!HF.q||r.who.includes(HF.q))
+      &&(HF.status==='all'||(HF.status==='done'&&['completed','manual'].includes(r.status))||(HF.status==='open'&&['awaiting_payment','confirmed','handed_over'].includes(r.status))||(HF.status==='cancelled'&&r.status==='cancelled')));
+    const st=r=>r.status==='manual'?['বাইরে বিক্রি','p-grey']:ORDER_ST[r.status];
+    body=`<div class="filters" style="grid-template-columns:repeat(5,1fr)">
+      <label><span>ধরন</span><select data-hf="type">${[['all','সব'],['sell','বিক্রি'],['buy','কেনা']].map(([k,t])=>`<option value="${k}" ${HF.type===k?'selected':''}>${t}</option>`).join('')}</select></label>
+      <label><span>ফসল</span><select data-hf="crop"><option value="all">সব</option>${Object.entries(CROPS).map(([k,c])=>`<option value="${k}" ${HF.crop===k?'selected':''}>${c.n}</option>`).join('')}</select></label>
+      <label><span>অবস্থা</span><select data-hf="status">${[['all','সব'],['done','সম্পূর্ণ'],['open','চলমান'],['cancelled','বাতিল']].map(([k,t])=>`<option value="${k}" ${HF.status===k?'selected':''}>${t}</option>`).join('')}</select></label>
+      <label><span>সময়</span><select data-hf="days">${[['7','৭ দিন'],['30','৩০ দিন'],['all','সব সময়']].map(([k,t])=>`<option value="${k}" ${HF.days===k?'selected':''}>${t}</option>`).join('')}</select></label>
+      <label><span>কার সাথে</span><input data-hf="q" value="${esc(HF.q)}" placeholder="নাম লিখুন"></label></div>
+    <div class="panel scroll"><table class="tbl"><tr><th>তারিখ</th><th>ধরন</th><th>ফসল</th><th class="num">পরিমাণ</th><th>কার সাথে</th><th class="num">তালিকার দাম</th><th class="num">চূড়ান্ত দাম</th><th class="num">মোট</th><th class="num">পরিবহন</th><th class="num">ফি</th><th>অবস্থা</th></tr>
+      ${rows.map(r=>`<tr class="${r.link?'click':''}" ${r.link?`data-act="nav" data-to="${r.link}"`:''}><td>${dateBn(r.at)}</td><td>${r.type==='sell'?'বিক্রি':'কেনা'}</td><td>${CROPS[r.crop].n}</td><td class="num">${monTxt(r.qty)}</td><td>${esc(r.who)}</td>
+        <td class="num">${r.listed?tk(r.listed,1):'–'}</td><td class="num">${tk(r.price,1)}</td><td class="num b">${tk(r.total)}</td><td class="num">${r.transport?tk(r.transport):'–'}</td><td class="num">${r.fee?tk(r.fee):'–'}</td><td>${pill(st(r))}</td></tr>`).join('')||'<tr><td colspan="11" class="muted">এই ফিল্টারে কিছু নেই</td></tr>'}</table></div>`;
+  }
+  if(BT==='pnl'){
+    const per={}; (S.orders||[]).filter(o=>o.status==='completed'&&o.seller===me().id).forEach(o=>{ const p=per[o.crop]||(per[o.crop]={rev:0,cost:0,unk:0,tr:0,fee:0,cb:0}); p.rev+=o.goods; if(o.cost_basis!=null) p.cost+=o.cost_basis*o.qty; else p.unk+=o.qty; p.tr+=o.t_seller-o.t_cs; p.fee+=o.fee-o.fee_disc; p.cb+=o.cashback||0; });
+    (S.entries||[]).filter(e=>e.kind==='sale').forEach(e=>{ const p=per[e.crop]||(per[e.crop]={rev:0,cost:0,unk:0,tr:0,fee:0,cb:0}); p.rev+=e.amount; if(e.cost_basis!=null) p.cost+=e.cost_basis*e.qty; else p.unk+=e.qty; });
+    body=`<div class="grid4"><div class="kpi"><span class="muted sm">মোট বিক্রি</span><strong>${tk(P.revenue)}</strong></div><div class="kpi"><span class="muted sm">মোট খরচ</span><strong>${tk(P.expense)}</strong></div>
+      <div class="kpi"><span class="muted sm">${P.exact?'লাভ':'আনুমানিক লাভ'}</span><strong style="color:var(--${P.profit>=0?'green':'red'})">${tk(P.profit)}</strong></div><div class="kpi"><span class="muted sm">${isP?'মজুদের জন্য কেনা':'ক্যাশব্যাক পেয়েছেন'}</span><strong>${tk(isP?P.purchases:P.cashback)}</strong></div></div>
+    <div class="grid2" style="margin-top:14px;align-items:start"><div class="panel"><h3>হিসাব কীভাবে হলো</h3>
+      ${bill([['মোট বিক্রি (Reroute + বাইরে)',tk(P.revenue)],P.cashback?['ক্যাশব্যাক','+'+tk(P.cashback),'plus']:null,[isP?'বিক্রি করা মালের কেনা খরচ':'বিক্রি করা মালের উৎপাদন খরচ','−'+tk(P.cost_of_goods),'minus'],['পরিবহন','−'+tk(P.transport),'minus'],['প্ল্যাটফর্ম ফি','−'+tk(P.fees),'minus'],['অন্যান্য খরচ','−'+tk(P.other),'minus'],[P.exact?'লাভ / ক্ষতি':'আনুমানিক লাভ / ক্ষতি',tk(P.profit),'tot']])}
+      ${!P.exact?`<p class="warn sm" style="margin-top:8px">${monTxt(P.unknown_cost_qty)} মালের খরচ জানা নেই, তাই এটা পুরো লাভ নয়। <a href="#/books" data-act="books-tab" data-v="entries">খরচ লিখুন</a></p>`:''}
+      ${isP?`<p class="muted sm" style="margin-top:8px">কেনা মাল যতক্ষণ বিক্রি হয়নি, ততক্ষণ সেটা মজুদ (খরচ নয়)। বিক্রি হলে তার কেনা খরচ হিসাবে আসে।</p>`:''}</div>
+    <div class="panel"><h3>ফসল অনুযায়ী</h3><div class="scroll"><table class="tbl"><tr><th>ফসল</th><th class="num">বিক্রি</th><th class="num">মালের খরচ</th><th class="num">পরিবহন+ফি</th><th class="num">লাভ</th></tr>
+      ${Object.entries(per).map(([k,p])=>`<tr><td>${CROPS[k].n}</td><td class="num">${tk(p.rev)}</td><td class="num">${p.unk?'অসম্পূর্ণ':tk(p.cost)}</td><td class="num">${tk(p.tr+p.fee)}</td><td class="num b">${p.unk?'–':tk(p.rev+p.cb-p.cost-p.tr-p.fee)}</td></tr>`).join('')||'<tr><td colspan="5" class="muted">এখনো বিক্রি নেই</td></tr>'}</table></div></div></div>
+    <div class="panel" style="margin-top:14px"><h3>🧮 লাভ-ক্ষতি ক্যালকুলেটর</h3><p class="muted sm">একটি বিক্রির আগে হিসাব করে দেখুন</p><div id="calc">${calcView()}</div></div>`;
+  }
+  if(BT==='entries') body=`<div class="grid2" style="align-items:start"><div class="panel"><h3>নতুন এন্ট্রি</h3>
+      <div class="choice c3" style="margin-top:8px">${[['expense','খরচ'],['sale','বাইরে বিক্রি'],['stock','মজুদ যোগ']].map(([k,t])=>`<button class="opt ${EN.kind===k?'on':''}" data-act="en-kind" data-v="${k}"><strong>${t}</strong></button>`).join('')}</div>
+      ${entryForm()}</div>
+    <div class="panel"><h3>আগের এন্ট্রি</h3>${(S.entries||[]).map(e=>`<div class="item"><div class="grow"><b>${{expense:'খরচ',sale:'বাইরে বিক্রি',stock:'মজুদ যোগ'}[e.kind]}${e.crop?': '+CROPS[e.crop].n+' '+monTxt(e.qty):''}</b><div class="muted sm">${esc(e.note||'')} · ${dateBn(e.at)}</div></div><b>${tk(e.amount)}</b></div>`).join('')||'<p class="muted">কিছু নেই</p>'}</div></div>`;
+  return `<div class="phead"><h1>📒 মজুদ ও হিসাব</h1></div>
+    <div class="tabs">${[['stock','📦 মজুদ'],['history','🧾 কেনাবেচার ইতিহাস'],['pnl','📊 লাভ-ক্ষতি'],['entries','✍️ খরচ ও এন্ট্রি']].map(([k,t])=>`<button class="${BT===k?'on':''}" data-act="books-tab" data-v="${k}">${t}</button>`).join('')}</div>${body}`;
+};
+let EN={kind:'expense',crop:'tomato',mon:10,amount:'',note:''};
+function entryForm(){
+  return `${EN.kind!=='expense'?`<div class="grid2" style="gap:10px"><label class="field"><span>ফসল</span><select data-en="crop">${Object.entries(CROPS).map(([k,c])=>`<option value="${k}" ${EN.crop===k?'selected':''}>${c.n}</option>`).join('')}</select></label>
+    <label class="field"><span>কত মণ</span><input data-en="mon" type="number" min="1" value="${EN.mon}"></label></div>`:''}
+    <label class="field"><span>${EN.kind==='expense'?'কত টাকা খরচ':EN.kind==='sale'?'মোট কত টাকায় বিক্রি':'মোট কেনা/উৎপাদন খরচ (ঐচ্ছিক)'}</span><input data-en="amount" type="number" min="0" value="${EN.amount}"></label>
+    <label class="field"><span>বিবরণ</span><input data-en="note" maxlength="120" value="${esc(EN.note)}" placeholder="${EN.kind==='expense'?'যেমন: সার, শ্রমিক, ভাড়া':'যেমন: স্থানীয় হাটে'}"></label>
+    <button class="btn btn-green btn-wide" style="margin-top:12px" data-act="en-submit">সংরক্ষণ করুন</button>`;
+}
+let CL=null;
+function calcView(){
+  const u=me(), inv=(S.inventory||[]).find(r=>r.cost!=null);
+  if(!CL) CL={crop:inv?inv.crop:'tomato',mon:25,price:MARKET_DEMO.dhaka[inv?inv.crop:'tomato'],cost:inv?Math.round(inv.cost):'',to:'dhaka',split:'half',other:0};
+  const kg=CL.mon*MON, rev=CL.price*kg, fee=u.role==='paikar'||u.role==='farmer'?platformFee(rev):0, q=quote(u.place,CL.to,kg,false,false);
+  const tr=CL.split==='none'?0:CL.split==='half'?q.total/2:q.total, cost=CL.cost===''?null:+CL.cost*kg, other=+CL.other||0, profit=rev-fee-tr-other-(cost||0);
+  return `<div class="grid4" style="gap:10px"><label class="field"><span>ফসল</span><select data-cl="crop">${Object.entries(CROPS).map(([k,c])=>`<option value="${k}" ${CL.crop===k?'selected':''}>${c.n}</option>`).join('')}</select></label>
+    <label class="field"><span>কত মণ</span><input data-cl="mon" type="number" min="5" value="${CL.mon}"></label>
+    <label class="field"><span>বিক্রির দাম ৳/কেজি</span><input data-cl="price" type="number" step="0.5" value="${CL.price}"></label>
+    <label class="field"><span>${u.role==='paikar'?'কেনা':'উৎপাদন'} খরচ ৳/কেজি</span><input data-cl="cost" type="number" step="0.5" value="${CL.cost}" placeholder="জানা না থাকলে ফাঁকা"></label>
+    <label class="field"><span>কোথায় পাঠাবেন</span><select data-cl="to">${Object.entries(PLACES).map(([k,p])=>`<option value="${k}" ${CL.to===k?'selected':''}>${p.n}</option>`).join('')}</select></label>
+    <label class="field"><span>ট্রাক ভাড়া আপনার</span><select data-cl="split">${[['half','অর্ধেক'],['all','পুরো'],['none','ক্রেতা দেবেন']].map(([k,t])=>`<option value="${k}" ${CL.split===k?'selected':''}>${t}</option>`).join('')}</select></label>
+    <label class="field"><span>অন্যান্য খরচ ৳</span><input data-cl="other" type="number" min="0" value="${CL.other}"></label></div>
+    <div id="calc-out" style="margin-top:12px">${bill([['বিক্রি',tk(rev)],cost!=null?['মালের খরচ','−'+tk(cost),'minus']:null,['ট্রাক ভাড়া (Reroute)','−'+tk(tr),'minus'],['প্ল্যাটফর্ম ফি ১%','−'+tk(fee),'minus'],other?['অন্যান্য','−'+tk(other),'minus']:null,[cost!=null?'লাভ / ক্ষতি':'খরচ বাদে হাতে থাকবে (মালের খরচ ছাড়া)',tk(profit),'tot']])}
+    ${cost==null?'<p class="warn sm" style="margin-top:6px">মালের খরচ দিলে আসল লাভ দেখাবে।</p>':''}</div>`;
+}
+
+/* ---------- price advice in plain language (দাম ও পরামর্শ) ---------- */
+const PR={crop:'tomato',mon:25,cost:null};
+V.prices = () => {
+  const u=me(), isP=u.role==='paikar', c=CROPS[PR.crop], kg=PR.mon*MON;
+  const inv=(S.inventory||[]).find(r=>r.crop===PR.crop); if(PR.cost===null) PR.cost=inv&&inv.cost!=null?Math.round(inv.cost*10)/10:'';
+  const live=(S.listings||[]).filter(l=>l.crop===PR.crop&&l.status==='active'), avg=live.length?live.reduce((a,l)=>a+l.eff_price,0)/live.length:null;
+  const head=`<div class="phead"><div><h1>💡 দাম ও পরামর্শ</h1><p class="muted">সহজ হিসাব: কোথায় ${isP?'কিনে কোথায় বেচলে':'বেচলে'} বেশি টাকা থাকবে</p></div></div>
+    <div class="warn" style="margin-bottom:12px">⚠️ সবজির বাজারদর এখানে <b>ডেমো অনুমান</b>, আসল বাজারের তথ্য নয়। Reroute-এর গড় দাম আসল লিস্টিং থেকে নেওয়া। পাইলটে কৃষি বিপণন অধিদপ্তরের দৈনিক দাম বসবে।</div>
+    <div class="chips">${Object.entries(CROPS).map(([k,cc])=>`<button class="chip ${PR.crop===k?'on':''}" data-act="pr-crop" data-v="${k}">${cc.i} ${cc.n}</button>`).join('')}</div>
+    <div class="row wrap-it" style="margin-bottom:12px"><label class="field" style="margin:0"><span>কত মণ</span><input data-pr="mon" type="number" min="5" value="${PR.mon}" style="width:110px"></label>
+      <label class="field" style="margin:0"><span>${isP?'':'আপনার উৎপাদন খরচ ৳/কেজি'}</span>${isP?'':`<input data-pr="cost" type="number" step="0.5" value="${PR.cost}" placeholder="জানা থাকলে" style="width:160px">`}</label></div>`;
+  const today=`<div class="panel"><h3>১. আজকের বাজার দর <span class="demo-tag">ডেমো অনুমান</span></h3><div class="scroll"><table class="tbl" style="margin-top:6px"><tr><th>জেলা</th><th class="num">প্রতি কেজি</th><th class="num">প্রতি মণ</th></tr>
+    ${Object.entries(PLACES).map(([k,p])=>`<tr><td>${p.n}${k===u.place?' (আপনার)':''}</td><td class="num">${tk(MARKET_DEMO[k][PR.crop])}</td><td class="num">${tk(MARKET_DEMO[k][PR.crop]*MON)}</td></tr>`).join('')}</table></div>
+    <p class="note sm" style="margin-top:8px">Reroute-এ এখন ${nf(live.length)}টি ${c.n}ের লিস্টিং${avg?`, গড় দাম ${tk(avg,1)}/কেজি (আসল)`:''}।</p></div>`;
+  if(!isP){
+    const cost=PR.cost===''?null:+PR.cost;
+    const rows=Object.keys(PLACES).map(m=>{ const price=MARKET_DEMO[m][PR.crop], q=quote(u.place,m,kg,u.plus_active,false), rev=price*kg, fee=platformFee(rev), tr=m===u.place?Math.round(kg*0.3):q.total;
+      return {m,price,rev,tr,fee,cost:cost!=null?cost*kg:0,net:rev-tr-fee-(cost!=null?cost*kg:0)}; }).sort((a,b)=>b.net-a.net);
+    const best=rows[0], home=rows.find(r=>r.m===u.place), mx=Math.max(...rows.map(r=>r.net)), speech=`${PLACES[best.m].n}-এ বেচলে হাতে থাকবে ${nf(Math.round(best.net))} টাকা, নিজের এলাকার চেয়ে ${nf(Math.round(best.net-home.net))} টাকা বেশি।`;
+    return head+`<div class="grid2" style="align-items:start">${today}
+      <div class="panel"><h3>২. আপনার খরচ (${monTxt(kg)})</h3>${bill([['মালের উৎপাদন খরচ',cost!=null?tk(cost*kg):'দেওয়া নেই'],[`ট্রাক ভাড়া ${PLACES[best.m].n} পর্যন্ত (Reroute)`,tk(best.tr)],['প্ল্যাটফর্ম ফি ১%',tk(best.fee)],['মোট খরচ',tk(best.tr+best.fee+(cost!=null?cost*kg:0)),'tot']])}
+        ${cost==null?'<p class="warn sm" style="margin-top:8px">উৎপাদন খরচ দিলে আসল লাভ দেখাবে।</p>':''}</div></div>
+      <div class="panel"><h3>৩. বিক্রি করলে কত থাকবে</h3><div class="scroll"><table class="tbl"><tr><th>কোথায়</th><th class="num">বিক্রি</th><th class="num">ট্রাক</th><th class="num">ফি</th>${cost!=null?'<th class="num">উৎপাদন খরচ</th>':''}<th class="num">হাতে থাকবে</th></tr>
+        ${rows.map(r=>`<tr><td>${PLACES[r.m].n}</td><td class="num">${tk(r.rev)}</td><td class="num">${tk(r.tr)}</td><td class="num">${tk(r.fee)}</td>${cost!=null?`<td class="num">${tk(r.cost)}</td>`:''}<td class="num b">${tk(r.net)}</td></tr>`).join('')}</table></div></div>
+      <div class="panel"><div class="between"><h3>৪. কোথায় বিক্রি করলে বেশি লাভ</h3><button class="iconbtn" data-act="say" data-v="${esc(speech)}" aria-label="শুনুন">🔊</button></div>
+        <div class="bars" style="margin-top:8px">${rows.map((r,i)=>`<div class="r"><span>${i===0?'🏆 ':''}${PLACES[r.m].n}</span><i class="${i===0?'best':r.m===u.place?'base':''}" style="width:${Math.max(4,r.net/mx*100)}%"></i><b>${tk(r.net)}</b></div>`).join('')}</div>
+        <div class="good" style="margin-top:10px">👉 ${PLACES[best.m].n}-এর পাইকারকে বেচলে নিজের এলাকার চেয়ে প্রায় ${tk(best.net-home.net)} বেশি থাকবে। <a href="#/market">সেখানকার ক্রেতা খুঁজুন</a> বা <a href="#/listings/new">লিস্টিং দিন</a>।</div>
+        <p class="muted sm" style="margin-top:8px">${c.n} বেশি দিন রাখা যায় না, তাই দূরের বাজারে পাঠালে পথে নষ্ট হওয়ার কথাও ভাবুন।</p></div>`;
+  }
+  const sell=MARKET_DEMO[u.place][PR.crop];
+  const src=(live.filter(l=>l.uid!==u.id).map(l=>{ const s=user(l.uid), q=myQuote(s.place,u.place,kg), per=l.eff_price+q.total/2/kg; return {l,s,per,profit:(sell-per)*kg,q}; })).sort((a,b)=>a.per-b.per);
+  const maxBuy=(sell/1.08)-(src[0]?src[0].q.total/2/kg:0);
+  const speech=src.length?`${dispName(src[0].s)}-এর কাছ থেকে কিনে আপনার বাজারে বেচলে আনুমানিক ${nf(Math.round(src[0].profit))} টাকা লাভ।`:'এখন এই ফসলের লিস্টিং নেই।';
+  return head+`<div class="grid2" style="align-items:start">${today}
+    <div class="panel"><h3>২. আপনার খরচ ও বিক্রি</h3>${bill([[`${PLACES[u.place].n}-এ বেচার দাম (ডেমো)`,tk(sell)+'/কেজি'],[`৮% লাভ রাখতে সর্বোচ্চ কেনা দাম`,tk(maxBuy,1)+'/কেজি','tot']])}
+      <p class="muted sm" style="margin-top:8px">সর্বোচ্চ কেনা দাম = বেচার দাম ÷ ১.০৮ − ট্রাক ভাড়ার আপনার অর্ধেক (প্রতি কেজি)। এর বেশি দামে কিনলে লাভ ৮%-এর কম।</p></div></div>
+    <div class="panel"><div class="between"><h3>৩–৪. কার কাছ থেকে কিনে বেচলে বেশি লাভ (${monTxt(kg)})</h3><button class="iconbtn" data-act="say" data-v="${esc(speech)}" aria-label="শুনুন">🔊</button></div>
+      <div class="scroll"><table class="tbl" style="margin-top:8px"><tr><th>বিক্রেতা</th><th class="num">দাম</th><th class="num">ট্রাক (অর্ধেক)/কেজি</th><th class="num">আপনার খরচ/কেজি</th><th class="num">আনুমানিক লাভ</th><th></th></tr>
+      ${src.map((x,i)=>`<tr><td>${i===0?'🏆 ':''}${esc(dispName(x.s))}, ${PLACES[x.s.place].n}</td><td class="num">${tk(x.l.eff_price,1)}</td><td class="num">${tk(x.q.total/2/kg,1)}</td><td class="num">${tk(x.per,1)}</td>
+        <td class="num b" style="color:var(--${x.profit>=0?'green':'red'})">${tk(x.profit)}</td><td><a class="btn btn-soft btn-sm" href="#/listing/${x.l.id}">দেখুন</a></td></tr>`).join('')||'<tr><td colspan="6" class="muted">এখন এই ফসলের লিস্টিং নেই</td></tr>'}</table></div>
+      <p class="muted sm" style="margin-top:8px">লাভ = (আপনার বাজারদর − কেনা দাম − ট্রাক ভাড়ার অর্ধেক) × পরিমাণ। Reroute ফি বিক্রেতা দেন।</p></div>`;
+};
+
+/* ---------- points & wallet ---------- */
+V.rewards = () => {
+  const u=me(), R=S.config.redeem;
+  const ptxBn={opening:'আগের পয়েন্ট',sale:'বিক্রি',purchase:'কেনা',transport:'Reroute ট্রাক',listing_info:'ছবি ও মানের তথ্য',verified:'প্রোফাইল যাচাই',redeem:'ব্যবহার',penalty:'জরিমানা'};
+  const wtxBn={payout:'বিক্রির টাকা',cashback:'ক্যাশব্যাক',refund:'ফেরত',payment:'পেমেন্ট',topup:'টাকা যোগ'};
+  return `<div class="phead"><h1>⭐ পয়েন্ট ও ওয়ালেট</h1></div>
+  <div class="grid2" style="align-items:start"><div>
+    <div class="panel" style="background:var(--ink);color:var(--surface)"><span style="opacity:.8">আমার পয়েন্ট</span><div style="font-size:2.3rem;font-weight:700;color:var(--gold)">⭐ ${nf(u.pts)}</div>
+      <div class="row wrap-it" style="margin-top:6px;opacity:.9">${u.transport_credit?`<span>🚚 পরিবহন ছাড় জমা: ${tk(u.transport_credit)}</span>`:''}${u.fee_credit?`<span>🧾 ফি ছাড় জমা: ${tk(u.fee_credit)}</span>`:''}</div></div>
+    <div class="panel"><h3>পয়েন্ট দিয়ে নিন</h3>${Object.entries(R).map(([k,[n,c,f,v]])=>`<div class="item"><div class="grow"><b>${n}</b><div class="muted sm">⭐ ${nf(c)} পয়েন্ট · ${k==='transport'?'পরের Reroute ট্রাকের ভাড়া থেকে কাটা যাবে (ভাড়ার অর্ধেক পর্যন্ত)':'পরের সফল বিক্রির ১% ফি থেকে কাটা যাবে'}</div></div>
+      <button class="btn btn-green btn-sm" data-act="redeem" data-id="${k}" ${u.pts<c?'disabled':''}>নিন</button></div>`).join('')}
+      <div class="item"><div class="grow"><b>🎁 ক্যাশব্যাক</b><div class="muted sm">যাচাইকৃত কৃষক ${tk(S.config.cashback_min)} বা বেশির সফল বিক্রিতে ${tk(S.config.cashback)} ক্যাশব্যাক পান, সপ্তাহে ৩ বার পর্যন্ত। নিজে থেকেই ওয়ালেটে আসে।</div></div></div>
+      <div class="item"><div class="grow"><b>🚚 অগ্রাধিকার ট্রাক</b><div class="muted sm">যাচাইকৃত কৃষক ও প্লাস সদস্যের বুকিং আগে ট্রাক পায়। ${u.verified?'✔ আপনি পাচ্ছেন':'প্রোফাইল যাচাই হলে পাবেন'}</div></div></div>
+      <div class="item"><div class="grow"><b>📦 নিয়মিত ক্রেতা ছাড়</b><div class="muted sm">৩০ দিনে ৫টি বা বেশি কেনা সম্পূর্ণ হলে ট্রাকের সেবা চার্জে ২০% ছাড়। ${u.bulk?'✔ আপনি পাচ্ছেন':''}</div></div></div></div>
+    <div class="panel"><h3>পয়েন্ট কীভাবে আসে</h3><ul class="sm" style="margin:8px 0 0;padding-left:18px">
+      <li>বিক্রি সম্পূর্ণ হলে প্রতি মণে ১ পয়েন্ট, কিনলে প্রতি ২ মণে ১</li><li>Reroute ট্রাকে মাল পৌঁছালে +১০</li><li>ছবি ও মানের তথ্যসহ লিস্টিং প্রথম বিক্রিতে +১০</li><li>প্রোফাইল যাচাই হলে +৫০</li>
+      <li>রাজি হওয়ার পর অর্ডার বাতিল করলে −১০</li></ul>
+      <p class="muted sm" style="margin-top:8px">ভুয়া লেনদেন ঠেকাতে: পয়েন্ট আসে শুধু পেমেন্ট হওয়া ও মাল পৌঁছানো অর্ডারে, অন্তত ৳৫,০০০-এর বিক্রিতে, আর একই ক্রেতা-বিক্রেতা জোড়া সপ্তাহে ৩ বারের বেশি নয়।</p></div></div>
+  <div><div class="panel"><span class="muted">ওয়ালেট ব্যালান্স</span><div style="font-size:2rem;font-weight:700">${tk(u.wallet)}</div>
+      <p class="muted sm">বিক্রির টাকা, ক্যাশব্যাক ও ফেরত টাকা এখানে আসে। পেমেন্টে ব্যবহার করা যায়। পাইলটে বিকাশ/ব্যাংকে তোলা যাবে।</p></div>
+    <div class="panel"><h3>ওয়ালেটের লেনদেন</h3>${(S.wallet_tx||[]).map(w=>`<div class="item"><div class="grow"><b>${wtxBn[w.kind]||w.kind}</b><div class="muted sm">${esc(w.note||'')} · ${dateBn(w.at)}</div></div><b style="color:var(--${w.amount>=0?'green':'red'})">${w.amount>=0?'+':''}${tk(w.amount)}</b></div>`).join('')||'<p class="muted">কিছু নেই</p>'}</div>
+    <div class="panel"><h3>পয়েন্টের ইতিহাস</h3>${(S.points_tx||[]).map(p=>`<div class="item"><div class="grow"><b>${ptxBn[p.kind]||p.kind}</b><div class="muted sm">${esc(p.note&&p.note.length>4?p.note:'')} ${dateBn(p.at)}</div></div><b style="color:var(--${p.pts>=0?'green':'red'})">${p.pts>=0?'+':''}${nf(p.pts)}</b></div>`).join('')||'<p class="muted">কিছু নেই</p>'}</div></div></div>`;
+};
+
+/* ---------- account & Plus ---------- */
+let AC=null;
+V.account = () => {
+  const u=me(); if(!AC) AC={name:u.name,area:u.area||'',biz:u.biz||'',photo:null};
+  const until=u.plus_until?dateBn(u.plus_until):'';
+  return `<div class="phead"><h1>👤 অ্যাকাউন্ট</h1><a class="btn btn-line" href="#/u/${u.id}">অন্যরা যেভাবে দেখে</a></div>
+  <div class="grid2" style="align-items:start"><div class="panel"><h3>প্রোফাইল</h3>
+    <div class="row" style="margin-top:10px">${AC.photo?`<span class="av lg"><img src="${AC.photo}" alt=""></span>`:avatar(u,true)}<label class="btn btn-line btn-sm">ছবি বদলান<input type="file" accept="image/*" data-act-change="ac-photo" hidden></label></div>
+    <label class="field"><span>নাম</span><input data-ac="name" value="${esc(AC.name)}"></label>
+    ${u.role==='paikar'?`<label class="field"><span>আড়ত / ব্যবসার নাম</span><input data-ac="biz" value="${esc(AC.biz)}"></label>`:''}
+    <label class="field"><span>উপজেলা / বাজার</span><input data-ac="area" value="${esc(AC.area)}"></label>
+    <dl class="kv" style="margin-top:12px"><dt>মোবাইল</dt><dd>${bd(u.phone)}</dd><dt>জেলা</dt><dd>${PLACES[u.place].n}</dd><dt>ধরন</dt><dd>${roleBn(u.role)}</dd>
+      <dt>যাচাই</dt><dd>${u.verified?'<span class="ver">✔ যাচাইকৃত</span>':'যাচাই হয়নি'}</dd></dl>
+    ${u.verified?'':`<p class="note sm" style="margin-top:8px">যাচাইয়ের জন্য ${u.role==='paikar'?'ট্রেড লাইসেন্স':'জাতীয় পরিচয়পত্র'} জমা দিতে হয়, Reroute অপারেশন টিম যাচাই করে। যাচাই হলে +৫০ পয়েন্ট, অগ্রাধিকার ট্রাক আর ক্যাশব্যাক।</p>`}
+    <button class="btn btn-green btn-wide" style="margin-top:12px" data-act="ac-save">সংরক্ষণ করুন</button>
+    <button class="btn btn-soft btn-wide" style="margin-top:8px" data-act="logout">বের হন</button></div>
+  ${u.role==='paikar'?`<div class="panel" style="${u.plus_active?'outline:2px solid var(--gold)':''}"><h3>⭐ প্লাস সাবস্ক্রিপশন ব্যবস্থাপনা</h3>
+    <div style="margin-top:10px">${u.plus_active?(u.plus_cancelled?`<span class="pill p-gold">বন্ধ করা হয়েছে</span> <span class="sm">${until} পর্যন্ত চালু থাকবে, তারপর আর নবায়ন হবে না</span>`:`<span class="pill p-green">চালু</span> <span class="sm">মেয়াদ ${until} পর্যন্ত</span>`):'<span class="pill p-grey">চালু নেই</span>'}</div>
+    <ul class="sm" style="margin:12px 0 0;padding-left:18px"><li>জরুরি বিক্রির খবর সবার আগে</li><li>ট্রাকের সেবা চার্জে ২৫% ছাড়</li><li>অগ্রাধিকার ট্রাক বুকিং</li></ul>
+    <p class="muted sm" style="margin-top:8px">দাম ${tk(S.config.plus_price)}, মেয়াদ ${nf(S.config.plus_days)} দিন। পেমেন্ট সফল হলেই চালু হয়।</p>
+    ${u.plus_active?(u.plus_cancelled?`<button class="btn btn-green btn-wide" style="margin-top:12px" data-act="plus-resume">আবার নবায়ন চালু করুন</button>`:`<button class="btn btn-soft btn-wide" style="margin-top:12px" data-act="plus-cancel">প্লাস বন্ধ করুন</button>`)
+      :`<button class="btn btn-ink btn-wide" style="margin-top:12px" data-act="plus-buy">প্লাস নিন (${tk(S.config.plus_price)})</button>`}
+    ${(S.payments||[]).filter(p=>p.purpose==='plus').map(p=>`<p class="muted xs" style="margin-top:6px">${dateBn(p.created)}: ${tk(p.amount)} · ${p.status==='success'?'সফল':p.status==='failed'?'ব্যর্থ':'অপেক্ষমাণ'}</p>`).join('')}</div>`
+  :`<div class="panel"><h3>নিরাপত্তা ও গোপনীয়তা</h3><p class="sm" style="margin-top:8px">আপনার ফোন নম্বর শুধু তারাই দেখেন যাদের সাথে পেমেন্ট হওয়া অর্ডার আছে। টাকার হিসাব আর লেনদেনের বিস্তারিত শুধু আপনি দেখেন। প্রোফাইলে অন্যরা দেখেন: নাম, এলাকা, রেটিং, কতগুলো লেনদেন সম্পূর্ণ করেছেন।</p></div>`}</div>`;
+};
+/* ---------- Reroute operations team: platform overview & truck management ---------- */
+V.admin = () => {
+  const A=S.admin, M=A.metrics, R=M.revenue, total=R.fee+R.service+R.commission+R.plus;
+  const ob=M.orders||{}, bb=M.bookings||{};
+  return `<div class="phead"><div><h1>📊 প্ল্যাটফর্মের সারাংশ</h1><p class="muted">Reroute অপারেশন টিম</p></div><a class="btn btn-green" href="#/admin/bookings">🚚 ট্রাক বুকিং দেখুন</a></div>
+  <div class="grid4"><div class="kpi"><span class="muted sm">কৃষক / পাইকার</span><strong>${nf(M.farmers)} / ${nf(M.paikars)}</strong><span class="muted sm">যাচাইকৃত ${nf(M.verified)}, প্লাস ${nf(M.plus)}</span></div>
+    <div class="kpi"><span class="muted sm">চালু লিস্টিং</span><strong>${nf(M.listings_active)}টি</strong><span class="muted sm">খোলা অফার ${nf(M.offers_open)}টি</span></div>
+    <div class="kpi"><span class="muted sm">সম্পূর্ণ অর্ডার</span><strong>${nf(ob.completed||0)}টি</strong><span class="muted sm">বাতিল ${nf(ob.cancelled||0)}টি</span></div>
+    <div class="kpi"><span class="muted sm">মোট কেনাবেচা</span><strong>${tk(M.gmv)}</strong><span class="muted sm">${monTxt(M.kg)}</span></div></div>
+  <div class="grid2" style="margin-top:14px;align-items:start"><div class="panel"><h3>💰 Reroute-এর আয়</h3>
+    ${bill([['প্ল্যাটফর্ম ফি (বিক্রির ১%)',tk(R.fee)],['ট্রাক সেবা চার্জ (৮%)',tk(R.service)],['ট্রাক মালিকের কমিশন (৭%)',tk(R.commission)],['প্লাস সাবস্ক্রিপশন',tk(R.plus)],['মোট আয়',tk(total),'tot'],['কৃষকদের ক্যাশব্যাক (খরচ)','−'+tk(M.cashback),'minus'],['নিট',tk(total-M.cashback),'tot']])}
+    <p class="muted sm" style="margin-top:8px">এক লেনদেনে একটাই প্ল্যাটফর্ম ফি (বিক্রেতার কাছ থেকে)। ট্রাকে সেবা চার্জ আর কমিশন আলাদা সেবার আয়। এখন এসক্রোতে জমা: ${tk(M.escrow)}</p></div>
+  <div class="panel"><h3>অর্ডার ও বুকিং</h3>
+    ${Object.entries(ORDER_ST).map(([k,v])=>`<div class="between sm" style="padding:4px 0"><span>${pill(v)}</span><b>${nf(ob[k]||0)}</b></div>`).join('')}<hr>
+    ${Object.entries(BOOK_ST).map(([k,v])=>`<div class="between sm" style="padding:4px 0"><span>🚚 ${pill(v)}</span><b>${nf(bb[k]||0)}</b></div>`).join('')}</div></div>
+  <div class="panel"><h3>সাম্প্রতিক পেমেন্ট</h3><div class="scroll"><table class="tbl"><tr><th>সময়</th><th>কে</th><th>কীসের</th><th>পদ্ধতি</th><th class="num">টাকা</th><th>অবস্থা</th></tr>
+    ${A.payments.slice(0,12).map(p=>`<tr><td>${ago(p.created)}</td><td>${esc(dispName(user(p.uid)))}</td><td>${{order:'অর্ডার',booking:'ট্রাক',plus:'প্লাস'}[p.purpose]}</td><td>${{bkash:'বিকাশ',nagad:'নগদ',card:'কার্ড',wallet:'ওয়ালেট'}[p.method]}</td><td class="num">${tk(p.amount)}</td><td>${pill(p.status==='success'?['সফল','p-green']:p.status==='failed'?['ব্যর্থ','p-red']:['অপেক্ষমাণ','p-gold'])}</td></tr>`).join('')}</table></div></div>`;
+};
+V.adminBookings = () => {
+  const A=S.admin, active=A.bookings.filter(b=>['requested','confirmed','pickup_scheduled','in_transit'].includes(b.status)), rest=A.bookings.filter(b=>!active.includes(b));
+  const row = b => { const tr=A.trucks.find(t=>t.id===b.truck), who=user(b.uid), V2=S.config.vehicles;
+    let ctl='';
+    if(b.status==='requested'){ const opts=A.trucks.filter(t=>['available','booked'].includes(t.status)&&V2[t.vehicle].cap>=Math.min(b.qty,V2.truck.cap)).sort((x,y)=>(y.place===b.pickup_place)-(x.place===b.pickup_place));
+      ctl=`<select id="ab-truck-${b.id}">${opts.map(t=>`<option value="${t.id}">${esc(t.company)} · ${V2[t.vehicle].n} · ${PLACES[t.place].n}${t.status==='booked'?' (শেয়ার্ড)':''}</option>`).join('')}</select>
+        <button class="btn btn-green btn-sm" data-act="ab" data-id="${b.id}" data-v="confirmed" ${opts.length?'':'disabled'}>ট্রাক দিন ও নিশ্চিত করুন</button>`; }
+    if(b.status==='confirmed') ctl=`<input id="ab-time-${b.id}" value="আগামীকাল সকাল ৭টা" style="max-width:180px"><button class="btn btn-blue btn-sm" data-act="ab" data-id="${b.id}" data-v="pickup_scheduled">মাল তোলার সময় ঠিক করুন</button>`;
+    if(b.status==='pickup_scheduled') ctl=`<button class="btn btn-blue btn-sm" data-act="ab" data-id="${b.id}" data-v="in_transit">🛣️ মাল উঠেছে, পথে রওনা</button>`;
+    if(b.status==='in_transit') ctl=`<label class="sm">আসল ভাড়া ৳ <input id="ab-fare-${b.id}" type="number" value="${b.fare}" style="width:100px"></label><button class="btn btn-green btn-sm" data-act="ab" data-id="${b.id}" data-v="delivered">📍 পৌঁছে গেছে</button>`;
+    return `<div class="panel"><div class="between"><div><b>${PLACES[b.pickup_place].n} → ${PLACES[b.drop_place].n}</b> ${pill(BOOK_ST[b.status])} ${b.priority?'<span class="pill p-gold">⭐ অগ্রাধিকার</span>':''} ${b.order_id?'<span class="pill p-grey">অর্ডারের সাথে</span>':''}</div><span class="muted sm">${ago(b.created)}</span></div>
+      <div class="muted sm" style="margin-top:4px">${monTxt(b.qty)} ${CROPS[b.crop].n} · ${S.config.vehicles[b.vehicle].n}${b.trucks_n>1?' × '+bd(b.trucks_n):''} · ${nf(b.km)} কিমি · ${esc(b.pickup_addr||'')} → ${esc(b.drop_addr||'')} · ${esc(b.date||'')} · বুক করেছেন ${esc(dispName(who))}</div>
+      <div class="sm" style="margin-top:4px">ভাড়া ${tk(b.fare)} + সেবা ${tk(b.service)} = ${tk(b.total)} · কমিশন ${tk(b.commission)}${tr?` · ট্রাক: ${esc(tr.company)}, ${esc(tr.driver)}`:''}${b.pickup_time?` · তোলা: ${esc(b.pickup_time)}`:''}${b.payout?` · ট্রাক মালিক পাবেন ${tk(b.payout)}`:''}</div>
+      ${ctl?`<div class="row wrap-it" style="margin-top:10px">${ctl}</div>`:''}</div>`; };
+  return `<div class="phead"><div><h1>🚚 ট্রাক বুকিং ব্যবস্থাপনা</h1><p class="muted sm">পেমেন্ট হওয়া বুকিং এখানে আসে। অগ্রাধিকার আগে। প্রতিটি ধাপে কৃষক ও পাইকার নোটিফিকেশন পান।</p></div></div>
+    <h3 style="margin-bottom:8px">চলমান (${nf(active.length)})</h3>${active.map(row).join('')||'<div class="empty">চলমান বুকিং নেই</div>'}
+    <h3 style="margin:16px 0 8px">আগের ও পেমেন্ট বাকি (${nf(rest.length)})</h3>${rest.map(row).join('')}`;
+};
+let TK={company:'Reroute ট্রাক ',driver:'',phone:'',number:'',vehicle:'mini',place:'rajshahi',areas:''};
+V.adminTrucks = () => {
+  const A=S.admin, V2=S.config.vehicles;
+  return `<div class="phead"><h1>🛻 ট্রাক বহর</h1></div>
+  <div class="grid4">${Object.entries(V2).map(([k,v])=>`<div class="kpi"><span class="muted sm">${v.n}</span><strong>${nf(A.trucks.filter(t=>t.vehicle===k).length)}টি</strong><span class="muted sm">ভিত্তি ${tk(v.base)} + কিমিতে ${tk(v.km)}</span></div>`).join('')}
+    <div class="kpi"><span class="muted sm">এখন পথে</span><strong>${nf(A.trucks.filter(t=>t.status==='on_trip').length)}টি</strong></div></div>
+  <div class="panel" style="margin-top:14px"><div class="scroll"><table class="tbl"><tr><th>ট্রাক</th><th>গাড়ি</th><th>চালক</th><th>নম্বর</th><th>এলাকা</th><th class="num">ট্রিপ</th><th>অবস্থা</th><th></th></tr>
+    ${A.trucks.map(t=>`<tr><td><b>${esc(t.company)}</b><div class="muted xs">${PLACES[t.place].n}</div></td><td>${V2[t.vehicle].n}</td><td>${esc(t.driver)}<div class="muted xs">${bd(t.phone)}</div></td><td>${esc(t.number)}</td><td class="sm">${esc(t.areas||'')}</td><td class="num">${nf(t.trips)}</td>
+      <td>${pill({available:['খালি','p-green'],booked:['বুক করা','p-blue'],on_trip:['পথে','p-blue'],maintenance:['মেরামতে','p-grey']}[t.status])}</td>
+      <td>${t.status==='available'?`<button class="btn btn-soft btn-sm" data-act="at-status" data-id="${t.id}" data-v="maintenance">মেরামতে পাঠান</button>`:t.status==='maintenance'?`<button class="btn btn-soft btn-sm" data-act="at-status" data-id="${t.id}" data-v="available">চালু করুন</button>`:''}</td></tr>`).join('')}</table></div></div>
+  <div class="panel"><h3>নতুন ট্রাক যোগ করুন</h3><div class="grid3" style="gap:10px">
+    ${[['company','কোম্পানি/নাম'],['driver','চালকের নাম'],['phone','চালকের মোবাইল'],['number','গাড়ির নম্বর'],['areas','সার্ভিস এলাকা']].map(([k,t])=>`<label class="field"><span>${t}</span><input data-tk="${k}" value="${esc(TK[k])}"></label>`).join('')}
+    <label class="field"><span>গাড়ির ধরন</span><select data-tk="vehicle">${Object.entries(V2).map(([k,v])=>`<option value="${k}" ${TK.vehicle===k?'selected':''}>${v.n}</option>`).join('')}</select></label>
+    <label class="field"><span>ঘাঁটি</span><select data-tk="place">${Object.entries(PLACES).map(([k,p])=>`<option value="${k}" ${TK.place===k?'selected':''}>${p.n}</option>`).join('')}</select></label></div>
+    <button class="btn btn-green" style="margin-top:12px" data-act="at-add">ট্রাক যোগ করুন</button></div>`;
+};
+V.adminUsers = () => `<div class="phead"><h1>👥 ব্যবহারকারী</h1></div><div class="panel scroll"><table class="tbl"><tr><th>নাম</th><th>ধরন</th><th>এলাকা</th><th>মোবাইল</th><th class="num">পয়েন্ট</th><th class="num">ওয়ালেট</th><th>যাচাই</th></tr>
+  ${S.admin.users.map(u=>`<tr><td><a href="#/u/${u.id}">${esc(dispName(u))}</a>${u.role==='paikar'?`<div class="muted xs">${esc(u.name)}</div>`:''}</td><td>${roleBn(u.role)}${u.plus_until>Date.now()?' ⭐':''}</td><td>${esc(u.area||'')}, ${PLACES[u.place].n}</td><td>${bd(u.phone)}</td>
+    <td class="num">${nf(u.pts)}</td><td class="num">${tk(u.wallet)}</td><td>${u.verified?'<span class="ver">✔ যাচাইকৃত</span>':`<button class="btn btn-blue btn-sm" data-act="au-verify" data-id="${u.id}">যাচাই করুন</button>`}</td></tr>`).join('')}</table></div>`;
+V.adminOrders = () => `<div class="phead"><h1>📦 লেনদেন</h1></div><div class="panel scroll"><table class="tbl"><tr><th>তারিখ</th><th>ফসল</th><th>বিক্রেতা → ক্রেতা</th><th class="num">পরিমাণ</th><th class="num">দাম</th><th class="num">মোট</th><th class="num">ফি</th><th>পরিবহন</th><th>অবস্থা</th></tr>
+  ${S.admin.orders.map(o=>`<tr><td>${dateBn(o.created)}</td><td>${CROPS[o.crop].n}</td><td>${esc(dispName(user(o.seller)))} → ${esc(dispName(user(o.buyer)))}</td><td class="num">${monTxt(o.qty)}</td><td class="num">${tk(o.price,1)}</td><td class="num">${tk(o.goods)}</td><td class="num">${tk(o.fee-o.fee_disc)}</td>
+    <td>${o.transport==='reroute'?'Reroute':'নিজে'}</td><td>${pill(ORDER_ST[o.status])}${o.reason?`<div class="muted xs">${esc(o.reason)}</div>`:''}</td></tr>`).join('')}</table></div>`;
+/* =====================================================================
+   Router
+   ===================================================================== */
+function parts(){ return (location.hash||'#/').split('?')[0].replace(/^#\/?/,'').split('/'); }
+function routeBase(){ const p=parts(); return '#/'+p[0]+(p[0]==='admin'&&p[1]?'/'+p[1]:''); }
+let AFTER_NAV=null;
+function closeSheet(){ $('#sheet').classList.remove('on'); $('#scrim').classList.remove('on'); }
+function go(h, then){ if(location.hash===h){ render(); if(then) then(); } else { AFTER_NAV=then||null; location.hash=h; } }
+function render(){
+  const p=parts(), u=me(); let html='';
+  const needT=()=>{ if(!u){ go('#/login'); return false; } if(u.role==='admin'){ go('#/admin'); return false; } return true; };
+  const needA=()=>{ if(!u||u.role!=='admin'){ go(u?'#/home':'#/login'); return false; } return true; };
+  switch(p[0]){
+    case '': if(u){ go(u.role==='admin'?'#/admin':'#/home'); return; } html=V.home(); break;
+    case 'login': html=V.login(); break;
+    case 'register': html=V.register(); break;
+    case 'market': html=V.market(); break;
+    case 'listing': html=V.listing(p[1]); break;
+    case 'u': html=V.profile(p[1]); break;
+    case 'ai': html=V.ai(); break;
+    case 'transport': if(u&&u.role==='admin'){ go('#/admin/bookings'); return; } html=V.transport(); break;
+    case 'home': if(!needT()) return; html=V.dash(); break;
+    case 'listings': if(!needT()) return; html=p[1]==='new'?V.newListing():V.listings(); break;
+    case 'deals': if(!needT()) return; html=V.deals(); break;
+    case 'offer': if(!needT()) return; html=V.offer(p[1]); break;
+    case 'order': if(!needT()) return; html=V.order(p[1]); break;
+    case 'inspection': if(!needT()) return; html=V.inspection(p[1]); break;
+    case 'booking': if(!needT()) return; html=V.booking(p[1]); break;
+    case 'books': if(!needT()) return; html=V.books(); break;
+    case 'prices': if(!needT()) return; html=V.prices(); break;
+    case 'rewards': if(!needT()) return; html=V.rewards(); break;
+    case 'account': if(!needT()) return; html=V.account(); break;
+    case 'admin': if(!needA()) return; html=({'':V.admin,bookings:V.adminBookings,trucks:V.adminTrucks,users:V.adminUsers,orders:V.adminOrders}[p[1]||'']||V.admin)(); break;
+    default: html=`<div class="empty">পাতা পাওয়া যায়নি। <a href="#/">শুরুতে ফিরুন</a></div>`;
+  }
+  if(u){ const here=location.hash; (S.notifs||[]).filter(n=>!n.read&&n.link===here).forEach(n=>{ n.read=1; api(`/notifs/${n.id}/read`,'POST').catch(()=>{}); }); }
+  if(u && !['login','register'].includes(p[0])) html=banners()+html;
+  $('#view').innerHTML=html; renderChrome();
+}
+function renderKeepFocus(){
+  const a=document.activeElement, key=a&&[...a.attributes].find(x=>x.name.startsWith('data-')&&x.name!=='data-act');
+  const sel=a&&a.selectionStart; render();
+  if(key){ const el=document.querySelector(`[${key.name}="${key.value}"]`); if(el){ el.focus(); try{ el.setSelectionRange(sel,sel); }catch(e){} } }
+}
+window.addEventListener('hashchange',()=>{ closeModal(); $('#npanel').classList.remove('on'); closeSheet(); PROFILE=null; render(); window.scrollTo(0,0); const f=AFTER_NAV; AFTER_NAV=null; if(f) f(); });
+
+/* =====================================================================
+   Actions
+   ===================================================================== */
+async function refresh(){ await load(); render(); }
+async function doLogin(body){
+  const r=await api('/login','POST',body); setToken(r.token); await load();
+  go(r.user.role==='admin'?'#/admin':'#/home'); toast(`স্বাগতম, ${dispName(r.user)}`);
+}
+const REASONS = {
+  reject_seller:['দাম কম','এত পরিমাণ দিতে পারব না','অন্য জায়গায় বিক্রি করেছি'],
+  reject_buyer:['দাম বেশি','আর লাগবে না','অন্য জায়গা থেকে কিনেছি'],
+  cancel_seller:['মাল শেষ হয়ে গেছে','এখন পাঠাতে পারব না','ক্রেতা যোগাযোগ করেননি'],
+  cancel_buyer:['আর লাগবে না','অন্য জায়গা থেকে কিনেছি','সময়মতো পাওয়া যাবে না']
+};
+const A = {
+  close:()=>closeModal(),
+  nav:d=>{ closeSheet(); go(d.to); },
+  sheet:()=>{ const on=$('#sheet').classList.toggle('on'); $('#scrim').classList.toggle('on',on); },
+  say:d=>say(d.v),
+  bell:()=>{ renderBell(); $('#npanel').classList.toggle('on'); },
+  'read-all':async()=>{ await api('/notifs/read','POST'); await load(); renderBell(); renderChrome(); },
+  notif:async d=>{ $('#npanel').classList.remove('on'); try{ await api(`/notifs/${d.id}/read`,'POST'); }catch(e){} await load(); if(d.link) go(d.link); else render(); },
+  'notif-x':async d=>{ await api(`/notifs/${d.id}/read`,'POST'); await refresh(); },
+  logout:async()=>{ closeSheet(); setToken(null); await load(); go('#/'); },
+  reset:async()=>{ if(!await confirmBox({title:'ডেমো নতুন করে শুরু করবেন?',body:'সব ডেমো ডেটা শুরুর অবস্থায় ফিরবে।',ok:'হ্যাঁ, শুরু করুন'})) return; await api('/reset','POST'); setToken(null); NL=null; BK=null; CL=null; AC=null; await load(); go('#/'); toast('ডেমো নতুন করে শুরু হয়েছে'); },
+  'pick-role':d=>{ loginRole=d.role; if(d.stay) render(); else go('#/login'); },
+  login:async d=>doLogin({user_id:d.id}),
+  'login-phone':async()=>doLogin({phone:($('#lg-phone').value||'').replace(/\D/g,''),role:loginRole}),
+  register:async()=>{ const b={role:loginRole,name:$('#rg-name').value.trim(),phone:($('#rg-phone').value||'').replace(/\D/g,''),place:$('#rg-place').value,area:$('#rg-area').value.trim(),biz:$('#rg-biz')?$('#rg-biz').value.trim():null};
+    if(b.name.length<2||!/^01\d{9}$/.test(b.phone)){ toast('নাম আর ০১ দিয়ে শুরু ১১ সংখ্যার নম্বর দিন'); return; }
+    const r=await api('/register','POST',b); setToken(r.token); await load(); go('#/home'); toast('অ্যাকাউন্ট খোলা হয়েছে'); },
+  'f-crop':d=>{ F.crop=d.v; render(); },
+  /* confirmation box */
+  'conf-yes':()=>{ const t=$('#conf-reason'); const reason=(t&&t.value.trim())||CONF.picked||null; if(CONF.reason&&CONF.requireReason&&!reason){ toast('একটি কারণ দিন, বা "কারণ ছাড়া" চাপুন'); return; } closeModal(CONF.reason?{reason}:true); },
+  'conf-skip':()=>closeModal({reason:null}),
+  'conf-no':()=>closeModal(false),
+  'conf-chip':d=>{ const t=$('#conf-reason'); CONF.picked = CONF.picked===d.v?'':d.v; if(t&&t.value&&!CONF.chips.includes(t.value)) CONF.picked=t.value; drawConfirm(); },
+  /* listings */
+  'nl-crop':d=>{ NL.crop=d.v; NL.price=null; render(); },
+  'nl-photo-x':d=>{ NL.photos.splice(+d.v,1); render(); },
+  'nl-submit':async()=>{ const u=me(), kg=NL.mon*MON;
+    if(!(NL.mon>=5&&NL.moq>=5&&NL.moq<=NL.mon&&NL.price>0)){ toast('পরিমাণ অন্তত ৫ মণ, সর্বনিম্ন অর্ডার ৫ মণ বা বেশি, আর দাম দিন'); return; }
+    const ok=await confirmBox({title:'লিস্টিং প্রকাশ করবেন?',body:bill([['ফসল',CROPS[NL.crop].n+', গ্রেড '+NL.grade],['পরিমাণ',kgMon(kg)],['দাম',tk(NL.price,1)+'/কেজি'],['সর্বনিম্ন অর্ডার',monTxt(NL.moq*MON)],['ছবি',nf(NL.photos.length)+'টি'],['মোট মূল্য',tk(NL.price*kg),'tot']])+'<p class="muted sm" style="margin-top:8px">প্রকাশ হলে সব কৃষক ও পাইকার দেখতে পাবেন।</p>',ok:'প্রকাশ করুন'});
+    if(!ok) return;
+    const l=await api('/listings','POST',{crop:NL.crop,qty:kg,price:+NL.price,moq:NL.moq*MON,grade:NL.grade,quality:NL.quality,harvest_days_ago:+NL.harvest,photos:NL.photos,prod_cost:NL.cost===''?null:+NL.cost});
+    nlReset(); await load(); go('#/listing/'+l.id); toast('✅ লিস্টিং প্রকাশ হয়েছে'); },
+  urgent:async d=>{ const l=listing(d.id), disc=l.days_left<=1?12:l.days_left<=2?10:7;
+    if(!await confirmBox({title:'🚨 জরুরি বিক্রি চালু করবেন?',body:`দাম ${nf(disc)}% কমে ${tk(l.price*(1-disc/100),1)}/কেজি হবে, আর সব পাইকারের কাছে সাথে সাথে খবর যাবে। পরে দাম আবার বদলাতে পারবেন।`,ok:'চালু করুন',danger:true})) return;
+    await api(`/listings/${d.id}/urgent`,'POST'); await refresh(); toast('🚨 জরুরি বিক্রি চালু, পাইকারদের জানানো হয়েছে'); },
+  'l-price':d=>{ const l=listing(d.id); modal(`<div class="body"><h2>দাম বদলান</h2><p class="muted">${CROPS[l.crop].n}, এখন ${tk(l.price,1)}/কেজি</p>
+    <label class="field"><span>নতুন দাম (৳/কেজি)</span><input id="lp-price" type="number" step="0.5" min="1" value="${l.price}"></label>
+    <p class="muted sm" style="margin-top:6px">চলমান অফার আর অর্ডারের দাম বদলাবে না।</p><button class="btn btn-green btn-wide" style="margin-top:12px" data-act="l-price-save" data-id="${l.id}">সংরক্ষণ</button></div>`); },
+  'l-price-save':async d=>{ const v=+$('#lp-price').value; if(!(v>0)){ toast('দাম দিন'); return; } await api(`/listings/${d.id}`,'PATCH',{price:v}); closeModal(); await refresh(); toast('দাম বদলানো হয়েছে'); },
+  'l-qty':d=>{ const l=listing(d.id); modal(`<div class="body"><h2>পরিমাণ বাড়ান বা কমান</h2><p class="muted">বিক্রির জন্য আছে ${monTxt(l.available)}</p>
+    <label class="field"><span>কত মণ যোগ করবেন? (কমাতে মাইনাস দিন, যেমন −১০)</span><input id="lq-mon" type="number" value="10"></label>
+    <button class="btn btn-green btn-wide" style="margin-top:12px" data-act="l-qty-save" data-id="${l.id}">সংরক্ষণ</button></div>`); },
+  'l-qty-save':async d=>{ const v=+$('#lq-mon').value; if(!v){ toast('সংখ্যা দিন'); return; } await api(`/listings/${d.id}`,'PATCH',{add_qty:v*MON}); closeModal(); await refresh(); toast('পরিমাণ বদলানো হয়েছে'); },
+  'l-status':async d=>{ const t={paused:['সাময়িক বন্ধ করবেন?','বন্ধ থাকলে কেউ নতুন অফার দিতে পারবেন না। পরে আবার চালু করা যাবে।'],active:['আবার চালু করবেন?','সবাই আবার দেখতে ও অফার দিতে পারবেন।'],closed:['লিস্টিং পুরো বন্ধ করবেন?','বাকি মাল আপনার মজুদে "তালিকার বাইরে" থাকবে। চলমান অর্ডার থাকলে বন্ধ করা যায় না।']}[d.v];
+    if(!await confirmBox({title:t[0],body:t[1],danger:d.v==='closed'})) return; await api(`/listings/${d.id}`,'PATCH',{status:d.v}); await refresh(); },
+  /* buying */
+  'offer-open':d=>{ if(!me()){ go('#/login'); return; } openOffer(d.id); },
+  'of-set':d=>{ OF[d.k]=d.v; drawOffer(); },
+  'of-submit':async()=>{ const c=offerCalc(), l=c.l;
+    if(c.kg<l.moq||c.kg>l.available){ toast(`পরিমাণ ${monTxt(l.moq)} থেকে ${monTxt(l.available)} এর মধ্যে দিন`); return; }
+    if(!(OF.price>0&&OF.price<=l.eff_price)){ toast(`দাম তালিকার দাম ${tk(l.eff_price,1)} বা কম দিন`); return; }
+    const ok=await confirmBox({title:'অফার পাঠাবেন?',body:`<p>${monTxt(c.kg)} ${CROPS[l.crop].n}, ${tk(OF.price,1)}/কেজি</p>`+offerBill(c)+'<p class="muted sm" style="margin-top:8px">বিক্রেতা রাজি হলে পেমেন্ট করতে বলা হবে। এখন কোনো টাকা কাটবে না।</p>',ok:'অফার পাঠান'});
+    if(!ok) return;
+    const o=await api('/offers','POST',{listing:l.id,qty:c.kg,price:+OF.price,transport:OF.transport,split:OF.split,note:OF.note}); await load(); go('#/offer/'+o.id); toast('📩 অফার পাঠানো হয়েছে'); },
+  'inspect-open':d=>{ if(!me()){ go('#/login'); return; } openInspect(d.id); },
+  'in-kind':d=>{ IN.kind=d.v; IN.pref=$('#in-pref').value; IN.note=$('#in-note').value; drawInspect(); },
+  'in-submit':async()=>{ const i=await api('/inspections','POST',{listing:IN.lid,kind:IN.kind,pref:$('#in-pref').value.trim()||'যেকোনো সময়',note:$('#in-note').value.trim()}); closeModal(); await load(); go('#/inspection/'+i.id); toast('🔍 অনুরোধ পাঠানো হয়েছে'); },
+  insp:async d=>{ const t={schedule:'রাজি হয়ে সময় জানাবেন?',decline:'পরিদর্শনে রাজি নন?',done:'মাল দেখা হয়েছে?',cancel:'অনুরোধ বাতিল করবেন?'}[d.v];
+    if(!await confirmBox({title:t,danger:['decline','cancel'].includes(d.v)})) return; const r=$('#insp-reply');
+    await api(`/inspections/${d.id}/${d.v}`,'POST',{reply:r?r.value:''}); await refresh(); },
+  dt:d=>{ DT=d.v; if(parts()[0]!=='deals') go('#/deals'); else render(); },
+  df:d=>{ DF=d.v; render(); },
+  /* negotiation */
+  'o-accept':async d=>{ const o=S.offers.find(x=>x.id===d.id), sell=o.seller===me().id;
+    if(sell){ const e=sellerPayout(o,o.price);
+      if(!await confirmBox({title:'এই দামে বিক্রি করবেন?',body:`<p>${monTxt(o.qty)} ${CROPS[o.crop].n}, ${tk(o.price,1)}/কেজি, ${esc(dispName(user(o.buyer)))}-কে</p>`+bill([['মালের দাম',tk(e.goods)],['প্ল্যাটফর্ম ফি ১%','−'+tk(e.fee-e.feeDisc),'minus'],e.share?['ট্রাক ভাড়া, আপনার ভাগ','−'+tk(e.share-e.credit),'minus']:null,['আপনি পাবেন',tk(e.payout),'tot']])+'<p class="muted sm" style="margin-top:8px">রাজি হলে মাল সংরক্ষিত হবে। ক্রেতা পেমেন্ট করলে অর্ডার নিশ্চিত, টাকা Reroute-এ জমা থাকবে, মাল বুঝে দিলে পাবেন।</p>',ok:'হ্যাঁ, রাজি'})) return;
+      const r=await api(`/offers/${d.id}/accept`,'POST',{}); await load(); go('#/order/'+r.order.id); toast('✅ রাজি হয়েছেন, ক্রেতার পেমেন্টের অপেক্ষা'); }
+    else { const e=buyerTotal(o,o.price);
+      if(!await confirmBox({title:'পাল্টা দামে কিনবেন?',body:`<p>${monTxt(o.qty)} ${CROPS[o.crop].n}, ${tk(o.price,1)}/কেজি</p>`+bill([['মালের দাম',tk(e.goods)],e.share?['ট্রাক ভাড়া, আপনার ভাগ',tk(e.share)]:null,e.credit?['⭐ ছাড়','−'+tk(e.credit),'plus']:null,['মোট পেমেন্ট',tk(e.total),'tot']])+'<p class="muted sm" style="margin-top:8px">রাজি হলে এখনই অনলাইনে পেমেন্ট করতে হবে।</p>',ok:'হ্যাঁ, পেমেন্টে যান'})) return;
+      const r=await api(`/offers/${d.id}/accept`,'POST',{}); await load();
+      go('#/order/'+r.order.id, ()=>payFlow('order',r.order.id,r.order.buyer_total,`${monTxt(o.qty)} ${CROPS[o.crop].n} কেনা`,null)); } },
+  'o-reject':async d=>{ const o=S.offers.find(x=>x.id===d.id), sell=o.seller===me().id;
+    const r=await confirmBox({title:sell?'অফারে না বলবেন?':'পাল্টা দামে না বলবেন?',body:`${monTxt(o.qty)} ${CROPS[o.crop].n}, ${tk(o.price,1)}/কেজি। অন্যজনকে জানানো হবে।`,reason:true,chips:REASONS[sell?'reject_seller':'reject_buyer'],ok:'কারণসহ না বলুন',okShort:'না বলুন',danger:true});
+    if(!r) return; await api(`/offers/${d.id}/reject`,'POST',{reason:r.reason}); await refresh(); toast('না বলা হয়েছে'); },
+  'o-cancel':async d=>{ const r=await confirmBox({title:'অফার তুলে নেবেন?',body:'বিক্রেতাকে জানানো হবে। পয়েন্ট কাটবে না।',reason:true,chips:REASONS.cancel_buyer,ok:'কারণসহ তুলে নিন',okShort:'তুলে নিন',danger:true});
+    if(!r) return; await api(`/offers/${d.id}/cancel`,'POST',{reason:r.reason}); await refresh(); },
+  'o-counter':d=>{ const o=S.offers.find(x=>x.id===d.id), mid=Math.round(((o.price+o.listed_price)/2)*2)/2;
+    modal(`<div class="body"><h2>↔️ পাল্টা দাম দিন</h2><p class="muted">ক্রেতা দিয়েছেন ${tk(o.price,1)}/কেজি, আপনার তালিকার দাম ${tk(o.listed_price,1)}</p>
+      <label class="field"><span>আপনার দাম (৳/কেজি)</span><input id="ct-price" type="number" step="0.5" min="${o.price+0.5}" max="${o.listed_price}" value="${mid}"></label>
+      <p class="muted sm" style="margin-top:6px">ক্রেতা রাজি হলে পেমেন্ট করবেন, না হলে প্রত্যাখ্যান করবেন।</p>
+      <button class="btn btn-blue btn-wide" style="margin-top:12px" data-act="counter-send" data-id="${o.id}">পাল্টা দাম পাঠান</button></div>`); },
+  'counter-send':async d=>{ const o=S.offers.find(x=>x.id===d.id), v=+$('#ct-price').value;
+    if(!(v>o.price&&v<=o.listed_price)){ toast(`দাম ${tk(o.price,1)}-এর বেশি এবং ${tk(o.listed_price,1)} বা কম দিন`); return; }
+    await api(`/offers/${d.id}/counter`,'POST',{price:v}); closeModal(); await refresh(); toast('↔️ পাল্টা দাম পাঠানো হয়েছে'); },
+  /* payments */
+  'pay-order':d=>{ const o=S.orders.find(x=>x.id===d.id); payFlow('order',o.id,o.buyer_total,`${monTxt(o.qty)} ${CROPS[o.crop].n}, ${esc(dispName(user(o.seller)))}-এর কাছ থেকে`,null); },
+  'pay-booking':d=>{ const b=S.bookings.find(x=>x.id===d.id); payFlow('booking',b.id,b.total-b.credit_used,`Reroute ট্রাক: ${PLACES[b.pickup_place].n} → ${PLACES[b.drop_place].n}`,null); },
+  'pay-method':async d=>{ PAY.method=d.v; const p=await api('/payments','POST',{purpose:PAY.purpose,ref:PAY.ref,method:d.v});
+    PAY.pid=p.id; if(p.status==='success'){ PAY.step='done'; PAY.txn=p.txn; } else if(p.status==='failed'){ PAY.step='failed'; PAY.msg=p.message; } else PAY.step='gateway'; drawPay(); },
+  'pay-back':()=>{ PAY.step='method'; drawPay(); },
+  'pay-confirm':async()=>{ const acc=($('#pay-acc').value||'').replace(/\s/g,''), pin=$('#pay-pin').value.trim();
+    const r=await api(`/payments/${PAY.pid}/confirm`,'POST',{account:acc,pin}); if(r.status==='success'){ PAY.step='done'; PAY.txn=r.txn; } else { PAY.step='failed'; PAY.msg=r.message; } drawPay(); },
+  'pay-retry':()=>{ PAY.step='method'; drawPay(); },
+  'pay-finish':async()=>{ const after=PAY.after; closeModal(); await refresh(); toast('✅ পেমেন্ট সফল'); if(after) after(); },
+  /* order steps */
+  handover:async d=>{ const o=S.orders.find(x=>x.id===d.id);
+    if(!await confirmBox({title:o.transport==='reroute'?'ট্রাকে মাল তুলে দিয়েছেন?':'পাইকারকে মাল বুঝিয়ে দিয়েছেন?',body:`${monTxt(o.qty)} ${CROPS[o.crop].n}। ক্রেতা মাল বুঝে নিলে টাকা আপনার ওয়ালেটে যাবে।`,ok:'হ্যাঁ, দিয়েছি'})) return;
+    await api(`/orders/${d.id}/handover`,'POST'); await refresh(); toast('📦 হস্তান্তর নিশ্চিত হয়েছে'); },
+  complete:async d=>{ const o=S.orders.find(x=>x.id===d.id);
+    if(!await confirmBox({title:'মাল বুঝে পেয়েছেন?',body:`${monTxt(o.qty)} ${CROPS[o.crop].n}। নিশ্চিত করলে বিক্রেতা ${tk(o.payout)} পাবেন, আর এটা ফেরানো যাবে না।`,ok:'হ্যাঁ, বুঝে পেয়েছি'})) return;
+    await api(`/orders/${d.id}/complete`,'POST'); await refresh(); toast('🎉 অর্ডার সম্পূর্ণ'); A['rate-open']({id:d.id}); },
+  'order-cancel':async d=>{ const o=S.orders.find(x=>x.id===d.id), sell=o.seller===me().id;
+    const r=await confirmBox({title:'অর্ডার বাতিল করবেন?',body:`${monTxt(o.qty)} ${CROPS[o.crop].n}। অন্যজনকে কারণসহ জানানো হবে।${o.paid_at?` ক্রেতার ${tk(o.buyer_total)} তাঁর ওয়ালেটে ফেরত যাবে।`:''}${o.booking?' Reroute ট্রাকের বুকিংও বাতিল হবে।':''}`,
+      penalty:S.config.penalty,reason:true,chips:REASONS[sell?'cancel_seller':'cancel_buyer'],ok:'কারণসহ বাতিল',okShort:'বাতিল',danger:true});
+    if(!r) return; await api(`/orders/${d.id}/cancel`,'POST',{reason:r.reason}); await refresh(); toast(`অর্ডার বাতিল হয়েছে, ${nf(S.config.penalty)} পয়েন্ট কাটা গেছে`); },
+  'rate-open':d=>{ RT={id:d.id,stars:5}; drawRate(); },
+  'rate-star':d=>{ RT.stars=+d.v; drawRate(); },
+  'rate-send':async()=>{ await api(`/orders/${RT.id}/rate`,'POST',{stars:RT.stars,text:($('#rt-text').value||'').trim()||null}); closeModal(); await refresh(); toast('⭐ রেটিং দেওয়া হয়েছে'); },
+  /* transport */
+  'bk-submit':async()=>{ const {kg,q,credit,pay}=bkQuote();
+    if(BK.src===BK.dst&&!BK.srcAddr){ toast('ঠিকানা দিন'); return; } if(kg<100){ toast('অন্তত ৩ মণ দিন'); return; }
+    if(!await confirmBox({title:'ট্রাক বুক করবেন?',body:`<p>${PLACES[BK.src].n} → ${PLACES[BK.dst].n}, ${monTxt(kg)} ${CROPS[BK.crop].n}, ${BK.date}</p>`+bill([[q.vehicle_name,tk(q.fare)],['সেবা চার্জ',tk(q.service)],credit?['⭐ ছাড়','−'+tk(credit),'plus']:null,['মোট',tk(pay),'tot']])+'<p class="muted sm" style="margin-top:8px">পেমেন্ট হলে বুকিং অনুরোধ অপারেশন টিমের কাছে যাবে, ট্রাক ঠিক হলে জানানো হবে।</p>',ok:'পেমেন্টে যান'})) return;
+    const b=await api('/bookings','POST',{pickup_place:BK.src,pickup_addr:BK.srcAddr,drop_place:BK.dst,drop_addr:BK.dstAddr,crop:BK.crop,qty:kg,date:BK.date});
+    await load(); go('#/booking/'+b.id, ()=>payFlow('booking',b.id,b.total-b.credit_used,`Reroute ট্রাক: ${PLACES[b.pickup_place].n} → ${PLACES[b.drop_place].n}`,null)); },
+  'bk-cancel':async d=>{ const b=S.bookings.find(x=>x.id===d.id);
+    if(!await confirmBox({title:'বুকিং বাতিল করবেন?',body:b.paid?`${tk(b.total-b.credit_used)} আপনার ওয়ালেটে ফেরত যাবে।`:'এখনো পেমেন্ট হয়নি।',danger:true,ok:'বাতিল করুন'})) return;
+    await api(`/bookings/${d.id}/cancel`,'POST'); await refresh(); toast('বুকিং বাতিল হয়েছে'); },
+  /* books */
+  'books-tab':d=>{ BT=d.v; if(parts()[0]!=='books') go('#/books'); else render(); },
+  'entry-open':d=>{ EN.kind=d.v; BT='entries'; render(); },
+  'en-kind':d=>{ EN.kind=d.v; render(); },
+  'en-submit':async()=>{ const amount=+EN.amount||0;
+    if(EN.kind==='expense'&&!amount){ toast('টাকার পরিমাণ দিন'); return; } if(EN.kind!=='expense'&&!(+EN.mon>0)){ toast('কত মণ দিন'); return; } if(EN.kind==='sale'&&!amount){ toast('বিক্রির টাকা দিন'); return; }
+    await api('/entries','POST',{kind:EN.kind,crop:EN.kind==='expense'?null:EN.crop,qty:EN.kind==='expense'?0:+EN.mon*MON,amount,note:EN.note});
+    EN.amount=''; EN.note=''; await refresh(); toast('✅ সংরক্ষণ হয়েছে'); },
+  'pr-crop':d=>{ PR.crop=d.v; PR.cost=null; render(); },
+  /* rewards & account */
+  redeem:async d=>{ const [n,c,,v]=S.config.redeem[d.id];
+    if(!await confirmBox({title:`${n} নেবেন?`,body:`${nf(c)} পয়েন্ট খরচ হবে, ${tk(v)} ছাড় জমা হবে যা পরের ${d.id==='transport'?'Reroute ট্রাকের ভাড়ায়':'বিক্রির ফি-তে'} নিজে থেকে কাটা যাবে।`,ok:'হ্যাঁ, নিন'})) return;
+    await api(`/rewards/${d.id}`,'POST'); await refresh(); toast('⭐ ছাড় জমা হয়েছে'); },
+  'ac-save':async()=>{ const b={name:AC.name,area:AC.area}; if(me().role==='paikar') b.biz=AC.biz; if(AC.photo) b.photo=AC.photo;
+    await api('/me','POST',b); AC=null; await refresh(); toast('✅ প্রোফাইল সংরক্ষণ হয়েছে'); },
+  'plus-buy':async()=>{ if(!await confirmBox({title:'⭐ Reroute প্লাস নেবেন?',body:bill([['দাম',tk(S.config.plus_price)],['মেয়াদ',`${nf(S.config.plus_days)} দিন`],['পেমেন্ট','বিকাশ, নগদ, কার্ড বা ওয়ালেট']])+'<p class="muted sm" style="margin-top:8px">পেমেন্ট সফলভাবে যাচাই হলেই প্লাস চালু হবে। ব্যর্থ হলে চালু হবে না, টাকাও কাটবে না।</p>',ok:'পেমেন্টে যান'})) return;
+    payFlow('plus',null,S.config.plus_price,`Reroute প্লাস, ${nf(S.config.plus_days)} দিন`,null); },
+  'plus-cancel':async()=>{ const u=me(); if(!await confirmBox({title:'প্লাস বন্ধ করবেন?',body:`আপনার প্লাস ${dateBn(u.plus_until)} পর্যন্ত চালু থাকবে, তারপর আর নবায়ন হবে না। বাকি দিনের টাকা ফেরত হয় না। চাইলে মেয়াদের মধ্যে আবার চালু করতে পারবেন।`,ok:'হ্যাঁ, বন্ধ করুন',danger:true})) return;
+    await api('/plus/cancel','POST'); await refresh(); toast('প্লাস বন্ধ করা হয়েছে, মেয়াদ পর্যন্ত চালু থাকবে'); },
+  'plus-resume':async()=>{ if(!await confirmBox({title:'প্লাস নবায়ন আবার চালু করবেন?',body:'এখন কোনো টাকা লাগবে না, মেয়াদ শেষে নবায়নের সময় পেমেন্ট চাওয়া হবে।'})) return; await api('/plus/resume','POST'); await refresh(); toast('প্লাস চালু থাকবে'); },
+  /* operations team */
+  ab:async d=>{ const b=S.admin.bookings.find(x=>x.id===d.id), body={status:d.v};
+    if(d.v==='confirmed') body.truck=$('#ab-truck-'+d.id).value; if(d.v==='pickup_scheduled') body.pickup_time=$('#ab-time-'+d.id).value; if(d.v==='delivered') body.actual_fare=+$('#ab-fare-'+d.id).value||null;
+    if(!await confirmBox({title:`বুকিং "${BOOK_ST[d.v][0]}" করবেন?`,body:`${PLACES[b.pickup_place].n} → ${PLACES[b.drop_place].n}, ${monTxt(b.qty)}। কৃষক ও পাইকারকে নোটিফিকেশন যাবে।`})) return;
+    await api(`/admin/bookings/${d.id}`,'POST',body); await refresh(); toast('✅ হালনাগাদ হয়েছে'); },
+  'at-add':async()=>{ if(!/^01\d{9}$/.test(TK.phone)||!TK.driver||!TK.number){ toast('চালক, ১১ সংখ্যার মোবাইল আর গাড়ির নম্বর দিন'); return; }
+    await api('/admin/trucks','POST',TK); TK={company:'Reroute ট্রাক ',driver:'',phone:'',number:'',vehicle:'mini',place:'rajshahi',areas:''}; await refresh(); toast('🛻 ট্রাক যোগ হয়েছে'); },
+  'at-status':async d=>{ if(!await confirmBox({title:d.v==='maintenance'?'ট্রাক মেরামতে পাঠাবেন?':'ট্রাক আবার চালু করবেন?'})) return; await api(`/admin/trucks/${d.id}`,'PATCH',{status:d.v}); await refresh(); },
+  'au-verify':async d=>{ if(!await confirmBox({title:'প্রোফাইল যাচাই করবেন?',body:'কাগজপত্র (NID / ট্রেড লাইসেন্স) দেখে নিশ্চিত হলে যাচাই করুন। ব্যবহারকারী +৫০ পয়েন্ট পাবেন।'})) return; await api(`/admin/users/${d.id}/verify`,'POST'); await refresh(); }
+};
+let RT=null;
+function drawRate(){
+  const o=S.orders.find(x=>x.id===RT.id), other=user(o.seller===me().id?o.buyer:o.seller);
+  modal(`<div class="body" style="text-align:center"><h2>${esc(dispName(other))}-কে রেটিং দিন</h2><p class="muted">${monTxt(o.qty)} ${CROPS[o.crop].n}</p>
+    <div style="font-size:2.4rem;margin:12px 0">${[1,2,3,4,5].map(i=>`<button data-act="rate-star" data-v="${i}" style="border:0;background:none;font-size:2.4rem;color:${i<=RT.stars?'var(--gold)':'var(--line)'}" aria-label="${bd(i)} তারা">★</button>`).join('')}</div>
+    <input id="rt-text" maxlength="120" placeholder="ছোট মন্তব্য (ঐচ্ছিক)" style="width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px;background:var(--surface)">
+    <button class="btn btn-green btn-wide" style="margin-top:12px" data-act="rate-send">রেটিং দিন</button></div>`);
+}
+
+/* =====================================================================
+   Events
+   ===================================================================== */
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');
+  if(!el){ if(!e.target.closest('#npanel')&&!e.target.closest('[data-act="bell"]')) $('#npanel').classList.remove('on');
+    if(e.target.id==='overlay') closeModal(); if(!e.target.closest('#sheet')) closeSheet(); return; }
+  const fn=A[el.dataset.act]; if(!fn) return;
+  e.preventDefault();
+  if(el.dataset.busy) return; el.dataset.busy='1';
+  Promise.resolve(fn(el.dataset,el)).catch(()=>{}).finally(()=>{ delete el.dataset.busy; });
+});
+document.addEventListener('input',e=>{
+  const t=e.target, d=t.dataset, v=t.type==='checkbox'?t.checked:t.value, num=x=>x===''?'':+x;
+  if(d.f!==undefined){ F[d.f]=v; renderKeepFocus(); return; }
+  if(d.nl!==undefined){ NL[d.nl]=['mon','price','moq','harvest'].includes(d.nl)?num(v):v; const s=$('#nl-sum'); if(s) s.innerHTML=nlSummary(); return; }
+  if(d.of!==undefined){ OF[d.of]=d.of==='note'?v:num(v); const b=$('#of-bill'); if(b) b.innerHTML=offerBill(offerCalc()); return; }
+  if(d.bk!==undefined){ BK[d.bk]=d.bk==='mon'?num(v):v; const b=$('#bk-bill'); if(b) b.innerHTML=bkBill(); return; }
+  if(d.hf!==undefined){ HF[d.hf]=v; renderKeepFocus(); return; }
+  if(d.cl!==undefined){ CL[d.cl]=['mon','price','other'].includes(d.cl)?num(v):v; const tmp=document.createElement('div'); tmp.innerHTML=calcView(); $('#calc-out').innerHTML=tmp.querySelector('#calc-out').innerHTML; return; }
+  if(d.en!==undefined){ EN[d.en]=v; return; }
+  if(d.pr!==undefined){ PR[d.pr]=v===''?'':+v; renderKeepFocus(); return; }
+  if(d.ac!==undefined){ AC[d.ac]=v; return; }
+  if(d.tk!==undefined){ TK[d.tk]=v; return; }
+  if(d.ai!==undefined){ AIS[d.ai]=v; render(); return; }
+});
+document.addEventListener('change',async e=>{
+  const t=e.target, a=t.dataset.actChange;
+  if(t.dataset.f==='sold'){ F.sold=t.checked; render(); return; }
+  if(a==='nl-photo'){ const files=[...t.files].slice(0,3-NL.photos.length); for(const f of files){ try{ NL.photos.push(await shrinkImage(f)); }catch(err){ toast('ছবি পড়া যায়নি'); } } render(); }
+  if(a==='ac-photo'&&t.files[0]){ try{ AC.photo=await shrinkImage(t.files[0],400); render(); }catch(err){ toast('ছবি পড়া যায়নি'); } }
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); $('#npanel').classList.remove('on'); closeSheet(); } });
+
+/* every 5 s: new offers / payments / truck updates from other phones show up here */
+setInterval(async()=>{
+  if(document.hidden) return;
+  try{ const r=await load(); if(!r.changed) return;
+    const a=document.activeElement, typing=a&&['INPUT','SELECT','TEXTAREA'].includes(a.tagName), modalOpen=$('#overlay').classList.contains('on');
+    if(typing||modalOpen) renderChrome(); else render();
+    if(r.fresh.length) toast('🔔 '+r.fresh[0].text.slice(0,80)+(r.fresh[0].text.length>80?'…':''));
+  }catch(e){}
+},5000);
+
+(async function init(){
+  $('#view').innerHTML='<div class="empty">লোড হচ্ছে...</div>';
+  try{ await load(); }catch(e){ $('#view').innerHTML='<div class="empty">সার্ভার চালু হচ্ছে, কয়েক সেকেন্ড পরে পাতাটি রিফ্রেশ করুন।</div>'; return; }
+  try{ speechSynthesis.getVoices(); }catch(e){}
+  render();
+})();
+</script>
+</body>
+</html>

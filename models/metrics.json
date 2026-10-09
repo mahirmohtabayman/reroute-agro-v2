@@ -1,0 +1,19 @@
+{
+  "train_rows": 54720,
+  "test_rows": 9424,
+  "train_period": "2008-01 to 2022-12",
+  "test_period": "2023-01 to 2025-07",
+  "mae_model": 1.618,
+  "mae_naive": 1.664,
+  "mape_model": 1.73,
+  "mape_naive": 1.77,
+  "improvement_pct": 2.7,
+  "direction_accuracy_pct": 70.8,
+  "markets": 76,
+  "products": [
+    "rice",
+    "lentils",
+    "oil",
+    "wheat_flour"
+  ]
+}
