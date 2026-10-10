@@ -7,7 +7,7 @@ Built for **Hack for Humanity**.
 |---|---|
 | 🌐 লাইভ প্রোটোটাইপ | "https://reroute-agro-k0of.onrender.com" |
 | 📸 শোকেস: ছবি, ডেমো অ্যাকাউন্ট, ট্যুর | GitHub Pages (`docs/`) |
-| 🔑 ডেমো | লগ ইন পাতায় এক চাপে ঢুকুন · পেমেন্ট পিন **১২৩৪৫** |
+| 🔑 ডেমো |· পেমেন্ট পিন **১২৩৪৫** |
 
 <p align="center"><img src="docs/screenshots/09_order_tracking.jpg" width="49%"> <img src="docs/screenshots/07_negotiation.jpg" width="49%"></p>
 <p align="center"><img src="docs/screenshots/11_operations_trucks.jpg" width="49%"> <img src="docs/screenshots/12_prices_farmer.jpg" width="49%"></p>
