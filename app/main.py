@@ -625,6 +625,10 @@ def reset():
     return {"ok": True}
 
 
+# AI advisor (simulated vegetable market data) lives in its own module
+from app.ai_routes import router as ai_router  # noqa: E402
+app.include_router(ai_router)
+
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 

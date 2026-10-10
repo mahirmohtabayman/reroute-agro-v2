@@ -80,9 +80,17 @@ def deal(listing, buyer, qty, price, transport="reroute", split="half", counter=
 
 
 def seed():
+    """(Re)build the demo. Accounts people registered themselves are kept (balances start fresh)."""
     global BASE
+    try:
+        kept = db.q("SELECT * FROM users WHERE id LIKE ?", ("U%",))
+    except Exception:
+        kept = []
     db.reset()
     BASE = db.now_ms()
+    for k in kept:
+        k.update(pts=0, wallet=0, fee_credit=0, transport_credit=0, plus_until=0, plus_cancelled=0)
+        db.insert("users", k)
     for uid, role, name, biz, phone, place, area, verified, days in USERS:
         db.insert("users", {"id": uid, "role": role, "name": name, "biz": biz, "phone": phone, "place": place,
                             "area": area, "verified": verified, "joined": BASE - days * DAY})
@@ -198,4 +206,4 @@ def seed():
     at(minutes=10)
     S.make_offer(U("p3"), lf9["id"], 600, 37, transport="self")
     S._clock[0] = None
-    db.run("INSERT OR REPLACE INTO meta (key, val) VALUES ('seeded_at', ?)", (str(BASE),))
+    db.set_meta("seeded_at", BASE)

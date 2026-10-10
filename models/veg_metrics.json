@@ -1,0 +1,45 @@
+{
+  "rows_train": 68964,
+  "test_period": "2025-07-01 → 2026-10-09",
+  "data": "simulated",
+  "horizons": {
+    "1": {
+      "mape_model": 6.48,
+      "mape_naive": 8.04,
+      "direction_accuracy": 66.6
+    },
+    "2": {
+      "mape_model": 8.78,
+      "mape_naive": 11.57,
+      "direction_accuracy": 68.0
+    },
+    "3": {
+      "mape_model": 10.05,
+      "mape_naive": 13.17,
+      "direction_accuracy": 68.7
+    }
+  },
+  "interval": {
+    "1": [
+      0.906,
+      1.107
+    ],
+    "2": [
+      0.874,
+      1.147
+    ],
+    "3": [
+      0.856,
+      1.168
+    ]
+  },
+  "market_choice": {
+    "cases": 6468,
+    "avg_extra_tk_per_kg": 7.84,
+    "avg_extra_tk_per_mon": 314.0,
+    "share_better_or_equal_than_local": 93.9,
+    "picked_true_best_market": 61.8,
+    "not_worse_than_local": 94.6,
+    "avg_extra_vs_always_dhaka_tk_per_kg": 3.92
+  }
+}

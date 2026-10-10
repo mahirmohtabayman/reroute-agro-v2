@@ -1,5 +1,6 @@
-"""SQLite database: schema and small helpers. Demo data lives in app/seed.py."""
+"""Database: PostgreSQL when DATABASE_URL is set, otherwise SQLite. Demo data lives in app/seed.py."""
 import os
+import re
 import sqlite3
 import threading
 import time
@@ -21,7 +22,7 @@ CREATE TABLE IF NOT EXISTS listings (id TEXT PRIMARY KEY, uid TEXT, crop TEXT, q
 CREATE TABLE IF NOT EXISTS offers (id TEXT PRIMARY KEY, listing TEXT, buyer TEXT, seller TEXT, crop TEXT, qty REAL,
   price REAL, listed_price REAL, status TEXT, waiting TEXT, transport TEXT, split TEXT, note TEXT, created INTEGER,
   updated INTEGER, expires INTEGER, order_id TEXT, reason TEXT);
-CREATE TABLE IF NOT EXISTS offer_events (id TEXT PRIMARY KEY, offer TEXT, by TEXT, action TEXT, price REAL, at INTEGER, note TEXT);
+CREATE TABLE IF NOT EXISTS offer_events (id TEXT PRIMARY KEY, offer TEXT, "by" TEXT, action TEXT, price REAL, at INTEGER, note TEXT);
 CREATE TABLE IF NOT EXISTS orders (id TEXT PRIMARY KEY, offer TEXT, listing TEXT, buyer TEXT, seller TEXT, crop TEXT,
   qty REAL, price REAL, listed_price REAL, goods REAL, fee REAL, fee_disc REAL DEFAULT 0, transport TEXT, split TEXT,
   booking TEXT, t_total REAL DEFAULT 0, t_buyer REAL DEFAULT 0, t_seller REAL DEFAULT 0, t_cb REAL DEFAULT 0,
@@ -54,7 +55,34 @@ TABLES = ["meta", "users", "stock", "listings", "offers", "offer_events", "order
           "inspections", "payments", "wallet_tx", "points_tx", "entries", "notifs", "ratings"]
 
 
+# ---------------------------------------------------------------- two backends
+# DATABASE_URL set (e.g. a free Neon / Supabase PostgreSQL) → data is permanent.
+# Not set → a local SQLite file (fine for development and quick demos).
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+PG = DATABASE_URL.startswith(("postgres://", "postgresql://"))
+
+if PG:
+    import psycopg
+    from psycopg.rows import dict_row
+    from decimal import Decimal
+
+
+def _pg_sql(sql):
+    """Write SQL once in SQLite style; translate the few differences for PostgreSQL."""
+    sql = sql.replace("?", "%s")
+    sql = re.sub(r"\bMAX\(0,", "GREATEST(0,", sql)
+    return sql
+
+
+def _pg_schema():
+    return SCHEMA.replace("INTEGER", "BIGINT").replace("REAL", "DOUBLE PRECISION")
+
+
 def connect():
+    if PG:
+        # prepare_threshold=None: works behind connection poolers (Neon / Supabase pooled URLs)
+        return psycopg.connect(DATABASE_URL, autocommit=True, row_factory=dict_row, connect_timeout=15,
+                               prepare_threshold=None)
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(DB_PATH, check_same_thread=False)
     con.row_factory = sqlite3.Row
@@ -64,9 +92,34 @@ def connect():
 CON = connect()
 
 
+def _clean(row):
+    return {k: (float(v) if PG and isinstance(v, Decimal) else v) for k, v in dict(row).items()}
+
+
+def _execute(sql, args=()):
+    """Run one statement. A cloud database may drop idle connections, so reconnect once and retry."""
+    global CON
+    if PG:
+        for attempt in (1, 2):
+            try:
+                cur = CON.cursor()
+                cur.execute(_pg_sql(sql), args)
+                return cur
+            except (psycopg.OperationalError, psycopg.InterfaceError):
+                if attempt == 2:
+                    raise
+                try:
+                    CON.close()
+                except Exception:
+                    pass
+                CON = connect()
+    return CON.execute(sql, args)
+
+
 def q(sql, args=()):
     with _lock:
-        return [dict(r) for r in CON.execute(sql, args).fetchall()]
+        cur = _execute(sql, args)
+        return [_clean(r) for r in cur.fetchall()]
 
 
 def one(sql, args=()):
@@ -75,15 +128,15 @@ def one(sql, args=()):
 
 
 def val(sql, args=()):
-    with _lock:
-        r = CON.execute(sql, args).fetchone()
-        return r[0] if r else None
+    rows = q(sql, args)
+    return next(iter(rows[0].values())) if rows else None
 
 
 def run(sql, args=()):
     with _lock:
-        CON.execute(sql, args)
-        CON.commit()
+        _execute(sql, args)
+        if not PG:
+            CON.commit()
 
 
 def insert(table, row):
@@ -96,6 +149,20 @@ def update(table, rid, **fields):
     run(f"UPDATE {table} SET {sets} WHERE id=?", (*fields.values(), rid))
 
 
+def set_meta(key, value):
+    if PG:
+        run("INSERT INTO meta (key, val) VALUES (?, ?) ON CONFLICT (key) DO UPDATE SET val=EXCLUDED.val", (key, str(value)))
+    else:
+        run("INSERT OR REPLACE INTO meta (key, val) VALUES (?, ?)", (key, str(value)))
+
+
+def get_meta(key):
+    try:
+        return val("SELECT val FROM meta WHERE key=?", (key,))
+    except Exception:
+        return None
+
+
 def now_ms():
     return int(time.time() * 1000)
 
@@ -104,17 +171,19 @@ def reset():
     """Drop and recreate every table."""
     with _lock:
         for t in TABLES + ["sessions", "reqs", "lots", "stats"]:
-            CON.execute(f"DROP TABLE IF EXISTS {t}")
-        CON.executescript(SCHEMA)
-        CON.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
-        CON.commit()
+            _execute(f"DROP TABLE IF EXISTS {t}")
+        schema = _pg_schema() if PG else SCHEMA
+        for stmt in [x.strip() for x in schema.split(";") if x.strip()]:
+            _execute(stmt)
+        if not PG:
+            CON.commit()
+    set_meta("schema_version", SCHEMA_VERSION)
 
 
 def needs_seed():
-    with _lock:
-        if CON.execute("PRAGMA user_version").fetchone()[0] != SCHEMA_VERSION:
+    try:
+        if str(get_meta("schema_version")) != str(SCHEMA_VERSION):
             return True
-        try:
-            return CON.execute("SELECT COUNT(*) FROM users").fetchone()[0] == 0
-        except sqlite3.OperationalError:
-            return True
+        return (val("SELECT COUNT(*) FROM users") or 0) == 0
+    except Exception:
+        return True
