@@ -18,7 +18,8 @@ V.offer = id => {
   const left=Math.max(0,Math.round((o.expires-Date.now())/36e5));
   let acts='';
   if(myTurn&&sell) acts=`<div class="row wrap-it"><button class="btn btn-green grow" data-act="o-accept" data-id="${id}">✓ রাজি</button>
-      <button class="btn btn-blue grow" data-act="o-counter" data-id="${id}">↔️ পাল্টা দাম দিন</button><button class="btn btn-soft grow" data-act="o-reject" data-id="${id}">না</button></div>`;
+      ${o.price<o.listed_price?`<button class="btn btn-blue grow" data-act="o-counter" data-id="${id}">↔️ পাল্টা দাম দিন</button>`:''}<button class="btn btn-soft grow" data-act="o-reject" data-id="${id}">না</button></div>
+      ${o.price<o.listed_price?'':`<p class="muted sm" style="margin-top:8px">ক্রেতা তালিকার পুরো দামেই কিনতে চান, তাই এখানে পাল্টা দাম দেওয়ার দরকার নেই।</p>`}`;
   if(myTurn&&!sell) acts=`<div class="row wrap-it"><button class="btn btn-green grow" data-act="o-accept" data-id="${id}">✓ রাজি, পেমেন্ট করব</button><button class="btn btn-soft grow" data-act="o-reject" data-id="${id}">না</button></div>`;
   if(!myTurn&&!sell&&['pending','countered'].includes(o.status)&&o.waiting==='seller') acts=`<button class="btn btn-line" data-act="o-cancel" data-id="${id}">অফার তুলে নিন</button>`;
   if(o.status==='accepted') acts=`<a class="btn btn-green btn-wide" href="#/order/${o.order_id}">অর্ডার দেখুন ›</a>`;
