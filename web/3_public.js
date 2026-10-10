@@ -25,14 +25,6 @@ V.login = () => {
       <p class="muted sm" style="margin-top:8px">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p></div>`:''}
     <h3 style="margin:18px 0 6px">ডেমো অ্যাকাউন্ট, এক চাপে ঢুকুন</h3>
     ${demo.map(id=>`<button class="opt" style="width:100%;margin-top:8px" data-act="login" data-id="${id}"><strong>${names[id][0]}</strong><span class="muted">${names[id][1]}</span></button>`).join('')}
-    <details class="panel" style="margin-top:16px" open><summary class="b" style="cursor:pointer">🧭 জাজদের জন্য ৩ মিনিটের ট্যুর</summary>
-      <ol class="sm" style="margin:10px 0 0;padding-left:20px;line-height:1.8">
-        <li><b>কৃষক রহিম উদ্দিন</b> হিসেবে ঢুকুন → "এখন আপনার কাজ"-এ ঢাকা ফ্রেশ হাবের কম দামের অফার → <b>পাল্টা দাম দিন</b>।</li>
-        <li>বের হয়ে <b>পাইকার ঢাকা ফ্রেশ হাব</b> → অফার ও অর্ডার → পাল্টা দামে <b>রাজি</b> → বিকাশে পেমেন্ট (পিন <b>১২৩৪৫</b>, অন্য পিনে ব্যর্থ পেমেন্ট দেখাবে)।</li>
-        <li><b>অপারেশন টিম</b> → ট্রাক বুকিং → ট্রাক দিন → মাল তোলার সময় ঠিক করুন।</li>
-        <li>রহিম → অর্ডার → <b>ট্রাকে মাল তুলে দিয়েছি</b>। ঢাকা ফ্রেশ হাব → <b>মাল বুঝে পেয়েছি</b> → রেটিং। রহিমের ওয়ালেটে টাকা আর পয়েন্ট আসে।</li>
-        <li>রহিম → <b>মজুদ ও হিসাব</b> (লাভ-ক্ষতি) আর <b>দাম ও পরামর্শ</b> দেখুন।</li></ol>
-      <p class="muted sm" style="margin-top:8px">দুটো ফোন বা দুটো ব্রাউজারে দুই অ্যাকাউন্টে ঢুকলে নোটিফিকেশন কয়েক সেকেন্ডে অন্যটায় পৌঁছায়। আগের কেউ ডেমো বদলে ফেললে নিচের "ডেমো নতুন করে শুরু" চাপুন।</p></details>
   </div>`;
 };
 V.register = () => `<div style="max-width:520px;margin:10px auto"><h1>নতুন অ্যাকাউন্ট</h1>
