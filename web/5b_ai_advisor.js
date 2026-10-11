@@ -62,7 +62,7 @@ function advFarmer() {
     ? `উৎপাদন খরচ বাদে আনুমানিক লাভ <b>${tk(b.profit)}</b> — স্থানীয়ের চেয়ে <b>${tk(b.vs_local)}</b> বেশি।`
     : `হাতে থাকবে আনুমানিক <b>${tk(b.net)}</b> — স্থানীয়ের চেয়ে <b>${tk(b.vs_local)}</b> বেশি।`;
   html += `<div class="panel" style="border:2px solid var(--green);margin-bottom:14px">
-    <div class="between"><h2 style="color:var(--green)">🤖 মূল পরামর্শ</h2><span class="demo-tag">সিমুলেটেড ডেটা</span></div>
+    <div class="between"><h2 style="color:var(--green)">🤖 মূল পরামর্শ</h2></div>
     <p style="margin-top:8px;font-size:1.05rem"><b>${ADV_SEND[b.send_in_days]}</b>, <b>${esc(b.name)}</b> বাজারে পাঠান।</p>
     <p class="muted" style="margin-top:4px">${profitLine}</p>
     <div class="grid3" style="margin-top:12px;gap:8px">
@@ -101,7 +101,7 @@ function advBuyer() {
   if (top) {
     const nm = top.kind === 'listing' ? top.seller_name : top.name;
     html += `<div class="panel" style="border:2px solid var(--blue);margin-bottom:14px">
-      <div class="between"><h2 style="color:var(--blue)">🤖 মূল পরামর্শ</h2><span class="demo-tag">সিমুলেটেড ডেটা</span></div>
+      <div class="between"><h2 style="color:var(--blue)">🤖 মূল পরামর্শ</h2></div>
       <p style="margin-top:8px;font-size:1.05rem"><b>${esc(nm)}</b>, <b>${PLACES[top.place].n}</b> থেকে কিনুন।</p>
       <p class="muted" style="margin-top:4px">পৌঁছে খরচ <b>${tk(top.landed, 1)}/কেজি</b> — আনুমানিক লাভ <b style="color:var(--${top.margin_kg>=0?'green':'red'})">${tk(top.margin_total)}</b>।</p>
       <div class="grid3" style="margin-top:12px;gap:8px">
@@ -151,7 +151,7 @@ V.advisor = () => {
   advDefaults();
   const st = advGet('/ai/advisor/status');
   return `<div class="phead"><div><h1>🤖 AI পরামর্শ</h1><p class="muted">কোন বাজারে কোন দিন বেচলে লাভ · কোথায় কম দামে মাল · বাজারের অবস্থা</p></div>
-    <span class="demo-tag">সিমুলেটেড ডেটা${st && st.date ? ' · ' + dateBn(new Date(st.date).getTime()) : ''}</span></div>
+    </div>
     <div class="tabs">${[['farmer','🧑‍🌾 কোথায় বেচবেন'],['buyer','🚚 কোথায় কিনবেন'],['market','📊 বাজারের অবস্থা']].map(([k,t])=>`<button class="${ADV.tab===k?'on':''}" data-adv="tab" data-v="${k}">${t}</button>`).join('')}</div>
     ${ADV.tab==='farmer'?advFarmer():ADV.tab==='buyer'?advBuyer():advMarket()}`;
 };
