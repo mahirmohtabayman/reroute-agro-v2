@@ -8,7 +8,26 @@ V.home = () => `<section class="hero"><div class="hero-in">
   <div class="cta"><button class="btn btn-green" data-act="pick-role" data-role="farmer">🧑‍🌾 আমি কৃষক</button>
     <button class="btn btn-blue" data-act="pick-role" data-role="paikar">🚚 আমি পাইকার</button></div>
   <p class="hero-link"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন</a></p>
-</div><div class="hero-field" aria-hidden="true"></div></section>
+</div><div class="hero-field" aria-hidden="true"><svg viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .lf{fill:none;stroke:var(--green);stroke-width:1.8;stroke-linecap:round;opacity:.55}
+      .lf2{fill:color-mix(in srgb,var(--green) 22%,transparent);stroke:none}
+    </style>
+  </defs>
+  <!-- floating leaf shapes scattered across the hero bottom -->
+  <g style="animation:float1 4.2s ease-in-out infinite"><path class="lf" d="M120 180 Q140 140 180 155 Q155 185 120 180z"/><path class="lf2" d="M120 180 Q140 140 180 155 Q155 185 120 180z"/><line class="lf" x1="120" y1="180" x2="155" y2="148"/></g>
+  <g style="animation:float2 5.1s ease-in-out .8s infinite"><path class="lf" d="M340 195 Q360 148 410 165 Q378 200 340 195z"/><path class="lf2" d="M340 195 Q360 148 410 165 Q378 200 340 195z"/><line class="lf" x1="340" y1="195" x2="378" y2="162"/></g>
+  <g style="animation:float3 3.8s ease-in-out 1.5s infinite"><path class="lf" d="M570 185 Q595 138 645 155 Q610 192 570 185z"/><path class="lf2" d="M570 185 Q595 138 645 155 Q610 192 570 185z"/><line class="lf" x1="570" y1="185" x2="610" y2="152"/></g>
+  <g style="animation:float1 4.7s ease-in-out 2.2s infinite"><path class="lf" d="M800 190 Q820 145 870 162 Q838 198 800 190z"/><path class="lf2" d="M800 190 Q820 145 870 162 Q838 198 800 190z"/><line class="lf" x1="800" y1="190" x2="838" y2="158"/></g>
+  <g style="animation:float2 5.5s ease-in-out 0.4s infinite"><path class="lf" d="M1020 178 Q1048 130 1100 150 Q1065 185 1020 178z"/><path class="lf2" d="M1020 178 Q1048 130 1100 150 Q1065 185 1020 178z"/><line class="lf" x1="1020" y1="178" x2="1065" y2="145"/></g>
+  <!-- small accent dots -->
+  <circle cx="230" cy="200" r="4" style="fill:color-mix(in srgb,var(--green) 30%,transparent)"/>
+  <circle cx="680" cy="205" r="5" style="fill:color-mix(in srgb,var(--green) 25%,transparent)"/>
+  <circle cx="960" cy="198" r="3.5" style="fill:color-mix(in srgb,var(--green) 35%,transparent)"/>
+  <!-- subtle wave baseline -->
+  <path d="M0 215 Q150 195 300 210 Q450 225 600 210 Q750 195 900 212 Q1050 228 1200 215 L1200 220 L0 220Z" style="fill:color-mix(in srgb,var(--green) 18%,transparent)"/>
+</svg></div></section>
 <section class="feat">
   <div><span class="feat-ic" aria-hidden="true">🤝</span><h3>সরাসরি দরদাম</h3><p>মাঝখানে দালাল নেই, কৃষক আর পাইকার নিজেরাই দাম ঠিক করেন।</p></div>
   <div><span class="feat-ic" aria-hidden="true">🔒</span><h3>নিরাপদ পেমেন্ট</h3><p>মাল বুঝে পাওয়া পর্যন্ত টাকা Reroute-এ জমা থাকে, তারপর বিক্রেতা পান।</p></div>
@@ -127,7 +146,7 @@ V.listing = id => {
         <dt>জায়গা</dt><dd>${s.area?esc(s.area)+', ':''}${PLACES[s.place].n}</dd>
         <dt>পরিবহন</dt><dd>Reroute ট্রাক বা নিজের ট্রাক</dd></dl>
       ${l.quality?`<div class="note" style="margin-top:12px"><b>মান:</b> ${esc(l.quality)}</div>`:''}
-      <p class="muted sm" style="margin-top:8px">${PLACES[s.place].n}-এ আজকের বাজার দর আনুমানিক ${tk(market)}/কেজি <span class="demo-tag">ডেমো অনুমান</span></p>
+      <p class="muted sm" style="margin-top:8px">${PLACES[s.place].n}-এ আজকের বাজার দর আনুমানিক ${tk(market)}/কেজি</p>
       ${mine?`<div class="row wrap-it" style="margin-top:14px"><a class="btn btn-ink" href="#/listings">লিস্টিং পরিচালনা</a></div>`
         :!u?`<a class="btn btn-green btn-wide" style="margin-top:14px" href="#/login">অফার দিতে লগ ইন করুন</a>`
         :u.role==='admin'?'':l.status!=='active'?`<div class="warn" style="margin-top:14px">এই মাল এখন বিক্রি হচ্ছে না।</div>`
