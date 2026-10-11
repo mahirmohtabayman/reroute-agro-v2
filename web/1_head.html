@@ -10,21 +10,22 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.maateen.me/kalpurush/font.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem('reroute-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
 :root{
   --bg:#F3F5F0; --surface:#FFFFFF; --surface2:#EAEFE6; --ink:#15271D; --muted:#5E6E63; --line:#DCE3D7;
   --green:#1E8A4C; --green-soft:#DDF1E4; --red:#D93D27; --red-soft:#FCE5E0; --gold:#B98200; --gold-soft:#FFF2CC;
   --blue:#245C9E; --blue-soft:#E2ECF8; --shadow:0 1px 2px rgba(21,39,29,.06),0 8px 22px -16px rgba(21,39,29,.4);
-  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); color-scheme:light;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --bg:#0F1712; --surface:#18221C; --surface2:#223128; --ink:#E5EEE7; --muted:#9DB0A3; --line:#2D3C33;
   --green:#3DAA6A; --green-soft:#1C3527; --red:#F2593F; --red-soft:#3A1F1A; --gold:#F0BE2E; --gold-soft:#3A3116;
-  --blue:#6FA6E8; --blue-soft:#1B2B3F; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px -16px rgba(0,0,0,.8); } }
+  --blue:#6FA6E8; --blue-soft:#1B2B3F; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px -16px rgba(0,0,0,.8); color-scheme:dark; } }
 :root[data-theme="dark"]{
   --bg:#0F1712; --surface:#18221C; --surface2:#223128; --ink:#E5EEE7; --muted:#9DB0A3; --line:#2D3C33;
   --green:#3DAA6A; --green-soft:#1C3527; --red:#F2593F; --red-soft:#3A1F1A; --gold:#F0BE2E; --gold-soft:#3A3116;
-  --blue:#6FA6E8; --blue-soft:#1B2B3F; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px -16px rgba(0,0,0,.8); }
+  --blue:#6FA6E8; --blue-soft:#1B2B3F; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 22px -16px rgba(0,0,0,.8); color-scheme:dark; }
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -262,6 +263,40 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
 }
 @keyframes sprout{from{transform:translateY(14px) scale(.6);opacity:0}}
 @keyframes rise{from{opacity:0;transform:perspective(360px) rotateX(80deg)}}
+
+/* motion that answers something: a page change, a popup opening, a new notification, the step an order is on */
+@media (prefers-reduced-motion:no-preference){
+  #view.enter{animation:view-in .2s ease-out}
+  .overlay.on{animation:fade .15s ease-out}
+  .overlay.on .modal{animation:pop .18s cubic-bezier(.2,.8,.3,1.1)}
+  .iconbtn.ring{animation:ring .9s ease-in-out}
+  .track .st.now i{animation:here 2.2s ease-out infinite}
+}
+@keyframes view-in{from{opacity:0;transform:translateY(5px)}}
+@keyframes fade{from{opacity:0}}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}}
+@keyframes slide-up{from{transform:translateY(100%)}}
+@keyframes ring{0%,100%{transform:rotate(0)}15%{transform:rotate(14deg)}30%{transform:rotate(-12deg)}45%{transform:rotate(8deg)}60%{transform:rotate(-5deg)}75%{transform:rotate(2deg)}}
+@keyframes here{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--green) 55%,transparent)}70%,100%{box-shadow:0 0 0 9px transparent}}
+
+/* theme switch: colours ease across instead of snapping */
+.theme-anim,.theme-anim *{transition:background-color .3s ease,color .3s ease,border-color .3s ease,fill .3s ease !important}
+.iconbtn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* empty states: a small line drawing of the thing that is missing */
+.empty-st{display:grid;justify-items:center;text-align:center;gap:6px;padding:34px 20px;border:1.5px dashed var(--line);border-radius:16px;color:var(--muted)}
+.empty-st svg{width:80px;height:80px;margin-bottom:4px;fill:none;stroke:var(--muted);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.empty-st svg .e-fill{fill:var(--green-soft);stroke:none}
+.empty-st svg .e-sh{fill:var(--surface2);stroke:none}
+.empty-st svg .e-green{stroke:var(--green)}
+.empty-st svg .e-hole{fill:var(--hole,var(--bg))}
+.panel .empty-st{--hole:var(--surface)}
+.empty-st h3{color:var(--ink);font-size:1.05rem}
+.empty-st p{max-width:32em;font-size:.93rem}
+.empty-st .btn{margin-top:10px}
+.empty-st.sm{padding:22px 16px;border-width:1px}
+.empty-st.sm svg{width:60px;height:60px}
+.panel .empty-st{border:0;padding:20px 8px}
  
 @media (max-width:900px){
   .grid2,.grid3{grid-template-columns:1fr} .grid4{grid-template-columns:1fr 1fr}
@@ -290,8 +325,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
   .feat-ic{grid-row:span 2;margin:0}
   .sk-card{height:220px}
 }
+@media (max-width:900px) and (prefers-reduced-motion:no-preference){ .overlay.on .modal{animation:slide-up .24s cubic-bezier(.2,.8,.3,1)} }
 @media (max-width:420px){ .logo .full{display:none} .choice.c4{grid-template-columns:repeat(2,1fr)} .hero .cta .btn{width:100%} }
-@media (prefers-reduced-motion:reduce){ .sheet,.toast,.btn,.opt,.chip,.lcard,.todo,a.kpi{transition:none} .sk::after,.btn[data-busy]::after,.opt[data-busy]::after{animation:appear .01s .3s forwards} }
+@media (prefers-reduced-motion:reduce){ .sheet,.toast,.btn,.opt,.chip,.lcard,.todo,a.kpi,.theme-anim,.theme-anim *{transition:none !important} .sk::after,.btn[data-busy]::after,.opt[data-busy]::after{animation:appear .01s .3s forwards} }
 </style>
 </head>
 <body>
