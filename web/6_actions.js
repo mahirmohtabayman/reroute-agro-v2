@@ -31,7 +31,7 @@ function render(){
     case 'rewards': if(!needT()) return; html=V.rewards(); break;
     case 'account': if(!needT()) return; html=V.account(); break;
     case 'admin': if(!needA()) return; html=({'':V.admin,bookings:V.adminBookings,trucks:V.adminTrucks,users:V.adminUsers,orders:V.adminOrders}[p[1]||'']||V.admin)(); break;
-    default: html=`<div class="empty">পাতা পাওয়া যায়নি। <a href="#/">শুরুতে ফিরুন</a></div>`;
+    default: html=emptyState('search','এই পাতাটা পাওয়া গেল না','লিংকটা হয়তো ভুল, বা পাতাটা সরানো হয়েছে।','<a class="btn btn-green" href="#/">শুরুতে ফিরুন</a>');
   }
   if(u){ const here=location.hash; (S.notifs||[]).filter(n=>!n.read&&n.link===here).forEach(n=>{ n.read=1; api(`/notifs/${n.id}/read`,'POST').catch(()=>{}); }); }
   if(u && !['login','register'].includes(p[0])) html=banners()+html;
@@ -42,7 +42,7 @@ function renderKeepFocus(){
   const sel=a&&a.selectionStart; render();
   if(key){ const el=document.querySelector(`[${key.name}="${key.value}"]`); if(el){ el.focus(); try{ el.setSelectionRange(sel,sel); }catch(e){} } }
 }
-window.addEventListener('hashchange',()=>{ closeModal(); $('#npanel').classList.remove('on'); closeSheet(); PROFILE=null; render(); window.scrollTo(0,0); const f=AFTER_NAV; AFTER_NAV=null; if(f) f(); });
+window.addEventListener('hashchange',()=>{ closeModal(); $('#npanel').classList.remove('on'); closeSheet(); PROFILE=null; render(); const v=$('#view'); v.classList.remove('enter'); void v.offsetWidth; v.classList.add('enter'); window.scrollTo(0,0); const f=AFTER_NAV; AFTER_NAV=null; if(f) f(); });
 
 /* =====================================================================
    Actions
@@ -76,6 +76,10 @@ const A = {
     if(b.name.length<2||!/^01\d{9}$/.test(b.phone)){ toast('নাম আর ০১ দিয়ে শুরু ১১ সংখ্যার নম্বর দিন'); return; }
     const r=await api('/register','POST',b); setToken(r.token); await load(); go('#/home'); toast('অ্যাকাউন্ট খোলা হয়েছে'); },
   'f-crop':d=>{ F.crop=d.v; render(); },
+  'f-clear':()=>{ Object.assign(F,{q:'',crop:'all',place:'all',max:'',min:'',seller:'all',sold:false}); render(); },
+  theme:()=>{ const r=document.documentElement, next=curTheme()==='dark'?'light':'dark';
+    r.classList.add('theme-anim'); r.dataset.theme=next; try{ localStorage.setItem('reroute-theme',next); }catch(e){}
+    renderChrome(); setTimeout(()=>r.classList.remove('theme-anim'),400); },
   /* confirmation box */
   'conf-yes':()=>{ const t=$('#conf-reason'); const reason=(t&&t.value.trim())||CONF.picked||null; if(CONF.reason&&CONF.requireReason&&!reason){ toast('একটি কারণ দিন, বা "কারণ ছাড়া" চাপুন'); return; } closeModal(CONF.reason?{reason}:true); },
   'conf-skip':()=>closeModal({reason:null}),
@@ -254,7 +258,7 @@ setInterval(async()=>{
   try{ const r=await load(); if(!r.changed) return;
     const a=document.activeElement, typing=a&&['INPUT','SELECT','TEXTAREA'].includes(a.tagName), modalOpen=$('#overlay').classList.contains('on');
     if(typing||modalOpen) renderChrome(); else render();
-    if(r.fresh.length) toast('🔔 '+r.fresh[0].text.slice(0,80)+(r.fresh[0].text.length>80?'…':''));
+    if(r.fresh.length){ toast('🔔 '+r.fresh[0].text.slice(0,80)+(r.fresh[0].text.length>80?'…':'')); const bell=document.querySelector('[data-act="bell"]'); if(bell) bell.classList.add('ring'); }
   }catch(e){}
 },5000);
 
