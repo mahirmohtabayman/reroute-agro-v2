@@ -38,10 +38,33 @@ function render(){
   $('#view').innerHTML=html; renderChrome();
 }
 function renderKeepFocus(){
-  const a=document.activeElement, key=a&&[...a.attributes].find(x=>x.name.startsWith('data-')&&x.name!=='data-act');
-  const sel=a&&a.selectionStart; render();
-  if(key){ const el=document.querySelector(`[${key.name}="${key.value}"]`); if(el){ el.focus(); try{ el.setSelectionRange(sel,sel); }catch(e){} } }
+  const a=document.activeElement, key=a&&[...a.attributes].find(x=>x.name.startsWith('data-')&&x.name!=='data-act'&&x.name!=='data-num');
+  const isText=!!a&&a.tagName==='INPUT'&&a.type==='text', raw=isText?a.value:null, s1=isText?a.selectionStart:null, s2=isText?a.selectionEnd:null; render();
+  if(key){ const el=document.querySelector(`[${key.name}="${key.value}"]`); if(el){
+    if(isText&&el.tagName==='INPUT'&&el.type==='text') el.value=raw;   /* keep exactly what was typed (e.g. "12.") */
+    el.focus(); try{ el.setSelectionRange(s1==null?el.value.length:s1, s2==null?el.value.length:s2); }catch(e){} } }
 }
+
+/* Number-only boxes (data-num="int" | "dec"): digits only (Bangla digits are converted),
+   one dot for "dec", never a minus sign. Runs before the app's own input handler. */
+(function(){
+  const BNDIG='০১২৩৪৫৬৭৮৯';
+  const clean=(s,dec)=>{
+    s=String(s).replace(/[০-৯]/g,d=>BNDIG.indexOf(d)).replace(/[।．]/g,'.');
+    if(!dec) return s.replace(/[^0-9]/g,'');
+    s=s.replace(/[^0-9.]/g,''); const i=s.indexOf('.');
+    return i<0?s:s.slice(0,i+1)+s.slice(i+1).replace(/\./g,'');
+  };
+  window.cleanNumberText=clean;
+  document.addEventListener('input',e=>{
+    const t=e.target; if(!t||!t.dataset||!t.dataset.num||e.isComposing) return;
+    const dec=t.dataset.num==='dec', before=t.value;
+    const pos=t.selectionStart==null?before.length:t.selectionStart;
+    const next=clean(before,dec); if(next===before) return;
+    const caret=clean(before.slice(0,pos),dec).length;
+    t.value=next; try{ t.setSelectionRange(caret,caret); }catch(err){}
+  },true);
+})();
 window.addEventListener('hashchange',()=>{ closeModal(); $('#npanel').classList.remove('on'); closeSheet(); PROFILE=null; render(); const v=$('#view'); v.classList.remove('enter'); void v.offsetWidth; v.classList.add('enter'); window.scrollTo(0,0); const f=AFTER_NAV; AFTER_NAV=null; if(f) f(); });
 
 /* =====================================================================
@@ -239,7 +262,7 @@ document.addEventListener('input',e=>{
   if(d.hf!==undefined){ HF[d.hf]=v; renderKeepFocus(); return; }
   if(d.cl!==undefined){ CL[d.cl]=['mon','price','other'].includes(d.cl)?num(v):v; const tmp=document.createElement('div'); tmp.innerHTML=calcView(); $('#calc-out').innerHTML=tmp.querySelector('#calc-out').innerHTML; return; }
   if(d.en!==undefined){ EN[d.en]=v; return; }
-  if(d.pr!==undefined){ PR[d.pr]=v===''?'':+v; renderKeepFocus(); return; }
+  if(d.pr!==undefined){ const n=parseFloat(v); PR[d.pr]=isNaN(n)?'':n; renderKeepFocus(); return; }
   if(d.ac!==undefined){ AC[d.ac]=v; return; }
   if(d.tk!==undefined){ TK[d.tk]=v; return; }
   if(d.ai!==undefined){ AIS[d.ai]=v; render(); return; }
