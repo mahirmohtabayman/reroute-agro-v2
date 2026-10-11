@@ -85,11 +85,10 @@ V.prices = () => {
   const inv=(S.inventory||[]).find(r=>r.crop===PR.crop); if(PR.cost===null) PR.cost=inv&&inv.cost!=null?Math.round(inv.cost*10)/10:'';
   const live=(S.listings||[]).filter(l=>l.crop===PR.crop&&l.status==='active'), avg=live.length?live.reduce((a,l)=>a+l.eff_price,0)/live.length:null;
   const head=`<div class="phead"><div><h1>💡 দাম ও পরামর্শ</h1><p class="muted">সহজ হিসাব: কোথায় ${isP?'কিনে কোথায় বেচলে':'বেচলে'} বেশি টাকা থাকবে</p></div></div>
-    <div class="warn" style="margin-bottom:12px">⚠️ সবজির বাজারদর এখানে <b>ডেমো অনুমান</b>, আসল বাজারের তথ্য নয়। Reroute-এর গড় দাম আসল লিস্টিং থেকে নেওয়া। পাইলটে কৃষি বিপণন অধিদপ্তরের দৈনিক দাম বসবে।</div>
     <div class="chips">${Object.entries(CROPS).map(([k,cc])=>`<button class="chip ${PR.crop===k?'on':''}" data-act="pr-crop" data-v="${k}">${cc.i} ${cc.n}</button>`).join('')}</div>
     <div class="row wrap-it" style="margin-bottom:12px"><label class="field" style="margin:0"><span>কত মণ</span><input data-pr="mon" data-num="int" type="text" inputmode="numeric" autocomplete="off" value="${PR.mon}" style="width:110px"></label>
       <label class="field" style="margin:0"><span>${isP?'':'আপনার উৎপাদন খরচ ৳/কেজি'}</span>${isP?'':`<input data-pr="cost" data-num="dec" type="text" inputmode="decimal" autocomplete="off" value="${PR.cost}" placeholder="জানা থাকলে" style="width:160px">`}</label></div>`;
-  const today=`<div class="panel"><h3>১. আজকের বাজার দর <span class="demo-tag">ডেমো অনুমান</span></h3><div class="scroll"><table class="tbl" style="margin-top:6px"><tr><th>জেলা</th><th class="num">প্রতি কেজি</th><th class="num">প্রতি মণ</th></tr>
+  const today=`<div class="panel"><h3>১. আজকের বাজার দর</h3><div class="scroll"><table class="tbl" style="margin-top:6px"><tr><th>জেলা</th><th class="num">প্রতি কেজি</th><th class="num">প্রতি মণ</th></tr>
     ${Object.entries(PLACES).map(([k,p])=>`<tr><td>${p.n}${k===u.place?' (আপনার)':''}</td><td class="num">${tk(MARKET_DEMO[k][PR.crop])}</td><td class="num">${tk(MARKET_DEMO[k][PR.crop]*MON)}</td></tr>`).join('')}</table></div>
     <p class="note sm" style="margin-top:8px">Reroute-এ এখন ${nf(live.length)}টি ${c.n}ের লিস্টিং${avg?`, গড় দাম ${tk(avg,1)}/কেজি (আসল)`:''}।</p></div>`;
   if(!isP){
@@ -128,8 +127,10 @@ V.rewards = () => {
   const wtxBn={payout:'বিক্রির টাকা',cashback:'ক্যাশব্যাক',refund:'ফেরত',payment:'পেমেন্ট',topup:'টাকা যোগ'};
   return `<div class="phead"><h1>⭐ পয়েন্ট ও ওয়ালেট</h1></div>
   <div class="grid2" style="align-items:start"><div>
-    <div class="panel" style="background:var(--ink);color:var(--surface)"><span style="opacity:.8">আমার পয়েন্ট</span><div style="font-size:2.3rem;font-weight:700;color:var(--gold)">⭐ ${nf(u.pts)}</div>
-      <div class="row wrap-it" style="margin-top:6px;opacity:.9">${u.transport_credit?`<span>🚚 পরিবহন ছাড় জমা: ${tk(u.transport_credit)}</span>`:''}${u.fee_credit?`<span>🧾 ফি ছাড় জমা: ${tk(u.fee_credit)}</span>`:''}</div></div>
+    <div class="panel" style="background:var(--green-soft);border:2px solid var(--green)">
+      <span class="muted sm" style="font-weight:600">আমার পয়েন্ট</span>
+      <div style="font-size:2.6rem;font-weight:800;color:var(--green);margin-top:4px">⭐ ${isEn?nf(u.pts).replace(/[০-৯]/g,d=>String('০১২৩৪৫৬৭৮৯'.indexOf(d))):nf(u.pts)}</div>
+      <div class="row wrap-it" style="margin-top:8px;gap:8px">${u.transport_credit?`<span class="pill p-green">🚚 পরিবহন ছাড় ${tk(u.transport_credit)}</span>`:''}${u.fee_credit?`<span class="pill p-blue">🧾 ফি ছাড় ${tk(u.fee_credit)}</span>`:''}</div></div>
     <div class="panel"><h3>পয়েন্ট দিয়ে নিন</h3>${Object.entries(R).map(([k,[n,c,f,v]])=>`<div class="item"><div class="grow"><b>${n}</b><div class="muted sm">⭐ ${nf(c)} পয়েন্ট · ${k==='transport'?'পরের Reroute ট্রাকের ভাড়া থেকে কাটা যাবে (ভাড়ার অর্ধেক পর্যন্ত)':'পরের সফল বিক্রির ১% ফি থেকে কাটা যাবে'}</div></div>
       <button class="btn btn-green btn-sm" data-act="redeem" data-id="${k}" ${u.pts<c?'disabled':''}>নিন</button></div>`).join('')}
       <div class="item"><div class="grow"><b>🎁 ক্যাশব্যাক</b><div class="muted sm">যাচাইকৃত কৃষক ${tk(S.config.cashback_min)} বা বেশির সফল বিক্রিতে ${tk(S.config.cashback)} ক্যাশব্যাক পান, সপ্তাহে ৩ বার পর্যন্ত। নিজে থেকেই ওয়ালেটে আসে।</div></div></div>
@@ -139,8 +140,10 @@ V.rewards = () => {
       <li>বিক্রি সম্পূর্ণ হলে প্রতি মণে ১ পয়েন্ট, কিনলে প্রতি ২ মণে ১</li><li>Reroute ট্রাকে মাল পৌঁছালে +১০</li><li>ছবি ও মানের তথ্যসহ লিস্টিং প্রথম বিক্রিতে +১০</li><li>প্রোফাইল যাচাই হলে +৫০</li>
       <li>রাজি হওয়ার পর অর্ডার বাতিল করলে −১০</li></ul>
       <p class="muted sm" style="margin-top:8px">ভুয়া লেনদেন ঠেকাতে: পয়েন্ট আসে শুধু পেমেন্ট হওয়া ও মাল পৌঁছানো অর্ডারে, অন্তত ৳৫,০০০-এর বিক্রিতে, আর একই ক্রেতা-বিক্রেতা জোড়া সপ্তাহে ৩ বারের বেশি নয়।</p></div></div>
-  <div><div class="panel"><span class="muted">ওয়ালেট ব্যালান্স</span><div style="font-size:2rem;font-weight:700">${tk(u.wallet)}</div>
-      <p class="muted sm">বিক্রির টাকা, ক্যাশব্যাক ও ফেরত টাকা এখানে আসে। পেমেন্টে ব্যবহার করা যায়। পাইলটে বিকাশ/ব্যাংকে তোলা যাবে।</p></div>
+  <div><div class="panel" style="background:var(--surface2);border:1.5px solid var(--line)">
+      <span class="muted sm" style="font-weight:600">ওয়ালেট ব্যালান্স</span>
+      <div style="font-size:2.4rem;font-weight:800;margin-top:6px;color:var(--ink)">${tk(u.wallet)}</div>
+      <div class="row" style="margin-top:8px;gap:6px"><span class="pill p-grey">💳 পেমেন্টে ব্যবহার করা যায়</span></div></div>
     <div class="panel"><h3>ওয়ালেটের লেনদেন</h3>${(S.wallet_tx||[]).map(w=>`<div class="item"><div class="grow"><b>${wtxBn[w.kind]||w.kind}</b><div class="muted sm">${esc(w.note||'')} · ${dateBn(w.at)}</div></div><b style="color:var(--${w.amount>=0?'green':'red'})">${w.amount>=0?'+':''}${tk(w.amount)}</b></div>`).join('')||'<p class="muted">কিছু নেই</p>'}</div>
     <div class="panel"><h3>পয়েন্টের ইতিহাস</h3>${(S.points_tx||[]).map(p=>`<div class="item"><div class="grow"><b>${ptxBn[p.kind]||p.kind}</b><div class="muted sm">${esc(p.note&&p.note.length>4?p.note:'')} ${dateBn(p.at)}</div></div><b style="color:var(--${p.pts>=0?'green':'red'})">${p.pts>=0?'+':''}${nf(p.pts)}</b></div>`).join('')||'<p class="muted">কিছু নেই</p>'}</div></div></div>`;
 };
