@@ -83,8 +83,8 @@ V.market = () => {
     <div class="filters">
       <label class="q"><span>খুঁজুন</span><input data-f="q" value="${esc(F.q)}" placeholder="ফসল, বিক্রেতা, এলাকা..."></label>
       <label><span>জেলা</span><select data-f="place"><option value="all">সব জেলা</option>${Object.entries(PLACES).map(([k,p])=>`<option value="${k}" ${F.place===k?'selected':''}>${p.n}</option>`).join('')}</select></label>
-      <label><span>সর্বোচ্চ দাম (৳/কেজি)</span><input data-f="max" type="number" min="0" value="${F.max}"></label>
-      <label><span>অন্তত কত মণ</span><input data-f="min" type="number" min="0" value="${F.min}"></label>
+      <label><span>সর্বোচ্চ দাম (৳/কেজি)</span><input data-f="max" data-num="dec" type="text" inputmode="decimal" autocomplete="off" placeholder="0" value="${F.max}"></label>
+      <label><span>অন্তত কত মণ</span><input data-f="min" data-num="int" type="text" inputmode="numeric" autocomplete="off" placeholder="0" value="${F.min}"></label>
       <label><span>বিক্রেতা</span><select data-f="seller">${[['all','সবাই'],['farmer','কৃষক'],['paikar','পাইকার']].map(([k,t])=>`<option value="${k}" ${F.seller===k?'selected':''}>${t}</option>`).join('')}</select></label>
       <label><span>সাজান</span><select data-f="sort">${[['new','নতুন আগে'],['cheap','কম দাম আগে'],['fresh','বেশি তাজা আগে'],['near','কাছের আগে'],['big','বেশি পরিমাণ আগে']].map(([k,t])=>`<option value="${k}" ${F.sort===k?'selected':''}>${t}</option>`).join('')}</select></label>
     </div>
