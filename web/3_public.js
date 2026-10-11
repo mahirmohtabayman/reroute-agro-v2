@@ -1,15 +1,19 @@
 const V = {};
 
 /* ---------- minimal home (before login) ---------- */
-V.home = () => `<section class="hero"><div>
-  <div class="logo-big">🍅</div>
+V.home = () => `<section class="hero"><div class="hero-in">
+  <div class="logo-big" aria-hidden="true">🍅</div>
   <h1>কৃষকের মাল, পাইকারের বাজার</h1>
   <p class="lead">সরাসরি কেনাবেচা ও দরদাম, নিরাপদ পেমেন্ট, আর নিজস্ব ট্রাকে কম খরচে পরিবহন।</p>
   <div class="cta"><button class="btn btn-green" data-act="pick-role" data-role="farmer">🧑‍🌾 আমি কৃষক</button>
     <button class="btn btn-blue" data-act="pick-role" data-role="paikar">🚚 আমি পাইকার</button></div>
-  <p style="margin-top:16px"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন</a></p>
-  <div class="feat"><span>🤝 সরাসরি দরদাম</span><span>🔒 নিরাপদ পেমেন্ট</span><span>🚚 নিজস্ব ট্রাক</span></div>
-</div></section>`;
+  <p class="hero-link"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন</a></p>
+</div><div class="hero-field" aria-hidden="true"></div></section>
+<section class="feat">
+  <div><span class="feat-ic" aria-hidden="true">🤝</span><h3>সরাসরি দরদাম</h3><p>মাঝখানে দালাল নেই, কৃষক আর পাইকার নিজেরাই দাম ঠিক করেন।</p></div>
+  <div><span class="feat-ic" aria-hidden="true">🔒</span><h3>নিরাপদ পেমেন্ট</h3><p>মাল বুঝে পাওয়া পর্যন্ত টাকা Reroute-এ জমা থাকে, তারপর বিক্রেতা পান।</p></div>
+  <div><span class="feat-ic" aria-hidden="true">🚚</span><h3>নিজস্ব ট্রাক</h3><p>শেয়ার্ড ট্রাকে মাল যায়, তাই বাজারের চেয়ে কম ভাড়ায় পৌঁছায়।</p></div>
+</section>`;
 
 /* ---------- login & register ---------- */
 let loginRole='farmer';
@@ -137,7 +141,7 @@ V.listing = id => {
 /* ---------- public profile ---------- */
 let PROFILE=null;
 V.profile = id => {
-  if(!PROFILE||PROFILE.user.id!==id){ api('/users/'+id).then(p=>{ PROFILE=p; render(); }).catch(()=>{}); return `<div class="empty">লোড হচ্ছে...</div>`; }
+  if(!PROFILE||PROFILE.user.id!==id){ api('/users/'+id).then(p=>{ PROFILE=p; render(); }).catch(()=>{}); return skeleton('page'); }
   const p=PROFILE, u=p.user, months=Math.max(1,Math.round((Date.now()-u.joined)/(30*DAY)));
   return `<div class="panel"><div class="row">${avatar(u,true)}<div class="grow"><h1>${esc(dispName(u))}</h1>
       <div class="muted">${roleBn(u.role)}${u.role==='paikar'?', মালিক '+esc(u.name):''} · ${u.area?esc(u.area)+', ':''}${PLACES[u.place].n}</div>
@@ -157,7 +161,7 @@ V.profile = id => {
 const AIS={market:'rajshahi',product:'lentils'};
 const PROD_BN={rice:'চাল',lentils:'মসুর ডাল',oil:'ভোজ্য তেল',wheat_flour:'আটা'};
 V.ai = () => {
-  if(!FD){ api('/ai/summary').then(d=>{FD=d;render();}).catch(()=>{}); return `<div class="empty">লোড হচ্ছে...</div>`; }
+  if(!FD){ api('/ai/summary').then(d=>{FD=d;render();}).catch(()=>{}); return skeleton('page'); }
   const M=FD.metrics, s=FD.series[AIS.market][AIS.product], last=s.close[s.close.length-1], ch=(s.forecast.price/last-1)*100;
   const all=[...s.dates,s.forecast.month], vals=[...s.close,s.forecast.price,...Object.values(s.backtest)];
   const mn=Math.floor(Math.min(...vals)*.97), mx=Math.ceil(Math.max(...vals)*1.03), W=720,H=260,pl=44,pr=20,pt=12,pb=30;
