@@ -40,6 +40,12 @@ const dateBn = t => { const d=new Date(t); return `${bd(d.getDate())} ${MONTHS[d
 function ago(t){ const m=Math.round((Date.now()-t)/6e4); if(m<60) return `${nf(Math.max(1,m))} মিনিট আগে`; const h=Math.round(m/60); if(h<24) return `${nf(h)} ঘণ্টা আগে`; const d=Math.round(h/24); return d<30?`${nf(d)} দিন আগে`:`${nf(Math.round(d/30))} মাস আগে`; }
 const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pill = ([t,c]) => `<span class="pill ${c}">${t}</span>`;
+/* skeleton: grey placeholder shapes while data loads. kind: 'cards' (a grid of listing cards) or 'page' */
+function skeleton(kind){
+  const head='<div class="sk sk-title"></div><div class="sk sk-line"></div>';
+  const body=kind==='cards'?`<div class="lgrid">${'<div class="sk sk-card"></div>'.repeat(6)}</div>`:'<div class="sk sk-block"></div><div class="sk sk-block"></div>';
+  return `<div class="sk-wrap" role="status" aria-busy="true"><span class="sr-only">লোড হচ্ছে...</span>${head}${body}</div>`;
+}
 
 /* ---------- state from the server ---------- */
 let S = {users:[],listings:[],trucks:[],me:null,notifs:[]}, TOKEN=null, lastJSON='', FD=null;
