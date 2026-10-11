@@ -149,7 +149,7 @@ V.transport = () => {
       <p class="muted sm" style="margin-top:6px">মাল কেনাবেচার সময় অফারেই Reroute ট্রাক বাছলে আলাদা বুক করতে হয় না।</p></div>
     <div class="panel"><h2>আমার বুকিং</h2>${isTrader()?(mine.length?mine.map(b=>`<a class="item" href="#/booking/${b.id}" style="text-decoration:none;color:inherit">${cropIco(b.crop,1)}<div class="grow">
         <div class="row wrap-it"><b>${PLACES[b.pickup_place].n} → ${PLACES[b.drop_place].n}</b>${pill(BOOK_ST[b.status])}${b.order_id?'<span class="pill p-grey">অর্ডারের</span>':''}</div>
-        <div class="muted sm">${monTxt(b.qty)} ${CROPS[b.crop].n} · ${tk(b.total)} · ${dateBn(b.created)}</div></div><span>›</span></a>`).join(''):'<p class="muted" style="margin-top:8px">এখনো কোনো বুকিং নেই</p>'):'<p class="muted" style="margin-top:8px">লগ ইন করলে এখানে আপনার বুকিং দেখাবে</p>'}</div></div>`;
+        <div class="muted sm">${monTxt(b.qty)} ${CROPS[b.crop].n} · ${tk(b.total)} · ${dateBn(b.created)}</div></div><span>›</span></a>`).join(''):emptyState('truck','এখনো কোনো বুকিং নেই','পাশের ফর্মে ভাড়া দেখে ট্রাক বুক করুন। অফারে Reroute ট্রাক বাছলেও বুকিং এখানে আসবে।','',true)):'<p class="muted" style="margin-top:8px">লগ ইন করলে এখানে আপনার বুকিং দেখাবে</p>'}</div></div>`;
 };
 V.booking = id => {
   const b=(S.bookings||[]).find(x=>x.id===id); if(!b) return `<div class="empty">বুকিং পাওয়া যায়নি</div>`;
