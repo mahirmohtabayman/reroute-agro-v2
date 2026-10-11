@@ -62,9 +62,9 @@ function advControls(buyer) {
   return `<div class="chips">${Object.entries(CROPS).map(([k, c]) => `<button class="chip ${ADV.crop === k ? 'on' : ''}" data-adv="crop" data-v="${k}">${c.i} ${c.n}</button>`).join('')}</div>
   <div class="filters" style="grid-template-columns:repeat(${buyer ? 2 : 4},minmax(0,1fr))">
     <label><span>${buyer ? 'আপনার বাজার' : 'মাল কোথায় আছে'}</span><select data-advf="place">${Object.entries(PLACES).map(([k, p]) => `<option value="${k}" ${ADV.place === k ? 'selected' : ''}>${p.n}</option>`).join('')}</select></label>
-    <label><span>কত মণ</span><input data-advf="mon" type="number" min="1" max="2500" value="${ADV.mon}"></label>
+    <label><span>কত মণ</span><input data-advf="mon" data-num="int" type="text" inputmode="numeric" autocomplete="off" value="${ADV.mon}"></label>
     ${buyer ? '' : `<label><span>আর কত দিন তাজা থাকবে</span><select data-advf="days"><option value="">ফসল অনুযায়ী</option>${[1, 2, 3, 4, 5, 6, 7, 10].map(d => `<option value="${d}" ${ADV.days === String(d) ? 'selected' : ''}>${nf(d)} দিন</option>`).join('')}</select></label>
-    <label><span>উৎপাদন খরচ ৳/কেজি (ঐচ্ছিক)</span><input data-advf="cost" type="number" min="0" step="0.5" value="${ADV.cost}" placeholder="লাভ-লোকসান দেখতে"></label>`}</div>`;
+    <label><span>উৎপাদন খরচ ৳/কেজি (ঐচ্ছিক)</span><input data-advf="cost" data-num="dec" type="text" inputmode="decimal" autocomplete="off" value="${ADV.cost}" placeholder="লাভ-লোকসান দেখতে"></label>`}</div>`;
 }
 
 /* ---------- farmer: where and when to sell ---------- */
@@ -176,6 +176,7 @@ document.addEventListener('change', e => {
   const k = e.target.dataset.advf; if (!k) return;
   const v = e.target.value;
   if (k === 'mon') ADV.mon = Math.min(2500, Math.max(1, Math.round(+v || 1)));
+  else if (k === 'cost') { const n = parseFloat(v); ADV.cost = isNaN(n) || n < 0 ? '' : String(n); }
   else ADV[k] = v;
   render();
 });
