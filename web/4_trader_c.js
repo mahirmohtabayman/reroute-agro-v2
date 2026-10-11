@@ -150,8 +150,7 @@ let AC=null;
 V.account = () => {
   const u=me(); if(!AC) AC={name:u.name,area:u.area||'',biz:u.biz||'',photo:null};
   const until=u.plus_until?dateBn(u.plus_until):'';
-  return `<div class="phead"><h1>👤 অ্যাকাউন্ট</h1><a class="btn btn-line" href="#/u/${u.id}">অন্যরা যেভাবে দেখে</a></div>
-  <div class="grid2" style="align-items:start"><div class="panel"><h3>প্রোফাইল</h3>
+  const profilePanel = `<div class="panel"><h3>প্রোফাইল</h3>
     <div class="row" style="margin-top:10px">${AC.photo?`<span class="av lg"><img src="${AC.photo}" alt=""></span>`:avatar(u,true)}<label class="btn btn-line btn-sm">ছবি বদলান<input type="file" accept="image/*" data-act-change="ac-photo" hidden></label></div>
     <label class="field"><span>নাম</span><input data-ac="name" value="${esc(AC.name)}"></label>
     ${u.role==='paikar'?`<label class="field"><span>আড়ত / ব্যবসার নাম</span><input data-ac="biz" value="${esc(AC.biz)}"></label>`:''}
@@ -160,13 +159,18 @@ V.account = () => {
       <dt>যাচাই</dt><dd>${u.verified?'<span class="ver">✔ যাচাইকৃত</span>':'যাচাই হয়নি'}</dd></dl>
     ${u.verified?'':`<p class="note sm" style="margin-top:8px">যাচাইয়ের জন্য ${u.role==='paikar'?'ট্রেড লাইসেন্স':'জাতীয় পরিচয়পত্র'} জমা দিতে হয়, Reroute অপারেশন টিম যাচাই করে। যাচাই হলে +৫০ পয়েন্ট, অগ্রাধিকার ট্রাক আর ক্যাশব্যাক।</p>`}
     <button class="btn btn-green btn-wide" style="margin-top:12px" data-act="ac-save">সংরক্ষণ করুন</button>
-    <button class="btn btn-soft btn-wide" style="margin-top:8px" data-act="logout">বের হন</button></div>
-  ${u.role==='paikar'?`<div class="panel" style="${u.plus_active?'outline:2px solid var(--gold)':''}"><h3>⭐ প্লাস সাবস্ক্রিপশন ব্যবস্থাপনা</h3>
+    <button class="btn btn-soft btn-wide" style="margin-top:8px" data-act="logout">বের হন</button></div>`;
+  if(u.role==='paikar'){
+    return `<div class="phead"><h1>👤 অ্যাকাউন্ট</h1><a class="btn btn-line" href="#/u/${u.id}">অন্যরা যেভাবে দেখে</a></div>
+  <div class="grid2" style="align-items:start">${profilePanel}
+    <div class="panel" style="${u.plus_active?'outline:2px solid var(--gold)':''}"><h3>⭐ প্লাস সাবস্ক্রিপশন ব্যবস্থাপনা</h3>
     <div style="margin-top:10px">${u.plus_active?(u.plus_cancelled?`<span class="pill p-gold">বন্ধ করা হয়েছে</span> <span class="sm">${until} পর্যন্ত চালু থাকবে, তারপর আর নবায়ন হবে না</span>`:`<span class="pill p-green">চালু</span> <span class="sm">মেয়াদ ${until} পর্যন্ত</span>`):'<span class="pill p-grey">চালু নেই</span>'}</div>
     <ul class="sm" style="margin:12px 0 0;padding-left:18px"><li>জরুরি বিক্রির খবর সবার আগে</li><li>ট্রাকের সেবা চার্জে ২৫% ছাড়</li><li>অগ্রাধিকার ট্রাক বুকিং</li></ul>
     <p class="muted sm" style="margin-top:8px">দাম ${tk(S.config.plus_price)}, মেয়াদ ${nf(S.config.plus_days)} দিন। পেমেন্ট সফল হলেই চালু হয়।</p>
     ${u.plus_active?(u.plus_cancelled?`<button class="btn btn-green btn-wide" style="margin-top:12px" data-act="plus-resume">আবার নবায়ন চালু করুন</button>`:`<button class="btn btn-soft btn-wide" style="margin-top:12px" data-act="plus-cancel">প্লাস বন্ধ করুন</button>`)
       :`<button class="btn btn-ink btn-wide" style="margin-top:12px" data-act="plus-buy">প্লাস নিন (${tk(S.config.plus_price)})</button>`}
-    ${(S.payments||[]).filter(p=>p.purpose==='plus').map(p=>`<p class="muted xs" style="margin-top:6px">${dateBn(p.created)}: ${tk(p.amount)} · ${p.status==='success'?'সফল':p.status==='failed'?'ব্যর্থ':'অপেক্ষমাণ'}</p>`).join('')}</div>`
-  :`<div class="panel"><h3>নিরাপত্তা ও গোপনীয়তা</h3><p class="sm" style="margin-top:8px">আপনার ফোন নম্বর শুধু তারাই দেখেন যাদের সাথে পেমেন্ট হওয়া অর্ডার আছে। টাকার হিসাব আর লেনদেনের বিস্তারিত শুধু আপনি দেখেন। প্রোফাইলে অন্যরা দেখেন: নাম, এলাকা, রেটিং, কতগুলো লেনদেন সম্পূর্ণ করেছেন।</p></div>`}</div>`;
+    ${(S.payments||[]).filter(p=>p.purpose==='plus').map(p=>`<p class="muted xs" style="margin-top:6px">${dateBn(p.created)}: ${tk(p.amount)} · ${p.status==='success'?'সফল':p.status==='failed'?'ব্যর্থ':'অপেক্ষমাণ'}</p>`).join('')}</div></div>`;
+  }
+  return `<div class="phead"><h1>👤 অ্যাকাউন্ট</h1><a class="btn btn-line" href="#/u/${u.id}">অন্যরা যেভাবে দেখে</a></div>
+  <div style="max-width:540px;margin:0 auto">${profilePanel}</div>`;
 };
