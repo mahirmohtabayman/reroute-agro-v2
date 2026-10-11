@@ -2,32 +2,92 @@ const V = {};
 
 /* ---------- minimal home (before login) ---------- */
 V.home = () => `<section class="hero"><div class="hero-in">
-  <div class="logo-big" aria-hidden="true">🍅</div>
+  <div class="hero-emblem" aria-hidden="true">
+    <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- stem -->
+      <line x1="23" y1="36" x2="23" y2="14" stroke="white" stroke-width="2.2" stroke-linecap="round" opacity=".85"/>
+      <!-- left leaf -->
+      <path d="M23 22 C19 18 12 18 10 13 C16 12 22 15 23 22Z" fill="white" opacity=".9"/>
+      <!-- right leaf -->
+      <path d="M23 28 C27 24 34 24 36 19 C30 18 24 21 23 28Z" fill="white" opacity=".9"/>
+      <!-- top bud -->
+      <circle cx="23" cy="12" r="3.5" fill="white" opacity=".95"/>
+      <!-- small left bud -->
+      <circle cx="10" cy="13" r="2" fill="white" opacity=".6"/>
+      <!-- small right bud -->
+      <circle cx="36" cy="19" r="2" fill="white" opacity=".6"/>
+    </svg>
+  </div>
   <h1>কৃষকের মাল, পাইকারের বাজার</h1>
   <p class="lead">সরাসরি কেনাবেচা ও দরদাম, নিরাপদ পেমেন্ট, আর নিজস্ব ট্রাকে কম খরচে পরিবহন।</p>
-  <div class="cta"><button class="btn btn-green" data-act="pick-role" data-role="farmer">🧑‍🌾 আমি কৃষক</button>
-    <button class="btn btn-blue" data-act="pick-role" data-role="paikar">🚚 আমি পাইকার</button></div>
+  <div class="cta">
+    <button class="btn btn-green" data-act="pick-role" data-role="farmer">🧑‍🌾 আমি কৃষক</button>
+    <button class="btn btn-blue" data-act="pick-role" data-role="paikar">🚚 আমি পাইকার</button>
+  </div>
   <p class="hero-link"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন</a></p>
-</div><div class="hero-field" aria-hidden="true"><svg viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <style>
-      .lf{fill:none;stroke:var(--green);stroke-width:1.8;stroke-linecap:round;opacity:.55}
-      .lf2{fill:color-mix(in srgb,var(--green) 22%,transparent);stroke:none}
-    </style>
-  </defs>
-  <!-- floating leaf shapes scattered across the hero bottom -->
-  <g style="animation:float1 4.2s ease-in-out infinite"><path class="lf" d="M120 180 Q140 140 180 155 Q155 185 120 180z"/><path class="lf2" d="M120 180 Q140 140 180 155 Q155 185 120 180z"/><line class="lf" x1="120" y1="180" x2="155" y2="148"/></g>
-  <g style="animation:float2 5.1s ease-in-out .8s infinite"><path class="lf" d="M340 195 Q360 148 410 165 Q378 200 340 195z"/><path class="lf2" d="M340 195 Q360 148 410 165 Q378 200 340 195z"/><line class="lf" x1="340" y1="195" x2="378" y2="162"/></g>
-  <g style="animation:float3 3.8s ease-in-out 1.5s infinite"><path class="lf" d="M570 185 Q595 138 645 155 Q610 192 570 185z"/><path class="lf2" d="M570 185 Q595 138 645 155 Q610 192 570 185z"/><line class="lf" x1="570" y1="185" x2="610" y2="152"/></g>
-  <g style="animation:float1 4.7s ease-in-out 2.2s infinite"><path class="lf" d="M800 190 Q820 145 870 162 Q838 198 800 190z"/><path class="lf2" d="M800 190 Q820 145 870 162 Q838 198 800 190z"/><line class="lf" x1="800" y1="190" x2="838" y2="158"/></g>
-  <g style="animation:float2 5.5s ease-in-out 0.4s infinite"><path class="lf" d="M1020 178 Q1048 130 1100 150 Q1065 185 1020 178z"/><path class="lf2" d="M1020 178 Q1048 130 1100 150 Q1065 185 1020 178z"/><line class="lf" x1="1020" y1="178" x2="1065" y2="145"/></g>
-  <!-- small accent dots -->
-  <circle cx="230" cy="200" r="4" style="fill:color-mix(in srgb,var(--green) 30%,transparent)"/>
-  <circle cx="680" cy="205" r="5" style="fill:color-mix(in srgb,var(--green) 25%,transparent)"/>
-  <circle cx="960" cy="198" r="3.5" style="fill:color-mix(in srgb,var(--green) 35%,transparent)"/>
-  <!-- subtle wave baseline -->
-  <path d="M0 215 Q150 195 300 210 Q450 225 600 210 Q750 195 900 212 Q1050 228 1200 215 L1200 220 L0 220Z" style="fill:color-mix(in srgb,var(--green) 18%,transparent)"/>
-</svg></div></section>
+</div>
+<div class="hero-field" aria-hidden="true">
+  <svg viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <style>
+        .lf{fill:none;stroke:var(--green);stroke-linecap:round;stroke-linejoin:round;opacity:.5}
+        .lf2{stroke:none;opacity:.18}
+      </style>
+    </defs>
+    <!-- leaf 1 -->
+    <g style="animation:float1 4.4s ease-in-out infinite;transform-origin:150px 168px">
+      <path class="lf" stroke-width="1.6" d="M118 180 Q142 136 188 152 Q158 188 118 180Z"/>
+      <path fill="var(--green)" class="lf2" d="M118 180 Q142 136 188 152 Q158 188 118 180Z"/>
+      <line class="lf" stroke-width="1.3" x1="118" y1="180" x2="156" y2="150"/>
+      <line class="lf" stroke-width=".9" x1="138" y1="165" x2="152" y2="158" opacity=".35"/>
+    </g>
+    <!-- leaf 2 -->
+    <g style="animation:float2 5.2s ease-in-out .9s infinite;transform-origin:375px 175px">
+      <path class="lf" stroke-width="1.6" d="M342 190 Q368 142 418 160 Q384 198 342 190Z"/>
+      <path fill="var(--green)" class="lf2" d="M342 190 Q368 142 418 160 Q384 198 342 190Z"/>
+      <line class="lf" stroke-width="1.3" x1="342" y1="190" x2="382" y2="158"/>
+    </g>
+    <!-- leaf 3 – small -->
+    <g style="animation:float3 3.6s ease-in-out 1.8s infinite;transform-origin:500px 185px">
+      <path class="lf" stroke-width="1.2" d="M482 198 Q498 172 524 180 Q506 202 482 198Z"/>
+      <path fill="var(--green)" class="lf2" d="M482 198 Q498 172 524 180 Q506 202 482 198Z"/>
+    </g>
+    <!-- leaf 4 -->
+    <g style="animation:float1 4.8s ease-in-out 2.4s infinite;transform-origin:640px 172px">
+      <path class="lf" stroke-width="1.6" d="M608 184 Q636 134 690 154 Q652 194 608 184Z"/>
+      <path fill="var(--green)" class="lf2" d="M608 184 Q636 134 690 154 Q652 194 608 184Z"/>
+      <line class="lf" stroke-width="1.3" x1="608" y1="184" x2="652" y2="152"/>
+      <line class="lf" stroke-width=".9" x1="634" y1="168" x2="648" y2="160" opacity=".35"/>
+    </g>
+    <!-- leaf 5 – small -->
+    <g style="animation:float2 4.0s ease-in-out 0.6s infinite;transform-origin:790px 188px">
+      <path class="lf" stroke-width="1.2" d="M770 200 Q788 170 818 180 Q798 205 770 200Z"/>
+      <path fill="var(--green)" class="lf2" d="M770 200 Q788 170 818 180 Q798 205 770 200Z"/>
+    </g>
+    <!-- leaf 6 -->
+    <g style="animation:float3 5.6s ease-in-out 1.2s infinite;transform-origin:940px 170px">
+      <path class="lf" stroke-width="1.6" d="M908 182 Q935 132 988 152 Q950 192 908 182Z"/>
+      <path fill="var(--green)" class="lf2" d="M908 182 Q935 132 988 152 Q950 192 908 182Z"/>
+      <line class="lf" stroke-width="1.3" x1="908" y1="182" x2="950" y2="150"/>
+    </g>
+    <!-- leaf 7 – small -->
+    <g style="animation:float1 3.9s ease-in-out 3.0s infinite;transform-origin:1080px 182px">
+      <path class="lf" stroke-width="1.2" d="M1058 196 Q1078 164 1110 175 Q1088 200 1058 196Z"/>
+      <path fill="var(--green)" class="lf2" d="M1058 196 Q1078 164 1110 175 Q1088 200 1058 196Z"/>
+    </g>
+    <!-- scattered pollen dots -->
+    <circle cx="240" cy="196" r="3.5" fill="var(--green)" opacity=".22"/>
+    <circle cx="540" cy="202" r="2.8" fill="var(--green)" opacity=".18"/>
+    <circle cx="740" cy="195" r="4"   fill="var(--green)" opacity=".2"/>
+    <circle cx="1000" cy="200" r="3"  fill="var(--green)" opacity=".16"/>
+    <circle cx="1140" cy="192" r="2.5" fill="var(--green)" opacity=".2"/>
+    <!-- wave ground line -->
+    <path d="M0 212 Q120 200 260 208 Q400 216 540 208 Q680 200 820 210 Q960 220 1100 210 Q1160 205 1200 212 L1200 220 L0 220Z"
+          fill="var(--green)" opacity=".1"/>
+    <path d="M0 218 Q200 210 400 216 Q600 222 800 216 Q1000 210 1200 218 L1200 220 L0 220Z"
+          fill="var(--green)" opacity=".12"/>
+  </svg>
+</div></section>
 <section class="feat">
   <div><span class="feat-ic" aria-hidden="true">🤝</span><h3>সরাসরি দরদাম</h3><p>মাঝখানে দালাল নেই, কৃষক আর পাইকার নিজেরাই দাম ঠিক করেন।</p></div>
   <div><span class="feat-ic" aria-hidden="true">🔒</span><h3>নিরাপদ পেমেন্ট</h3><p>মাল বুঝে পাওয়া পর্যন্ত টাকা Reroute-এ জমা থাকে, তারপর বিক্রেতা পান।</p></div>
