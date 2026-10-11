@@ -29,7 +29,7 @@ function advDefaults() {
     if (l) { ADV.mon = Math.max(1, Math.round(l.available / MON)); ADV.days = String(Math.max(1, l.days_left)); }
   }
 }
-const advLoading = t => `<div class="empty">🤖 ${t || 'AI হিসাব করছে...'}</div>`;
+const advLoading = t => `<div class="sk-wrap" role="status" aria-busy="true" style="margin-top:6px"><span class="sr-only">${t || 'AI হিসাব করছে...'}</span><div class="sk sk-block" style="margin-top:0"></div><div class="sk sk-block"></div></div>`;
 const advPct = v => `${v > 0 ? '+' : ''}${nf(v, 1)}%`;
 
 function advChart(sr, title) {
