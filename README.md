@@ -82,22 +82,30 @@ Built for **Hack for Humanity**.
 ডেমো পেমেন্ট পিন **১২৩৪৫** (অন্য পিনে ব্যর্থ পেমেন্ট দেখায়)। ফুটারের "ডেমো নতুন করে শুরু" সব আগের অবস্থায় ফেরায়। ডেমো ডেটা অ্যাপের আসল ফাংশন দিয়ে তৈরি, তাই মজুদ, টাকা, পয়েন্ট ও লাভ-ক্ষতি একে অপরের সাথে মেলে।
 
 ## 🏗 Architecture
-```
-Browser (HTML/CSS/JS, Bangla, mobile-first) ── fetch /api/* (every 5 s for live updates)
-        │
-FastAPI  app/main.py      routes, signed-token login (survives restarts)
-         app/services.py  business rules: listings, offers, payments, orders, transport, points, P/L
-         app/logic.py     prices, fees, truck fares, rewards (single source of numbers)
-         app/db.py        SQLite schema        app/seed.py  demo data via the real functions
-         app/ai.py        loads models/price_model.joblib (trained by ml/train.py)
-```
-```
-app/  ml/  models/  data/raw/  static/index.html (built from web/*)  web/ (frontend source)
-requirements.txt  render.yaml  Dockerfile  build.py
-```
+```mermaid
+flowchart TD
+    W["web/* (ফ্রন্টএন্ডের সোর্স)"] -->|python build.py| B["ব্রাউজার: static/index.html<br/>HTML/CSS/JS, মোবাইল-ফার্স্ট"]
+    B -->|"fetch /api/* (প্রতি ৫ সেকেন্ডে)"| M["app/main.py · FastAPI<br/>রাউট, টোকেন লগইন"]
 
-<img width="1266" height="1127" alt="image" src="https://github.com/user-attachments/assets/30ab728e-da2d-449b-9324-4282b34ee205" />
+    M --> S["app/services.py<br/>লিস্টিং, অফার, পেমেন্ট, অর্ডার, ট্রাক, পয়েন্ট"]
+    S --> L["app/logic.py<br/>দাম, ফি, ট্রাক ভাড়া, পুরস্কার"]
+    S --> D[("app/db.py<br/>SQLite বা PostgreSQL")]
+    SE["app/seed.py<br/>ডেমো ডেটা"] --> D
 
+    M --> A["app/ai.py<br/>মাসিক দামের পূর্বাভাস"]
+    R["data/raw<br/>আসল দামের ডেটা"] --> T["ml/train.py"] --> PM["models/price_model.joblib"] --> A
+
+    M --> V["app/ai_routes.py + veg_ai.py<br/>সবজির AI পরামর্শ"]
+    VS["ml/vegsim.py<br/>সিমুলেটেড সবজির দাম"] --> TV["ml/train_veg.py<br/>১–৩ দিনের মডেল"] --> V
+
+    classDef fe fill:#EEEDFE,stroke:#534AB7,color:#26215C
+    classDef be fill:#E1F5EE,stroke:#0F6E56,color:#04342C
+    classDef ml fill:#FAECE7,stroke:#993C1D,color:#4A1B0C
+    class W,B fe
+    class M,S,L,D,SE,A,V be
+    class R,T,PM,VS,TV ml
+```
+```
 
 ## ▶️ Run
 ```bash
