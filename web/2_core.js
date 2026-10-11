@@ -40,6 +40,25 @@ const dateBn = t => { const d=new Date(t); return `${bd(d.getDate())} ${MONTHS[d
 function ago(t){ const m=Math.round((Date.now()-t)/6e4); if(m<60) return `${nf(Math.max(1,m))} মিনিট আগে`; const h=Math.round(m/60); if(h<24) return `${nf(h)} ঘণ্টা আগে`; const d=Math.round(h/24); return d<30?`${nf(d)} দিন আগে`:`${nf(Math.round(d/30))} মাস আগে`; }
 const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pill = ([t,c]) => `<span class="pill ${c}">${t}</span>`;
+/* line drawings for empty pages (72x72, drawn with the text colour; green-soft is the only fill) */
+const ILL = {
+  crate: '<ellipse class="e-sh" cx="36" cy="62" rx="25" ry="4"/><path class="e-fill" d="M13 31h46l-4 27H17z"/><path d="M13 31h46l-4 27H17z"/><path d="M16 40h40M17 49h38M26 31v27M36 31v27M46 31v27"/><path class="e-green" d="M37 31c0-9 6-15 15-15-1 9-6 14-15 15zM37 31c-1-6-5-10-11-11"/>',
+  truck: '<ellipse class="e-sh" cx="36" cy="61" rx="29" ry="3.5"/><rect class="e-fill" x="8" y="22" width="35" height="27" rx="3"/><path d="M8 25a3 3 0 0 1 3-3h29a3 3 0 0 1 3 3v24H8zM43 31h10l8 9v9H43zM47 35h5l5 6H47z"/><circle class="e-hole" cx="20" cy="51" r="5.5"/><circle class="e-hole" cx="51" cy="51" r="5.5"/><path d="M1 30h4M2 37h4"/>',
+  search: '<path class="e-green" d="M8 60h56M15 52h42M22 44h28"/><circle class="e-fill" cx="41" cy="24" r="12"/><circle cx="41" cy="24" r="12"/><path d="M49.5 32.5l9 9"/>',
+  sprout: '<path d="M14 58h44"/><path class="e-sh" d="M22 58c3-5 9-7 14-7s11 2 14 7z"/><path d="M36 52V31"/><path class="e-fill" d="M36 41c-10 0-16-6-16-15 9 0 16 5 16 15zM36 35c0-10 6-17 16-17 0 10-6 17-16 17z"/><path d="M36 41c-10 0-16-6-16-15 9 0 16 5 16 15zM36 35c0-10 6-17 16-17 0 10-6 17-16 17z"/>',
+  receipt: '<path class="e-fill" d="M20 11h32v47l-5-4-5 4-5-4-5 4-5-4-5 4-2-1.5z"/><path d="M20 11h32v47l-5-4-5 4-5-4-5 4-5-4-5 4-2-1.5zM27 23h18M27 31h18M27 39h10"/>'
+};
+function emptyState(ill, title, sub='', extra='', small=false){
+  return `<div class="empty-st${small?' sm':''}"><svg viewBox="0 0 72 72" aria-hidden="true">${ILL[ill]}</svg><h3>${title}</h3>${sub?`<p>${sub}</p>`:''}${extra}</div>`;
+}
+/* light / dark: follows the phone until the person picks one, then remembers it */
+function curTheme(){ return document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'); }
+function themeBtn(){
+  const dark=curTheme()==='dark';
+  return `<button class="iconbtn" data-act="theme" aria-label="${dark?'লাইট মোড':'ডার্ক মোড'}" title="${dark?'লাইট মোড':'ডার্ক মোড'}"><svg viewBox="0 0 24 24" aria-hidden="true">${dark
+    ?'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>'
+    :'<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>'}</svg></button>`;
+}
 /* skeleton: grey placeholder shapes while data loads. kind: 'cards' (a grid of listing cards) or 'page' */
 function skeleton(kind){
   const head='<div class="sk sk-title"></div><div class="sk sk-line"></div>';
@@ -179,13 +198,13 @@ function renderChrome(){
   const u=me(), r=routeBase();
   document.body.classList.toggle('authed',!!u);
   if(!u){
-    $('#hrow').innerHTML = LOGO+`<div class="hright"><a class="btn btn-soft btn-sm" href="#/market">বাজার</a><a class="btn btn-green btn-sm" href="#/login">লগ ইন</a></div>`;
+    $('#hrow').innerHTML = LOGO+`<div class="hright">${themeBtn()}<a class="btn btn-soft btn-sm" href="#/market">বাজার</a><a class="btn btn-green btn-sm" href="#/login">লগ ইন</a></div>`;
     $('#tnav').innerHTML=''; $('#bnav').innerHTML=''; return;
   }
   const unread=(S.notifs||[]).filter(n=>!n.read).length, todo=todoCount();
   $('#hrow').innerHTML = LOGO+`<div class="hright">
     <a class="chip-user" href="${u.role==='admin'?'#/admin':'#/account'}">${avatar(u)}<span class="nm">${esc(dispName(u))}</span><span class="role ${u.role}">${roleBn(u.role)}</span></a>
-    <button class="iconbtn" data-act="bell" aria-label="নোটিফিকেশন">🔔${unread?`<b>${nf(unread)}</b>`:''}</button>
+    ${themeBtn()}<button class="iconbtn" data-act="bell" aria-label="নোটিফিকেশন">🔔${unread?`<b>${nf(unread)}</b>`:''}</button>
     <button class="btn btn-line btn-sm hide-m" data-act="logout">বের হন</button></div>`;
   const nav = u.role==='admin'?NAV_ADMIN:NAV_TRADER;
   $('#tnav').innerHTML = `<div class="wrap">${nav.map(([h,i,t])=>`<a href="${h}" class="${r===h?'on':''}">${i} ${t}${h==='#/deals'&&todo?`<span class="cnt">${nf(todo)}</span>`:''}</a>`).join('')}</div>`;
