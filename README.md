@@ -96,6 +96,9 @@ app/  ml/  models/  data/raw/  static/index.html (built from web/*)  web/ (front
 requirements.txt  render.yaml  Dockerfile  build.py
 ```
 
+<img width="1266" height="1127" alt="image" src="https://github.com/user-attachments/assets/30ab728e-da2d-449b-9324-4282b34ee205" />
+
+
 ## ▶️ Run
 ```bash
 pip install -r requirements.txt
