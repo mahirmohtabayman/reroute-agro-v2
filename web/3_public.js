@@ -30,62 +30,62 @@ V.home = () => `<section class="hero"><div class="hero-in">
   <svg viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <style>
-        .lf{fill:none;stroke:var(--green);stroke-linecap:round;stroke-linejoin:round;opacity:.5}
-        .lf2{stroke:none;opacity:.18}
+        .lf{fill:none;stroke:rgba(255,255,255,.55);stroke-linecap:round;stroke-linejoin:round}
+        .lf2{stroke:none;fill:rgba(255,255,255,.12)}
       </style>
     </defs>
     <!-- leaf 1 -->
     <g style="animation:float1 4.4s ease-in-out infinite;transform-origin:150px 168px">
       <path class="lf" stroke-width="1.6" d="M118 180 Q142 136 188 152 Q158 188 118 180Z"/>
-      <path fill="var(--green)" class="lf2" d="M118 180 Q142 136 188 152 Q158 188 118 180Z"/>
+      <path class="lf2" d="M118 180 Q142 136 188 152 Q158 188 118 180Z"/>
       <line class="lf" stroke-width="1.3" x1="118" y1="180" x2="156" y2="150"/>
       <line class="lf" stroke-width=".9" x1="138" y1="165" x2="152" y2="158" opacity=".35"/>
     </g>
     <!-- leaf 2 -->
     <g style="animation:float2 5.2s ease-in-out .9s infinite;transform-origin:375px 175px">
       <path class="lf" stroke-width="1.6" d="M342 190 Q368 142 418 160 Q384 198 342 190Z"/>
-      <path fill="var(--green)" class="lf2" d="M342 190 Q368 142 418 160 Q384 198 342 190Z"/>
+      <path class="lf2" d="M342 190 Q368 142 418 160 Q384 198 342 190Z"/>
       <line class="lf" stroke-width="1.3" x1="342" y1="190" x2="382" y2="158"/>
     </g>
     <!-- leaf 3 – small -->
     <g style="animation:float3 3.6s ease-in-out 1.8s infinite;transform-origin:500px 185px">
       <path class="lf" stroke-width="1.2" d="M482 198 Q498 172 524 180 Q506 202 482 198Z"/>
-      <path fill="var(--green)" class="lf2" d="M482 198 Q498 172 524 180 Q506 202 482 198Z"/>
+      <path class="lf2" d="M482 198 Q498 172 524 180 Q506 202 482 198Z"/>
     </g>
     <!-- leaf 4 -->
     <g style="animation:float1 4.8s ease-in-out 2.4s infinite;transform-origin:640px 172px">
       <path class="lf" stroke-width="1.6" d="M608 184 Q636 134 690 154 Q652 194 608 184Z"/>
-      <path fill="var(--green)" class="lf2" d="M608 184 Q636 134 690 154 Q652 194 608 184Z"/>
+      <path class="lf2" d="M608 184 Q636 134 690 154 Q652 194 608 184Z"/>
       <line class="lf" stroke-width="1.3" x1="608" y1="184" x2="652" y2="152"/>
       <line class="lf" stroke-width=".9" x1="634" y1="168" x2="648" y2="160" opacity=".35"/>
     </g>
     <!-- leaf 5 – small -->
     <g style="animation:float2 4.0s ease-in-out 0.6s infinite;transform-origin:790px 188px">
       <path class="lf" stroke-width="1.2" d="M770 200 Q788 170 818 180 Q798 205 770 200Z"/>
-      <path fill="var(--green)" class="lf2" d="M770 200 Q788 170 818 180 Q798 205 770 200Z"/>
+      <path class="lf2" d="M770 200 Q788 170 818 180 Q798 205 770 200Z"/>
     </g>
     <!-- leaf 6 -->
     <g style="animation:float3 5.6s ease-in-out 1.2s infinite;transform-origin:940px 170px">
       <path class="lf" stroke-width="1.6" d="M908 182 Q935 132 988 152 Q950 192 908 182Z"/>
-      <path fill="var(--green)" class="lf2" d="M908 182 Q935 132 988 152 Q950 192 908 182Z"/>
+      <path class="lf2" d="M908 182 Q935 132 988 152 Q950 192 908 182Z"/>
       <line class="lf" stroke-width="1.3" x1="908" y1="182" x2="950" y2="150"/>
     </g>
     <!-- leaf 7 – small -->
     <g style="animation:float1 3.9s ease-in-out 3.0s infinite;transform-origin:1080px 182px">
       <path class="lf" stroke-width="1.2" d="M1058 196 Q1078 164 1110 175 Q1088 200 1058 196Z"/>
-      <path fill="var(--green)" class="lf2" d="M1058 196 Q1078 164 1110 175 Q1088 200 1058 196Z"/>
+      <path class="lf2" d="M1058 196 Q1078 164 1110 175 Q1088 200 1058 196Z"/>
     </g>
     <!-- scattered pollen dots -->
-    <circle cx="240" cy="196" r="3.5" fill="var(--green)" opacity=".22"/>
-    <circle cx="540" cy="202" r="2.8" fill="var(--green)" opacity=".18"/>
-    <circle cx="740" cy="195" r="4"   fill="var(--green)" opacity=".2"/>
-    <circle cx="1000" cy="200" r="3"  fill="var(--green)" opacity=".16"/>
-    <circle cx="1140" cy="192" r="2.5" fill="var(--green)" opacity=".2"/>
-    <!-- wave ground line -->
+    <circle cx="240" cy="196" r="3.5" fill="rgba(255,255,255,.35)"/>
+    <circle cx="540" cy="202" r="2.8" fill="rgba(255,255,255,.28)"/>
+    <circle cx="740" cy="195" r="4"   fill="rgba(255,255,255,.3)"/>
+    <circle cx="1000" cy="200" r="3"  fill="rgba(255,255,255,.25)"/>
+    <circle cx="1140" cy="192" r="2.5" fill="rgba(255,255,255,.3)"/>
+    <!-- wave ground lines -->
     <path d="M0 212 Q120 200 260 208 Q400 216 540 208 Q680 200 820 210 Q960 220 1100 210 Q1160 205 1200 212 L1200 220 L0 220Z"
-          fill="var(--green)" opacity=".1"/>
+          fill="rgba(255,255,255,.08)"/>
     <path d="M0 218 Q200 210 400 216 Q600 222 800 216 Q1000 210 1200 218 L1200 220 L0 220Z"
-          fill="var(--green)" opacity=".12"/>
+          fill="rgba(255,255,255,.1)"/>
   </svg>
 </div></section>
 <section class="feat">
