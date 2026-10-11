@@ -211,7 +211,42 @@ const I18N_PHRASES = [
   ['গড় ভুল','Average error'],
   ['দাম বাড়বে না কমবে','Price direction'],
   ['কালো: আসল দাম · সবুজ ডটেড: মডেলের পূর্বাভাস (যাচাই) · লাল: পরের মাস','Black: actual price · green dotted: model forecast (validation) · red: next month'],
-  ['সার্ভার চালু হচ্ছে, কয়েক সেকেন্ড পরে পাতাটি রিফ্রেশ করুন।','The server is starting. Refresh the page after a few seconds.']
+  ['সার্ভার চালু হচ্ছে, কয়েক সেকেন্ড পরে পাতাটি রিফ্রেশ করুন।','The server is starting. Refresh the page after a few seconds.'],
+  ['নষ্ট হওয়া শুরু','Spoilage has started'],
+  ['নিরাপদ পেমেন্ট','Secure Payment'],
+  ['সরাসরি দরদাম','Direct Negotiation'],
+  ['নিজস্ব ট্রাক','Reroute Transport'],
+  ['লগ ইন ছাড়াই বাজার দেখুন','Browse the market without logging in'],
+  ['পাইকার হিসেবে','As a wholesaler'],
+  ['কৃষক হিসেবে','As a farmer'],
+  ['পেমেন্ট করতে হবে','Payment required'],
+  ['পেমেন্ট করুন','Make payment'],
+  ['ট্রাকে মাল তুলে দিয়েছি','Goods loaded onto truck'],
+  ['মাল বুঝে পেয়েছি','Goods received'],
+  ['ট্রাক আসছে','Truck is coming'],
+  ['ট্রাকে মাল তুলে দিন','Load goods onto truck'],
+  ['পাইকারকে বুঝিয়ে দিন','Hand over to wholesaler'],
+  ['মাল তৈরি রাখুন','Keep goods ready'],
+  ['রাজি হলে পেমেন্ট করব','Accept and pay'],
+  ['রাজি, পেমেন্ট করব','Accept — I will pay'],
+  ['পাল্টা দাম দিন','Make a counter offer'],
+  ['কারণ ছাড়া নিশ্চিত','Confirm without reason'],
+  ['সব ফিল্টার মুছুন','Clear all filters'],
+  ['এই খোঁজে কোনো মাল পাওয়া গেল না','No produce found for this search'],
+  ['অন্য ফসল, জেলা বা দাম দিয়ে আবার দেখুন।','Try a different crop, district or price.'],
+  ['বিক্রির জন্য আছে','Available for sale'],
+  ['পাইকারি: সর্বনিম্ন অর্ডার','Wholesale — minimum order'],
+  ['কৃষক ও পাইকারদের তোলা সব মাল।','All produce listed by farmers and wholesalers.'],
+  ['মাল বিক্রির জন্য দিন','List produce for sale'],
+  ['কিনতে বা বেচতে লগ ইন','Log in to buy or sell'],
+  ['ছবি দেওয়া হয়নি','No photo provided'],
+  ['দিন তাজা থাকবে','days fresh'],
+  ['দিন তাজা থাকবে','days remaining'],
+  ['বিক্রি শেষ','Sold out'],
+  ['গ্রেড ','Grade '],
+  [' পর্যন্ত Reroute ট্রাকে আনুমানিক ',' — Reroute truck estimate '],
+  ['বাজারে ট্রাক ভাড়া ','market truck fare '],
+  ['আনুমানিক ট্রাক ভাড়া','estimated truck fare']
 ].sort((a,b)=>b[0].length-a[0].length);
 
 const I18N_WORDS = {
@@ -282,7 +317,16 @@ function translateBnText(input){
     return romanizeBn(word);
   });
 
-  return s.replace(/।/g,'.').replace(/\s{2,}/g,' ').trim();
+  s = s.replace(/।/g,'.').replace(/\s{2,}/g,' ').trim();
+  // Fix word-order: "available X maund" → "X maund available"
+  s = s.replace(/\bavailable (\d[\d,.]*) maund\b/g,'$1 maund available');
+  s = s.replace(/\bavailable (\d[\d,.]*) kg\b/g,'$1 kg available');
+  // Fix doubled units
+  s = s.replace(/\b(\d+) maund maund\b/g,'$1 maund');
+  s = s.replace(/\b(\d+) kg kg\b/g,'$1 kg');
+  // Fix "days fresh" → "days"
+  s = s.replace(/\bdays fresh\b/g,'days');
+  return s;
 }
 
 function langBtn(){
