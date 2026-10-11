@@ -87,8 +87,8 @@ V.prices = () => {
   const head=`<div class="phead"><div><h1>💡 দাম ও পরামর্শ</h1><p class="muted">সহজ হিসাব: কোথায় ${isP?'কিনে কোথায় বেচলে':'বেচলে'} বেশি টাকা থাকবে</p></div></div>
     <div class="warn" style="margin-bottom:12px">⚠️ সবজির বাজারদর এখানে <b>ডেমো অনুমান</b>, আসল বাজারের তথ্য নয়। Reroute-এর গড় দাম আসল লিস্টিং থেকে নেওয়া। পাইলটে কৃষি বিপণন অধিদপ্তরের দৈনিক দাম বসবে।</div>
     <div class="chips">${Object.entries(CROPS).map(([k,cc])=>`<button class="chip ${PR.crop===k?'on':''}" data-act="pr-crop" data-v="${k}">${cc.i} ${cc.n}</button>`).join('')}</div>
-    <div class="row wrap-it" style="margin-bottom:12px"><label class="field" style="margin:0"><span>কত মণ</span><input data-pr="mon" type="number" min="5" value="${PR.mon}" style="width:110px"></label>
-      <label class="field" style="margin:0"><span>${isP?'':'আপনার উৎপাদন খরচ ৳/কেজি'}</span>${isP?'':`<input data-pr="cost" type="number" step="0.5" value="${PR.cost}" placeholder="জানা থাকলে" style="width:160px">`}</label></div>`;
+    <div class="row wrap-it" style="margin-bottom:12px"><label class="field" style="margin:0"><span>কত মণ</span><input data-pr="mon" data-num="int" type="text" inputmode="numeric" autocomplete="off" value="${PR.mon}" style="width:110px"></label>
+      <label class="field" style="margin:0"><span>${isP?'':'আপনার উৎপাদন খরচ ৳/কেজি'}</span>${isP?'':`<input data-pr="cost" data-num="dec" type="text" inputmode="decimal" autocomplete="off" value="${PR.cost}" placeholder="জানা থাকলে" style="width:160px">`}</label></div>`;
   const today=`<div class="panel"><h3>১. আজকের বাজার দর <span class="demo-tag">ডেমো অনুমান</span></h3><div class="scroll"><table class="tbl" style="margin-top:6px"><tr><th>জেলা</th><th class="num">প্রতি কেজি</th><th class="num">প্রতি মণ</th></tr>
     ${Object.entries(PLACES).map(([k,p])=>`<tr><td>${p.n}${k===u.place?' (আপনার)':''}</td><td class="num">${tk(MARKET_DEMO[k][PR.crop])}</td><td class="num">${tk(MARKET_DEMO[k][PR.crop]*MON)}</td></tr>`).join('')}</table></div>
     <p class="note sm" style="margin-top:8px">Reroute-এ এখন ${nf(live.length)}টি ${c.n}ের লিস্টিং${avg?`, গড় দাম ${tk(avg,1)}/কেজি (আসল)`:''}।</p></div>`;
