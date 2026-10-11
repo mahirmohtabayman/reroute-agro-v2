@@ -112,9 +112,14 @@ main{padding:20px 0 70px;min-height:72vh}
 .hero .cta .btn{padding:15px 26px;font-size:1.08rem;border-radius:14px;min-width:190px}
 .hero-link{margin-top:18px}
 .hero .logo-big{display:inline-block;font-size:3.8rem;line-height:1;margin-bottom:10px}
-.hero-field{position:absolute;left:-60%;right:-60%;bottom:-20px;height:310px;pointer-events:none;transform-origin:50% 100%;transform:perspective(360px) rotateX(62deg);
-  background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--green) 42%,transparent) 0 22px,transparent 22px 52px);
-  -webkit-mask-image:linear-gradient(to top,#000 30%,transparent 95%);mask-image:linear-gradient(to top,#000 30%,transparent 95%)}
+.hero-field{position:absolute;left:0;right:0;bottom:0;height:220px;pointer-events:none;overflow:hidden;opacity:.85;
+  -webkit-mask-image:linear-gradient(to top,#000 40%,transparent 100%);mask-image:linear-gradient(to top,#000 40%,transparent 100%)}
+.hero-field svg{width:100%;height:100%}
+@keyframes float1{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(8deg)}}
+@keyframes float2{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(-6deg)}}
+@keyframes float3{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-22px) rotate(5deg)}}
+@keyframes drift{0%{transform:translateX(-120px)}100%{transform:translateX(120vw)}}
+@keyframes fadein-hero{from{opacity:0}to{opacity:.85}}
 .feat{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:980px;margin:34px auto 6px;text-align:left}
 .feat-ic{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:var(--green-soft);font-size:1.45rem;margin-bottom:12px}
 .feat h3{font-size:1.12rem}
@@ -260,10 +265,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
 /* one entrance on the home page: the tomato sprouts, the field rows rise */
 @media (prefers-reduced-motion:no-preference){
   .hero .logo-big{animation:sprout .7s cubic-bezier(.2,.8,.3,1.25) both}
-  .hero-field{animation:rise .9s ease-out .1s both}
+  .hero-field{animation:fadein-hero .8s ease-out .2s both}
 }
 @keyframes sprout{from{transform:translateY(14px) scale(.6);opacity:0}}
-@keyframes rise{from{opacity:0;transform:perspective(360px) rotateX(80deg)}}
+@keyframes rise{from{opacity:0}} /* hero field now uses fadein-hero */
 
 /* motion that answers something: a page change, a popup opening, a new notification, the step an order is on */
 @media (prefers-reduced-motion:no-preference){
