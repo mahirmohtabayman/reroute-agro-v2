@@ -30,7 +30,7 @@ V.dash = () => {
     ${A.map(([k,t,l])=>`<div class="alert ${k}"><span class="grow">${t}</span>${k==='spoil'&&!l.urgent?`<button class="btn btn-red btn-sm" data-act="urgent" data-id="${l.id}">জরুরি বিক্রি</button>`:`<a class="btn btn-soft btn-sm" href="#/listings">দেখুন</a>`}</div>`).join('')}
     <h2 style="margin:6px 0 10px">এখন আপনার কাজ ${T.length?`<span class="cnt">${nf(T.length)}</span>`:''}</h2>
     ${T.length?T.map(([i,t,d,h])=>`<a class="todo" href="${h}"><span class="ic">${i}</span><div class="grow"><b>${t}</b><div class="muted sm">${d}</div></div><span>›</span></a>`).join('')
-      :`<div class="empty">এখন কোনো কাজ বাকি নেই। নতুন অফার বা অর্ডার এলে এখানে দেখাবে।</div>`}
+      :emptyState('sprout','এখন হাতে কোনো কাজ নেই','নতুন অফার, পেমেন্ট বা ট্রাকের খবর এলে এখানে দেখাবে।','',true)}
     <div class="grid4" style="margin-top:16px">
       <a class="kpi" href="#/rewards"><span class="muted sm">ওয়ালেট</span><strong>${tk(u.wallet)}</strong></a>
       <a class="kpi" href="#/rewards"><span class="muted sm">পয়েন্ট</span><strong style="color:var(--gold)">⭐ ${nf(u.pts)}</strong></a>
@@ -65,7 +65,7 @@ V.listings = () => {
         ${l.status==='active'?`<button class="btn btn-line btn-sm" data-act="l-status" data-id="${l.id}" data-v="paused">সাময়িক বন্ধ</button>`:l.status==='paused'?`<button class="btn btn-line btn-sm" data-act="l-status" data-id="${l.id}" data-v="active">আবার চালু</button>`:''}
         ${l.status==='active'&&!l.urgent?`<button class="btn btn-red btn-sm" data-act="urgent" data-id="${l.id}">🚨 জরুরি বিক্রি</button>`:''}
         <button class="btn btn-soft btn-sm" data-act="l-status" data-id="${l.id}" data-v="closed">লিস্টিং বন্ধ করুন</button></div>`:''}</div>`; }).join('')
-  :`<div class="empty">এখনো কোনো লিস্টিং নেই। <a href="#/listings/new">মাল বিক্রির জন্য দিন</a></div>`}`;
+  :emptyState('crate','আপনার কোনো মাল এখনো বাজারে নেই','ছবি, দাম আর পরিমাণ দিয়ে কয়েক মিনিটেই লিস্টিং দেওয়া যায়।','<a class="btn btn-green" href="#/listings/new">+ মাল বিক্রির জন্য দিন</a>')}`;
 };
 
 /* ---------- new listing ---------- */
@@ -75,7 +75,7 @@ V.newListing = () => {
   if(!NL) nlReset();
   const u=me(), isP=u.role==='paikar', inv=(S.inventory||[]).filter(r=>r.unlisted>0);
   const crops = isP ? inv.map(r=>r.crop) : Object.keys(CROPS);
-  if(isP&&!crops.length) return `<h1>নতুন লিস্টিং</h1><div class="empty" style="margin-top:12px">পাইকার হিসেবে আপনার মজুদে থাকা মালই বিক্রির জন্য দিতে পারবেন। এখন তালিকার বাইরে কোনো মজুদ নেই।<br><a href="#/books">মজুদ দেখুন</a> বা <a href="#/market">মাল কিনুন</a></div>`;
+  if(isP&&!crops.length) return `<h1>নতুন লিস্টিং</h1><div style="margin-top:12px">${emptyState('crate','বিক্রির মতো মজুদ এখন নেই','পাইকার হিসেবে আপনার মজুদে থাকা মালই বাজারে দিতে পারবেন। আগে কিনুন, বা মজুদ যোগ করুন।','<div class="row wrap-it" style="justify-content:center"><a class="btn btn-green" href="#/market">মাল কিনুন</a><a class="btn btn-line" href="#/books">মজুদ দেখুন</a></div>')}</div>`;
   if(!crops.includes(NL.crop)) NL.crop=crops[0];
   const mk=MARKET_DEMO[u.place][NL.crop]; if(NL.price===null) NL.price=mk;
   const invRow=(S.inventory||[]).find(r=>r.crop===NL.crop), maxMon=isP?Math.floor(invRow.unlisted/MON):null;
@@ -176,9 +176,9 @@ V.deals = () => {
     <div class="note" style="margin-bottom:12px">ধাপ: <b>অফার → বিক্রেতা রাজি → পেমেন্ট (অর্ডার নিশ্চিত) → মাল হস্তান্তর → সম্পূর্ণ</b>। টাকা Reroute-এ জমা থাকে, মাল বুঝে পেলে বিক্রেতা পান।</div>
     <div class="tabs">${[['offers',`অফার (${nf(S.offers.length)})`],['orders',`অর্ডার (${nf(orders.length)})`],['insp',`পরিদর্শন (${nf(insp.length)})`]].map(([k,t])=>`<button class="${DT===k?'on':''}" data-act="dt" data-v="${k}">${t}</button>`).join('')}</div>
     ${DT==='offers'?`<div class="tabs">${[['all','সব'],['in','আমার মালে এসেছে'],['out','আমি দিয়েছি']].map(([k,t])=>`<button class="${DF===k?'on':''}" data-act="df" data-v="${k}">${t}</button>`).join('')}</div>
-      <div class="panel">${offers.map(offerRow).join('')||'<p class="muted">কোনো অফার নেই</p>'}</div>`:''}
-    ${DT==='orders'?groups.filter(g=>g[1].length).map(([t,l])=>`<h3 style="margin:14px 0 6px">${t} (${nf(l.length)})</h3><div class="panel">${l.map(orderRow).join('')}</div>`).join('')||'<div class="empty">কোনো অর্ডার নেই</div>':''}
+      ${offers.length?`<div class="panel">${offers.map(offerRow).join('')}</div>`:emptyState('receipt','কোনো অফার নেই','বাজারে পছন্দের মালে অফার দিন। আপনার মালে কেউ অফার দিলেও এখানে দেখাবে।','<a class="btn btn-line" href="#/market">বাজারে যান</a>')}`:''}
+    ${DT==='orders'?groups.filter(g=>g[1].length).map(([t,l])=>`<h3 style="margin:14px 0 6px">${t} (${nf(l.length)})</h3><div class="panel">${l.map(orderRow).join('')}</div>`).join('')||emptyState('receipt','এখনো কোনো অর্ডার হয়নি','অফারে বিক্রেতা রাজি হলে অর্ডার তৈরি হয়, তারপর পেমেন্ট আর ট্রাকের খবর এখানে থাকবে।'):''}
     ${DT==='insp'?`<div class="panel">${insp.map(i=>{ const l=listing(i.listing)||{crop:'tomato'}, other=user(i.seller===id?i.buyer:i.seller);
       return `<a class="item" href="#/inspection/${i.id}" style="text-decoration:none;color:inherit">${cropIco(l.crop)}<div class="grow"><div class="row"><b>${i.kind==='video'?'📹 ভিডিও':'🚶 সরাসরি'} পরিদর্শন</b>${pill(INSP_ST[i.status])}</div>
-        <div class="muted sm">${i.seller===id?'ক্রেতা':'বিক্রেতা'}: ${esc(dispName(other))} · ${esc(i.pref)}</div></div><span>›</span></a>`; }).join('')||'<p class="muted">কোনো পরিদর্শন নেই</p>'}</div>`:''}`;
+        <div class="muted sm">${i.seller===id?'ক্রেতা':'বিক্রেতা'}: ${esc(dispName(other))} · ${esc(i.pref)}</div></div><span>›</span></a>`; }).join('')||emptyState('search','কোনো পরিদর্শন নেই','কেনার আগে মাল দেখতে চাইলে লিস্টিংয়ের পাতা থেকে ভিডিও কল বা সরাসরি দেখার অনুরোধ করুন।','',true)}</div>`:''}`;
 };
