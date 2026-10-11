@@ -250,6 +250,7 @@ const I18N_PHRASES = [
 ].sort((a,b)=>b[0].length-a[0].length);
 
 const I18N_WORDS = {
+  'কাজ':'Action','কাজটি':'action','কাজের':'work','ভাড়া':'fare','ভাড়ার':'fare','ভাড়ায়':'fare','ছাড়':'discount','আবার':'Again','হলে':'when','মালের':'produce','বিক্রির':'sale','ট্রাকে':'truck','বুঝে':'confirm','দেখতে':'view','পাওয়া':'found','পাওয়া যায়':'available','পাইকারের':'wholesaler','পাইকারকে':'wholesaler','পাইকারদের':'wholesalers','দরদাম':'negotiation','বাকি':'remaining','থাকলে':'if available','ট্রাকের':'transport','চলমান':'Active','অন্তত':'at least','পরের':'next','এসেছে':'received','আসে':'comes','হয়ে':'has been','কেনার':'purchase','তারপর':'then','আজকের':'today’s','বাদে':'excluding','পৌঁছালে':'when delivered','ইতিহাস':'History','পেমেন্টের':'payment','দেখাবে':'will appear','নবায়ন':'renewal','নিয়মিত':'Frequent','ব্যবস্থাপনা':'Management','সাময়িক':'Temporarily','বাড়ান':'Increase','কমান':'Decrease','কয়েক':'a few','হিসেবে':'as','মজুদে':'inventory','দামে':'price','দামের':'price','চেয়ে':'than','দিয়ে':'with','দিয়েছি':'confirmed','দেখা':'Viewed','দেখে':'after checking','কাটা':'deducted','কাটবে':'will be deducted','ওয়ালেটে':'wallet','বিক্রিতে':'sale','পেমেন্টে':'payment','পৌঁছাতে':'deliver','পেয়েছেন':'received','পেয়েছি':'received','দেন':'give','দেননি':'did not provide','গেল':'was completed','খবর':'updates','ক্ষতির':'loss','মানের':'quality','রাখা':'keep','হতে':'to be','পারে':'may','বুঝিয়ে':'handover','তৈরি':'ready','আটকে':'reserved','কাছে':'from','কাছ':'from','লাগবে':'required','লিখুন':'Enter','চেষ্টা':'Try','যায়':'can','যায়নি':'not completed','হওয়া':'being','হওয়ার':'after','পরিশোধ':'Payment','পড়া':'Read','বুক':'Booked','জানানো':'notified','পাঠানো':'sent','পরিমাণের':'quantity','বেচলে':'selling','থাকে':'remains','থেকেই':'automatically','কমে':'decreases','পাইকারি':'Wholesale','ফসলের':'crop','লিস্টিংটা':'listing','লেনদেনের':'transaction','সবুজ':'green','লাল':'red','কালো':'black','বিক্রেতার':'seller','ক্রেতার':'buyer','কৃষকের':'farmer','চূড়ান্ত':'Final','যোগাযোগ':'Contact','ব্যবহার':'Use','জরিমানা':'Penalty','ছবি ও মানের তথ্য':'Photo & quality details',
   'ড্যাশবোর্ড':'Dashboard','হোম':'Home','বাজার':'Market','বাজারে':'market','বাজারের':'market','বাজারদর':'market price',
   'লিস্টিং':'Listing','লেনদেন':'Transactions','পরিবহন':'Transport','অ্যাকাউন্ট':'Account','প্রোফাইল':'Profile',
   'কৃষক':'Farmer','পাইকার':'Wholesaler','বিক্রেতা':'Seller','ক্রেতা':'Buyer','ব্যবহারকারী':'Users','অপারেশন':'Operations','টিম':'Team',
@@ -283,24 +284,168 @@ const I18N_WORDS = {
   'ক্যাশব্যাক':'Cashback','অগ্রাধিকার':'Priority','ডেলিভারি':'Delivery','সাবস্ক্রিপশন':'Subscription','কোম্পানি':'Company','ঘাঁটি':'Base','ট্রিপ':'Trip','রুটের':'route','দূরত্ব':'Distance','তারিখ':'Date','খালি':'Available','মেরামতে':'Maintenance'
 };
 
+/* ---------------------------------------------------------------------
+   Production English copy overrides.
+   These are intentionally sentence/phrase based. They run before the
+   fallback word translator so the English UI reads naturally instead of
+   becoming Banglish (for example, "Now your kaj").
+   --------------------------------------------------------------------- */
+const I18N_UI_FIXES = [
+  ['এখন আপনার কাজ','What needs your attention'],
+  ['এখন হাতে কোনো কাজ নেই','You have no pending actions right now'],
+  ['নতুন অফার, পেমেন্ট বা ট্রাকের খবর এলে এখানে দেখাবে।','New offers, payments, and transport updates will appear here.'],
+  ['আসসালামু আলাইকুম,','Welcome,'],
+  ['চলমান অর্ডার','Active orders'],
+  ['এ পর্যন্ত লাভ-ক্ষতি','Profit & loss to date'],
+  ['মোট বিক্রি','Total sales'],
+  ['মোট খরচ','Total costs'],
+  ['আনুমানিক লাভ','Estimated profit'],
+  ['কোথায় বেচলে/কিনলে লাভ','Find the most profitable market'],
+  ['কম খরচে ট্রাক বুক করুন','Book transport at a lower cost'],
+  ['আমার কাছে কী মাল আছে','See what you have in stock'],
+  ['বাজারে আপনার মাল। অর্ডার এলে পরিমাণ নিজে থেকেই কমে যায়।','Your produce currently listed in the market. Available quantity updates automatically when orders are placed.'],
+  ['আপনার কোনো মাল এখনো বাজারে নেই','You do not have any active listings yet'],
+  ['ছবি, দাম আর পরিমাণ দিয়ে কয়েক মিনিটেই লিস্টিং দেওয়া যায়।','Add photos, price, and quantity to publish a listing in just a few minutes.'],
+  ['বিক্রির মতো মজুদ এখন নেই','There is no inventory available to list right now'],
+  ['পাইকার হিসেবে আপনার মজুদে থাকা মালই বাজারে দিতে পারবেন। আগে কিনুন, বা মজুদ যোগ করুন।','As a wholesaler, you can only list produce that is in your inventory. Buy produce first or add inventory.'],
+  ['মাল কিনুন','Buy produce'],
+  ['মজুদ দেখুন','View inventory'],
+  ['কোন ফসল?','Which crop?'],
+  ['বিক্রির জন্য আছে','Available for sale'],
+  ['অর্ডারে আটকে','Reserved for orders'],
+  ['বিক্রি হয়েছে','Sold'],
+  ['দাম বদলান','Change price'],
+  ['পরিমাণ বাড়ান/কমান','Adjust quantity'],
+  ['সাময়িক বন্ধ','Pause listing'],
+  ['আবার চালু','Reactivate'],
+  ['লিস্টিং বন্ধ করুন','Close listing'],
+  ['আমার পয়েন্ট','My points'],
+  ['পয়েন্ট দিয়ে নিন','Redeem your points'],
+  ['পরের Reroute ট্রাকের ভাড়া থেকে কাটা যাবে (ভাড়ার অর্ধেক পর্যন্ত)','Applied to your next Reroute transport charge, up to 50% of the fare'],
+  ['পরের সফল বিক্রির ১% ফি থেকে কাটা যাবে','Applied to the 1% service fee on your next successful sale'],
+  ['যাচাইকৃত কৃষক','Verified farmers'],
+  ['বা বেশির সফল বিক্রিতে','or more in a successful sale receive'],
+  ['ক্যাশব্যাক পান, সপ্তাহে ৩ বার পর্যন্ত। নিজে থেকেই ওয়ালেটে আসে।','cashback, up to three times per week. It is credited to the wallet automatically.'],
+  ['অগ্রাধিকার ট্রাক','Priority transport'],
+  ['যাচাইকৃত কৃষক ও প্লাস সদস্যের বুকিং আগে ট্রাক পায়।','Bookings from verified farmers and Plus members receive transport priority.'],
+  ['✔ আপনি পাচ্ছেন','✔ Active for you'],
+  ['প্রোফাইল যাচাই হলে পাবেন','Available after profile verification'],
+  ['নিয়মিত ক্রেতা ছাড়','Frequent buyer discount'],
+  ['৩০ দিনে ৫টি বা বেশি কেনা সম্পূর্ণ হলে ট্রাকের সেবা চার্জে ২০% ছাড়।','Complete 5 or more purchases within 30 days to receive 20% off the transport service fee.'],
+  ['পয়েন্ট কীভাবে আসে','How you earn points'],
+  ['বিক্রি সম্পূর্ণ হলে প্রতি মণে ১ পয়েন্ট, কিনলে প্রতি ২ মণে ১','Earn 1 point per maund sold, or 1 point for every 2 maunds purchased, after completion.'],
+  ['Reroute ট্রাকে মাল পৌঁছালে +১০','Earn +10 points when delivery is completed with Reroute transport.'],
+  ['ছবি ও মানের তথ্যসহ লিস্টিং প্রথম বিক্রিতে +১০','Earn +10 points on the first sale from a listing that includes photos and quality details.'],
+  ['প্রোফাইল যাচাই হলে +৫০','Earn +50 points when your profile is verified.'],
+  ['রাজি হওয়ার পর অর্ডার বাতিল করলে −১০','Lose 10 points if you cancel an order after accepting it.'],
+  ['ভুয়া লেনদেন ঠেকাতে: পয়েন্ট আসে শুধু পেমেন্ট হওয়া ও মাল পৌঁছানো অর্ডারে, অন্তত ৳৫,০০০-এর বিক্রিতে, আর একই ক্রেতা-বিক্রেতা জোড়া সপ্তাহে ৩ বারের বেশি নয়।','To prevent misuse, points are awarded only for paid and delivered orders, sales of at least ৳5,000, and no more than three qualifying transactions per week between the same buyer and seller.'],
+  ['ওয়ালেট ব্যালান্স','Wallet balance'],
+  ['পেমেন্টে ব্যবহার করা যায়','Available for payments'],
+  ['ওয়ালেটের লেনদেন','Wallet transactions'],
+  ['পয়েন্টের ইতিহাস','Points history'],
+  ['আগের পয়েন্ট','Opening points'],
+  ['বিক্রির টাকা','Sale proceeds'],
+  ['টাকা যোগ','Wallet top-up'],
+  ['কিছু নেই','No activity yet'],
+  ['প্রোফাইল','Profile'],
+  ['ছবি বদলান','Change photo'],
+  ['অন্যরা যেভাবে দেখে','View public profile'],
+  ['যাচাই হয়নি','Not verified'],
+  ['সংরক্ষণ করুন','Save changes'],
+  ['প্লাস সাবস্ক্রিপশন ব্যবস্থাপনা','Plus subscription'],
+  ['বন্ধ করা হয়েছে','Renewal cancelled'],
+  ['পর্যন্ত চালু থাকবে, তারপর আর নবায়ন হবে না','remains active until this date and will not renew afterward'],
+  ['চালু নেই','Not active'],
+  ['জরুরি বিক্রির খবর সবার আগে','Early access to urgent-sale alerts'],
+  ['ট্রাকের সেবা চার্জে ২৫% ছাড়','25% off the transport service fee'],
+  ['অগ্রাধিকার ট্রাক বুকিং','Priority transport booking'],
+  ['পেমেন্ট সফল হলেই চালু হয়।','Activates immediately after successful payment.'],
+  ['আবার নবায়ন চালু করুন','Resume renewal'],
+  ['প্লাস বন্ধ করুন','Cancel Plus'],
+  ['প্লাস নিন','Get Plus'],
+  ['রাজি, পাল্টা দাম বা না বলুন','Accept, counter, or decline the offer'],
+  ['রাজি হলে পেমেন্ট করুন','Pay after accepting the offer'],
+  ['পেমেন্ট হলে অর্ডার নিশ্চিত হবে','Your order will be confirmed after payment'],
+  ['দিয়ে "হস্তান্তর করেছি" চাপুন','After handover, tap “Handed over”'],
+  ['তৈরি রাখুন, তুলে দিয়ে নিশ্চিত করুন','Keep the produce ready, load it, then confirm pickup'],
+  ['পৌঁছালে বুঝে নিন','Confirm after the goods arrive'],
+  ['"মাল বুঝে পেয়েছি" চাপলে বিক্রেতা টাকা পাবেন','Tap “Goods received” to release payment to the seller'],
+  ['কে রেটিং দিন','Leave a rating'],
+  ['মাল দেখতে চান','wants to inspect the produce'],
+  ['নষ্ট হতে শুরু করেছে','has started to spoil'],
+  ['কাল থেকে নষ্ট হতে পারে','may begin to spoil tomorrow'],
+  ['জরুরি বিক্রি চালু আছে।','Urgent sale is already enabled.'],
+  ['দাম কমিয়ে জরুরি বিক্রি দিন।','Consider lowering the price and enabling an urgent sale.'],
+  ['এর লিস্টিংয়ে আর মাত্র','listing has only'],
+  ['পুরো বিক্রি/বুক হয়ে গেছে। আরও থাকলে পরিমাণ যোগ করুন।','is fully sold or reserved. Add more quantity if you have additional stock.'],
+  ['মালের উৎপাদন/কেনা খরচ দেওয়া নেই, তাই লাভ সম্পূর্ণ নয়।','Some production or purchase costs are missing, so the profit figure is incomplete.'],
+  ['পেমেন্ট করতে হবে','Payment required'],
+  ['পেমেন্ট করুন','Pay now'],
+  ['ব্যালান্স যথেষ্ট নয়','Insufficient wallet balance'],
+  ['ক্রেতার পেমেন্টের অপেক্ষা।','Waiting for buyer payment.'],
+  ['মাল পৌঁছালে ক্রেতা নিশ্চিত করবেন, তখন টাকা আপনার ওয়ালেটে যাবে।','The buyer will confirm delivery, then the payment will be released to your wallet.'],
+  ['আপনার টাকা Reroute-এ জমা আছে।','Your payment is being held securely by Reroute.'],
+  ['অফার পাঠানো হয়েছে','Offer sent successfully'],
+  ['পাল্টা দাম পাঠানো হয়েছে','Counteroffer sent successfully'],
+  ['পেমেন্ট সফল','Payment successful'],
+  ['পেমেন্ট হয়নি','Payment failed'],
+  ['কাজটি হয়নি, আবার চেষ্টা করুন','We could not complete that action. Please try again.'],
+  ['সার্ভারের সাথে যোগাযোগ হচ্ছে না, একটু পরে চেষ্টা করুন','Unable to connect to the server. Please try again shortly.'],
+  ['তথ্য ঠিকভাবে দিন','Please check the information and try again.'],
+  ['এই পাতাটা পাওয়া গেল না','Page not found'],
+  ['লিংকটা হয়তো ভুল, বা পাতাটা সরানো হয়েছে।','The link may be incorrect, or the page may have been moved.'],
+  ['শুরুতে ফিরুন','Back to home'],
+  ['আপনি কে, বাছুন','Choose your account type'],
+  ['ডেমো অ্যাকাউন্ট, এক চাপে ঢুকুন','Use a demo account with one click'],
+  ['লগ ইন ছাড়াই বাজার দেখুন','Browse the market without logging in'],
+  ['নতুন? অ্যাকাউন্ট খুলুন','New here? Create an account'],
+  ['নাম আর ০১ দিয়ে শুরু ১১ সংখ্যার নম্বর দিন','Enter your name and an 11-digit mobile number starting with 01'],
+  ['অ্যাকাউন্ট খোলা হয়েছে','Account created successfully'],
+  ['এই খোঁজে কোনো মাল পাওয়া গেল না','No produce matched your search'],
+  ['অন্য ফসল, জেলা বা দাম দিয়ে আবার দেখুন।','Try another crop, district, or price range.'],
+  ['সব ফিল্টার মুছুন','Clear all filters'],
+  ['অফার দিতে লগ ইন করুন','Log in to make an offer'],
+  ['এই মাল এখন বিক্রি হচ্ছে না।','This produce is not currently available for sale.'],
+  ['আগে মাল দেখতে চাই (ভিডিও / সরাসরি)','Inspect the produce before buying (video / in person)'],
+  ['কোনো অফার নেই','No offers yet'],
+  ['কোনো পরিদর্শন নেই','No inspection requests'],
+  ['কোনো নোটিফিকেশন নেই','No notifications'],
+  ['সব পড়া হয়েছে','Mark all as read'],
+  ['ডেমো নতুন করে শুরু','Restart demo'],
+  ['ডেমো সংস্করণ','Demo version']
+].sort((a,b)=>b[0].length-a[0].length);
+
 /* Bengali romanization fallback for names/user text/unmapped words. */
 const BN_ROMAN = {
   'অ':'o','আ':'a','ই':'i','ঈ':'i','উ':'u','ঊ':'u','ঋ':'ri','এ':'e','ঐ':'oi','ও':'o','ঔ':'ou',
   'ক':'k','খ':'kh','গ':'g','ঘ':'gh','ঙ':'ng','চ':'ch','ছ':'chh','জ':'j','ঝ':'jh','ঞ':'n','ট':'t','ঠ':'th','ড':'d','ঢ':'dh','ণ':'n','ত':'t','থ':'th','দ':'d','ধ':'dh','ন':'n','প':'p','ফ':'f','ব':'b','ভ':'bh','ম':'m','য':'y','র':'r','ল':'l','শ':'sh','ষ':'sh','স':'s','হ':'h','ড়':'r','ঢ়':'rh','য়':'y','ৎ':'t','ং':'ng','ঃ':'h','ঁ':'n',
   'া':'a','ি':'i','ী':'i','ু':'u','ূ':'u','ৃ':'ri','ে':'e','ৈ':'oi','ো':'o','ৌ':'ou','্':'','়':''
 };
+
 function romanizeBn(s){
-  return String(s).split('').map(ch=>BN_ROMAN[ch] ?? ch).join('').replace(/\s+/g,' ').trim();
+  return String(s)
+    .split('')
+    .map(ch=>BN_ROMAN[ch] ?? ch)
+    .join('')
+    .replace(/\s+/g,' ')
+    .trim();
 }
 
 function translateBnText(input){
   if (input == null) return input;
+
   let s = String(input);
+
   if (!/[\u0980-\u09ff]/.test(s)) return enDigits(s);
+
+  for (const [bn,en] of I18N_UI_FIXES) {
+    if (s.includes(bn)) s = s.split(bn).join(en);
+  }
 
   for (const [bn,en] of I18N_PHRASES) {
     if (s.includes(bn)) s = s.split(bn).join(en);
   }
+
   s = enDigits(s);
 
   s = s
@@ -313,100 +458,254 @@ function translateBnText(input){
     .replace(/৳\s*(\d[\d,.]*)/g,'৳$1');
 
   s = s.replace(/[\u0980-\u09ff]+/g,word=>{
-    if (Object.prototype.hasOwnProperty.call(I18N_WORDS,word)) return I18N_WORDS[word];
+    if (Object.prototype.hasOwnProperty.call(I18N_WORDS,word)) {
+      return I18N_WORDS[word];
+    }
     return romanizeBn(word);
   });
 
-  s = s.replace(/।/g,'.').replace(/\s{2,}/g,' ').trim();
-  // Fix word-order: "available X maund" → "X maund available"
-  s = s.replace(/\bavailable (\d[\d,.]*) maund\b/g,'$1 maund available');
-  s = s.replace(/\bavailable (\d[\d,.]*) kg\b/g,'$1 kg available');
-  // Fix doubled units
-  s = s.replace(/\b(\d+) maund maund\b/g,'$1 maund');
-  s = s.replace(/\b(\d+) kg kg\b/g,'$1 kg');
-  // Fix "days fresh" → "days"
-  s = s.replace(/\bdays fresh\b/g,'days');
+  s = s
+    .replace(/।/g,'.')
+    .replace(/\s{2,}/g,' ')
+    .trim();
+
+  /*
+   * Small grammar clean-ups for fallback translations.
+   */
+  s = s.replace(
+    /\bavailable (\d[\d,.]*) maund\b/g,
+    '$1 maund available'
+  );
+
+  s = s.replace(
+    /\bavailable (\d[\d,.]*) kg\b/g,
+    '$1 kg available'
+  );
+
+  s = s.replace(
+    /\b(\d+) maund maund\b/g,
+    '$1 maund'
+  );
+
+  s = s.replace(
+    /\b(\d+) kg kg\b/g,
+    '$1 kg'
+  );
+
+  s = s.replace(
+    /\bdays fresh\b/g,
+    'days'
+  );
+
   return s;
 }
 
 function langBtn(){
   const en = isEn();
-  return `<button class="btn btn-soft btn-sm langbtn" data-act="lang" type="button" data-i18n-skip aria-label="${en?'বাংলা ভাষায় দেখুন':'Switch to English'}" title="${en?'বাংলা ভাষায় দেখুন':'Switch to English'}"><span aria-hidden="true">🌐</span><span>${en?'বাংলা':'EN'}</span></button>`;
+
+  return `
+    <button
+      class="btn btn-soft btn-sm langbtn"
+      data-act="lang"
+      type="button"
+      data-i18n-skip
+      aria-label="${en ? 'বাংলা ভাষায় দেখুন' : 'Switch to English'}"
+      title="${en ? 'বাংলা ভাষায় দেখুন' : 'Switch to English'}"
+    >
+      <span aria-hidden="true">🌐</span>
+      <span>${en ? 'বাংলা' : 'EN'}</span>
+    </button>
+  `;
 }
 
 function syncDocumentLanguage(){
   document.documentElement.lang = isEn() ? 'en' : 'bn';
+
   document.title = isEn()
     ? 'Reroute Agro | Wholesale Marketplace for Farmers & Wholesalers'
     : 'Reroute Agro | কৃষক ও পাইকারের পাইকারি বাজার';
+
   const meta = document.querySelector('meta[name="description"]');
-  if (meta) meta.setAttribute('content', isEn()
-    ? 'A direct wholesale marketplace for farmers and wholesalers: negotiation, secure payments, transport, inventory and profit/loss tracking.'
-    : 'কৃষক ও পাইকারের সরাসরি পাইকারি বাজার: দরদাম, নিরাপদ পেমেন্ট, নিজস্ব ট্রাক, মজুদ ও লাভ-ক্ষতির হিসাব');
+
+  if (meta) {
+    meta.setAttribute(
+      'content',
+      isEn()
+        ? 'A direct wholesale marketplace for farmers and wholesalers: negotiation, secure payments, transport, inventory and profit/loss tracking.'
+        : 'কৃষক ও পাইকারের সরাসরি পাইকারি বাজার: দরদাম, নিরাপদ পেমেন্ট, নিজস্ব ট্রাক, মজুদ ও লাভ-ক্ষতির হিসাব'
+    );
+  }
 }
 
 const I18N_TEXT_ORIG = new WeakMap();
 const I18N_ATTR_ORIG = new WeakMap();
-const I18N_ATTRS = ['aria-label','title','placeholder','alt'];
+const I18N_ATTRS = [
+  'aria-label',
+  'title',
+  'placeholder',
+  'alt'
+];
 
 function i18nSkip(node){
-  const el = node && (node.nodeType===Node.ELEMENT_NODE ? node : node.parentElement);
-  return !!(el && el.closest && el.closest('[data-i18n-skip]'));
+  const el =
+    node &&
+    (
+      node.nodeType === Node.ELEMENT_NODE
+        ? node
+        : node.parentElement
+    );
+
+  return !!(
+    el &&
+    el.closest &&
+    el.closest('[data-i18n-skip]')
+  );
 }
 
 function translateTextNode(node){
-  if (!node || node.nodeType!==Node.TEXT_NODE || i18nSkip(node)) return;
-  const p=node.parentElement;
-  if (!p || ['SCRIPT','STYLE','NOSCRIPT','CODE','PRE'].includes(p.tagName)) return;
-  if (!I18N_TEXT_ORIG.has(node)) I18N_TEXT_ORIG.set(node,node.nodeValue);
-  const original=I18N_TEXT_ORIG.get(node);
-  const next=isEn()?translateBnText(original):original;
-  if (node.nodeValue!==next) node.nodeValue=next;
+  if (
+    !node ||
+    node.nodeType !== Node.TEXT_NODE ||
+    i18nSkip(node)
+  ) {
+    return;
+  }
+
+  const p = node.parentElement;
+
+  if (
+    !p ||
+    ['SCRIPT','STYLE','NOSCRIPT','CODE','PRE'].includes(p.tagName)
+  ) {
+    return;
+  }
+
+  if (!I18N_TEXT_ORIG.has(node)) {
+    I18N_TEXT_ORIG.set(node,node.nodeValue);
+  }
+
+  const original = I18N_TEXT_ORIG.get(node);
+  const next = isEn()
+    ? translateBnText(original)
+    : original;
+
+  if (node.nodeValue !== next) {
+    node.nodeValue = next;
+  }
 }
 
 function translateElementAttrs(el){
-  if (!el || el.nodeType!==Node.ELEMENT_NODE || i18nSkip(el)) return;
-  let saved=I18N_ATTR_ORIG.get(el);
-  if(!saved){ saved={}; I18N_ATTR_ORIG.set(el,saved); }
-  for(const attr of I18N_ATTRS){
-    if(!el.hasAttribute(attr)) continue;
-    if(!(attr in saved)) saved[attr]=el.getAttribute(attr);
-    const next=isEn()?translateBnText(saved[attr]):saved[attr];
-    if(el.getAttribute(attr)!==next) el.setAttribute(attr,next);
+  if (
+    !el ||
+    el.nodeType !== Node.ELEMENT_NODE ||
+    i18nSkip(el)
+  ) {
+    return;
+  }
+
+  let saved = I18N_ATTR_ORIG.get(el);
+
+  if (!saved) {
+    saved = {};
+    I18N_ATTR_ORIG.set(el,saved);
+  }
+
+  for (const attr of I18N_ATTRS) {
+    if (!el.hasAttribute(attr)) continue;
+
+    if (!(attr in saved)) {
+      saved[attr] = el.getAttribute(attr);
+    }
+
+    const next = isEn()
+      ? translateBnText(saved[attr])
+      : saved[attr];
+
+    if (el.getAttribute(attr) !== next) {
+      el.setAttribute(attr,next);
+    }
   }
 }
 
 function applyLanguage(root=document){
   syncDocumentLanguage();
-  if(!root) return;
-  if(root.nodeType===Node.TEXT_NODE){ translateTextNode(root); return; }
-  if(root.nodeType===Node.ELEMENT_NODE) translateElementAttrs(root);
-  const walker=document.createTreeWalker(root,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT);
+
+  if (!root) return;
+
+  if (root.nodeType === Node.TEXT_NODE) {
+    translateTextNode(root);
+    return;
+  }
+
+  if (root.nodeType === Node.ELEMENT_NODE) {
+    translateElementAttrs(root);
+  }
+
+  const walker = document.createTreeWalker(
+    root,
+    NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT
+  );
+
   let node;
-  while((node=walker.nextNode())){
-    if(node.nodeType===Node.TEXT_NODE) translateTextNode(node);
-    else translateElementAttrs(node);
+
+  while ((node = walker.nextNode())) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      translateTextNode(node);
+    } else {
+      translateElementAttrs(node);
+    }
   }
 }
 
 function setLanguage(lang){
-  APP_LANG = lang==='en'?'en':'bn';
-  try{ localStorage.setItem(LANG_KEY,APP_LANG); }catch(e){}
+  APP_LANG = lang === 'en'
+    ? 'en'
+    : 'bn';
+
+  try {
+    localStorage.setItem(
+      LANG_KEY,
+      APP_LANG
+    );
+  } catch (e) {}
+
   syncDocumentLanguage();
   applyLanguage(document.body);
 }
 
-let I18N_OBSERVER=null;
+let I18N_OBSERVER = null;
+
 function startI18nObserver(){
-  if(I18N_OBSERVER || !document.body) return;
-  I18N_OBSERVER=new MutationObserver(list=>{
-    if(!isEn()) return;
-    for(const mutation of list){
-      if(mutation.type==='characterData') translateTextNode(mutation.target);
-      for(const node of mutation.addedNodes) applyLanguage(node);
+  if (
+    I18N_OBSERVER ||
+    !document.body
+  ) {
+    return;
+  }
+
+  I18N_OBSERVER = new MutationObserver(list=>{
+    if (!isEn()) return;
+
+    for (const mutation of list) {
+      if (mutation.type === 'characterData') {
+        translateTextNode(mutation.target);
+      }
+
+      for (const node of mutation.addedNodes) {
+        applyLanguage(node);
+      }
     }
   });
-  I18N_OBSERVER.observe(document.body,{subtree:true,childList:true,characterData:true});
+
+  I18N_OBSERVER.observe(
+    document.body,
+    {
+      subtree:true,
+      childList:true,
+      characterData:true
+    }
+  );
+
   applyLanguage(document.body);
 }
 
