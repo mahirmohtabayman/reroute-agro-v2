@@ -91,12 +91,12 @@ V.market = () => {
     <div class="chips">${[['all','সব ফসল'],...Object.entries(CROPS).map(([k,c])=>[k,c.i+' '+c.n])].map(([k,t])=>`<button class="chip ${F.crop===k?'on':''}" data-act="f-crop" data-v="${k}">${t}</button>`).join('')}
       <label class="chip"><input type="checkbox" data-f="sold" ${F.sold?'checked':''}> বিক্রি শেষ-ও দেখাও</label></div>
     <p class="muted sm" style="margin-bottom:8px">${nf(list.length)}টি লিস্টিং</p>
-    <div class="lgrid">${list.map(lcard).join('')||'<div class="empty" style="grid-column:1/-1">এই খোঁজে কিছু পাওয়া যায়নি। ফিল্টার বদলান।</div>'}</div>`;
+    ${list.length?`<div class="lgrid">${list.map(lcard).join('')}</div>`:emptyState('search','এই খোঁজে কোনো মাল পাওয়া গেল না','অন্য ফসল, জেলা বা দাম দিয়ে আবার দেখুন।','<button class="btn btn-line" data-act="f-clear">সব ফিল্টার মুছুন</button>')}`;
 };
 
 /* ---------- listing detail ---------- */
 V.listing = id => {
-  const l=listing(id); if(!l) return `<div class="empty">লিস্টিং পাওয়া যায়নি বা বন্ধ হয়ে গেছে। <a href="#/market">বাজারে ফিরুন</a></div>`;
+  const l=listing(id); if(!l) return emptyState('crate','এই লিস্টিংটা আর নেই','হয়তো সব বিক্রি হয়ে গেছে, বা বিক্রেতা বন্ধ করে দিয়েছেন।','<a class="btn btn-green" href="#/market">বাজারে ফিরুন</a>');
   const c=CROPS[l.crop], s=user(l.uid), u=me(), mine=u&&u.id===l.uid, harvest=Date.now()-(S.config?0:0);
   const photos=Array.from({length:l.photo_count},(_,i)=>`<img src="/api/listings/${l.id}/photo/${i}" alt="${c.n} ছবি ${bd(i+1)}" style="border-radius:12px;max-height:360px;width:100%;object-fit:cover">`);
   const market=MARKET_DEMO[s.place][l.crop];
