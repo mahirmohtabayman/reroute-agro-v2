@@ -34,7 +34,7 @@ function render(){
     default: html=emptyState('search','এই পাতাটা পাওয়া গেল না','লিংকটা হয়তো ভুল, বা পাতাটা সরানো হয়েছে।','<a class="btn btn-green" href="#/">শুরুতে ফিরুন</a>');
   }
   if(u){ const here=location.hash; (S.notifs||[]).filter(n=>!n.read&&n.link===here).forEach(n=>{ n.read=1; api(`/notifs/${n.id}/read`,'POST').catch(()=>{}); }); }
-  if(u && !['login','register'].includes(p[0])) html=banners()+html;
+  // top banners removed per design decision
   $('#view').innerHTML=html; renderChrome();
 }
 function renderKeepFocus(){
