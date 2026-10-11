@@ -31,7 +31,7 @@ V.adminBookings = () => {
       <div class="sm" style="margin-top:4px">ভাড়া ${tk(b.fare)} + সেবা ${tk(b.service)} = ${tk(b.total)} · কমিশন ${tk(b.commission)}${tr?` · ট্রাক: ${esc(tr.company)}, ${esc(tr.driver)}`:''}${b.pickup_time?` · তোলা: ${esc(b.pickup_time)}`:''}${b.payout?` · ট্রাক মালিক পাবেন ${tk(b.payout)}`:''}</div>
       ${ctl?`<div class="row wrap-it" style="margin-top:10px">${ctl}</div>`:''}</div>`; };
   return `<div class="phead"><div><h1>🚚 ট্রাক বুকিং ব্যবস্থাপনা</h1><p class="muted sm">পেমেন্ট হওয়া বুকিং এখানে আসে। অগ্রাধিকার আগে। প্রতিটি ধাপে কৃষক ও পাইকার নোটিফিকেশন পান।</p></div></div>
-    <h3 style="margin-bottom:8px">চলমান (${nf(active.length)})</h3>${active.map(row).join('')||'<div class="empty">চলমান বুকিং নেই</div>'}
+    <h3 style="margin-bottom:8px">চলমান (${nf(active.length)})</h3>${active.map(row).join('')||emptyState('truck','এখন কোনো ট্রাক পথে বা অপেক্ষায় নেই','নতুন বুকিংয়ের পেমেন্ট হলে এখানে চলে আসবে।','',true)}
     <h3 style="margin:16px 0 8px">আগের ও পেমেন্ট বাকি (${nf(rest.length)})</h3>${rest.map(row).join('')}`;
 };
 let TK={company:'Reroute ট্রাক ',driver:'',phone:'',number:'',vehicle:'mini',place:'rajshahi',areas:''};
