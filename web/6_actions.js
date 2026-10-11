@@ -259,7 +259,7 @@ setInterval(async()=>{
 },5000);
 
 (async function init(){
-  $('#view').innerHTML='<div class="empty">লোড হচ্ছে...</div>';
+  $('#view').innerHTML=skeleton('cards');
   try{ await load(); }catch(e){ $('#view').innerHTML='<div class="empty">সার্ভার চালু হচ্ছে, কয়েক সেকেন্ড পরে পাতাটি রিফ্রেশ করুন।</div>'; return; }
   try{ speechSynthesis.getVoices(); }catch(e){}
   render();
