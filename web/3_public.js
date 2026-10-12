@@ -190,7 +190,7 @@ V.listing = id => {
         <dt>তাজা থাকবে</dt><dd style="color:var(--${freshCls(l.days_left)==='ok'?'green':freshCls(l.days_left)==='mid'?'gold':'red'})">${freshTxt(l.days_left)}</dd>
         <dt>জায়গা</dt><dd>${s.area?esc(s.area)+', ':''}${PLACES[s.place].n}</dd>
         <dt>পরিবহন</dt><dd>Reroute ট্রাক বা নিজের ট্রাক</dd></dl>
-      ${l.quality?`<div class="note" style="margin-top:12px"><b>মান:</b> ${esc(l.quality)}</div>`:''}
+      ${l.quality?`<div class="note" style="margin-top:12px" data-i18n-skip><b>মান:</b> ${esc(l.quality)}</div>`:''}
       <p class="muted sm" style="margin-top:8px">${PLACES[s.place].n}-এ আজকের বাজার দর আনুমানিক ${tk(market)}/কেজি</p>
       ${mine?`<div class="row wrap-it" style="margin-top:14px"><a class="btn btn-ink" href="#/listings">লিস্টিং পরিচালনা</a></div>`
         :!u?`<a class="btn btn-green btn-wide" style="margin-top:14px" href="#/login">অফার দিতে লগ ইন করুন</a>`
