@@ -2733,7 +2733,7 @@ and
 }
 
 /* Sunrise homepage — scoped to the existing home hero only. */
-.hero{background:#fff4df url('/sunrise-home-bg.webp') center center/cover no-repeat;min-height:700px;padding:76px 28px 195px;border:1px solid rgba(109,117,64,.12);box-shadow:0 14px 45px rgba(96,79,44,.14)}
+.hero{background:#fff4df url('/static/sunrise-home-bg.webp') center center/cover no-repeat;min-height:700px;padding:76px 28px 195px;border:1px solid rgba(109,117,64,.12);box-shadow:0 14px 45px rgba(96,79,44,.14)}
 .hero::before{background:linear-gradient(180deg,rgba(255,247,230,.12),rgba(255,249,222,.06) 65%,rgba(248,252,219,.1));}
 .hero-in{max-width:1160px;}
 .hero h1{color:#09281d;font-size:clamp(2.15rem,5.1vw,4.4rem);line-height:1.18;text-shadow:0 2px 9px rgba(255,255,255,.3)}
@@ -2754,7 +2754,7 @@ and
 
 /* Homepage adaptive theme: shared for all visits and theme toggles. */
 :root {
-  --home-bg: url('/sunrise-home-bg.webp');
+  --home-bg: url('/static/sunrise-home-bg.webp');
   --home-fallback: #fff4df;
   --home-title: #09281d;
   --home-lead: #586a68;
@@ -2765,7 +2765,7 @@ and
   --home-badge-icon-bg: rgba(32,142,78,.10);
 }
 :root[data-theme="dark"] {
-  --home-bg: url('/sunrise-home-bg-dark.webp');
+  --home-bg: url('/static/sunrise-home-bg-dark.webp');
   --home-fallback: #102820;
   --home-title: #f2fff5;
   --home-lead: #d0e4d8;
@@ -2777,7 +2777,7 @@ and
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    --home-bg: url('/sunrise-home-bg-dark.webp');
+    --home-bg: url('/static/sunrise-home-bg-dark.webp');
     --home-fallback: #102820;
     --home-title: #f2fff5;
     --home-lead: #d0e4d8;
@@ -2791,9 +2791,11 @@ and
 .hero {
   background-color: var(--home-fallback);
   background-image: var(--home-bg);
+  background-size: cover;
+  background-position: center center;
   transition: background-color .35s ease, border-color .35s ease, box-shadow .35s ease;
 }
-.hero h1 {color:var(--home-title);text-shadow:none}
+.hero h1 {color:var(--home-title);text-shadow:0 2px 16px rgba(255,255,255,.18)}
 .hero p.lead {color:var(--home-lead)}
 .hero .hero-link a {color:var(--home-link)}
 .hero .hero-link a:hover {color:var(--home-link);filter:brightness(1.15)}
@@ -2804,10 +2806,10 @@ and
   box-shadow:0 4px 15px rgba(0,0,0,.08);
   transition:background-color .3s ease,color .3s ease,border-color .3s ease;
 }
-.feat h3 {color:inherit}
+.feat h3,.feat p {color:var(--home-badge-text)!important}
 .feat-ic {background:var(--home-badge-icon-bg)}
 :root[data-theme="dark"] .hero {border-color:rgba(149,203,162,.25);box-shadow:0 16px 48px rgba(0,0,0,.34)}
-:root[data-theme="dark"] .hero::before {background:linear-gradient(180deg,rgba(8,28,23,.04),rgba(7,26,21,.16))}
+:root[data-theme="dark"] .hero::before {background:linear-gradient(180deg,rgba(8,28,23,.03),rgba(7,26,21,.12))}
 :root[data-theme="dark"] .hero-field .lf {stroke:rgba(161,214,142,.8)}
 :root[data-theme="dark"] .hero-field .lf2 {fill:rgba(112,180,104,.25)}
 @media(prefers-color-scheme:dark){
