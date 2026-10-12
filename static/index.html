@@ -2751,6 +2751,70 @@ and
 @media(max-width:600px){.hero{min-height:670px;padding:50px 16px 165px;background-position:center bottom}.hero h1{font-size:clamp(2rem,9vw,3rem)}.hero-emblem{width:72px;height:72px}.hero .cta{gap:12px}.hero .cta .btn{width:100%;min-width:0}.hero-leaf.a{left:1%}.hero-leaf.b{right:1%}.hero-leaf.c,.hero-leaf.d{display:none}}
 @media(prefers-reduced-motion:reduce){.hero-leaf,.hero-field g{animation:none!important}}
 
+
+/* Homepage adaptive theme: shared for all visits and theme toggles. */
+:root {
+  --home-bg: url('/sunrise-home-bg.webp');
+  --home-fallback: #fff4df;
+  --home-title: #09281d;
+  --home-lead: #586a68;
+  --home-link: #0865c3;
+  --home-badge-bg: rgba(255,255,255,.90);
+  --home-badge-text: #193c2c;
+  --home-badge-border: rgba(34,101,61,.20);
+  --home-badge-icon-bg: rgba(32,142,78,.10);
+}
+:root[data-theme="dark"] {
+  --home-bg: url('/sunrise-home-bg-dark.webp');
+  --home-fallback: #102820;
+  --home-title: #f2fff5;
+  --home-lead: #d0e4d8;
+  --home-link: #9ac8ff;
+  --home-badge-bg: rgba(25,54,43,.90);
+  --home-badge-text: #eefcf2;
+  --home-badge-border: rgba(183,234,199,.28);
+  --home-badge-icon-bg: rgba(118,204,150,.18);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --home-bg: url('/sunrise-home-bg-dark.webp');
+    --home-fallback: #102820;
+    --home-title: #f2fff5;
+    --home-lead: #d0e4d8;
+    --home-link: #9ac8ff;
+    --home-badge-bg: rgba(25,54,43,.90);
+    --home-badge-text: #eefcf2;
+    --home-badge-border: rgba(183,234,199,.28);
+    --home-badge-icon-bg: rgba(118,204,150,.18);
+  }
+}
+.hero {
+  background-color: var(--home-fallback);
+  background-image: var(--home-bg);
+  transition: background-color .35s ease, border-color .35s ease, box-shadow .35s ease;
+}
+.hero h1 {color:var(--home-title);text-shadow:none}
+.hero p.lead {color:var(--home-lead)}
+.hero .hero-link a {color:var(--home-link)}
+.hero .hero-link a:hover {color:var(--home-link);filter:brightness(1.15)}
+.feat > div {
+  background:var(--home-badge-bg);
+  color:var(--home-badge-text);
+  border:1px solid var(--home-badge-border);
+  box-shadow:0 4px 15px rgba(0,0,0,.08);
+  transition:background-color .3s ease,color .3s ease,border-color .3s ease;
+}
+.feat h3 {color:inherit}
+.feat-ic {background:var(--home-badge-icon-bg)}
+:root[data-theme="dark"] .hero {border-color:rgba(149,203,162,.25);box-shadow:0 16px 48px rgba(0,0,0,.34)}
+:root[data-theme="dark"] .hero::before {background:linear-gradient(180deg,rgba(8,28,23,.04),rgba(7,26,21,.16))}
+:root[data-theme="dark"] .hero-field .lf {stroke:rgba(161,214,142,.8)}
+:root[data-theme="dark"] .hero-field .lf2 {fill:rgba(112,180,104,.25)}
+@media(prefers-color-scheme:dark){
+ :root:not([data-theme="light"]):not([data-theme="dark"]) .hero {border-color:rgba(149,203,162,.25);box-shadow:0 16px 48px rgba(0,0,0,.34)}
+ :root:not([data-theme="light"]):not([data-theme="dark"]) .hero::before {background:linear-gradient(180deg,rgba(8,28,23,.04),rgba(7,26,21,.16))}
+}
+
 </style>
 
 <style>
