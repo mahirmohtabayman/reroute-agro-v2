@@ -2733,7 +2733,7 @@ and
 }
 
 /* Sunrise homepage — scoped to the existing home hero only. */
-.hero{background:#fff4df url('/sunrise-home-bg.webp') center center/cover no-repeat;min-height:700px;padding:76px 28px 195px;border:1px solid rgba(109,117,64,.12);box-shadow:0 14px 45px rgba(96,79,44,.14)}
+.hero{background:#fff4df url('/static/sunrise-home-bg.webp') center center/cover no-repeat;min-height:700px;padding:76px 28px 195px;border:1px solid rgba(109,117,64,.12);box-shadow:0 14px 45px rgba(96,79,44,.14)}
 .hero::before{background:linear-gradient(180deg,rgba(255,247,230,.12),rgba(255,249,222,.06) 65%,rgba(248,252,219,.1));}
 .hero-in{max-width:1160px;}
 .hero h1{color:#09281d;font-size:clamp(2.15rem,5.1vw,4.4rem);line-height:1.18;text-shadow:0 2px 9px rgba(255,255,255,.3)}
@@ -2754,7 +2754,7 @@ and
 
 /* Homepage adaptive theme: shared for all visits and theme toggles. */
 :root {
-  --home-bg: url('/sunrise-home-bg.webp');
+  --home-bg: url('/static/sunrise-home-bg.webp');
   --home-fallback: #fff4df;
   --home-title: #09281d;
   --home-lead: #586a68;
@@ -2765,7 +2765,7 @@ and
   --home-badge-icon-bg: rgba(32,142,78,.10);
 }
 :root[data-theme="dark"] {
-  --home-bg: url('/sunrise-home-bg-dark.webp');
+  --home-bg: url('/static/sunrise-home-bg-dark.webp');
   --home-fallback: #102820;
   --home-title: #f2fff5;
   --home-lead: #d0e4d8;
@@ -2777,7 +2777,7 @@ and
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    --home-bg: url('/sunrise-home-bg-dark.webp');
+    --home-bg: url('/static/sunrise-home-bg-dark.webp');
     --home-fallback: #102820;
     --home-title: #f2fff5;
     --home-lead: #d0e4d8;
