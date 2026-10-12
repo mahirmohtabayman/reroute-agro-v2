@@ -2,22 +2,7 @@ const V = {};
 
 /* ---------- minimal home (before login) ---------- */
 V.home = () => `<section class="hero"><div class="hero-in">
-  <div class="hero-emblem" aria-hidden="true">
-    <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- stem -->
-      <line x1="23" y1="36" x2="23" y2="14" stroke="white" stroke-width="2.2" stroke-linecap="round" opacity=".85"/>
-      <!-- left leaf -->
-      <path d="M23 22 C19 18 12 18 10 13 C16 12 22 15 23 22Z" fill="white" opacity=".9"/>
-      <!-- right leaf -->
-      <path d="M23 28 C27 24 34 24 36 19 C30 18 24 21 23 28Z" fill="white" opacity=".9"/>
-      <!-- top bud -->
-      <circle cx="23" cy="12" r="3.5" fill="white" opacity=".95"/>
-      <!-- small left bud -->
-      <circle cx="10" cy="13" r="2" fill="white" opacity=".6"/>
-      <!-- small right bud -->
-      <circle cx="36" cy="19" r="2" fill="white" opacity=".6"/>
-    </svg>
-  </div>
+  <div class="hero-emblem" aria-hidden="true"><svg width="70" height="70" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><path d="M39 67 Q9 57 17 22 Q39 20 42 47 Q47 13 70 19 Q72 48 42 63Z" fill="#58bc20"/><path d="M39 67 Q9 57 17 22 Q39 20 42 47Z" fill="#087f42"/><path d="M40 67 Q41 43 65 25" stroke="#fff" stroke-width="2.5" fill="none"/><path d="M40 67 Q36 44 22 30" stroke="#fff" stroke-width="2" fill="none"/></svg></div>
   <h1>কৃষকের মাল, পাইকারের বাজার</h1>
   <p class="lead">সরাসরি কেনাবেচা ও দরদাম, নিরাপদ পেমেন্ট, আর নিজস্ব ট্রাকে কম খরচে পরিবহন।</p>
   <div class="cta">
@@ -26,12 +11,12 @@ V.home = () => `<section class="hero"><div class="hero-in">
   </div>
   <p class="hero-link"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন</a></p>
 </div>
-<div class="hero-field" aria-hidden="true">
+<div class="hero-leaf a" aria-hidden="true"><svg viewBox="0 0 90 45"><path d="M3 39Q34 -8 87 9Q51 48 3 39Z" fill="#75b63c"/><path d="M3 39L70 13" stroke="#317e35" fill="none" stroke-width="2"/></svg></div><div class="hero-leaf b" aria-hidden="true"><svg viewBox="0 0 90 45"><path d="M3 39Q34 -8 87 9Q51 48 3 39Z" fill="#75b63c"/><path d="M3 39L70 13" stroke="#317e35" fill="none" stroke-width="2"/></svg></div><div class="hero-leaf c" aria-hidden="true"><svg viewBox="0 0 90 45"><path d="M3 39Q34 -8 87 9Q51 48 3 39Z" fill="#75b63c"/><path d="M3 39L70 13" stroke="#317e35" fill="none" stroke-width="2"/></svg></div><div class="hero-leaf d" aria-hidden="true"><svg viewBox="0 0 90 45"><path d="M3 39Q34 -8 87 9Q51 48 3 39Z" fill="#75b63c"/><path d="M3 39L70 13" stroke="#317e35" fill="none" stroke-width="2"/></svg></div><div class="hero-field" aria-hidden="true">
   <svg viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <style>
-        .lf{fill:none;stroke:rgba(255,255,255,.55);stroke-linecap:round;stroke-linejoin:round}
-        .lf2{stroke:none;fill:rgba(255,255,255,.12)}
+        .lf{fill:none;stroke:rgba(59,135,47,.70);stroke-linecap:round;stroke-linejoin:round}
+        .lf2{stroke:none;fill:rgba(94,166,70,.22)}
       </style>
     </defs>
     <!-- leaf 1 -->
@@ -76,11 +61,11 @@ V.home = () => `<section class="hero"><div class="hero-in">
       <path class="lf2" d="M1058 196 Q1078 164 1110 175 Q1088 200 1058 196Z"/>
     </g>
     <!-- scattered pollen dots -->
-    <circle cx="240" cy="196" r="3.5" fill="rgba(255,255,255,.35)"/>
-    <circle cx="540" cy="202" r="2.8" fill="rgba(255,255,255,.28)"/>
-    <circle cx="740" cy="195" r="4"   fill="rgba(255,255,255,.3)"/>
-    <circle cx="1000" cy="200" r="3"  fill="rgba(255,255,255,.25)"/>
-    <circle cx="1140" cy="192" r="2.5" fill="rgba(255,255,255,.3)"/>
+    <circle cx="240" cy="196" r="3.5" fill="rgba(66,156,76,.35)"/>
+    <circle cx="540" cy="202" r="2.8" fill="rgba(66,156,76,.28)"/>
+    <circle cx="740" cy="195" r="4"   fill="rgba(66,156,76,.3)"/>
+    <circle cx="1000" cy="200" r="3"  fill="rgba(66,156,76,.25)"/>
+    <circle cx="1140" cy="192" r="2.5" fill="rgba(66,156,76,.3)"/>
     <!-- wave ground lines -->
     <path d="M0 212 Q120 200 260 208 Q400 216 540 208 Q680 200 820 210 Q960 220 1100 210 Q1160 205 1200 212 L1200 220 L0 220Z"
           fill="rgba(255,255,255,.08)"/>
