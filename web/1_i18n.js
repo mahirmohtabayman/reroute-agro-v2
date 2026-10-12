@@ -461,7 +461,9 @@ function translateBnText(input){
     if (Object.prototype.hasOwnProperty.call(I18N_WORDS,word)) {
       return I18N_WORDS[word];
     }
-    return romanizeBn(word);
+    // Keep unknown Bangla words as-is. Romanizing character-by-character
+    // breaks jukta-akkhors, names and user-typed notes into garbled output.
+    return word;
   });
 
   s = s
