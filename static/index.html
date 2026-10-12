@@ -2791,11 +2791,9 @@ and
 .hero {
   background-color: var(--home-fallback);
   background-image: var(--home-bg);
-  background-size: cover;
-  background-position: center center;
   transition: background-color .35s ease, border-color .35s ease, box-shadow .35s ease;
 }
-.hero h1 {color:var(--home-title);text-shadow:0 2px 16px rgba(255,255,255,.18)}
+.hero h1 {color:var(--home-title);text-shadow:none}
 .hero p.lead {color:var(--home-lead)}
 .hero .hero-link a {color:var(--home-link)}
 .hero .hero-link a:hover {color:var(--home-link);filter:brightness(1.15)}
@@ -2806,10 +2804,10 @@ and
   box-shadow:0 4px 15px rgba(0,0,0,.08);
   transition:background-color .3s ease,color .3s ease,border-color .3s ease;
 }
-.feat h3,.feat p {color:var(--home-badge-text)!important}
+.feat h3 {color:inherit}
 .feat-ic {background:var(--home-badge-icon-bg)}
 :root[data-theme="dark"] .hero {border-color:rgba(149,203,162,.25);box-shadow:0 16px 48px rgba(0,0,0,.34)}
-:root[data-theme="dark"] .hero::before {background:linear-gradient(180deg,rgba(8,28,23,.03),rgba(7,26,21,.12))}
+:root[data-theme="dark"] .hero::before {background:linear-gradient(180deg,rgba(8,28,23,.04),rgba(7,26,21,.16))}
 :root[data-theme="dark"] .hero-field .lf {stroke:rgba(161,214,142,.8)}
 :root[data-theme="dark"] .hero-field .lf2 {fill:rgba(112,180,104,.25)}
 @media(prefers-color-scheme:dark){
@@ -3676,7 +3674,9 @@ function translateBnText(input){
     if (Object.prototype.hasOwnProperty.call(I18N_WORDS,word)) {
       return I18N_WORDS[word];
     }
-    return romanizeBn(word);
+    // Keep unknown Bangla words as-is. Romanizing character-by-character
+    // breaks jukta-akkhors, names and user-typed notes into garbled output.
+    return word;
   });
 
   s = s
@@ -4729,7 +4729,7 @@ V.listing = id => {
         <dt>তাজা থাকবে</dt><dd style="color:var(--${freshCls(l.days_left)==='ok'?'green':freshCls(l.days_left)==='mid'?'gold':'red'})">${freshTxt(l.days_left)}</dd>
         <dt>জায়গা</dt><dd>${s.area?esc(s.area)+', ':''}${PLACES[s.place].n}</dd>
         <dt>পরিবহন</dt><dd>Reroute ট্রাক বা নিজের ট্রাক</dd></dl>
-      ${l.quality?`<div class="note" style="margin-top:12px"><b>মান:</b> ${esc(l.quality)}</div>`:''}
+      ${l.quality?`<div class="note" style="margin-top:12px" data-i18n-skip><b>মান:</b> ${esc(l.quality)}</div>`:''}
       <p class="muted sm" style="margin-top:8px">${PLACES[s.place].n}-এ আজকের বাজার দর আনুমানিক ${tk(market)}/কেজি</p>
       ${mine?`<div class="row wrap-it" style="margin-top:14px"><a class="btn btn-ink" href="#/listings">লিস্টিং পরিচালনা</a></div>`
         :!u?`<a class="btn btn-green btn-wide" style="margin-top:14px" href="#/login">অফার দিতে লগ ইন করুন</a>`
@@ -5006,7 +5006,7 @@ V.offer = id => {
       <dt>পরিমাণ</dt><dd>${kgMon(o.qty)}</dd><dt>মোট মালের দাম</dt><dd>${tk(o.price*o.qty)}</dd>
       <dt>পরিবহন</dt><dd>${o.transport==='reroute'?'🚚 Reroute ট্রাক, ভাড়া '+{buyer:'ক্রেতা দেবেন',half:'অর্ধেক অর্ধেক',seller:'বিক্রেতা দেবেন'}[o.split]:'🚛 ক্রেতা নিজে আনবেন'}</dd>
       <dt>ডেলিভারি</dt><dd>${PLACES[user(o.seller).place].n} → ${PLACES[user(o.buyer).place].n}</dd></dl>
-    ${o.note?`<p class="note" style="margin-top:10px">💬 ${esc(o.note)}</p>`:''}
+    ${o.note?`<p class="note" style="margin-top:10px" data-i18n-skip>💬 ${esc(o.note)}</p>`:''}
     <h3 style="margin-top:14px">${sell?'রাজি হলে আপনি পাবেন (আনুমানিক)':'রাজি হলে আপনি দেবেন'}</h3>
     ${sell?bill([['মালের দাম',tk(est.goods)],['প্ল্যাটফর্ম ফি ১%','−'+tk(est.fee),'minus'],est.feeDisc?['⭐ ফি ছাড়','+'+tk(est.feeDisc),'plus']:null,
         est.share?['ট্রাক ভাড়া, আপনার ভাগ','−'+tk(est.share),'minus']:null,est.credit?['⭐ পরিবহন ছাড়','+'+tk(est.credit),'plus']:null,['আপনার হাতে আসবে',tk(est.payout),'tot']])
@@ -5083,7 +5083,7 @@ V.inspection = id => {
     <div class="between"><h1>🔍 ${i.kind==='video'?'ভিডিও কলে':'সরাসরি'} মাল দেখা</h1>${pill(INSP_ST[i.status])}</div>
     ${l?`<p style="margin-top:6px"><a href="#/listing/${l.id}">${CROPS[l.crop].i} ${CROPS[l.crop].n}, ${monTxt(l.available)}</a></p>`:''}
     <div style="margin-top:10px">${personRow(other)}</div>
-    <dl class="kv" style="margin-top:12px"><dt>ক্রেতার পছন্দের সময়</dt><dd>${esc(i.pref)}</dd>${i.note?`<dt>যা দেখতে চান</dt><dd>${esc(i.note)}</dd>`:''}${i.reply?`<dt>বিক্রেতার উত্তর</dt><dd>${esc(i.reply)}</dd>`:''}</dl>
+    <dl class="kv" style="margin-top:12px"><dt>ক্রেতার পছন্দের সময়</dt><dd data-i18n-skip>${esc(i.pref)}</dd>${i.note?`<dt>যা দেখতে চান</dt><dd data-i18n-skip>${esc(i.note)}</dd>`:''}${i.reply?`<dt>বিক্রেতার উত্তর</dt><dd data-i18n-skip>${esc(i.reply)}</dd>`:''}</dl>
     <div style="margin-top:14px">${acts}</div></div>`;
 };
 
