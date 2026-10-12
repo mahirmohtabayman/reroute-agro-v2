@@ -32,7 +32,7 @@ V.offer = id => {
       <dt>পরিমাণ</dt><dd>${kgMon(o.qty)}</dd><dt>মোট মালের দাম</dt><dd>${tk(o.price*o.qty)}</dd>
       <dt>পরিবহন</dt><dd>${o.transport==='reroute'?'🚚 Reroute ট্রাক, ভাড়া '+{buyer:'ক্রেতা দেবেন',half:'অর্ধেক অর্ধেক',seller:'বিক্রেতা দেবেন'}[o.split]:'🚛 ক্রেতা নিজে আনবেন'}</dd>
       <dt>ডেলিভারি</dt><dd>${PLACES[user(o.seller).place].n} → ${PLACES[user(o.buyer).place].n}</dd></dl>
-    ${o.note?`<p class="note" style="margin-top:10px">💬 ${esc(o.note)}</p>`:''}
+    ${o.note?`<p class="note" style="margin-top:10px" data-i18n-skip>💬 ${esc(o.note)}</p>`:''}
     <h3 style="margin-top:14px">${sell?'রাজি হলে আপনি পাবেন (আনুমানিক)':'রাজি হলে আপনি দেবেন'}</h3>
     ${sell?bill([['মালের দাম',tk(est.goods)],['প্ল্যাটফর্ম ফি ১%','−'+tk(est.fee),'minus'],est.feeDisc?['⭐ ফি ছাড়','+'+tk(est.feeDisc),'plus']:null,
         est.share?['ট্রাক ভাড়া, আপনার ভাগ','−'+tk(est.share),'minus']:null,est.credit?['⭐ পরিবহন ছাড়','+'+tk(est.credit),'plus']:null,['আপনার হাতে আসবে',tk(est.payout),'tot']])
@@ -109,7 +109,7 @@ V.inspection = id => {
     <div class="between"><h1>🔍 ${i.kind==='video'?'ভিডিও কলে':'সরাসরি'} মাল দেখা</h1>${pill(INSP_ST[i.status])}</div>
     ${l?`<p style="margin-top:6px"><a href="#/listing/${l.id}">${CROPS[l.crop].i} ${CROPS[l.crop].n}, ${monTxt(l.available)}</a></p>`:''}
     <div style="margin-top:10px">${personRow(other)}</div>
-    <dl class="kv" style="margin-top:12px"><dt>ক্রেতার পছন্দের সময়</dt><dd>${esc(i.pref)}</dd>${i.note?`<dt>যা দেখতে চান</dt><dd>${esc(i.note)}</dd>`:''}${i.reply?`<dt>বিক্রেতার উত্তর</dt><dd>${esc(i.reply)}</dd>`:''}</dl>
+    <dl class="kv" style="margin-top:12px"><dt>ক্রেতার পছন্দের সময়</dt><dd data-i18n-skip>${esc(i.pref)}</dd>${i.note?`<dt>যা দেখতে চান</dt><dd data-i18n-skip>${esc(i.note)}</dd>`:''}${i.reply?`<dt>বিক্রেতার উত্তর</dt><dd data-i18n-skip>${esc(i.reply)}</dd>`:''}</dl>
     <div style="margin-top:14px">${acts}</div></div>`;
 };
 
