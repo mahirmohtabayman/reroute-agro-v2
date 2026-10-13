@@ -51,8 +51,43 @@ V.order = id => {
   const u=me(), sell=o.seller===u.id, other=user(sell?o.buyer:o.seller), b=(S.bookings||[]).find(x=>x.id===o.booking);
   const truck=b&&b.truck?(S.my_trucks||[]).find(t=>t.id===b.truck):null, phone=(S.contacts||{})[other.id];
   const idx=o.status==='cancelled'?(o.paid_at?2:1):ORDER_IDX[o.status];
+  const tn=(S.transport_negotiations||{})[id];
+  const tnPending=tn&&tn.status!=='agreed';
+  const pendingProp=tn&&(tn.proposals||[]).find(p=>p.status==='pending');
+  const iAmRecipient=pendingProp&&pendingProp.recipient===u.id;
+  const iAmProposer=pendingProp&&pendingProp.proposer===u.id;
   let acts='';
-  if(o.status==='awaiting_payment'&&!sell) acts=`<button class="btn btn-green btn-wide" data-act="pay-order" data-id="${id}">💳 ${tk(o.buyer_total)} পেমেন্ট করুন</button>`;
+  // Transport negotiation block (shown before payment)
+  let tnBlock='';
+  if(o.transport==='reroute'&&tn){
+    if(tn.status==='agreed'){
+      tnBlock=`<div class="panel" style="margin-top:10px"><div class="between"><h3>🚚 পরিবহন চুক্তি</h3><span class="pill p-green">নিশ্চিত</span></div>
+        ${bill([['মোট ট্রাক ভাড়া',tk(tn.t_total)],['ক্রেতার ভাগ',tk(tn.agreed_buyer_amt)+'  ('+nf(tn.agreed_buyer_pct,1)+'%)'],['বিক্রেতার ভাগ',tk(tn.agreed_seller_amt)+'  ('+nf(tn.agreed_seller_pct,1)+'%)']])}</div>`;
+    } else {
+      // Show negotiation panel
+      const latestProps=(tn.proposals||[]).slice().reverse();
+      tnBlock=`<div class="panel" style="margin-top:10px"><div class="between"><h3>🚚 পরিবহন খরচ চুক্তি</h3><span class="pill p-gold">অপেক্ষমান</span></div>
+        <p class="muted sm" style="margin-top:6px">মোট ট্রাক ভাড়া: <b>${tk(tn.t_total)}</b></p>
+        ${pendingProp&&iAmRecipient?`<div class="warn" style="margin-top:10px">
+          <b>নতুন প্রস্তাব এসেছে:</b> ক্রেতার ভাগ ${tk(pendingProp.buyer_amt)} (${nf(pendingProp.buyer_pct,1)}%), বিক্রেতার ভাগ ${tk(pendingProp.seller_amt)} (${nf(pendingProp.seller_pct,1)}%)
+          <div class="row" style="margin-top:8px">
+            <button class="btn btn-green grow" data-act="tn-accept" data-oid="${id}" data-pid="${pendingProp.id}">✓ গ্রহণ করুন</button>
+            <button class="btn btn-soft grow" data-act="tn-reject" data-oid="${id}" data-pid="${pendingProp.id}">না</button>
+            <button class="btn btn-blue grow" data-act="tn-counter" data-oid="${id}">পাল্টা দিন</button>
+          </div></div>`
+        :pendingProp&&iAmProposer?`<div class="note" style="margin-top:10px">প্রস্তাব পাঠানো হয়েছে: ক্রেতার ভাগ ${tk(pendingProp.buyer_amt)} (${nf(pendingProp.buyer_pct,1)}%), বিক্রেতার ভাগ ${tk(pendingProp.seller_amt)} (${nf(pendingProp.seller_pct,1)}%)। অপরজনের উত্তরের অপেক্ষা।
+          <div style="margin-top:8px"><button class="btn btn-line btn-sm" data-act="tn-propose" data-oid="${id}">নতুন প্রস্তাব দিন</button></div></div>`
+        :`<div style="margin-top:10px"><button class="btn btn-green btn-wide" data-act="tn-propose" data-oid="${id}">পরিবহন খরচের প্রস্তাব দিন</button></div>`}
+        ${latestProps.length?`<div class="timeline" style="margin-top:10px">${latestProps.slice(0,5).map(p=>`<div><b>${esc(dispName(user(p.proposer)))}</b> প্রস্তাব: ক্রেতা ${nf(p.buyer_pct,1)}% (৳${nf(p.buyer_amt)}), বিক্রেতা ${nf(p.seller_pct,1)}% (৳${nf(p.seller_amt)}) <span class="pill ${p.status==='accepted'?'p-green':p.status==='rejected'?'p-red':p.status==='superseded'?'p-grey':'p-gold'}">${{pending:'অপেক্ষমান',accepted:'গৃহীত',rejected:'প্রত্যাখ্যাত',superseded:'পুরনো'}[p.status]||p.status}</span><div class="muted xs">${ago(p.created)}</div></div>`).join('')}</div>`:''}</div>`;
+    }
+  }
+  if(o.status==='awaiting_payment'&&!sell){
+    if(o.transport==='reroute'&&tnPending){
+      acts=`<div class="warn">পরিবহন খরচের চুক্তি নিশ্চিত করুন, তারপর পেমেন্ট করুন।</div>`;
+    } else {
+      acts=`<button class="btn btn-green btn-wide" data-act="pay-order" data-id="${id}">💳 ${tk(o.buyer_total)} পেমেন্ট করুন</button>`;
+    }
+  }
   if(o.status==='awaiting_payment'&&sell) acts=`<div class="warn">ক্রেতার পেমেন্টের অপেক্ষা। ${nf(Math.max(0,Math.round((o.created+24*36e5-Date.now())/36e5)))} ঘণ্টার মধ্যে না দিলে অর্ডার নিজে থেকে বাতিল হবে।</div>`;
   if(o.status==='confirmed'&&sell){
     if(o.transport==='self') acts=`<button class="btn btn-green btn-wide" data-act="handover" data-id="${id}">📦 পাইকারকে মাল বুঝিয়ে দিয়েছি</button>`;
@@ -73,7 +108,8 @@ V.order = id => {
       ${o.status==='cancelled'?`<div class="danger" style="margin-top:8px">❌ ${o.cancelled_by==='system'?'সিস্টেম':o.cancelled_by===u.id?'আপনি':esc(dispName(other))} বাতিল করেছেন${o.reason?`। কারণ: ${esc(o.reason)}`:''}${o.paid_at&&!sell?'। টাকা ওয়ালেটে ফেরত দেওয়া হয়েছে।':''}</div>`:''}
       <div style="margin-top:14px">${acts}</div>
       ${canCancel?`<button class="btn btn-soft btn-sm" style="margin-top:10px" data-act="order-cancel" data-id="${id}">অর্ডার বাতিল করুন</button>`:''}</div>
-    ${o.transport==='reroute'&&b?`<div class="panel"><div class="between"><h3>🚚 পরিবহন</h3>${pill(BOOK_ST[b.status])}</div>
+    ${tnBlock}
+    ${o.transport==='reroute'&&b&&tn&&tn.status==='agreed'?`<div class="panel"><div class="between"><h3>🚚 পরিবহন</h3>${pill(BOOK_ST[b.status])}</div>
       ${b.status!=='cancelled'&&b.status!=='awaiting_payment'?track(BOOK_STEPS,BOOK_IDX[b.status]):''}
       ${truck?`<div class="note" style="margin-top:8px">${esc(truck.company)} · ${S.config.vehicles[truck.vehicle].n} · ${esc(truck.number)}<br>চালক ${esc(truck.driver)}, 📞 ${bd(truck.phone)}${b.pickup_time?`<br>মাল তোলা: ${esc(b.pickup_time)}`:''}</div>`:''}
       <a href="#/booking/${b.id}" class="sm">বুকিংয়ের বিস্তারিত ›</a></div>`:o.transport==='self'?`<div class="panel"><h3>🚛 পরিবহন</h3><p class="muted">ক্রেতা নিজের ট্রাকে মাল নেবেন।</p></div>`:''}</div>
@@ -85,7 +121,7 @@ V.order = id => {
           [o.status==='completed'?'ওয়ালেটে জমা হয়েছে':'মাল বুঝে দিলে পাবেন',tk(o.payout+(o.cashback||0)),'tot']])
         :bill([['মালের দাম',`${tk(o.goods)} (${tk(o.price,1)}/কেজি)`],o.t_buyer?['ট্রাক ভাড়া, আপনার ভাগ',tk(o.t_buyer)]:null,o.t_cb?['⭐ পরিবহন ছাড়','−'+tk(o.t_cb),'plus']:null,
           [o.paid_at?'পরিশোধ করেছেন':'পরিশোধ করতে হবে',tk(o.buyer_total),'tot']])}
-      ${o.t_total?`<p class="muted sm" style="margin-top:8px">মোট ট্রাক ভাড়া ${tk(o.t_total)} (Reroute সেবা চার্জসহ), ${({buyer:'ক্রেতা দিচ্ছেন',half:'দুজনে অর্ধেক',seller:'বিক্রেতা দিচ্ছেন'})[o.split]}।</p>`:''}
+      ${o.t_total&&tn&&tn.status==='agreed'?`<p class="muted sm" style="margin-top:8px">মোট ট্রাক ভাড়া ${tk(o.t_total)} (Reroute সেবা চার্জসহ)। চুক্তি: ক্রেতা ${nf(tn.agreed_buyer_pct,1)}%, বিক্রেতা ${nf(tn.agreed_seller_pct,1)}%।</p>`:''}
       ${o.paid_at?`<p class="muted sm">পেমেন্ট: ${dateBn(o.paid_at)}</p>`:''}</div>
     ${P?`<div class="panel"><h3>📊 এই অর্ডারের লাভ-ক্ষতি</h3>
       ${P.side==='seller'?bill([['বিক্রি',tk(P.revenue)],P.cost!=null?['মালের খরচ (উৎপাদন/কেনা)','−'+tk(P.cost),'minus']:null,['ট্রাক ভাড়া','−'+tk(P.transport),'minus'],['প্ল্যাটফর্ম ফি','−'+tk(P.fee),'minus'],P.cashback?['ক্যাশব্যাক','+'+tk(P.cashback),'plus']:null,
@@ -95,22 +131,84 @@ V.order = id => {
           + `<p class="muted sm" style="margin-top:8px">আপনার বাজারে আজকের দর আনুমানিক ${tk(MARKET_DEMO[me().place][o.crop])}/কেজি <span class="demo-tag">ডেমো</span>। এই দামে বেচলে আনুমানিক লাভ ${tk((MARKET_DEMO[me().place][o.crop]-P.per_kg)*o.qty)}।</p>`}</div>`:''}</div></div>`;
 };
 
-/* ---------- inspection detail ---------- */
+/* ---------- inspection detail — full 6-step workflow ---------- */
 V.inspection = id => {
-  const i=(S.inspections||[]).find(x=>x.id===id); if(!i) return `<div class="empty">পাওয়া যায়নি</div>`;
+  const i=(S.inspections||[]).find(x=>x.id===id);
+  if(!i) return `<div class="empty">পাওয়া যায়নি</div>`;
   const u=me(), sell=i.seller===u.id, other=user(sell?i.buyer:i.seller), l=listing(i.listing);
-  let acts='';
-  if(sell&&i.status==='requested') acts=`<label class="field"><span>উত্তর (সময়, কীভাবে)</span><input id="insp-reply" value="${i.kind==='video'?'আজ বিকেল ৪টায় ইমো/হোয়াটসঅ্যাপে ভিডিও কল':'কাল সকাল ১০টায় খেতে আসুন'}"></label>
-    <div class="row" style="margin-top:10px"><button class="btn btn-green grow" data-act="insp" data-id="${id}" data-v="schedule">রাজি, সময় জানান</button><button class="btn btn-soft grow" data-act="insp" data-id="${id}" data-v="decline">রাজি নই</button></div>`;
-  if(!sell&&i.status==='scheduled') acts=`<button class="btn btn-green btn-wide" data-act="insp" data-id="${id}" data-v="done">মাল দেখেছি</button>`;
-  if(!sell&&['requested','scheduled'].includes(i.status)) acts+=`<button class="btn btn-soft btn-sm" style="margin-top:8px" data-act="insp" data-id="${id}" data-v="cancel">অনুরোধ বাতিল</button>`;
-  if(!sell&&i.status==='done'&&l&&l.status==='active') acts=`<button class="btn btn-green btn-wide" data-act="offer-open" data-id="${l.id}">এখন অফার দিন</button>`;
-  return `<p><a href="#/deals" data-act="dt" data-v="insp">← পরিদর্শন</a></p><div class="panel" style="max-width:640px;margin-top:10px">
-    <div class="between"><h1>🔍 ${i.kind==='video'?'ভিডিও কলে':'সরাসরি'} মাল দেখা</h1>${pill(INSP_ST[i.status])}</div>
+  let acts='', info='';
+
+  // Timeline / status steps
+  const steps=['অনুরোধ','সময় প্রস্তাব','সময় নিশ্চিত','পরিদর্শন সম্পন্ন'];
+  const stepIdx={requested:0,time_proposed:1,scheduled:2,buyer_done:2,completed:3,disputed:3};
+  const si=stepIdx[i.status]??0;
+
+  if(i.proposed_time) info+=`<dt>প্রস্তাবিত সময়</dt><dd data-i18n-skip>${esc(i.proposed_time)}</dd>`;
+  if(i.confirmed_time) info+=`<dt>নিশ্চিত সময়</dt><dd data-i18n-skip>${esc(i.confirmed_time)}</dd>`;
+
+  // --- SELLER ACTIONS ---
+  if(sell){
+    if(i.status==='requested'){
+      acts=`<label class="field"><span>পরিদর্শনের তারিখ ও সময় প্রস্তাব করুন</span>
+        <input id="insp-time" placeholder="যেমন: ২৫ জানুয়ারি বেলা ১১টায়" value="${i.kind==='video'?'আগামীকাল বিকেল ৪টায়':'কাল সকাল ১০টায়'}">
+      </label>
+      <label class="field"><span>অতিরিক্ত নোট (ঐচ্ছিক)</span>
+        <input id="insp-reply" placeholder="যেমন: মূল রাস্তার পাশে আসবেন">
+      </label>
+      <div class="row" style="margin-top:10px">
+        <button class="btn btn-green grow" data-act="insp-propose-time" data-id="${id}">📅 সময় প্রস্তাব করুন</button>
+        <button class="btn btn-soft grow" data-act="insp-decline" data-id="${id}">রাজি নই</button>
+      </div>`;
+    }
+    if(i.status==='buyer_done'){
+      acts=`<div class="warn" style="margin-bottom:10px">ক্রেতা বলছেন মাল দেখেছেন। আপনি কি নিশ্চিত করবেন?</div>
+      <div class="row">
+        <button class="btn btn-green grow" data-act="insp-seller-verify" data-id="${id}" data-v="1">✅ হ্যাঁ, পরিদর্শন হয়েছে</button>
+        <button class="btn btn-red grow" data-act="insp-seller-verify" data-id="${id}" data-v="0">❌ না, আসেননি</button>
+      </div>`;
+    }
+  }
+
+  // --- BUYER ACTIONS ---
+  if(!sell){
+    if(i.status==='time_proposed'){
+      acts=`<div class="note" style="margin-bottom:10px">বিক্রেতা পরিদর্শনের সময় প্রস্তাব করেছেন: <b>${esc(i.proposed_time||'')}</b></div>
+      <button class="btn btn-green btn-wide" data-act="insp-confirm-schedule" data-id="${id}">✅ এই সময়ে আসব — নিশ্চিত করুন</button>`;
+    }
+    if(i.status==='scheduled'){
+      acts=`<div class="note" style="margin-bottom:10px">পরিদর্শনের সময়: <b>${esc(i.confirmed_time||i.proposed_time||'')}</b></div>
+      <button class="btn btn-green btn-wide" data-act="insp-buyer-done" data-id="${id}">🔍 আমি মাল দেখেছি</button>
+      <p class="muted sm" style="margin-top:6px">মাল পরিদর্শন করার পর এই বাটন চাপুন। বিক্রেতা নিশ্চিত করলে পরিদর্শন সম্পন্ন হবে।</p>`;
+    }
+    if(i.status==='completed'&&l&&l.status==='active'){
+      acts=`<a class="btn btn-green btn-wide" data-act="offer-open" data-id="${l.id}">✅ পরিদর্শন সম্পন্ন — এখন অফার দিন</a>`;
+    }
+    if(['requested','time_proposed','scheduled'].includes(i.status)){
+      acts+=(acts?'<div style="margin-top:8px">':'')
+        +`<button class="btn btn-soft btn-sm" ${acts?'':'style="margin-top:8px"'} data-act="insp-cancel" data-id="${id}">অনুরোধ বাতিল করুন</button>`
+        +(acts?'</div>':'');
+    }
+  }
+
+  const statusColor={requested:'p-gold',time_proposed:'p-blue',scheduled:'p-blue',buyer_done:'p-gold',completed:'p-green',disputed:'p-red',declined:'p-red',cancelled:'p-grey'};
+  return `<p><a href="#/deals" data-act="dt" data-v="insp">← পরিদর্শন</a></p>
+  <div class="panel" style="max-width:680px;margin-top:10px">
+    <div class="between">
+      <h1>🔍 ${i.kind==='video'?'ভিডিও কলে':'সরাসরি'} মাল দেখা</h1>
+      ${pill(INSP_ST[i.status]||[i.status,'p-grey'])}
+    </div>
     ${l?`<p style="margin-top:6px"><a href="#/listing/${l.id}">${CROPS[l.crop].i} ${CROPS[l.crop].n}, ${monTxt(l.available)}</a></p>`:''}
     <div style="margin-top:10px">${personRow(other)}</div>
-    <dl class="kv" style="margin-top:12px"><dt>ক্রেতার পছন্দের সময়</dt><dd data-i18n-skip>${esc(i.pref)}</dd>${i.note?`<dt>যা দেখতে চান</dt><dd data-i18n-skip>${esc(i.note)}</dd>`:''}${i.reply?`<dt>বিক্রেতার উত্তর</dt><dd data-i18n-skip>${esc(i.reply)}</dd>`:''}</dl>
-    <div style="margin-top:14px">${acts}</div></div>`;
+    ${!['cancelled','declined'].includes(i.status)?`<div class="track" style="margin-top:12px">${steps.map((s,idx)=>`<div class="st ${idx<=si?'done':''} ${idx===si?'now':''}"><i></i>${s}</div>`).join('')}</div>`:''}
+    <dl class="kv" style="margin-top:12px">
+      <dt>ক্রেতার পছন্দের সময়</dt><dd data-i18n-skip>${esc(i.pref)}</dd>
+      ${i.note?`<dt>যা দেখতে চান</dt><dd data-i18n-skip>${esc(i.note)}</dd>`:''}
+      ${info}
+      ${i.reply?`<dt>নোট</dt><dd data-i18n-skip>${esc(i.reply)}</dd>`:''}
+    </dl>
+    ${i.status==='disputed'?`<div class="danger" style="margin-top:10px">⚠️ বিক্রেতা নিশ্চিত করেননি: ${esc(i.reply||'কোনো মন্তব্য নেই')}</div>`:''}
+    <div style="margin-top:14px">${acts}</div>
+  </div>`;
 };
 
 /* ---------- transport: our own truck service ---------- */
