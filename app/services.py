@@ -1,14 +1,19 @@
 """
-Business logic for Reroute Agro. The API (main.py) and the demo data (seed.py) both go through
-these functions, so stock, money, points and transport always stay consistent with each other.
+Business logic for Reroute Agro.
 
-Deal flow:   Listing → Offer (listed or lower price) → seller accepts / rejects / counters
-             → buyer pays online (held by Reroute) → Order confirmed → Handover → Completed
-             (payment released to the seller's wallet).
-Transport:   Requested → Confirmed (truck assigned) → Pickup scheduled → In transit → Delivered.
+Deal flow:
+  Listing → Inspection Requested → Inspection Scheduled → Inspection Completed
+  → Offer (produce price) → Transport Cost Agreement → Payment → Order Confirmed
+  → Handover → Completed
+
+Transport negotiation:
+  Buyer selects split option (buyer/half/seller) → Proposal sent to farmer if cost falls on farmer
+  → Farmer accepts/rejects/counters → Counter-offer loop → Agreement confirmed
+  → Payment unlocked
 """
 import json
 import uuid
+from decimal import ROUND_HALF_UP, Decimal
 
 from fastapi import HTTPException
 
@@ -17,7 +22,6 @@ from app.logic import (CANCEL_PENALTY, CASHBACK, CASHBACK_MIN, CASHBACK_WEEK, CO
                        DAY, HOUR, MIN_ORDER_KG, MON, OFFER_HOURS, PAY_HOURS, PLACES, PLUS_DAYS, PLUS_PRICE, REDEEM,
                        bn, crop_name, mon, place_name, platform_fee, tk, transport_quote)
 
-# a settable clock, so the demo data can be generated "in the past"
 _clock = [None]
 
 
@@ -64,7 +68,6 @@ def notify(to, text, kind="info", link=None):
 
 
 def seen(uid, link):
-    """Once someone has acted on something, its alert is no longer news for them."""
     db.run('UPDATE notifs SET read=1 WHERE "to"=? AND link=?', (uid, link))
 
 
@@ -91,7 +94,6 @@ def stock_row(uid, crop):
 
 
 def stock_add(uid, crop, qty, cost_per_kg=None):
-    """Add goods; keep a weighted average cost per kg (None if the cost is unknown)."""
     s = stock_row(uid, crop)
     new_qty = s["qty"] + qty
     if cost_per_kg is None or (s["cost"] is None and s["qty"] > 0):
@@ -146,7 +148,7 @@ def create_listing(u, crop, qty, price, moq, grade="A", quality="", harvest_days
         fail(400, "দাম দিন")
     free = unlisted(u["id"], crop)
     if u["role"] == "farmer":
-        if qty > free:                                    # new harvest goes into the farmer's stock
+        if qty > free:
             stock_add(u["id"], crop, qty - free, prod_cost)
     elif qty > free:
         fail(400, f"আপনার মজুদে বিক্রির মতো {crop_name(crop)} আছে {mon(free)} মণ। এর বেশি তালিকায় দেওয়া যাবে না")
@@ -222,7 +224,6 @@ def make_urgent(u, lid):
 
 
 def check_listing_alerts(l):
-    """Low-stock and sold-out alerts for the seller, sent once."""
     seller = l["uid"]
     if l["available"] <= 0 and l["status"] == "active":
         db.update("listings", l["id"], status="sold_out")
@@ -232,33 +233,125 @@ def check_listing_alerts(l):
         notify(seller, f"⚠️ {crop_name(l['crop'])}-এর লিস্টিংয়ে আর মাত্র {mon(l['available'])} মণ বাকি।", "stock", f"#/listing/{l['id']}")
 
 
-# ---------------------------------------------------------------- inspection (video / visit) before buying
+# ---------------------------------------------------------------- STEP 1 & 2: Inspection workflow
 def request_inspection(u, lid, kind, pref, note=""):
+    """Buyer requests inspection of a farmer's listing."""
     l = db.one("SELECT * FROM listings WHERE id=?", (lid,))
     if not l or l["uid"] == u["id"]:
         fail(400, "এই মাল পরিদর্শন করা যাবে না")
-    i = {"id": nid("I"), "listing": lid, "buyer": u["id"], "seller": l["uid"], "kind": kind, "pref": pref, "note": note,
-         "status": "requested", "reply": None, "created": now(), "updated": now()}
+    if l["status"] != "active":
+        fail(400, "এই লিস্টিং এখন চালু নেই")
+    if u["role"] != "paikar":
+        fail(403, "পাইকার হিসেবে লগ ইন করুন")
+    i = {"id": nid("I"), "listing": lid, "buyer": u["id"], "seller": l["uid"], "kind": kind, "pref": pref,
+         "note": note, "status": "requested", "reply": None, "created": now(), "updated": now(),
+         "proposed_time": None, "confirmed_time": None, "buyer_confirmed_at": None,
+         "buyer_done_at": None, "seller_verified_at": None, "scheduled_at": None}
     db.insert("inspections", i)
     notify(l["uid"], f"🔍 {who(u)} আপনার {crop_name(l['crop'])} {'ভিডিও কলে' if kind == 'video' else 'সরাসরি এসে'} "
-                     f"দেখতে চান ({pref})।", "inspection", f"#/inspection/{i['id']}")
+                     f"দেখতে চান। পছন্দের সময়: {pref}।", "inspection", f"#/inspection/{i['id']}")
     return i
 
 
-def respond_inspection(u, iid, action, reply=""):
+def farmer_propose_time(u, iid, proposed_time, reply=""):
+    """Farmer accepts inspection request and proposes a specific date/time (Step 1 part 2)."""
     i = db.one("SELECT * FROM inspections WHERE id=?", (iid,))
-    if not i or u["id"] not in (i["buyer"], i["seller"]):
+    if not i:
         fail(404, "পরিদর্শন পাওয়া যায়নি")
-    allowed = {"seller": {"schedule", "decline"}, "buyer": {"done", "cancel"}}["seller" if u["id"] == i["seller"] else "buyer"]
-    if action not in allowed:
-        fail(400, "এই কাজ এখন করা যাবে না")
-    status = {"schedule": "scheduled", "decline": "declined", "done": "done", "cancel": "cancelled"}[action]
-    db.update("inspections", iid, status=status, reply=reply or i["reply"], updated=now())
+    if u["id"] != i["seller"]:
+        fail(403, "শুধু বিক্রেতা সময় প্রস্তাব করতে পারেন")
+    if i["status"] != "requested":
+        fail(400, "এখন সময় প্রস্তাব করা যাবে না")
+    if not proposed_time or not proposed_time.strip():
+        fail(400, "পরিদর্শনের তারিখ ও সময় দিন")
+    db.update("inspections", iid, status="time_proposed", proposed_time=proposed_time,
+              reply=reply or "", updated=now())
     seen(u["id"], f"#/inspection/{iid}")
-    other = i["buyer"] if u["id"] == i["seller"] else i["seller"]
-    text = {"scheduled": f"✅ {who(u)} পরিদর্শনে রাজি: {reply}", "declined": f"❌ {who(u)} পরিদর্শনে রাজি হননি। {reply}",
-            "done": f"🔍 {who(u)} মাল দেখেছেন। এখন অফার দিতে পারেন।", "cancelled": f"{who(u)} পরিদর্শন বাতিল করেছেন।"}[status]
-    notify(other, text, "inspection", f"#/inspection/{iid}")
+    notify(i["buyer"], f"📅 {who(u)} পরিদর্শনের সময় প্রস্তাব করেছেন: {proposed_time}। নিশ্চিত করুন।",
+           "inspection", f"#/inspection/{iid}")
+    return db.one("SELECT * FROM inspections WHERE id=?", (iid,))
+
+
+def buyer_confirm_schedule(u, iid):
+    """Buyer confirms the farmer's proposed inspection time — sets status to 'scheduled' (Step 1 final)."""
+    i = db.one("SELECT * FROM inspections WHERE id=?", (iid,))
+    if not i:
+        fail(404, "পরিদর্শন পাওয়া যায়নি")
+    if u["id"] != i["buyer"]:
+        fail(403, "শুধু ক্রেতা সময় নিশ্চিত করতে পারেন")
+    if i["status"] != "time_proposed":
+        fail(400, "বিক্রেতার প্রস্তাবিত সময় নিশ্চিত করুন")
+    db.update("inspections", iid, status="scheduled", confirmed_time=i["proposed_time"],
+              buyer_confirmed_at=now(), scheduled_at=now(), updated=now())
+    seen(u["id"], f"#/inspection/{iid}")
+    notify(i["seller"], f"✅ {who(u)} পরিদর্শনের সময় নিশ্চিত করেছেন: {i['proposed_time']}।",
+           "inspection", f"#/inspection/{iid}")
+    return db.one("SELECT * FROM inspections WHERE id=?", (iid,))
+
+
+def buyer_report_inspection_done(u, iid):
+    """Buyer reports they have physically inspected the produce (Step 2 part 1)."""
+    i = db.one("SELECT * FROM inspections WHERE id=?", (iid,))
+    if not i:
+        fail(404, "পরিদর্শন পাওয়া যায়নি")
+    if u["id"] != i["buyer"]:
+        fail(403, "শুধু ক্রেতা মাল দেখার রিপোর্ট করতে পারেন")
+    if i["status"] != "scheduled":
+        fail(400, "পরিদর্শন সময়সূচি নিশ্চিত না হলে এটি করা যাবে না")
+    db.update("inspections", iid, status="buyer_done", buyer_done_at=now(), updated=now())
+    seen(u["id"], f"#/inspection/{iid}")
+    notify(i["seller"], f"🔍 {who(u)} বলছেন মাল দেখেছেন। আপনি কি এটি নিশ্চিত করবেন?",
+           "inspection", f"#/inspection/{iid}")
+    return db.one("SELECT * FROM inspections WHERE id=?", (iid,))
+
+
+def seller_verify_inspection(u, iid, confirm=True, note=""):
+    """Farmer confirms or disputes that buyer visited and inspected the produce (Step 2 final)."""
+    i = db.one("SELECT * FROM inspections WHERE id=?", (iid,))
+    if not i:
+        fail(404, "পরিদর্শন পাওয়া যায়নি")
+    if u["id"] != i["seller"]:
+        fail(403, "শুধু বিক্রেতা পরিদর্শন নিশ্চিত করতে পারেন")
+    if i["status"] != "buyer_done":
+        fail(400, "ক্রেতার রিপোর্টের পরেই নিশ্চিত করা যাবে")
+    buyer = user(i["buyer"])
+    if confirm:
+        db.update("inspections", iid, status="completed", seller_verified_at=now(), reply=note or "", updated=now())
+        seen(u["id"], f"#/inspection/{iid}")
+        notify(i["buyer"], f"✅ {who(u)} নিশ্চিত করেছেন — পরিদর্শন সম্পন্ন। এখন অফার দিতে পারেন।",
+               "inspection", f"#/inspection/{iid}")
+    else:
+        db.update("inspections", iid, status="disputed", reply=note or "বিক্রেতা বলছেন ক্রেতা আসেননি", updated=now())
+        seen(u["id"], f"#/inspection/{iid}")
+        notify(i["buyer"], f"❌ {who(u)} পরিদর্শন নিশ্চিত করেননি। কারণ: {note or 'বিক্রেতা বলছেন ক্রেতা আসেননি'}",
+               "inspection", f"#/inspection/{iid}")
+    return db.one("SELECT * FROM inspections WHERE id=?", (iid,))
+
+
+def decline_inspection(u, iid, reply=""):
+    """Farmer declines an inspection request."""
+    i = db.one("SELECT * FROM inspections WHERE id=?", (iid,))
+    if not i or u["id"] != i["seller"]:
+        fail(403, "এই পরিদর্শন আপনার নয়")
+    if i["status"] != "requested":
+        fail(400, "এখন বাতিল করা যাবে না")
+    db.update("inspections", iid, status="declined", reply=reply, updated=now())
+    seen(u["id"], f"#/inspection/{iid}")
+    notify(i["buyer"], f"❌ {who(u)} পরিদর্শনে রাজি হননি।" + (f" কারণ: {reply}" if reply else ""),
+           "inspection", f"#/inspection/{iid}")
+
+
+def cancel_inspection(u, iid):
+    """Buyer cancels their own inspection request."""
+    i = db.one("SELECT * FROM inspections WHERE id=?", (iid,))
+    if not i or u["id"] != i["buyer"]:
+        fail(403, "এই পরিদর্শন আপনার নয়")
+    if i["status"] in ("completed", "cancelled", "declined"):
+        fail(400, "এই পরিদর্শন বাতিল করা যাবে না")
+    db.update("inspections", iid, status="cancelled", updated=now())
+    seen(u["id"], f"#/inspection/{iid}")
+    notify(i["seller"], f"{who(u)} পরিদর্শনের অনুরোধ বাতিল করেছেন।",
+           "inspection", f"#/inspection/{iid}")
 
 
 # ---------------------------------------------------------------- offers & negotiation
@@ -267,6 +360,7 @@ def offer_event(oid, by, action, price, note=None):
 
 
 def make_offer(u, lid, qty, price, transport="reroute", split="half", note=""):
+    """Buyer makes an offer. Inspection must be completed if it exists for this listing/buyer pair."""
     l = db.one("SELECT * FROM listings WHERE id=?", (lid,))
     if not l or l["status"] != "active":
         fail(400, "এই লিস্টিং এখন চালু নেই")
@@ -281,6 +375,15 @@ def make_offer(u, lid, qty, price, transport="reroute", split="half", note=""):
         fail(400, f"দাম তালিকার দাম ৳{bn(listed, 1)}/কেজি বা তার কম হতে হবে")
     if transport not in ("reroute", "self") or split not in ("buyer", "half", "seller"):
         fail(400, "পরিবহন বাছাই ঠিক নেই")
+
+    # Check: if inspection exists for this buyer+listing, it must be completed
+    existing_insp = db.one(
+        "SELECT * FROM inspections WHERE listing=? AND buyer=? ORDER BY created DESC LIMIT 1",
+        (lid, u["id"])
+    )
+    if existing_insp and existing_insp["status"] not in ("completed", "cancelled", "declined"):
+        fail(400, "পরিদর্শন সম্পন্ন হওয়ার আগে অফার দেওয়া যাবে না")
+
     o = {"id": nid("O"), "listing": lid, "buyer": u["id"], "seller": l["uid"], "crop": l["crop"], "qty": qty,
          "price": price, "listed_price": listed, "status": "pending", "waiting": "seller", "transport": transport,
          "split": split if transport == "reroute" else "buyer", "note": note, "created": now(), "updated": now(),
@@ -301,7 +404,7 @@ def get_offer(oid):
 
 
 def respond_offer(u, oid, action, price=None, reason=None):
-    """Seller: accept / reject / counter. Buyer: accept / reject a counter, or cancel his offer."""
+    """Seller: accept / reject / counter. Buyer: accept / reject a counter, or cancel."""
     o = get_offer(oid)
     side = "seller" if u["id"] == o["seller"] else "buyer" if u["id"] == o["buyer"] else None
     if not side:
@@ -345,6 +448,11 @@ def respond_offer(u, oid, action, price=None, reason=None):
 
 
 def create_order(o, accepted_by):
+    """
+    Creates the order after offer acceptance.
+    For reroute transport: creates a transport negotiation record.
+    The booking is NOT created until transport negotiation is agreed.
+    """
     l = db.one("SELECT * FROM listings WHERE id=?", (o["listing"],))
     if not l or l["available"] < o["qty"]:
         fail(400, "লিস্টিংয়ে এখন এত মাল নেই")
@@ -352,36 +460,31 @@ def create_order(o, accepted_by):
     goods = round(o["price"] * o["qty"])
     fee = platform_fee(goods)
     fee_disc = min(seller["fee_credit"] or 0, fee)
+
     t_total = t_buyer = t_seller = t_cb = t_cs = 0
     booking = None
+
     if o["transport"] == "reroute":
         qd = transport_quote(seller["place"], buyer["place"], o["qty"], is_plus(buyer), is_bulk(buyer["id"]))
         t_total = qd["total"]
+        # Initial split from offer — will be overridden by transport negotiation
         t_buyer = {"buyer": t_total, "half": t_total / 2, "seller": 0}[o["split"]]
         t_seller = t_total - t_buyer
         t_cb = min(buyer["transport_credit"] or 0, t_buyer * CREDIT_MAX_SHARE)
         t_cs = min(seller["transport_credit"] or 0, t_seller * CREDIT_MAX_SHARE)
-        booking = nid("B")
-        db.insert("bookings", {"id": booking, "uid": buyer["id"], "order_id": None, "pickup_place": seller["place"],
-                               "pickup_addr": seller["area"] or "", "drop_place": buyer["place"], "drop_addr": buyer["area"] or "",
-                               "crop": o["crop"], "qty": o["qty"], "vehicle": qd["vehicle"], "trucks_n": qd["trucks"],
-                               "km": qd["km"], "eta": qd["eta"], "fare": qd["fare"], "service": qd["service"],
-                               "commission": qd["commission"], "total": t_total, "offline": qd["offline"],
-                               "credit_used": round(t_cb + t_cs), "status": "awaiting_payment", "truck": None,
-                               "pickup_time": None, "priority": 1 if (seller["verified"] or is_plus(buyer)) else 0,
-                               "paid": 0, "created": now(), "updated": now(), "date": "অর্ডারের সাথে"})
+
     oid = nid("D")
     order = {"id": oid, "offer": o["id"], "listing": o["listing"], "buyer": buyer["id"], "seller": seller["id"],
              "crop": o["crop"], "qty": o["qty"], "price": o["price"], "listed_price": o["listed_price"], "goods": goods,
              "fee": fee, "fee_disc": fee_disc, "transport": o["transport"], "split": o["split"], "booking": booking,
-             "t_total": round(t_total), "t_buyer": round(t_buyer), "t_seller": round(t_seller), "t_cb": round(t_cb),
-             "t_cs": round(t_cs), "buyer_total": round(goods + t_buyer - t_cb),
+             "t_total": round(t_total), "t_buyer": round(t_buyer), "t_seller": round(t_seller),
+             "t_cb": round(t_cb), "t_cs": round(t_cs),
+             "buyer_total": round(goods + t_buyer - t_cb),
              "payout": round(goods - (fee - fee_disc) - (t_seller - t_cs)), "status": "awaiting_payment",
              "created": now()}
     db.insert("orders", order)
-    if booking:
-        db.update("bookings", booking, order_id=oid)
-    # reserve the goods and the credits used
+
+    # Reserve goods and credits
     db.run("UPDATE listings SET available=available-?, reserved=reserved+?, updated=? WHERE id=?",
            (o["qty"], o["qty"], now(), l["id"]))
     db.run("UPDATE users SET fee_credit=fee_credit-?, transport_credit=transport_credit-? WHERE id=?",
@@ -390,11 +493,251 @@ def create_order(o, accepted_by):
     db.update("offers", o["id"], status="accepted", order_id=oid, updated=now())
     offer_event(o["id"], accepted_by["id"], "accept", o["price"])
     check_listing_alerts(db.one("SELECT * FROM listings WHERE id=?", (l["id"],)))
-    notify(buyer["id"], f"✅ {who(seller)} রাজি: {mon(o['qty'])} মণ {crop_name(o['crop'])} ৳{bn(o['price'], 1)}/কেজি। "
-                        f"এখন {tk(order['buyer_total'])} পেমেন্ট করুন, {bn(PAY_HOURS)} ঘণ্টার মধ্যে।", "pay", f"#/order/{oid}")
-    notify(seller["id"], f"✅ {mon(o['qty'])} মণ {crop_name(o['crop'])} বিক্রিতে রাজি হয়েছেন। "
-                         f"{who(buyer)} পেমেন্ট করলেই অর্ডার নিশ্চিত হবে।", "order", f"#/order/{oid}")
+
+    if o["transport"] == "reroute":
+        # Create transport negotiation record
+        _init_transport_negotiation(oid, buyer["id"], seller["id"], round(t_total), o["split"])
+        # Status will stay awaiting_payment until transport is agreed
+        _send_transport_proposal_from_split(oid, buyer, seller, round(t_total), o["split"])
+        notify(buyer["id"], f"✅ {who(seller)} রাজি: {mon(o['qty'])} মণ {crop_name(o['crop'])} ৳{bn(o['price'], 1)}/কেজি। "
+                            f"পরিবহন খরচ ভাগাভাগি নিশ্চিত করুন।", "pay", f"#/order/{oid}")
+        notify(seller["id"], f"✅ {mon(o['qty'])} মণ {crop_name(o['crop'])} বিক্রিতে রাজি হয়েছেন। "
+                             f"পরিবহন খরচের প্রস্তাব আপনার কাছে পাঠানো হয়েছে।", "order", f"#/order/{oid}")
+    else:
+        # Self transport — no negotiation needed, proceed directly
+        notify(buyer["id"], f"✅ {who(seller)} রাজি: {mon(o['qty'])} মণ {crop_name(o['crop'])} ৳{bn(o['price'], 1)}/কেজি। "
+                            f"এখন {tk(order['buyer_total'])} পেমেন্ট করুন, {bn(PAY_HOURS)} ঘণ্টার মধ্যে।", "pay", f"#/order/{oid}")
+        notify(seller["id"], f"✅ {mon(o['qty'])} মণ {crop_name(o['crop'])} বিক্রিতে রাজি হয়েছেন। "
+                             f"{who(buyer)} পেমেন্ট করলেই অর্ডার নিশ্চিত হবে।", "order", f"#/order/{oid}")
     return order
+
+
+# ---------------------------------------------------------------- STEPS 3 & 4: Transport Cost Negotiation
+def _money(val):
+    """Round money to 2 decimal places using ROUND_HALF_UP."""
+    return float(Decimal(str(val)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+
+
+def _init_transport_negotiation(order_id, buyer_id, seller_id, t_total, initial_split):
+    """Create the transport_negotiations record for a new reroute-transport order."""
+    nid_val = nid("TN")
+    db.insert("transport_negotiations", {
+        "id": nid_val, "order_id": order_id, "buyer": buyer_id, "seller": seller_id,
+        "t_total": t_total, "status": "pending",
+        "agreed_buyer_pct": None, "agreed_seller_pct": None,
+        "agreed_buyer_amt": None, "agreed_seller_amt": None,
+        "created": now(), "updated": now(), "version": 1
+    })
+    return nid_val
+
+
+def _send_transport_proposal_from_split(order_id, buyer, seller, t_total, split):
+    """
+    Create initial transport proposal based on the offer's split choice.
+    buyer=100% (option A): no farmer consent needed, auto-confirm.
+    half (option B): notify farmer to accept/reject/counter.
+    seller=100% (option C): notify farmer to accept/reject/counter.
+    """
+    pct_map = {"buyer": (100, 0), "half": (50, 50), "seller": (0, 100)}
+    buyer_pct, seller_pct = pct_map[split]
+    buyer_amt = _money(t_total * buyer_pct / 100)
+    seller_amt = _money(t_total * seller_pct / 100)
+
+    tn = db.one("SELECT * FROM transport_negotiations WHERE order_id=?", (order_id,))
+    if not tn:
+        return
+
+    prop = {"id": nid("TP"), "negotiation": tn["id"], "proposer": buyer["id"], "recipient": seller["id"],
+            "buyer_pct": buyer_pct, "seller_pct": seller_pct,
+            "buyer_amt": buyer_amt, "seller_amt": seller_amt,
+            "status": "pending", "note": "", "created": now(), "version": 1}
+    db.insert("transport_proposals", prop)
+
+    if split == "buyer":
+        # Buyer pays 100% — auto-confirm, no farmer consent needed
+        _confirm_transport_agreement(tn["id"], buyer_pct, seller_pct, buyer_amt, seller_amt)
+    else:
+        cost_txt = f"আপনার ভাগ: ৳{bn(seller_amt)} ({bn(seller_pct)}%)" if seller_amt > 0 else "আপনার ভাগ: ০ টাকা"
+        notify(seller["id"], f"🚚 পরিবহন খরচের প্রস্তাব এসেছে। মোট ভাড়া: ৳{bn(t_total)}। {cost_txt}। "
+                              "রাজি হলে 'গ্রহণ করুন', না হলে 'পাল্টা প্রস্তাব দিন'।",
+               "transport", f"#/order/{order_id}")
+
+
+def propose_transport_split(u, order_id, buyer_pct, seller_pct, note=""):
+    """
+    Buyer or farmer submits a transport cost sharing proposal (percentage-based).
+    buyer_pct + seller_pct must = 100. Both must be 0-100.
+    """
+    o = get_order(order_id, u)
+    tn = db.one("SELECT * FROM transport_negotiations WHERE order_id=?", (order_id,))
+    if not tn:
+        fail(404, "পরিবহন চুক্তির তথ্য পাওয়া যায়নি")
+    if tn["status"] == "agreed":
+        fail(400, "পরিবহন চুক্তি আগেই চূড়ান্ত হয়েছে")
+    if o["status"] not in ("awaiting_payment",):
+        fail(400, "এই পর্যায়ে পরিবহন প্রস্তাব করা যাবে না")
+
+    side = "buyer" if u["id"] == o["buyer"] else "seller" if u["id"] == o["seller"] else None
+    if not side:
+        fail(403, "এই অর্ডার আপনার নয়")
+
+    # Validation
+    buyer_pct = round(float(buyer_pct), 2)
+    seller_pct = round(float(seller_pct), 2)
+    if abs(buyer_pct + seller_pct - 100) > 0.01:
+        fail(400, "ক্রেতা ও বিক্রেতার শতাংশের যোগফল ১০০ হতে হবে")
+    if buyer_pct < 0 or seller_pct < 0 or buyer_pct > 100 or seller_pct > 100:
+        fail(400, "শতাংশ ০ থেকে ১০০-এর মধ্যে হতে হবে")
+
+    t_total = tn["t_total"]
+    buyer_amt = _money(t_total * buyer_pct / 100)
+    seller_amt = _money(t_total * seller_pct / 100)
+
+    # Mark any existing pending proposals as superseded
+    db.run("UPDATE transport_proposals SET status='superseded' WHERE negotiation=? AND status='pending'", (tn["id"],))
+
+    recipient = o["seller"] if side == "buyer" else o["buyer"]
+    new_version = (tn["version"] or 1) + 1
+
+    prop = {"id": nid("TP"), "negotiation": tn["id"], "proposer": u["id"], "recipient": recipient,
+            "buyer_pct": buyer_pct, "seller_pct": seller_pct,
+            "buyer_amt": buyer_amt, "seller_amt": seller_amt,
+            "status": "pending", "note": note or "", "created": now(), "version": new_version}
+    db.insert("transport_proposals", prop)
+    db.update("transport_negotiations", tn["id"], version=new_version, updated=now())
+
+    recipient_user = user(recipient)
+    proposer_user = user(u["id"])
+    cost_txt = (f"আপনার ভাগ: ৳{bn(seller_amt)} ({bn(seller_pct)}%)" if side == "buyer"
+                else f"ক্রেতার ভাগ: ৳{bn(buyer_amt)} ({bn(buyer_pct)}%), আপনার ভাগ: ৳{bn(seller_amt)} ({bn(seller_pct)}%)")
+    notify(recipient, f"🔄 {who(proposer_user)} পরিবহন খরচের নতুন প্রস্তাব দিয়েছেন। "
+                      f"মোট ভাড়া: ৳{bn(t_total)}। {cost_txt}।",
+           "transport", f"#/order/{order_id}")
+
+    return {"proposal": prop, "negotiation": db.one("SELECT * FROM transport_negotiations WHERE id=?", (tn["id"],))}
+
+
+def respond_transport_proposal(u, order_id, proposal_id, action, note=""):
+    """
+    Accept or reject a transport proposal. Only the recipient can act.
+    action: 'accept' | 'reject'
+    """
+    o = get_order(order_id, u)
+    tn = db.one("SELECT * FROM transport_negotiations WHERE order_id=?", (order_id,))
+    if not tn:
+        fail(404, "পরিবহন চুক্তির তথ্য পাওয়া যায়নি")
+    if tn["status"] == "agreed":
+        fail(400, "পরিবহন চুক্তি আগেই চূড়ান্ত হয়েছে")
+
+    prop = db.one("SELECT * FROM transport_proposals WHERE id=?", (proposal_id,))
+    if not prop or prop["negotiation"] != tn["id"]:
+        fail(404, "প্রস্তাব পাওয়া যায়নি")
+    if prop["status"] != "pending":
+        fail(400, "এই প্রস্তাব আর সক্রিয় নেই (পুরনো বা ইতিমধ্যে সাড়া দেওয়া হয়েছে)")
+    if prop["recipient"] != u["id"]:
+        fail(403, "এই প্রস্তাব আপনার কাছে পাঠানো হয়নি")
+
+    if action == "accept":
+        db.update("transport_proposals", proposal_id, status="accepted")
+        _confirm_transport_agreement(tn["id"], prop["buyer_pct"], prop["seller_pct"],
+                                     prop["buyer_amt"], prop["seller_amt"])
+        _apply_agreed_transport_to_order(order_id, prop["buyer_amt"], prop["seller_amt"],
+                                         prop["buyer_pct"], prop["seller_pct"])
+        proposer = user(prop["proposer"])
+        notify(prop["proposer"], f"✅ পরিবহন খরচের প্রস্তাব গৃহীত হয়েছে। "
+                                  f"ক্রেতার ভাগ: ৳{bn(prop['buyer_amt'])}, বিক্রেতার ভাগ: ৳{bn(prop['seller_amt'])}। "
+                                  "এখন পেমেন্ট করুন।",
+               "transport", f"#/order/{order_id}")
+        return {"status": "agreed"}
+    elif action == "reject":
+        db.update("transport_proposals", proposal_id, status="rejected")
+        db.update("transport_negotiations", tn["id"], updated=now())
+        rejector = user(u["id"])
+        notify(prop["proposer"], f"❌ {who(rejector)} পরিবহন খরচের প্রস্তাব গ্রহণ করেননি।"
+                                  + (f" কারণ: {note}" if note else "") + " নতুন প্রস্তাব দিন।",
+               "transport", f"#/order/{order_id}")
+        return {"status": "rejected"}
+    else:
+        fail(400, "অজানা কাজ")
+
+
+def _confirm_transport_agreement(tn_id, buyer_pct, seller_pct, buyer_amt, seller_amt):
+    """Mark transport negotiation as agreed with final amounts."""
+    db.update("transport_negotiations", tn_id,
+              status="agreed",
+              agreed_buyer_pct=buyer_pct, agreed_seller_pct=seller_pct,
+              agreed_buyer_amt=buyer_amt, agreed_seller_amt=seller_amt,
+              updated=now())
+
+
+def _apply_agreed_transport_to_order(order_id, buyer_amt, seller_amt, buyer_pct, seller_pct):
+    """
+    Update order's transport amounts and create the booking.
+    Also update buyer_total and payout.
+    """
+    o = db.one("SELECT * FROM orders WHERE id=?", (order_id,))
+    if not o:
+        return
+    buyer_obj = user(o["buyer"])
+    seller_obj = user(o["seller"])
+
+    t_total = o["t_total"]
+    t_buyer = round(buyer_amt)
+    t_seller = round(seller_amt)
+
+    # Restore old credits first, then recalculate
+    old_t_cb = o["t_cb"]
+    old_t_cs = o["t_cs"]
+    db.run("UPDATE users SET transport_credit=transport_credit+? WHERE id=?", (old_t_cb, o["buyer"]))
+    db.run("UPDATE users SET transport_credit=transport_credit+? WHERE id=?", (old_t_cs, o["seller"]))
+
+    buyer_obj = user(o["buyer"])
+    seller_obj = user(o["seller"])
+    t_cb = round(min(buyer_obj["transport_credit"] or 0, t_buyer * CREDIT_MAX_SHARE))
+    t_cs = round(min(seller_obj["transport_credit"] or 0, t_seller * CREDIT_MAX_SHARE))
+
+    db.run("UPDATE users SET transport_credit=transport_credit-? WHERE id=?", (t_cb, o["buyer"]))
+    db.run("UPDATE users SET transport_credit=transport_credit-? WHERE id=?", (t_cs, o["seller"]))
+
+    goods = o["goods"]
+    fee = o["fee"]
+    fee_disc = o["fee_disc"]
+    buyer_total = round(goods + t_buyer - t_cb)
+    payout = round(goods - (fee - fee_disc) - (t_seller - t_cs))
+
+    # Create the booking
+    qd = transport_quote(seller_obj["place"], buyer_obj["place"], o["qty"],
+                         is_plus(buyer_obj), is_bulk(buyer_obj["id"]))
+    booking_id = nid("B")
+    db.insert("bookings", {
+        "id": booking_id, "uid": buyer_obj["id"], "order_id": order_id,
+        "pickup_place": seller_obj["place"], "pickup_addr": seller_obj["area"] or "",
+        "drop_place": buyer_obj["place"], "drop_addr": buyer_obj["area"] or "",
+        "crop": o["crop"], "qty": o["qty"], "vehicle": qd["vehicle"], "trucks_n": qd["trucks"],
+        "km": qd["km"], "eta": qd["eta"], "fare": qd["fare"], "service": qd["service"],
+        "commission": qd["commission"], "total": t_total, "offline": qd["offline"],
+        "credit_used": t_cb + t_cs, "status": "awaiting_payment", "truck": None,
+        "pickup_time": None,
+        "priority": 1 if (seller_obj["verified"] or is_plus(buyer_obj)) else 0,
+        "paid": 0, "created": now(), "updated": now(), "date": "অর্ডারের সাথে"
+    })
+
+    db.run("""UPDATE orders SET t_buyer=?, t_seller=?, t_cb=?, t_cs=?,
+              buyer_total=?, payout=?, booking=?, split=? WHERE id=?""",
+           (t_buyer, t_seller, t_cb, t_cs, buyer_total, payout, booking_id,
+            f"{buyer_pct}/{seller_pct}", order_id))
+
+    notify(o["buyer"], f"✅ পরিবহন চুক্তি নিশ্চিত হয়েছে। এখন ৳{bn(buyer_total)} পেমেন্ট করুন।",
+           "pay", f"#/order/{order_id}")
+
+
+def get_transport_negotiation(order_id):
+    """Get current transport negotiation state including all proposals."""
+    tn = db.one("SELECT * FROM transport_negotiations WHERE order_id=?", (order_id,))
+    if not tn:
+        return None
+    proposals = db.q("SELECT * FROM transport_proposals WHERE negotiation=? ORDER BY created DESC", (tn["id"],))
+    return {**tn, "proposals": proposals}
 
 
 def get_order(oid, u=None):
@@ -404,7 +747,7 @@ def get_order(oid, u=None):
     return o
 
 
-# ---------------------------------------------------------------- payments (demo gateway: bKash / Nagad / card / wallet)
+# ---------------------------------------------------------------- STEP 5: Payments
 DEMO_PIN = "12345"
 
 
@@ -415,6 +758,11 @@ def start_payment(u, purpose, ref, method):
         o = get_order(ref, u)
         if o["buyer"] != u["id"] or o["status"] != "awaiting_payment":
             fail(400, "এই অর্ডারের পেমেন্ট এখন করা যাবে না")
+        # For reroute transport, transport negotiation must be agreed
+        if o["transport"] == "reroute":
+            tn = db.one("SELECT * FROM transport_negotiations WHERE order_id=?", (ref,))
+            if tn and tn["status"] != "agreed":
+                fail(400, "পরিবহন খরচের চুক্তি নিশ্চিত হওয়ার আগে পেমেন্ট করা যাবে না")
         amount = o["buyer_total"]
     elif purpose == "booking":
         b = db.one("SELECT * FROM bookings WHERE id=?", (ref,))
@@ -455,7 +803,6 @@ def confirm_payment(u, pid, account=None, pin=None):
     if not ok:
         db.update("payments", pid, status="failed", message=msg, verified_at=now())
         return {**p, "status": "failed", "message": msg}
-    # re-check that the thing is still payable, then apply
     txn = "TXN" + uuid.uuid4().hex[:10].upper()
     if p["method"] == "wallet":
         wallet(u["id"], -p["amount"], "payment", pid, {"order": "অর্ডারের পেমেন্ট", "booking": "পরিবহন বুকিং",
@@ -463,13 +810,19 @@ def confirm_payment(u, pid, account=None, pin=None):
     db.update("payments", pid, status="success", verified_at=now(), txn=txn, message="পেমেন্ট সফল")
     if p["purpose"] == "order":
         o = get_order(p["ref"])
+        # Idempotency: only confirm once
+        if o["status"] != "awaiting_payment":
+            return {**p, "status": "success", "txn": txn, "message": "পেমেন্ট ইতিমধ্যে প্রক্রিয়া হয়েছে"}
         db.update("orders", o["id"], status="confirmed", paid_at=now(), payment=pid)
         seen(u["id"], f"#/order/{o['id']}")
         if o["booking"]:
             db.update("bookings", o["booking"], paid=1, status="requested", updated=now())
             booking_event(o["booking"], "requested", "অর্ডারের পেমেন্টের সাথে বুকিং হয়েছে")
+        seller = user(o["seller"])
         notify(o["seller"], f"💰 {who(u)} {tk(o['buyer_total'])} পেমেন্ট করেছেন, টাকা Reroute-এ জমা আছে। "
                             f"{'Reroute ট্রাক আসবে, মাল তৈরি রাখুন।' if o['transport'] == 'reroute' else 'পাইকার নিজে মাল নিতে আসবেন।'}",
+               "order", f"#/order/{o['id']}")
+        notify(o["buyer"], f"✅ অর্ডার নিশ্চিত হয়েছে! পেমেন্ট সফল (TXN: {txn})।",
                "order", f"#/order/{o['id']}")
     elif p["purpose"] == "booking":
         db.update("bookings", p["ref"], paid=1, status="requested", updated=now())
@@ -481,7 +834,7 @@ def confirm_payment(u, pid, account=None, pin=None):
     return {**p, "status": "success", "txn": txn, "message": "পেমেন্ট সফল"}
 
 
-# ---------------------------------------------------------------- order steps
+# ---------------------------------------------------------------- STEP 6: Order steps
 def handover(u, oid):
     o = get_order(oid, u)
     if o["seller"] != u["id"] or o["status"] != "confirmed":
@@ -507,13 +860,11 @@ def complete(u, oid):
         if b["status"] != "delivered":
             set_booking_status(b["id"], "delivered", "ক্রেতা মাল বুঝে পেয়েছেন")
     seller = user(o["seller"])
-    # goods move: listing → sold, seller stock → buyer stock
     db.run("UPDATE listings SET reserved=MAX(0,reserved-?), sold=sold+?, updated=? WHERE id=?",
            (o["qty"], o["qty"], now(), o["listing"]))
     cost_basis = stock_take(seller["id"], o["crop"], o["qty"])
     landed_cost = (o["goods"] + o["t_buyer"] - o["t_cb"]) / o["qty"]
     stock_add(u["id"], o["crop"], o["qty"], landed_cost)
-    # money: release payment to the seller, cashback for verified farmers' bigger sales
     cashback = 0
     if seller["role"] == "farmer" and o["goods"] >= CASHBACK_MIN and seller["verified"]:
         n = db.val("SELECT COUNT(*) FROM orders WHERE seller=? AND cashback>0 AND completed_at>?",
@@ -532,7 +883,6 @@ def complete(u, oid):
 
 
 def award_points(o, seller, buyer):
-    """Points only for real, completed, paid deals. Same buyer-seller pair earns at most 3 times a week."""
     pair = db.val("SELECT COUNT(*) FROM points_tx WHERE uid=? AND kind='sale' AND note=? AND at>?",
                   (seller["id"], buyer["id"], now() - 7 * DAY)) or 0
     if o["goods"] >= 5000 and pair < 3:
@@ -560,7 +910,6 @@ def cancel_order(u, oid, reason=None):
 
 
 def release_order(o, by, reason):
-    """Undo an order that was not delivered: goods back on the market, money and credits back."""
     db.run("UPDATE listings SET available=available+?, reserved=MAX(0,reserved-?), updated=?, "
            "status=CASE WHEN status='sold_out' THEN 'active' ELSE status END WHERE id=?",
            (o["qty"], o["qty"], now(), o["listing"]))
@@ -638,7 +987,6 @@ def cancel_booking(u, bid):
 
 
 def set_booking_status(bid, status, note=None, truck=None, pickup_time=None, actual_fare=None):
-    """Truck management (operations team). Every step notifies the people involved."""
     b = db.one("SELECT * FROM bookings WHERE id=?", (bid,))
     if not b:
         fail(404, "বুকিং পাওয়া যায়নি")
@@ -718,7 +1066,6 @@ def resume_plus(u):
 
 
 def add_entry(u, kind, crop, qty, amount, note):
-    """Manual records: other expenses, stock added outside the platform, sales made outside the platform."""
     if kind not in ("expense", "sale", "stock") or amount < 0:
         fail(400, "তথ্য ঠিক নেই")
     cost_basis = None
@@ -740,7 +1087,6 @@ def add_entry(u, kind, crop, qty, amount, note):
 
 # ---------------------------------------------------------------- profit & loss
 def order_pnl(o, uid):
-    """Profit/loss of one order for one side. Exact only when the cost of the goods is known."""
     if uid == o["seller"]:
         cost = o["cost_basis"] * o["qty"] if o["cost_basis"] is not None else None
         transport = o["t_seller"] - o["t_cs"]
@@ -777,7 +1123,7 @@ def pnl(uid):
             "sales_count": len(sales), "buys_count": len(buys)}
 
 
-# ---------------------------------------------------------------- housekeeping (run on every state read)
+# ---------------------------------------------------------------- housekeeping
 def housekeeping(uid=None):
     t = now()
     for o in db.q("SELECT * FROM offers WHERE status IN ('pending','countered') AND expires<?", (t,)):
