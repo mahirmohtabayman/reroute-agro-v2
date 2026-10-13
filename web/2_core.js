@@ -22,7 +22,7 @@ const MARKET_DEMO = {
 const OFFER_ST = {pending:['উত্তরের অপেক্ষা','p-gold'],countered:['পাল্টা দাম এসেছে','p-blue'],accepted:['গৃহীত','p-green'],rejected:['প্রত্যাখ্যাত','p-red'],expired:['মেয়াদ শেষ','p-grey'],cancelled:['বাতিল','p-grey']};
 const ORDER_ST = {awaiting_payment:['পেমেন্ট বাকি','p-gold'],confirmed:['অর্ডার নিশ্চিত','p-blue'],handed_over:['মাল হস্তান্তর হয়েছে','p-blue'],completed:['সম্পূর্ণ','p-green'],cancelled:['বাতিল','p-red']};
 const BOOK_ST = {awaiting_payment:['পেমেন্ট বাকি','p-gold'],requested:['বুকিং অনুরোধ','p-gold'],confirmed:['বুকিং নিশ্চিত','p-blue'],pickup_scheduled:['মাল তোলার সময় ঠিক','p-blue'],in_transit:['পথে আছে','p-blue'],delivered:['পৌঁছে গেছে','p-green'],cancelled:['বাতিল','p-red']};
-const INSP_ST = {requested:['অনুরোধ','p-gold'],scheduled:['সময় ঠিক','p-blue'],done:['দেখা হয়েছে','p-green'],declined:['রাজি হননি','p-red'],cancelled:['বাতিল','p-grey']};
+const INSP_ST = {requested:["অনুরোধ","p-gold"],time_proposed:["সময় প্রস্তাব","p-blue"],scheduled:["পরিদর্শন নির্ধারিত","p-blue"],buyer_done:["ক্রেতা দেখেছেন","p-gold"],completed:["পরিদর্শন সম্পন্ন","p-green"],disputed:["বিতর্কিত","p-red"],declined:["রাজি হননি","p-red"],cancelled:["বাতিল","p-grey"]};
 const ORDER_STEPS = ['অফার','বিক্রেতা রাজি','পেমেন্ট ও অর্ডার নিশ্চিত','মাল হস্তান্তর','সম্পূর্ণ'];
 const ORDER_IDX = {awaiting_payment:1,confirmed:2,handed_over:3,completed:4};
 const BOOK_STEPS = ['বুকিং অনুরোধ','বুকিং নিশ্চিত','মাল তোলার সময়','পথে','পৌঁছেছে'];
@@ -413,6 +413,13 @@ function todoCount(){
 
   const id=S.me.id;
 
+  // transport negotiation todos: pending proposal where I am the recipient
+  let tNegTodo=0;
+  const tn=S.transport_negotiations||{};
+  Object.values(tn).forEach(neg=>{
+    if(neg.status!=='agreed'&&(neg.proposals||[]).some(p=>p.status==='pending'&&p.recipient===id)) tNegTodo++;
+  });
+
   return (S.offers||[]).filter(o=>
     ['pending','countered'].includes(o.status)
     &&
@@ -432,8 +439,12 @@ function todoCount(){
   ).length
   +
   (S.inspections||[]).filter(i=>
-    i.status==='requested'&&i.seller===id
-  ).length;
+    (i.status==='requested'&&i.seller===id)
+    ||(i.status==='time_proposed'&&i.buyer===id)
+    ||(i.status==='buyer_done'&&i.seller===id)
+  ).length
+  +
+  tNegTodo;
 }
 
 function renderChrome(){
