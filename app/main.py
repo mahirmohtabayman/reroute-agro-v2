@@ -27,8 +27,8 @@ logging.basicConfig(level=logging.INFO)
 STATIC = Path(__file__).resolve().parents[1] / "static"
 SECRET = os.environ.get("SECRET_KEY", "reroute-agro-demo-secret").encode()
 
-app = FastAPI(title="Reroute Agro API", version="2.0",
-              description="কৃষক ও পাইকারের পাইকারি বাজার: অফার-দরদাম, অনলাইন পেমেন্ট, নিজস্ব ট্রাক, মজুদ ও লাভ-ক্ষতি")
+app = FastAPI(title="Reroute Agro API", version="2.1",
+              description="কৃষক ও পাইকারের পাইকারি বাজার: পরিদর্শন, অফার-দরদাম, পরিবহন চুক্তি, অনলাইন পেমেন্ট, নিজস্ব ট্রাক")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 if db.needs_seed():
@@ -37,9 +37,6 @@ if db.needs_seed():
 AI = PriceAI()
 
 # ---------------------------------------------------------------- keep the public demo fresh
-# Offers expire after 48 h and unpaid orders after 24 h, so a demo left alone for days would
-# look empty to a judge who opens it later. When the demo data is older than DEMO_TTL and nobody
-# has changed anything for DEMO_IDLE, it is rebuilt (never in the middle of someone's session).
 DEMO_TTL = int(os.environ.get("DEMO_TTL_HOURS", "12")) * 3_600_000
 DEMO_IDLE = 30 * 60_000
 _last_write = [0]
@@ -65,8 +62,7 @@ def refresh_demo_if_stale():
         seed()
 
 
-# ---------------------------------------------------------------- auth: signed tokens
-# A token is "user-id.signature". It is not stored on the server, so a restart never logs anyone out.
+# ---------------------------------------------------------------- auth
 def sign(uid):
     sig = hmac.new(SECRET, uid.encode(), hashlib.sha256).hexdigest()[:32]
     return f"{base64.urlsafe_b64encode(uid.encode()).decode()}.{sig}"
@@ -184,6 +180,15 @@ def state(u=Depends(get_user)):
             contacts[other["id"]] = other["phone"]
     for o in orders:
         o["pnl"] = S.order_pnl(o, uid) if o["status"] == "completed" else None
+
+    # Transport negotiations for this user's orders
+    order_ids = [o["id"] for o in orders]
+    transport_negotiations = {}
+    for oid in order_ids:
+        tn = S.get_transport_negotiation(oid)
+        if tn:
+            transport_negotiations[oid] = tn
+
     out.update({
         "offers": offers, "offer_events": ev, "orders": orders, "bookings": bookings, "booking_events": bev,
         "my_trucks": db.q(f"SELECT * FROM trucks WHERE id IN ({','.join('?' * len(truck_ids)) or 'NULL'})", tuple(truck_ids)),
@@ -194,6 +199,7 @@ def state(u=Depends(get_user)):
         "entries": db.q("SELECT * FROM entries WHERE uid=? ORDER BY at DESC", (uid,)),
         "inventory": S.inventory(uid), "pnl": S.pnl(uid), "contacts": contacts,
         "rated": [r["order_id"] for r in db.q('SELECT order_id FROM ratings WHERE "from"=?', (uid,))],
+        "transport_negotiations": transport_negotiations,
     })
     return out
 
@@ -310,7 +316,6 @@ def user_photo(uid: str):
 
 @app.get("/api/users/{uid}")
 def profile(uid: str):
-    """Public profile: only what a trading partner needs. No phone, no money, no private history."""
     u = next((x for x in public_users() if x["id"] == uid), None)
     if not u:
         raise HTTPException(404, "অ্যাকাউন্ট পাওয়া যায়নি")
@@ -375,6 +380,7 @@ def listing_photo(lid: str, i: int):
     return image_response(photos[i])
 
 
+# ---------------------------------------------------------------- Inspection endpoints (full workflow)
 class InspectIn(BaseModel):
     listing: str
     kind: str = Field(pattern="^(video|visit)$")
@@ -387,14 +393,74 @@ def inspect(body: InspectIn, u=Depends(need_trader)):
     return S.request_inspection(u, body.listing, body.kind, body.pref, body.note)
 
 
+class ProposeTimeIn(BaseModel):
+    proposed_time: str = Field(min_length=1, max_length=120)
+    reply: str = Field("", max_length=200)
+
+
+@app.post("/api/inspections/{iid}/propose-time")
+def inspection_propose_time(iid: str, body: ProposeTimeIn, u=Depends(need_trader)):
+    """Farmer proposes an inspection date/time."""
+    return S.farmer_propose_time(u, iid, body.proposed_time, body.reply)
+
+
+@app.post("/api/inspections/{iid}/confirm-schedule")
+def inspection_confirm_schedule(iid: str, u=Depends(need_trader)):
+    """Buyer confirms the farmer's proposed time — sets status to 'scheduled'."""
+    return S.buyer_confirm_schedule(u, iid)
+
+
+@app.post("/api/inspections/{iid}/buyer-done")
+def inspection_buyer_done(iid: str, u=Depends(need_trader)):
+    """Buyer reports they have inspected the produce."""
+    return S.buyer_report_inspection_done(u, iid)
+
+
+class VerifyIn(BaseModel):
+    confirm: bool = True
+    note: str = Field("", max_length=200)
+
+
+@app.post("/api/inspections/{iid}/seller-verify")
+def inspection_seller_verify(iid: str, body: VerifyIn, u=Depends(need_trader)):
+    """Farmer confirms or disputes buyer's inspection report."""
+    return S.seller_verify_inspection(u, iid, body.confirm, body.note)
+
+
 class ReplyIn(BaseModel):
     reply: str = Field("", max_length=200)
 
 
+@app.post("/api/inspections/{iid}/decline")
+def inspection_decline(iid: str, body: ReplyIn = ReplyIn(), u=Depends(need_trader)):
+    """Farmer declines the inspection request."""
+    S.decline_inspection(u, iid, body.reply)
+    return {"ok": True}
+
+
+@app.post("/api/inspections/{iid}/cancel")
+def inspection_cancel(iid: str, u=Depends(need_trader)):
+    """Buyer cancels their inspection request."""
+    S.cancel_inspection(u, iid)
+    return {"ok": True}
+
+
+# Legacy single-action endpoint — kept for backward compatibility
 @app.post("/api/inspections/{iid}/{action}")
 def inspection_action(iid: str, action: str, body: ReplyIn = ReplyIn(), u=Depends(need_trader)):
-    S.respond_inspection(u, iid, action, body.reply)
-    return {"ok": True}
+    """Legacy: schedule/decline/done/cancel via single endpoint."""
+    if action == "schedule":
+        # old behavior: farmer schedules with reply text
+        return S.farmer_propose_time(u, iid, body.reply or "সময় নিশ্চিত করা হবে", body.reply)
+    elif action == "decline":
+        S.decline_inspection(u, iid, body.reply)
+        return {"ok": True}
+    elif action == "done":
+        return S.buyer_report_inspection_done(u, iid)
+    elif action == "cancel":
+        S.cancel_inspection(u, iid)
+        return {"ok": True}
+    raise HTTPException(404, "অজানা কাজ")
 
 
 # ---------------------------------------------------------------- offers, payments, orders
@@ -424,6 +490,41 @@ def offer_action(oid: str, action: str, body: OfferAction = OfferAction(), u=Dep
     return S.respond_offer(u, oid, action, body.price, body.reason)
 
 
+# ---------------------------------------------------------------- Transport negotiation endpoints
+class TransportProposalIn(BaseModel):
+    buyer_pct: float = Field(ge=0, le=100)
+    seller_pct: float = Field(ge=0, le=100)
+    note: str = Field("", max_length=200)
+
+
+@app.post("/api/orders/{oid}/transport/propose")
+def transport_propose(oid: str, body: TransportProposalIn, u=Depends(need_trader)):
+    """Propose a new transport cost split (buyer_pct + seller_pct must = 100)."""
+    return S.propose_transport_split(u, oid, body.buyer_pct, body.seller_pct, body.note)
+
+
+class TransportRespondIn(BaseModel):
+    action: str = Field(pattern="^(accept|reject)$")
+    note: str = Field("", max_length=200)
+
+
+@app.post("/api/orders/{oid}/transport/proposals/{pid}/respond")
+def transport_respond(oid: str, pid: str, body: TransportRespondIn, u=Depends(need_trader)):
+    """Accept or reject a transport cost proposal."""
+    return S.respond_transport_proposal(u, oid, pid, body.action, body.note)
+
+
+@app.get("/api/orders/{oid}/transport")
+def transport_negotiation(oid: str, u=Depends(need_trader)):
+    """Get transport negotiation state for an order."""
+    o = S.get_order(oid, u)
+    tn = S.get_transport_negotiation(oid)
+    if not tn:
+        raise HTTPException(404, "পরিবহন চুক্তির তথ্য পাওয়া যায়নি")
+    return tn
+
+
+# ---------------------------------------------------------------- payments
 class PayIn(BaseModel):
     purpose: str = Field(pattern="^(order|booking|plus)$")
     ref: Optional[str] = None
@@ -478,7 +579,7 @@ def order_rate(oid: str, body: RateIn, u=Depends(need_trader)):
     return {"ok": True}
 
 
-# ---------------------------------------------------------------- transport
+# ---------------------------------------------------------------- transport bookings
 @app.get("/api/quote")
 def quote(src: str, dst: str, qty: float, u=Depends(get_user)):
     return S.quote_for(u or {"id": "", "plus_until": 0}, src, dst, qty)
@@ -550,7 +651,7 @@ def read_one(nid: str, u=Depends(need_user)):
     return {"ok": True}
 
 
-# ---------------------------------------------------------------- operations team (admin): trucks, bookings, users
+# ---------------------------------------------------------------- admin: trucks, bookings, users
 class StatusIn(BaseModel):
     status: str
     truck: Optional[str] = None
@@ -604,7 +705,7 @@ def admin_verify(uid: str, u=Depends(need_admin)):
     return {"ok": True}
 
 
-# ---------------------------------------------------------------- AI (real staples model) + demo + frontend
+# ---------------------------------------------------------------- AI + demo + frontend
 @app.get("/api/ai/summary")
 def ai_summary():
     return AI.summary()
@@ -625,7 +726,6 @@ def reset():
     return {"ok": True}
 
 
-# AI advisor (simulated vegetable market data) lives in its own module
 from app.ai_routes import router as ai_router  # noqa: E402
 app.include_router(ai_router)
 
