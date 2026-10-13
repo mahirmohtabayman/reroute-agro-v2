@@ -57,6 +57,20 @@ def deal(listing, buyer, qty, price, transport="reroute", split="half", counter=
     else:
         r = S.respond_offer(U(l["uid"]), o["id"], "accept")
     order = r["order"]
+    # Auto-confirm transport negotiation for seed data (no real negotiation needed)
+    if transport == "reroute":
+        tn = db.one("SELECT * FROM transport_negotiations WHERE order_id=?", (order["id"],))
+        if tn and tn["status"] != "agreed":
+            # Find the pending proposal and auto-accept it
+            prop = db.one("SELECT * FROM transport_proposals WHERE negotiation=? AND status='pending' ORDER BY created DESC LIMIT 1",
+                         (tn["id"],))
+            if prop:
+                db.update("transport_proposals", prop["id"], status="accepted")
+                S._confirm_transport_agreement(tn["id"], prop["buyer_pct"], prop["seller_pct"],
+                                               prop["buyer_amt"], prop["seller_amt"])
+                S._apply_agreed_transport_to_order(order["id"], prop["buyer_amt"], prop["seller_amt"],
+                                                   prop["buyer_pct"], prop["seller_pct"])
+                order = db.one("SELECT * FROM orders WHERE id=?", (order["id"],))
     p = S.start_payment(U(buyer), "order", order["id"], method)
     if p["status"] == "failed":                       # e.g. not enough in the wallet: pay by bKash instead
         p = S.start_payment(U(buyer), "order", order["id"], "bkash")
@@ -65,6 +79,8 @@ def deal(listing, buyer, qty, price, transport="reroute", split="half", counter=
     if not finish:
         return order
     if transport == "reroute":
+        # Re-fetch order since booking was created by transport agreement
+        order = db.one("SELECT * FROM orders WHERE id=?", (order["id"],))
         b = order["booking"]
         S.set_booking_status(b, "confirmed", truck=truck)
         S.set_booking_status(b, "pickup_scheduled", pickup_time="সকাল ৭টা")
