@@ -8,7 +8,7 @@ from pathlib import Path
 
 DB_PATH = Path(os.environ.get("DB_PATH", Path(__file__).resolve().parents[1] / "data" / "reroute.db"))
 _lock = threading.RLock()
-SCHEMA_VERSION = 6
+SCHEMA_VERSION = 7
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, role TEXT, name TEXT, biz TEXT, phone TEXT UNIQUE, place TEXT,
@@ -38,7 +38,16 @@ CREATE TABLE IF NOT EXISTS booking_events (id TEXT PRIMARY KEY, booking TEXT, st
 CREATE TABLE IF NOT EXISTS trucks (id TEXT PRIMARY KEY, company TEXT, driver TEXT, phone TEXT, number TEXT,
   vehicle TEXT, place TEXT, areas TEXT, status TEXT, trips INTEGER DEFAULT 0);
 CREATE TABLE IF NOT EXISTS inspections (id TEXT PRIMARY KEY, listing TEXT, buyer TEXT, seller TEXT, kind TEXT,
-  pref TEXT, note TEXT, status TEXT, reply TEXT, created INTEGER, updated INTEGER);
+  pref TEXT, note TEXT, status TEXT, reply TEXT, created INTEGER, updated INTEGER,
+  proposed_time TEXT, confirmed_time TEXT, buyer_confirmed_at INTEGER,
+  buyer_done_at INTEGER, seller_verified_at INTEGER, scheduled_at INTEGER);
+CREATE TABLE IF NOT EXISTS transport_negotiations (id TEXT PRIMARY KEY, order_id TEXT, buyer TEXT, seller TEXT,
+  t_total REAL, status TEXT, agreed_buyer_pct REAL, agreed_seller_pct REAL,
+  agreed_buyer_amt REAL, agreed_seller_amt REAL,
+  created INTEGER, updated INTEGER, version INTEGER DEFAULT 1);
+CREATE TABLE IF NOT EXISTS transport_proposals (id TEXT PRIMARY KEY, negotiation TEXT, proposer TEXT, recipient TEXT,
+  buyer_pct REAL, seller_pct REAL, buyer_amt REAL, seller_amt REAL,
+  status TEXT, note TEXT, created INTEGER, version INTEGER);
 CREATE TABLE IF NOT EXISTS payments (id TEXT PRIMARY KEY, uid TEXT, purpose TEXT, ref TEXT, amount REAL, method TEXT,
   status TEXT, created INTEGER, verified_at INTEGER, txn TEXT, message TEXT);
 CREATE TABLE IF NOT EXISTS wallet_tx (id TEXT PRIMARY KEY, uid TEXT, amount REAL, kind TEXT, ref TEXT, note TEXT, at INTEGER);
@@ -51,13 +60,26 @@ CREATE TABLE IF NOT EXISTS ratings (id TEXT PRIMARY KEY, order_id TEXT, "from" T
   text TEXT, at INTEGER);
 CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, val TEXT);
 """
+
 TABLES = ["meta", "users", "stock", "listings", "offers", "offer_events", "orders", "bookings", "booking_events", "trucks",
-          "inspections", "payments", "wallet_tx", "points_tx", "entries", "notifs", "ratings"]
+          "inspections", "transport_negotiations", "transport_proposals", "payments", "wallet_tx", "points_tx", "entries", "notifs", "ratings"]
 
+MIGRATIONS = [
+    """ALTER TABLE inspections ADD COLUMN proposed_time TEXT""",
+    """ALTER TABLE inspections ADD COLUMN confirmed_time TEXT""",
+    """ALTER TABLE inspections ADD COLUMN buyer_confirmed_at INTEGER""",
+    """ALTER TABLE inspections ADD COLUMN buyer_done_at INTEGER""",
+    """ALTER TABLE inspections ADD COLUMN seller_verified_at INTEGER""",
+    """ALTER TABLE inspections ADD COLUMN scheduled_at INTEGER""",
+    """CREATE TABLE IF NOT EXISTS transport_negotiations (id TEXT PRIMARY KEY, order_id TEXT, buyer TEXT, seller TEXT,
+      t_total REAL, status TEXT, agreed_buyer_pct REAL, agreed_seller_pct REAL,
+      agreed_buyer_amt REAL, agreed_seller_amt REAL,
+      created INTEGER, updated INTEGER, version INTEGER DEFAULT 1)""",
+    """CREATE TABLE IF NOT EXISTS transport_proposals (id TEXT PRIMARY KEY, negotiation TEXT, proposer TEXT, recipient TEXT,
+      buyer_pct REAL, seller_pct REAL, buyer_amt REAL, seller_amt REAL,
+      status TEXT, note TEXT, created INTEGER, version INTEGER)""",
+]
 
-# ---------------------------------------------------------------- two backends
-# DATABASE_URL set (e.g. a free Neon / Supabase PostgreSQL) → data is permanent.
-# Not set → a local SQLite file (fine for development and quick demos).
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 PG = DATABASE_URL.startswith(("postgres://", "postgresql://"))
 
@@ -68,7 +90,6 @@ if PG:
 
 
 def _pg_sql(sql):
-    """Write SQL once in SQLite style; translate the few differences for PostgreSQL."""
     sql = sql.replace("?", "%s")
     sql = re.sub(r"\bMAX\(0,", "GREATEST(0,", sql)
     return sql
@@ -80,7 +101,6 @@ def _pg_schema():
 
 def connect():
     if PG:
-        # prepare_threshold=None: works behind connection poolers (Neon / Supabase pooled URLs)
         return psycopg.connect(DATABASE_URL, autocommit=True, row_factory=dict_row, connect_timeout=15,
                                prepare_threshold=None)
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -97,7 +117,6 @@ def _clean(row):
 
 
 def _execute(sql, args=()):
-    """Run one statement. A cloud database may drop idle connections, so reconnect once and retry."""
     global CON
     if PG:
         for attempt in (1, 2):
@@ -167,6 +186,15 @@ def now_ms():
     return int(time.time() * 1000)
 
 
+def _apply_migrations():
+    """Safely apply schema migrations for existing databases."""
+    for stmt in MIGRATIONS:
+        try:
+            run(stmt)
+        except Exception:
+            pass
+
+
 def reset():
     """Drop and recreate every table."""
     with _lock:
@@ -182,7 +210,12 @@ def reset():
 
 def needs_seed():
     try:
-        if str(get_meta("schema_version")) != str(SCHEMA_VERSION):
+        ver = str(get_meta("schema_version") or "")
+        if ver != str(SCHEMA_VERSION):
+            if (val("SELECT COUNT(*) FROM users") or 0) > 0:
+                _apply_migrations()
+                set_meta("schema_version", SCHEMA_VERSION)
+                return False
             return True
         return (val("SELECT COUNT(*) FROM users") or 0) == 0
     except Exception:
