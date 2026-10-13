@@ -2562,7 +2562,238 @@ const A = {
     );
 
     await refresh();
+  },
+
+
+  /* =====================================================
+     Inspection — new multi-step workflow
+     ===================================================== */
+
+  // Legacy action kept for backward compatibility
+  insp:async d=>{
+    const action=d.v;
+    if(action==='schedule'){
+      const reply=($('#insp-reply')?.value||'').trim();
+      const time=($('#insp-time')?.value||reply||'সময় নিশ্চিত করা হবে').trim();
+      await api(`/inspections/${d.id}/propose-time`,'POST',{proposed_time:time,reply});
+    } else if(action==='decline'){
+      const reply=($('#insp-reply')?.value||'').trim();
+      await api(`/inspections/${d.id}/decline`,'POST',{reply});
+    } else if(action==='done'){
+      await api(`/inspections/${d.id}/buyer-done`,'POST');
+    } else if(action==='cancel'){
+      await api(`/inspections/${d.id}/cancel`,'POST');
+    }
+    await refresh();
+    toast('✅ হালনাগাদ হয়েছে');
+  },
+
+  // Farmer proposes inspection date/time
+  'insp-propose-time':async d=>{
+    const time=($('#insp-time')?.value||'').trim();
+    const reply=($('#insp-reply')?.value||'').trim();
+    if(!time){
+      toast('পরিদর্শনের তারিখ ও সময় দিন');
+      return;
+    }
+    await api(`/inspections/${d.id}/propose-time`,'POST',{proposed_time:time,reply});
+    await refresh();
+    toast('📅 সময় প্রস্তাব পাঠানো হয়েছে');
+  },
+
+  // Buyer confirms the proposed schedule
+  'insp-confirm-schedule':async d=>{
+    const i=(S.inspections||[]).find(x=>x.id===d.id);
+    if(!await confirmBox({
+      title:'পরিদর্শনের সময় নিশ্চিত করবেন?',
+      body:`প্রস্তাবিত সময়: ${esc(i?.proposed_time||'')}। নিশ্চিত করলে কৃষককে জানানো হবে।`,
+      ok:'হ্যাঁ, নিশ্চিত করুন'
+    })) return;
+    await api(`/inspections/${d.id}/confirm-schedule`,'POST');
+    await refresh();
+    toast('✅ পরিদর্শনের সময় নিশ্চিত হয়েছে');
+  },
+
+  // Buyer reports inspection done
+  'insp-buyer-done':async d=>{
+    if(!await confirmBox({
+      title:'মাল দেখার কথা নিশ্চিত করবেন?',
+      body:'আপনি কি সত্যিই কৃষকের খামারে গিয়ে মাল দেখেছেন? কৃষক এটি নিশ্চিত করবেন।',
+      ok:'হ্যাঁ, দেখেছি'
+    })) return;
+    await api(`/inspections/${d.id}/buyer-done`,'POST');
+    await refresh();
+    toast('🔍 পরিদর্শন রিপোর্ট পাঠানো হয়েছে');
+  },
+
+  // Farmer verifies inspection (confirm=1) or disputes (confirm=0)
+  'insp-seller-verify':async d=>{
+    const confirm=d.v==='1';
+    if(confirm){
+      if(!await confirmBox({
+        title:'পরিদর্শন নিশ্চিত করবেন?',
+        body:'ক্রেতা সত্যিই এসে মাল দেখেছেন? নিশ্চিত করলে পরিদর্শন সম্পন্ন হবে এবং ক্রেতা অফার দিতে পারবেন।',
+        ok:'হ্যাঁ, পরিদর্শন হয়েছে'
+      })) return;
+      await api(`/inspections/${d.id}/seller-verify`,'POST',{confirm:true,note:''});
+      await refresh();
+      toast('✅ পরিদর্শন সম্পন্ন নিশ্চিত হয়েছে');
+    } else {
+      const r=await confirmBox({
+        title:'পরিদর্শন অস্বীকার করবেন?',
+        body:'ক্রেতা আসেননি বলে মনে করলে "অস্বীকার করুন" চাপুন।',
+        reason:true,
+        chips:['ক্রেতা আসেননি','সময় পরিবর্তন হয়েছে','অন্য কারণ'],
+        ok:'কারণসহ অস্বীকার করুন',
+        okShort:'অস্বীকার করুন',
+        danger:true
+      });
+      if(!r) return;
+      await api(`/inspections/${d.id}/seller-verify`,'POST',{confirm:false,note:r.reason||''});
+      await refresh();
+      toast('পরিদর্শন অস্বীকার করা হয়েছে');
+    }
+  },
+
+  // Farmer declines inspection
+  'insp-decline':async d=>{
+    const r=await confirmBox({
+      title:'পরিদর্শনে রাজি নয়?',
+      body:'ক্রেতাকে কারণ জানানো হবে।',
+      reason:true,
+      chips:['এখন সুবিধা নেই','অন্য কারণ'],
+      ok:'রাজি নই',
+      danger:true
+    });
+    if(!r) return;
+    await api(`/inspections/${d.id}/decline`,'POST',{reply:r.reason||''});
+    await refresh();
+    toast('পরিদর্শনে রাজি হওয়া হয়নি');
+  },
+
+  // Buyer cancels inspection
+  'insp-cancel':async d=>{
+    if(!await confirmBox({
+      title:'পরিদর্শনের অনুরোধ বাতিল করবেন?',
+      body:'কৃষককে জানানো হবে।',
+      danger:true,
+      ok:'বাতিল করুন'
+    })) return;
+    await api(`/inspections/${d.id}/cancel`,'POST');
+    await refresh();
+    toast('পরিদর্শনের অনুরোধ বাতিল হয়েছে');
+  },
+
+
+  /* =====================================================
+     Transport Cost Negotiation
+     ===================================================== */
+
+  // Open transport proposal modal
+  'tn-propose':d=>{
+    const oid=d.oid;
+    const o=(S.orders||[]).find(x=>x.id===oid);
+    const tn=(S.transport_negotiations||{})[oid];
+    const tTotal=tn?tn.t_total:(o?o.t_total:0);
+    const isBuyer=o&&o.buyer===me().id;
+    modal(`<div class="body">
+      <h2>🚚 পরিবহন খরচের প্রস্তাব</h2>
+      <p class="muted" style="margin-top:6px">মোট ট্রাক ভাড়া: <b>${tk(tTotal)}</b></p>
+      <p class="muted sm" style="margin-top:4px">ক্রেতা ও বিক্রেতার শতাংশের যোগফল ১০০ হতে হবে।</p>
+      <div class="grid2" style="gap:10px;margin-top:12px">
+        <label class="field"><span>ক্রেতার ভাগ (%)</span>
+          <input id="tn-buyer-pct" type="number" min="0" max="100" step="1" value="${isBuyer?100:50}">
+        </label>
+        <label class="field"><span>বিক্রেতার ভাগ (%)</span>
+          <input id="tn-seller-pct" type="number" min="0" max="100" step="1" value="${isBuyer?0:50}">
+        </label>
+      </div>
+      <div id="tn-preview" class="bill" style="margin-top:10px"></div>
+      <label class="field" style="margin-top:10px"><span>নোট (ঐচ্ছিক)</span>
+        <input id="tn-note" placeholder="কারণ বা মন্তব্য">
+      </label>
+      <div class="row" style="margin-top:14px">
+        <button class="btn btn-soft grow" data-act="close">বাতিল</button>
+        <button class="btn btn-green grow" data-act="tn-propose-send" data-oid="${oid}" data-total="${tTotal}">প্রস্তাব পাঠান</button>
+      </div>
+    </div>`);
+    // live preview
+    function updatePreview(){
+      const bp=+($('#tn-buyer-pct')?.value||0);
+      const sp=+($('#tn-seller-pct')?.value||0);
+      const el=$('#tn-preview');
+      if(el) el.innerHTML=`<div><span>ক্রেতার ভাগ</span><b>${tk(Math.round(tTotal*bp/100))} (${nf(bp,1)}%)</b></div><div><span>বিক্রেতার ভাগ</span><b>${tk(Math.round(tTotal*sp/100))} (${nf(sp,1)}%)</b></div>`;
+    }
+    setTimeout(()=>{
+      $('#tn-buyer-pct')?.addEventListener('input',()=>{
+        const bp=+($('#tn-buyer-pct').value||0);
+        const sp=100-bp;
+        if($('#tn-seller-pct')) $('#tn-seller-pct').value=sp;
+        updatePreview();
+      });
+      $('#tn-seller-pct')?.addEventListener('input',()=>{
+        const sp=+($('#tn-seller-pct').value||0);
+        const bp=100-sp;
+        if($('#tn-buyer-pct')) $('#tn-buyer-pct').value=bp;
+        updatePreview();
+      });
+      updatePreview();
+    },50);
+  },
+
+  'tn-propose-send':async d=>{
+    const bp=+($('#tn-buyer-pct')?.value||0);
+    const sp=+($('#tn-seller-pct')?.value||0);
+    const note=($('#tn-note')?.value||'').trim();
+    if(Math.abs(bp+sp-100)>0.01){
+      toast('ক্রেতা ও বিক্রেতার শতাংশের যোগফল ১০০ হতে হবে');
+      return;
+    }
+    if(bp<0||sp<0||bp>100||sp>100){
+      toast('শতাংশ ০ থেকে ১০০-এর মধ্যে হতে হবে');
+      return;
+    }
+    await api(`/orders/${d.oid}/transport/propose`,'POST',{buyer_pct:bp,seller_pct:sp,note});
+    closeModal();
+    await refresh();
+    toast('🚚 পরিবহন খরচের প্রস্তাব পাঠানো হয়েছে');
+  },
+
+  'tn-accept':async d=>{
+    const oid=d.oid, pid=d.pid;
+    const tn=(S.transport_negotiations||{})[oid];
+    const prop=tn&&(tn.proposals||[]).find(p=>p.id===pid);
+    if(!await confirmBox({
+      title:'পরিবহন খরচের প্রস্তাব গ্রহণ করবেন?',
+      body:prop?`ক্রেতার ভাগ: ${tk(prop.buyer_amt)} (${nf(prop.buyer_pct,1)}%), বিক্রেতার ভাগ: ${tk(prop.seller_amt)} (${nf(prop.seller_pct,1)}%)। চুক্তি নিশ্চিত হবে।`:'প্রস্তাব গ্রহণ করবেন?',
+      ok:'গ্রহণ করুন'
+    })) return;
+    await api(`/orders/${oid}/transport/proposals/${pid}/respond`,'POST',{action:'accept',note:''});
+    await refresh();
+    toast('✅ পরিবহন চুক্তি নিশ্চিত হয়েছে');
+  },
+
+  'tn-reject':async d=>{
+    const oid=d.oid, pid=d.pid;
+    const r=await confirmBox({
+      title:'পরিবহন প্রস্তাব প্রত্যাখ্যান করবেন?',
+      body:'অন্যপক্ষকে জানানো হবে। নতুন প্রস্তাব দেওয়ার সুযোগ থাকবে।',
+      reason:true,
+      chips:['ভাগ ঠিক নেই','অন্য প্রস্তাব দিন'],
+      ok:'প্রত্যাখ্যান করুন',
+      danger:true
+    });
+    if(!r) return;
+    await api(`/orders/${oid}/transport/proposals/${pid}/respond`,'POST',{action:'reject',note:r.reason||''});
+    await refresh();
+    toast('পরিবহন প্রস্তাব প্রত্যাখ্যান করা হয়েছে');
+  },
+
+  'tn-counter':d=>{
+    // Open proposal modal (same as propose)
+    A['tn-propose'](d);
   }
+
 };
 
 
