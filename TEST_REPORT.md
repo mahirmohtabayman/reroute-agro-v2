@@ -54,6 +54,24 @@ Migrations `0001`–`0003` applied; no seeding; seeded admin's public password r
 | Full layout audit: 37 pages (public, farmer, paikar, admin incl. advisor, impact, pooling) × widths 320/375/768/1024/1440 × light/dark = **370 page views**, checking horizontal overflow and JS/console errors | First run: **1 issue** — new-listing page 29 px too wide at 320 px (a long text value in the cost summary did not wrap). Fixed; re-run at 320 px light+dark (74 page views): **no issues** |
 | Full layout audit 3.1: **43 pages** (adds `#/hisab`, `/bills`, `/entries`, `/reports` for farmer; `#/hisab`, `/reports` for paikar) × 320/375/768/1024/1440 × light/dark = **430 page views** | **no issues** (no horizontal overflow, no JS/console errors) |
 
+## 3.2 UI refinement and localisation (run 2026-10-17, local server, Chromium)
+
+| Check | Result |
+|---|---|
+| pytest, SQLite / PostgreSQL 16 | **152 passed, 1 skipped** on each (adds `tests/test_i18n.py`: catalogue well-formed; every Bangla server message has English; and `test_favicon_assets_are_served`) |
+| `tests/e2e/smoke.mjs` | **33 checks, ALL PASSED** — adds English-mode menu and wallet label, leaf favicon served, wallet balance larger than points, theme switch passes through intermediate colours |
+| Theme transition (sampled computed colours every 60 ms) | light→dark and dark→light move smoothly over ~300 ms; with `prefers-reduced-motion` the switch is instant; layout shift during the switch 0 |
+| Favicon | `/favicon.ico` (16/32/48), SVG, 16/32 px PNG, apple-touch, 192/512/maskable PWA icons all 200; no 4xx/5xx while loading the page |
+| Test matrix: public, farmer, paikar, admin × light/dark × Bangla/English × 390/1366 px (34 combinations, 5–7 pages each) | **0 issues**: no horizontal overflow, no broken images, no JS errors, no failed static requests, menu fully in the selected language |
+| Language scan, every page of all roles + assistant + notifications | Bangla mode: only the brand, IDs, file formats (PDF/CSV/JPG) and the "Switch to English" label are Latin. English mode: no half-translated sentences; remaining Bangla is names, places, truck numbers and users' notes (not translated by design) |
+| Language switch with a modal open, toast, in-place text update | modal text switches both ways and returns to the exact original; toasts and live updates translate |
+| English mode at 320/375 px on all scanned pages | no horizontal overflow (after wrapping fixes for quick links, money list, wide buttons) |
+| Full layout audit (Bangla), 43 pages × 320/375/768/1024/1440 × light/dark | **430 page views, no issues** |
+| Layout shift (local PerformanceObserver, 4 runs) | home desktop 0.411 → ≤ 0.002; home mobile ≤ 0.012; signed-in dashboard and wallet ≤ 0.004 (was up to 0.16) |
+
+Not measured here: new Lighthouse scores (run Lighthouse on the deployed site), Safari/Firefox rendering of
+`@property` (they fall back to an instant theme switch), favicon in browsers other than Chromium, a real phone.
+
 ## 4. Not tested / needs production verification
 - Smart Hisab on the live Neon database (migrations 0004/0005 were only tested on a local PostgreSQL copy of the
   previous release's schema with demo data); PDF download on Render; Web Share on a real phone.

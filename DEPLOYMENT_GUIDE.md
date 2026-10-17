@@ -83,6 +83,8 @@ Nothing in this release was deployed automatically. Follow these steps yourself.
   `defusedxml`. All have ready-made Linux wheels for Python 3.12 (checked with `pip download`), so the build
   command is unchanged. The Bengali font files are in `app/fonts/` (SIL Open Font License).
 - Receipt photos/PDFs that users attach in Smart Hisab are stored in the database, not on Render's disk.
+- 3.2 changes only the interface (no migration). Browsers that cached the old icon get the new one through
+  the `?v=2` URLs and service-worker cache v2; if a tab still shows the old icon, reload once (Ctrl+Shift+R).
 - Local disk is not persistent: all data lives in Neon.
 - Availability is not guaranteed on the free tier.
 

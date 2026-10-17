@@ -1,6 +1,52 @@
 # Changelog
 
-## 3.1 — Smart Hisab, first-party trade data, Bangla assistant (this release)
+## 3.2 — UI refinement and complete Bangla/English (this release)
+
+Presentation only: no API, database, payment, authentication or business-logic changes.
+
+### Theme switching
+- Colour tokens are registered as animatable colours (`@property`) and transition on the root element for
+  300 ms only while the user switches theme, so every surface, text, border, gradient and freshly rendered
+  element changes together. No delay, no opacity fade, no layout change; instant with reduced motion.
+  The saved theme is still applied before the first paint (no flash).
+
+### Language (Bangla / English)
+- New `web/1b_i18n_catalog.js`: whole-sentence English for about 1,300 interface strings and server messages
+  (errors, notifications, assistant answers, advisor explanations), found by scanning every Bangla string in
+  `web/*.js` and `app/*.py`. Values inside a sentence (numbers, names, crops) are placeholders.
+- The translator now uses the catalogue first, then translates sentence by sentence, keeps separators and
+  spaces, and never mixes languages: text it cannot translate completely (names, places, a user's own notes)
+  stays as written. Text and labels the app changes in place are re-translated (no stale text).
+- Bangla mode uses one glossary: এআই পরামর্শ, ওয়ালেট ব্যালেন্স, মোট বিক্রয়, …; English words such as
+  "Retraining", "export" and a file path were removed from Bangla text.
+- English mode uses consistent labels (Dashboard, Marketplace, My Listings, Offers & Orders, Transportation,
+  Stock & Accounts, Smart Hisab, AI Advisor, Points & Wallet, Wallet Balance, …).
+- The Bangla assistant's answers now follow the language; its example questions still send Bangla.
+- Known limits: names, places, truck numbers and user-written notes are not translated (by design); invoice,
+  receipt and report PDFs and the admin dataset CSV stay in Bangla.
+
+### Favicon and app icons
+- The Reroute Agro leaf logo (the header logo artwork, matching the supplied image) is now the favicon:
+  `favicon.ico` (16/32/48), 16/32/48 px PNGs, SVG, 180 px Apple touch icon, 192/512 px PWA icons and a
+  maskable icon. Served at `/favicon.ico` and `/static/icons/…?v=2`; the service worker cache moved to v2 so
+  old icons are replaced. The GitHub Pages showcase uses the same logo.
+
+### Sidebar
+- Light mode: soft sage background (`#EEF5EB`) with matching hover and active states; dark mode: forest
+  green (`#172B22`). Width, order, icons, spacing and behaviour unchanged; keyboard focus ring added.
+
+### Wallet balance card
+- Forest-green gradient card with a larger balance (tabular figures), wallet icon, lime/gold accent line;
+  dark-mode variant; shown first on phones. The points card stays as it was, one step smaller. Values still
+  come from the signed-in user's account; nothing hard-coded.
+
+### Layout stability and small-screen fixes
+- Footer starts below the fold, the sidebar's space is reserved from the first paint for signed-in users,
+  and the sidebar width animates only when the user toggles it. Locally measured layout shift: home page on
+  desktop 0.411 → 0.002; signed-in pages up to 0.16 → at most 0.004 (local measurement, not Lighthouse).
+- English labels wrap at 320 px (dashboard quick links, money list, full-width buttons).
+
+## 3.1 — Smart Hisab, first-party trade data, Bangla assistant
 
 ### Smart Hisab (one new navigation item, four tabs)
 - **হিসাব (overview)**: sales (platform vs user-reported), costs, profit/loss, receivables/payables for today,

@@ -14,7 +14,7 @@ AI-assisted selling decisions, shared truck transport and built-in bookkeeping.
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.143-009688?logo=fastapi&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169E1?logo=postgresql&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.8-F7931E?logo=scikitlearn&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-149%20passed-2E7D32)
+![Tests](https://img.shields.io/badge/tests-152%20passed-2E7D32)
 ![Status](https://img.shields.io/badge/status-hackathon%20prototype-B8860B)
 
 </div>
@@ -212,8 +212,8 @@ TEST_DATABASE_URL=postgresql://…/scratch_db pytest -q        # PostgreSQL (the
 node tests/e2e/smoke.mjs http://localhost:8000 <admin password>   # browser journey (Playwright)
 ```
 
-150 backend tests cover security, sign-up codes, concurrent payments and orders, Smart Hisab accounting,
-the trade dataset, the assistant and database migrations. They pass on both SQLite and PostgreSQL (one test per
+152 backend tests cover security, sign-up codes, concurrent payments and orders, Smart Hisab accounting,
+the trade dataset, the assistant, the Bangla/English catalogue and database migrations. They pass on both SQLite and PostgreSQL (one test per
 database applies only to the other). The browser test walks a full trade from listing to invoice and assistant
 answer. Results and what is not yet verified: [TEST_REPORT.md](TEST_REPORT.md).
 
@@ -278,6 +278,7 @@ docs/           GitHub Pages showcase and screenshots
 | [SECURITY_REVIEW.md](SECURITY_REVIEW.md) | threat review, fixes and remaining risks |
 | [TEST_REPORT.md](TEST_REPORT.md) | what was tested, results, what still needs live verification |
 | [PROJECT_AUDIT.md](PROJECT_AUDIT.md) · [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | audit findings and work plan |
+| [LOCALIZATION.md](LOCALIZATION.md) | how Bangla/English works, adding text, terminology |
 | [CHANGELOG.md](CHANGELOG.md) | release history |
 
 <div align="center">
