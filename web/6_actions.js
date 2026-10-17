@@ -509,8 +509,8 @@ function drawOtp(value=''){
       <p class="xs muted">উদাহরণ কোড · <span id="otp-left">${otpLeft()}</span></p>
     </div>
     <label class="field"><span>৫ সংখ্যার কোড দিন</span>
-      <input id="otp-in" class="otp-input" inputmode="numeric" maxlength="5" autocomplete="one-time-code" placeholder="_ _ _ _ _" value="${esc(value)}"></label>
-    ${OTP.err?`<p class="danger sm" style="margin-top:10px">${esc(OTP.err)}</p>`:''}
+      <input id="otp-in" class="otp-input" inputmode="numeric" maxlength="5" autocomplete="one-time-code" placeholder="_ _ _ _ _" value="${esc(value)}" ${OTP.err?'aria-invalid="true"':''}></label>
+    ${OTP.err?`<p class="danger sm" role="alert" style="margin-top:10px;text-align:left">${esc(OTP.err)}</p>`:''}
     <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="otp-verify">যাচাই করে অ্যাকাউন্ট খুলুন</button>
     <p class="muted sm" style="margin-top:12px">কোড পাননি? <button type="button" class="linkbtn" data-act="otp-resend">আবার পাঠান</button></p>
   </div>`);
@@ -539,7 +539,11 @@ document.addEventListener('input',e=>{
       if(f){ f.classList.remove('err'); const m=f.querySelector('.ferr'); if(m) m.remove(); }
     }
   }
-  if(d.lg!==undefined) LG[d.lg]=e.target.value;
+  if(d.lg!==undefined){
+    LG[d.lg]=e.target.value;
+    if(LG.err){ LG.err=''; const m=$('#lg-err'); if(m) m.remove(); document.querySelectorAll('[data-lg]').forEach(x=>{ x.removeAttribute('aria-invalid'); const f=x.closest('.field'); if(f) f.classList.remove('err'); }); }
+  }
+  if(d.rg!==undefined&&RGE.form){ delete RGE.form; const m=$('#rg-err'); if(m) m.remove(); }
 });
 
 /* Enter submits the login, sign-up and OTP forms */
@@ -685,15 +689,26 @@ const A = {
     const phone=onlyDigits(LG.phone);
 
     if(!/^01\d{9}$/.test(phone)||!LG.password){
-      toast('মোবাইল নম্বর আর পাসওয়ার্ড দিন');
+      LG.err='মোবাইল নম্বর আর পাসওয়ার্ড দিন';
+      render();
+      toast(LG.err,'error');
       return;
     }
 
-    await doLogin({
-      phone,
-      password:LG.password,
-      role:loginRole
-    });
+    LG.err='';
+    try{
+      await doLogin({
+        phone,
+        password:LG.password,
+        role:loginRole
+      });
+    }
+    catch(e){
+      // the server's message (e.g. wrong password) is shown under the form as well as in the toast
+      LG.err=e.message||'লগ ইন হয়নি, আবার চেষ্টা করুন';
+      render();
+      return;
+    }
 
     LG.password='';
   },
@@ -738,7 +753,15 @@ const A = {
       biz:loginRole==='paikar'&&RG.biz.trim()?RG.biz.trim():null
     };
 
-    const r=await api('/register','POST',b);
+    let r;
+    try{
+      r=await api('/register','POST',b);
+    }
+    catch(e){
+      RGE={form:e.message||'অ্যাকাউন্ট খোলা যায়নি, আবার চেষ্টা করুন'};
+      render();
+      return;
+    }
 
     OTP={...r, phone, body:b, expires:Date.now()+r.expires_in*1000, err:''};
     drawOtp();
@@ -776,7 +799,7 @@ const A = {
     const r=await api('/register','POST',OTP.body);
     OTP={...OTP, ...r, expires:Date.now()+r.expires_in*1000, err:''};
     drawOtp();
-    toast('নতুন কোড পাঠানো হয়েছে');
+    toast('নতুন কোড পাঠানো হয়েছে','info');
   },
 
   'f-crop':d=>{
@@ -884,7 +907,7 @@ const A = {
       !reason
     ){
       toast(
-        'একটি কারণ দিন, বা "কারণ ছাড়া" চাপুন'
+        'একটি কারণ দিন, বা "কারণ ছাড়া" চাপুন','error'
       );
 
       return;
@@ -964,7 +987,7 @@ const A = {
       )
     ){
       toast(
-        'পরিমাণ অন্তত ৫ মণ, সর্বনিম্ন অর্ডার ৫ মণ বা বেশি, আর দাম দিন'
+        'পরিমাণ অন্তত ৫ মণ, সর্বনিম্ন অর্ডার ৫ মণ বা বেশি, আর দাম দিন','error'
       );
 
       return;
@@ -1160,7 +1183,7 @@ const A = {
       +$('#lp-price').value;
 
     if(!(v>0)){
-      toast('দাম দিন');
+      toast('দাম দিন','error');
       return;
     }
 
@@ -1229,7 +1252,7 @@ const A = {
 
     if(!v){
       toast(
-        'সংখ্যা দিন'
+        'সংখ্যা দিন','error'
       );
 
       return;
@@ -1320,7 +1343,7 @@ const A = {
       c.kg>l.available
     ){
       toast(
-        `পরিমাণ ${monTxt(l.moq)} থেকে ${monTxt(l.available)} এর মধ্যে দিন`
+        `পরিমাণ ${monTxt(l.moq)} থেকে ${monTxt(l.available)} এর মধ্যে দিন`,'error'
       );
 
       return;
@@ -1334,7 +1357,7 @@ const A = {
       )
     ){
       toast(
-        `দাম তালিকার দাম ${tk(l.eff_price,1)} বা কম দিন`
+        `দাম তালিকার দাম ${tk(l.eff_price,1)} বা কম দিন`,'error'
       );
 
       return;
@@ -1685,7 +1708,7 @@ const A = {
     await refresh();
 
     toast(
-      'না বলা হয়েছে'
+      'না বলা হয়েছে','info'
     );
   },
 
@@ -1814,7 +1837,7 @@ const A = {
       )
     ){
       toast(
-        `দাম ${tk(o.price,1)}-এর বেশি এবং ${tk(o.listed_price,1)} বা কম দিন`
+        `দাম ${tk(o.price,1)}-এর বেশি এবং ${tk(o.listed_price,1)} বা কম দিন`,'error'
       );
 
       return;
@@ -2091,7 +2114,7 @@ const A = {
     await refresh();
 
     toast(
-      `অর্ডার বাতিল হয়েছে, ${nf(S.config.penalty)} পয়েন্ট কাটা গেছে`
+      `অর্ডার বাতিল হয়েছে, ${nf(S.config.penalty)} পয়েন্ট কাটা গেছে`,'warning'
     );
   },
 
@@ -2151,7 +2174,7 @@ const A = {
       !BK.srcAddr
     ){
       toast(
-        'ঠিকানা দিন'
+        'ঠিকানা দিন','error'
       );
 
       return;
@@ -2159,7 +2182,7 @@ const A = {
 
     if(kg<100){
       toast(
-        'অন্তত ৩ মণ দিন'
+        'অন্তত ৩ মণ দিন','error'
       );
 
       return;
@@ -2264,7 +2287,7 @@ const A = {
     await refresh();
 
     toast(
-      'বুকিং বাতিল হয়েছে'
+      'বুকিং বাতিল হয়েছে','info'
     );
   },
 
@@ -2305,7 +2328,7 @@ const A = {
       !amount
     ){
       toast(
-        'টাকার পরিমাণ দিন'
+        'টাকার পরিমাণ দিন','error'
       );
 
       return;
@@ -2317,7 +2340,7 @@ const A = {
       !(+EN.mon>0)
     ){
       toast(
-        'কত মণ দিন'
+        'কত মণ দিন','error'
       );
 
       return;
@@ -2329,7 +2352,7 @@ const A = {
       !amount
     ){
       toast(
-        'বিক্রির টাকা দিন'
+        'বিক্রির টাকা দিন','error'
       );
 
       return;
@@ -2508,7 +2531,7 @@ const A = {
     await refresh();
 
     toast(
-      'প্লাস বন্ধ করা হয়েছে, মেয়াদ পর্যন্ত চালু থাকবে'
+      'প্লাস বন্ধ করা হয়েছে, মেয়াদ পর্যন্ত চালু থাকবে','info'
     );
   },
 
@@ -2602,7 +2625,7 @@ const A = {
       !TK.number
     ){
       toast(
-        'চালক, ১১ সংখ্যার মোবাইল আর গাড়ির নম্বর দিন'
+        'চালক, ১১ সংখ্যার মোবাইল আর গাড়ির নম্বর দিন','error'
       );
 
       return;
@@ -2703,7 +2726,7 @@ const A = {
     const time=($('#insp-time')?.value||'').trim();
     const reply=($('#insp-reply')?.value||'').trim();
     if(!time){
-      toast('পরিদর্শনের তারিখ ও সময় দিন');
+      toast('পরিদর্শনের তারিখ ও সময় দিন','error');
       return;
     }
     await api(`/inspections/${d.id}/propose-time`,'POST',{proposed_time:time,reply});
@@ -2761,7 +2784,7 @@ const A = {
       if(!r) return;
       await api(`/inspections/${d.id}/seller-verify`,'POST',{confirm:false,note:r.reason||''});
       await refresh();
-      toast('পরিদর্শন অস্বীকার করা হয়েছে');
+      toast('পরিদর্শন অস্বীকার করা হয়েছে','info');
     }
   },
 
@@ -2778,7 +2801,7 @@ const A = {
     if(!r) return;
     await api(`/inspections/${d.id}/decline`,'POST',{reply:r.reason||''});
     await refresh();
-    toast('পরিদর্শনে রাজি হওয়া হয়নি');
+    toast('পরিদর্শনে রাজি হওয়া হয়নি','info');
   },
 
   // Buyer cancels inspection
@@ -2791,7 +2814,7 @@ const A = {
     })) return;
     await api(`/inspections/${d.id}/cancel`,'POST');
     await refresh();
-    toast('পরিদর্শনের অনুরোধ বাতিল হয়েছে');
+    toast('পরিদর্শনের অনুরোধ বাতিল হয়েছে','info');
   },
 
 
@@ -2856,11 +2879,11 @@ const A = {
     const sp=+($('#tn-seller-pct')?.value||0);
     const note=($('#tn-note')?.value||'').trim();
     if(Math.abs(bp+sp-100)>0.01){
-      toast('ক্রেতা ও বিক্রেতার শতাংশের যোগফল ১০০ হতে হবে');
+      toast('ক্রেতা ও বিক্রেতার শতাংশের যোগফল ১০০ হতে হবে','error');
       return;
     }
     if(bp<0||sp<0||bp>100||sp>100){
-      toast('শতাংশ ০ থেকে ১০০-এর মধ্যে হতে হবে');
+      toast('শতাংশ ০ থেকে ১০০-এর মধ্যে হতে হবে','error');
       return;
     }
     await api(`/orders/${d.oid}/transport/propose`,'POST',{buyer_pct:bp,seller_pct:sp,note});
@@ -2896,7 +2919,7 @@ const A = {
     if(!r) return;
     await api(`/orders/${oid}/transport/proposals/${pid}/respond`,'POST',{action:'reject',note:r.reason||''});
     await refresh();
-    toast('পরিবহন প্রস্তাব প্রত্যাখ্যান করা হয়েছে');
+    toast('পরিবহন প্রস্তাব প্রত্যাখ্যান করা হয়েছে','info');
   },
 
   'tn-counter':d=>{
@@ -3245,7 +3268,7 @@ document.addEventListener(
         }
         catch(err){
           toast(
-            'ছবি পড়া যায়নি'
+            'ছবি পড়া যায়নি','error'
           );
         }
       }
@@ -3269,7 +3292,7 @@ document.addEventListener(
       }
       catch(err){
         toast(
-          'ছবি পড়া যায়নি'
+          'ছবি পড়া যায়নি','error'
         );
       }
     }
@@ -3350,7 +3373,7 @@ setInterval(
               .length>80
               ? '…'
               : ''
-          )
+          ),'info'
         );
 
         const bell=
@@ -3388,7 +3411,7 @@ setInterval(
   }
   catch(e){
     $('#view').innerHTML=
-      '<div class="empty">সার্ভার চালু হচ্ছে, কয়েক সেকেন্ড পরে পাতাটি রিফ্রেশ করুন।</div>';
+      '<div class="empty-st"><h3>সার্ভারের সাথে যোগাযোগ হচ্ছে না</h3><p>সার্ভার চালু হচ্ছে, কয়েক সেকেন্ড পরে পাতাটি রিফ্রেশ করুন।</p><a class="btn btn-green" href="">আবার চেষ্টা করুন</a></div>';
 
     applyLanguage(
       $('#view')

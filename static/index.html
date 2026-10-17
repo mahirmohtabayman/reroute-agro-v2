@@ -267,6 +267,19 @@ a:hover{color:var(--green-hover);}
 .panel>.between:first-child{margin-bottom:10px;}
 .empty{border:1px dashed var(--line2); border-radius:var(--r); padding:24px; text-align:center; color:var(--muted); background:var(--surface);}
 .note,.warn,.danger,.good{border-radius:10px; padding:10px 14px; font-size:.92rem; border:1px solid transparent;}
+/* every callout carries an icon, so meaning never depends on colour alone */
+.note,.warn,.danger,.good{position:relative; padding-left:38px;}
+.note::before,.warn::before,.danger::before,.good::before{content:""; position:absolute; left:13px; top:calc(10px + .2em); width:16px; height:16px; background:currentColor; -webkit-mask:var(--ico) center/contain no-repeat; mask:var(--ico) center/contain no-repeat;}
+.note{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E");}
+.note::before{color:var(--blue);}
+.warn{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4M12 17h.01'/%3E%3C/svg%3E");}
+.warn::before{color:var(--gold);}
+.danger{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m15 9-6 6M9 9l6 6'/%3E%3C/svg%3E");}
+.good{--ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E");}
+.danger.row,.good.row{padding-left:14px;}
+.danger.row::before,.good.row::before{display:none;}
+.form-error{display:flex; gap:8px; align-items:flex-start; margin-top:14px; padding:10px 12px; border-radius:10px; background:var(--red-soft); color:var(--red); border:1px solid color-mix(in srgb,var(--red) 25%,transparent); font-size:.9rem; font-weight:600;}
+.form-error::before{content:""; flex:none; width:17px; height:17px; margin-top:.15em; background:currentColor; -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m15 9-6 6M9 9l6 6'/%3E%3C/svg%3E") center/contain no-repeat; mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m15 9-6 6M9 9l6 6'/%3E%3C/svg%3E") center/contain no-repeat;}
 .note{background:var(--blue-soft); border-color:color-mix(in srgb,var(--blue) 18%,transparent); color:var(--ink2);}
 .warn{background:var(--gold-soft); border-color:color-mix(in srgb,var(--gold) 20%,transparent); color:var(--ink2);}
 .danger{background:var(--red-soft); border-color:color-mix(in srgb,var(--red) 20%,transparent); color:var(--red); font-weight:600;}
@@ -524,6 +537,16 @@ a.kpi:hover{color:var(--ink); border-color:var(--line2);}
 .x{position:absolute; top:14px; right:14px; width:34px; height:34px; border-radius:9px; border:1px solid var(--line); background:var(--surface); color:var(--muted); font-size:.95rem; z-index:2; display:grid; place-items:center;}
 .x:hover{background:var(--surface2); color:var(--ink);}
 .toast{position:fixed; left:50%; top:calc(76px + env(safe-area-inset-top,0px)); transform:translate(-50%,-12px); background:var(--ink); color:var(--surface); padding:11px 18px; border-radius:12px; opacity:0; pointer-events:none; transition:.25s; z-index:80; max-width:min(560px,92vw); text-align:center; font-weight:500; font-size:.94rem; box-shadow:var(--shadow-lg);}
+.toast{display:flex; align-items:flex-start; gap:10px; text-align:left; border:1px solid transparent; border-left-width:4px;}
+.toast .i{flex:none; width:19px; height:19px; margin-top:.1em;}
+.toast.t-success{background:var(--surface); color:var(--ink); border-color:color-mix(in srgb,var(--green) 30%,var(--line)); border-left-color:var(--green);}
+.toast.t-success .i{color:var(--green);}
+.toast.t-error{background:var(--surface); color:var(--ink); border-color:color-mix(in srgb,var(--red) 35%,var(--line)); border-left-color:var(--red);}
+.toast.t-error .i{color:var(--red);}
+.toast.t-warning{background:var(--surface); color:var(--ink); border-color:color-mix(in srgb,var(--gold) 35%,var(--line)); border-left-color:var(--harvest);}
+.toast.t-warning .i{color:var(--gold);}
+.toast.t-info{background:var(--surface); color:var(--ink); border-color:color-mix(in srgb,var(--blue) 30%,var(--line)); border-left-color:var(--blue);}
+.toast.t-info .i{color:var(--blue);}
 .toast.on{opacity:1; transform:translate(-50%,0);}
 .banner{display:flex; gap:12px; align-items:center; border-radius:12px; padding:10px 14px; margin-bottom:10px; background:var(--green-soft); border:1px solid color-mix(in srgb,var(--green) 20%,transparent); font-size:.92rem; font-weight:500;}
 .banner.cancel{background:var(--red-soft); border-color:color-mix(in srgb,var(--red) 20%,transparent);}
@@ -769,6 +792,22 @@ a.kpi.kpi-feature:hover{color:#F1F6F0; border-color:transparent;}
 }
 .theme-anim,.theme-anim *{transition:background-color .3s ease,color .3s ease,border-color .3s ease,fill .3s ease!important;}
 
+/* ---------- signed-in desktop layout: left sidebar navigation ---------- */
+@media (min-width:1024px){
+  body.authed{--side:236px;}
+  body.authed header.top .hrow{max-width:none; padding-left:24px; padding-right:24px;}
+  body.authed .tnav{position:fixed; z-index:25; top:calc(65px + env(safe-area-inset-top,0px)); bottom:0; left:0; width:var(--side); border-bottom:0; border-right:1px solid var(--line); overflow-y:auto; padding:18px 12px 24px;}
+  body.authed .tnav .wrap{flex-direction:column; gap:2px; padding:0; max-width:none; overflow:visible;}
+  body.authed .tnav a{border-bottom:0; margin:0; border-radius:10px; padding:10px 12px; font-size:.95rem; position:relative;}
+  body.authed .tnav a .i{width:18px; height:18px;}
+  body.authed .tnav a:hover{background:var(--surface2);}
+  body.authed .tnav a.on{background:var(--green-soft); color:var(--ink);}
+  body.authed .tnav a.on::before{content:""; position:absolute; left:-12px; top:8px; bottom:8px; width:3px; border-radius:0 3px 3px 0; background:var(--green);}
+  body.authed .tnav a .cnt{margin-left:auto;}
+  body.authed main,body.authed footer{margin-left:var(--side);}
+  body.authed main .wrap,body.authed footer .wrap{max-width:1180px; padding-left:32px; padding-right:32px;}
+}
+
 /* ---------- responsive ---------- */
 @media (max-width:1080px){
   .filters{grid-template-columns:repeat(3,1fr);}
@@ -936,6 +975,11 @@ function enDigits(v){ return String(v).replace(/[০-৯]/g,d=>String(BN_DIGITS.
 
 /* Long phrases first. These keep the English UI natural instead of word-by-word. */
 const I18N_PHRASES = [
+  ['লগ ইন হয়নি, আবার চেষ্টা করুন','Login failed, please try again'],
+  ['অ্যাকাউন্ট খোলা যায়নি, আবার চেষ্টা করুন','Could not create the account, please try again'],
+  ['সার্ভারের সাথে যোগাযোগ হচ্ছে না','Cannot reach the server'],
+  ['সার্ভার চালু হচ্ছে, কয়েক সেকেন্ড পরে পাতাটি রিফ্রেশ করুন।','The server is starting. Please refresh in a few seconds.'],
+  ['আবার চেষ্টা করুন','Try again'],
   ['তথ্য দিন, তারপর মোবাইলে আসা কোড দিয়ে যাচাই করুন।','Fill in your details, then verify with the code sent to your phone.'],
   ['অ্যাকাউন্টের ধরন','Account type'],
   ['ব্যক্তিগত তথ্য','Personal details'],
@@ -1869,7 +1913,7 @@ async function api(path, method='GET', body){
     try{ data=await r.json(); }catch(e){}
   }
   catch(e){
-    toast('সার্ভারের সাথে যোগাযোগ হচ্ছে না, একটু পরে চেষ্টা করুন');
+    toast('সার্ভারের সাথে যোগাযোগ হচ্ছে না, একটু পরে চেষ্টা করুন','error');
     throw e;
   }
 
@@ -1877,7 +1921,7 @@ async function api(path, method='GET', body){
 
   if(!r.ok){
     const d=data&&data.detail;
-    toast(typeof d==='string'?d:(Array.isArray(d)?'তথ্য ঠিকভাবে দিন':'কাজটি হয়নি, আবার চেষ্টা করুন'));
+    toast(typeof d==='string'?d:(Array.isArray(d)?'তথ্য ঠিকভাবে দিন':'কাজটি হয়নি, আবার চেষ্টা করুন'),'error');
     throw new Error(d);
   }
 
@@ -1916,12 +1960,18 @@ const roleBn = r => (isEn()?{farmer:'Farmer',paikar:'Wholesaler',admin:'Operatio
 
 let tT;
 
-function toast(m){
-  const t=$('#toast');
-  t.textContent=isEn()?translateBnText(m):m;
+/* kind: 'success' (default) | 'error' | 'warning' | 'info' — sets colour, icon and how screen readers announce it */
+function toast(m, kind='success'){
+  const t=$('#toast'), span=document.createElement('span');
+  span.textContent=isEn()?translateBnText(m):m;
+  t.className='toast t-'+kind;
+  t.setAttribute('role',kind==='error'?'alert':'status');
+  t.innerHTML=ic({error:'xc',warning:'alert',info:'info',success:'checkc'}[kind]||'checkc');
+  t.appendChild(span);
+  void t.offsetWidth;
   t.classList.add('on');
   clearTimeout(tT);
-  tT=setTimeout(()=>t.classList.remove('on'),3000);
+  tT=setTimeout(()=>t.classList.remove('on'),kind==='error'?5200:3200);
 }
 
 function say(text){
@@ -1938,7 +1988,7 @@ function say(text){
       speechSynthesis.speak(u);
     }
     else{
-      toast('🔊 '+spoken.slice(0,90));
+      toast('🔊 '+spoken.slice(0,90),'info');
     }
   }
   catch(e){}
@@ -2440,7 +2490,7 @@ ${(S.listings||[]).some(l=>l.status==='active')?`<section class="home-sec">
 
 /* ---------- login & register ---------- */
 let loginRole='farmer';
-let LG={phone:'',password:''};
+let LG={phone:'',password:'',err:''};
 let RG={name:'',biz:'',phone:'',password:'',confirm:'',place:'rajshahi',upazila:'',market:''}, RGE={};
 function pwInput(id, key, store, ac, ph){
   const v=(store==='LG'?LG:RG)[key];
@@ -2454,8 +2504,9 @@ V.login = () => {
     <h1>লগ ইন</h1><p class="muted sub">আপনি কে, বাছুন</p>
     <div class="choice c3">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪'],['admin','অপারেশন','🛠️']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div>
     ${loginRole!=='admin'?`<div class="panel" style="margin-top:16px">
-      <label class="field" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" data-lg="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(LG.phone)}"></label>
-      <label class="field"><span>পাসওয়ার্ড</span>${pwInput('lg-password','password','LG','current-password','আপনার পাসওয়ার্ড')}</label>
+      <label class="field${LG.err?' err':''}" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" data-lg="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(LG.phone)}" ${LG.err?'aria-invalid="true" aria-describedby="lg-err"':''}></label>
+      <label class="field${LG.err?' err':''}"><span>পাসওয়ার্ড</span>${pwInput('lg-password','password','LG','current-password','আপনার পাসওয়ার্ড')}</label>
+      ${LG.err?`<p class="form-error" id="lg-err" role="alert">${esc(LG.err)}</p>`:''}
       <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="login-phone">ঢুকুন</button>
       <p class="muted sm" style="margin-top:12px;text-align:center">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p>
       <p class="muted xs demo-pw">ডেমো অ্যাকাউন্টগুলোর পাসওয়ার্ড: <b data-i18n-skip>123456</b></p></div>`:''}
@@ -2464,14 +2515,14 @@ V.login = () => {
   </div>`;
 };
 V.register = () => {
-  const E=RGE, err=k=>E[k]?`<small class="ferr">${E[k]}</small>`:'', cls=k=>E[k]?' err':'';
+  const E=RGE, err=k=>E[k]?`<small class="ferr" id="rg-${k}-err">${E[k]}</small>`:'', cls=k=>E[k]?' err':'';
   return `<div class="auth"><h1>নতুন অ্যাকাউন্ট</h1><p class="muted sub">তথ্য দিন, তারপর মোবাইলে আসা কোড দিয়ে যাচাই করুন।</p>
   <div class="field" style="margin-top:0"><span>অ্যাকাউন্টের ধরন</span><div class="choice c2">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div></div>
   <div class="panel" style="margin-top:16px">
     <h3 class="form-sec">${ic('user')} ব্যক্তিগত তথ্য</h3>
-    <label class="field${cls('name')}"><span>পুরো নাম</span><input id="rg-name" data-rg="name" autocomplete="name" value="${esc(RG.name)}" placeholder="যেমন: রহিম উদ্দিন">${err('name')}</label>
+    <label class="field${cls('name')}"><span>পুরো নাম</span><input id="rg-name" data-rg="name" ${E.name?'aria-invalid="true" aria-describedby="rg-name-err"':''} autocomplete="name" value="${esc(RG.name)}" placeholder="যেমন: রহিম উদ্দিন">${err('name')}</label>
     ${loginRole==='paikar'?`<label class="field"><span>আড়ত / ব্যবসার নাম (ঐচ্ছিক)</span><input id="rg-biz" data-rg="biz" value="${esc(RG.biz)}"></label>`:''}
-    <label class="field${cls('phone')}"><span>মোবাইল নম্বর</span><input id="rg-phone" data-rg="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(RG.phone)}">${err('phone')}</label>
+    <label class="field${cls('phone')}"><span>মোবাইল নম্বর</span><input id="rg-phone" data-rg="phone" ${E.phone?'aria-invalid="true" aria-describedby="rg-phone-err"':''} inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(RG.phone)}">${err('phone')}</label>
     <h3 class="form-sec">${ic('lock')} পাসওয়ার্ড</h3>
     <div class="grid2 tight">
       <label class="field${cls('password')}"><span>পাসওয়ার্ড</span>${pwInput('rg-password','password','RG','new-password','অন্তত ৬ অক্ষর')}${err('password')}</label>
@@ -2479,9 +2530,10 @@ V.register = () => {
     <h3 class="form-sec">${ic('pin')} ঠিকানা</h3>
     <div class="grid2 tight">
       <label class="field"><span>জেলা</span><select id="rg-place" data-rg="place">${Object.entries(PLACES).map(([k,p])=>`<option value="${k}" ${RG.place===k?'selected':''}>${p.n}</option>`).join('')}</select></label>
-      <label class="field${cls('upazila')}"><span>উপজেলা</span><input id="rg-upazila" data-rg="upazila" value="${esc(RG.upazila)}" placeholder="যেমন: পবা">${err('upazila')}</label></div>
-    <label class="field${cls('market')}"><span>নিকটবর্তী বাজারের নাম</span><input id="rg-market" data-rg="market" value="${esc(RG.market)}" placeholder="যেমন: নওহাটা বাজার">${err('market')}</label>
+      <label class="field${cls('upazila')}"><span>উপজেলা</span><input id="rg-upazila" data-rg="upazila" ${E.upazila?'aria-invalid="true" aria-describedby="rg-upazila-err"':''} value="${esc(RG.upazila)}" placeholder="যেমন: পবা">${err('upazila')}</label></div>
+    <label class="field${cls('market')}"><span>নিকটবর্তী বাজারের নাম</span><input id="rg-market" data-rg="market" ${E.market?'aria-invalid="true" aria-describedby="rg-market-err"':''} value="${esc(RG.market)}" placeholder="যেমন: নওহাটা বাজার">${err('market')}</label>
     <p class="muted xs" style="margin-top:6px">এখন এই জেলাগুলোতে সেবা চালু আছে।</p>
+    ${E.form?`<p class="form-error" id="rg-err" role="alert">${esc(E.form)}</p>`:''}
     <button class="btn btn-green btn-wide" style="margin-top:18px" data-act="register">অ্যাকাউন্ট খুলুন</button>
     <p class="muted sm" style="margin-top:12px">শুধু কৃষক ও পাইকারদের জন্য পাইকারি প্ল্যাটফর্ম। সর্বনিম্ন অর্ডার ${monTxt(S.config.min_order)}।</p>
     <p class="muted sm" style="margin-top:6px;text-align:center">আগেই অ্যাকাউন্ট আছে? <a href="#/login">লগ ইন করুন</a></p></div></div>`;
@@ -6426,9 +6478,9 @@ function taDecide(p, r){
   if (!r) { taRun(p); return; }                                   // AI unavailable: never block the trade
   if (r.status === 'loss') { taModal(p, r); return; }
   if (r.status === 'unknown') {
-    toast('নির্ভরযোগ্য লাভ-ক্ষতির হিসাবের জন্য উৎপাদন/কেনা খরচ দরকার। এখন হাতে থাকবে আনুমানিক ' + tk(r.in_hand));
+    toast('নির্ভরযোগ্য লাভ-ক্ষতির হিসাবের জন্য উৎপাদন/কেনা খরচ দরকার। এখন হাতে থাকবে আনুমানিক ' + tk(r.in_hand),'warning');
   } else if (r.side === 'buyer') {
-    toast(r.risk_range ? `আনুমানিক লাভ ${tk(r.net)}, তবে দাম কমলে লোকসানের ঝুঁকি আছে` : `আনুমানিক লাভজনক: প্রায় ${tk(r.net)} লাভ`);
+    toast(r.risk_range ? `আনুমানিক লাভ ${tk(r.net)}, তবে দাম কমলে লোকসানের ঝুঁকি আছে` : `আনুমানিক লাভজনক: প্রায় ${tk(r.net)} লাভ`, r.risk_range ? 'warning' : 'success');
   } else {
     toast(`আনুমানিক লাভজনক: খরচ বাদে প্রায় ${tk(r.profit)} লাভ`);
   }
@@ -6491,7 +6543,7 @@ document.addEventListener('click', e => {
   e.stopImmediatePropagation();
   if (TA.busy) return;
   TA.busy = true;
-  toast('লাভ-ক্ষতি হিসাব হচ্ছে...');
+  toast('লাভ-ক্ষতি হিসাব হচ্ছে...','info');
   advFetch(p.path).catch(() => null).then(r => { TA.busy = false; taDecide(p, r); });
 }, true);
 
@@ -6512,7 +6564,7 @@ document.addEventListener('click', e => {
 async function advDownload(fmt, source){
   try {
     const r = await fetch(`/api/ai/advisor/admin/export?fmt=${fmt}&source=${source}`, {headers: TOKEN ? {'X-Token': TOKEN} : {}});
-    if (!r.ok) { toast('Export হয়নি, আবার চেষ্টা করুন'); return; }
+    if (!r.ok) { toast('Export হয়নি, আবার চেষ্টা করুন','error'); return; }
     const blob = await r.blob(), cd = r.headers.get('Content-Disposition') || '', m = cd.match(/filename="([^"]+)"/);
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -6520,9 +6572,9 @@ async function advDownload(fmt, source){
     document.body.appendChild(a);
     a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
-    toast('ডাউনলোড শুরু হয়েছে');
+    toast('ডাউনলোড শুরু হয়েছে','info');
   } catch (e) {
-    toast('Export হয়নি, আবার চেষ্টা করুন');
+    toast('Export হয়নি, আবার চেষ্টা করুন','error');
   }
 }
 
@@ -7136,8 +7188,8 @@ function drawOtp(value=''){
       <p class="xs muted">উদাহরণ কোড · <span id="otp-left">${otpLeft()}</span></p>
     </div>
     <label class="field"><span>৫ সংখ্যার কোড দিন</span>
-      <input id="otp-in" class="otp-input" inputmode="numeric" maxlength="5" autocomplete="one-time-code" placeholder="_ _ _ _ _" value="${esc(value)}"></label>
-    ${OTP.err?`<p class="danger sm" style="margin-top:10px">${esc(OTP.err)}</p>`:''}
+      <input id="otp-in" class="otp-input" inputmode="numeric" maxlength="5" autocomplete="one-time-code" placeholder="_ _ _ _ _" value="${esc(value)}" ${OTP.err?'aria-invalid="true"':''}></label>
+    ${OTP.err?`<p class="danger sm" role="alert" style="margin-top:10px;text-align:left">${esc(OTP.err)}</p>`:''}
     <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="otp-verify">যাচাই করে অ্যাকাউন্ট খুলুন</button>
     <p class="muted sm" style="margin-top:12px">কোড পাননি? <button type="button" class="linkbtn" data-act="otp-resend">আবার পাঠান</button></p>
   </div>`);
@@ -7166,7 +7218,11 @@ document.addEventListener('input',e=>{
       if(f){ f.classList.remove('err'); const m=f.querySelector('.ferr'); if(m) m.remove(); }
     }
   }
-  if(d.lg!==undefined) LG[d.lg]=e.target.value;
+  if(d.lg!==undefined){
+    LG[d.lg]=e.target.value;
+    if(LG.err){ LG.err=''; const m=$('#lg-err'); if(m) m.remove(); document.querySelectorAll('[data-lg]').forEach(x=>{ x.removeAttribute('aria-invalid'); const f=x.closest('.field'); if(f) f.classList.remove('err'); }); }
+  }
+  if(d.rg!==undefined&&RGE.form){ delete RGE.form; const m=$('#rg-err'); if(m) m.remove(); }
 });
 
 /* Enter submits the login, sign-up and OTP forms */
@@ -7312,15 +7368,26 @@ const A = {
     const phone=onlyDigits(LG.phone);
 
     if(!/^01\d{9}$/.test(phone)||!LG.password){
-      toast('মোবাইল নম্বর আর পাসওয়ার্ড দিন');
+      LG.err='মোবাইল নম্বর আর পাসওয়ার্ড দিন';
+      render();
+      toast(LG.err,'error');
       return;
     }
 
-    await doLogin({
-      phone,
-      password:LG.password,
-      role:loginRole
-    });
+    LG.err='';
+    try{
+      await doLogin({
+        phone,
+        password:LG.password,
+        role:loginRole
+      });
+    }
+    catch(e){
+      // the server's message (e.g. wrong password) is shown under the form as well as in the toast
+      LG.err=e.message||'লগ ইন হয়নি, আবার চেষ্টা করুন';
+      render();
+      return;
+    }
 
     LG.password='';
   },
@@ -7365,7 +7432,15 @@ const A = {
       biz:loginRole==='paikar'&&RG.biz.trim()?RG.biz.trim():null
     };
 
-    const r=await api('/register','POST',b);
+    let r;
+    try{
+      r=await api('/register','POST',b);
+    }
+    catch(e){
+      RGE={form:e.message||'অ্যাকাউন্ট খোলা যায়নি, আবার চেষ্টা করুন'};
+      render();
+      return;
+    }
 
     OTP={...r, phone, body:b, expires:Date.now()+r.expires_in*1000, err:''};
     drawOtp();
@@ -7403,7 +7478,7 @@ const A = {
     const r=await api('/register','POST',OTP.body);
     OTP={...OTP, ...r, expires:Date.now()+r.expires_in*1000, err:''};
     drawOtp();
-    toast('নতুন কোড পাঠানো হয়েছে');
+    toast('নতুন কোড পাঠানো হয়েছে','info');
   },
 
   'f-crop':d=>{
@@ -7511,7 +7586,7 @@ const A = {
       !reason
     ){
       toast(
-        'একটি কারণ দিন, বা "কারণ ছাড়া" চাপুন'
+        'একটি কারণ দিন, বা "কারণ ছাড়া" চাপুন','error'
       );
 
       return;
@@ -7591,7 +7666,7 @@ const A = {
       )
     ){
       toast(
-        'পরিমাণ অন্তত ৫ মণ, সর্বনিম্ন অর্ডার ৫ মণ বা বেশি, আর দাম দিন'
+        'পরিমাণ অন্তত ৫ মণ, সর্বনিম্ন অর্ডার ৫ মণ বা বেশি, আর দাম দিন','error'
       );
 
       return;
@@ -7787,7 +7862,7 @@ const A = {
       +$('#lp-price').value;
 
     if(!(v>0)){
-      toast('দাম দিন');
+      toast('দাম দিন','error');
       return;
     }
 
@@ -7856,7 +7931,7 @@ const A = {
 
     if(!v){
       toast(
-        'সংখ্যা দিন'
+        'সংখ্যা দিন','error'
       );
 
       return;
@@ -7947,7 +8022,7 @@ const A = {
       c.kg>l.available
     ){
       toast(
-        `পরিমাণ ${monTxt(l.moq)} থেকে ${monTxt(l.available)} এর মধ্যে দিন`
+        `পরিমাণ ${monTxt(l.moq)} থেকে ${monTxt(l.available)} এর মধ্যে দিন`,'error'
       );
 
       return;
@@ -7961,7 +8036,7 @@ const A = {
       )
     ){
       toast(
-        `দাম তালিকার দাম ${tk(l.eff_price,1)} বা কম দিন`
+        `দাম তালিকার দাম ${tk(l.eff_price,1)} বা কম দিন`,'error'
       );
 
       return;
@@ -8312,7 +8387,7 @@ const A = {
     await refresh();
 
     toast(
-      'না বলা হয়েছে'
+      'না বলা হয়েছে','info'
     );
   },
 
@@ -8441,7 +8516,7 @@ const A = {
       )
     ){
       toast(
-        `দাম ${tk(o.price,1)}-এর বেশি এবং ${tk(o.listed_price,1)} বা কম দিন`
+        `দাম ${tk(o.price,1)}-এর বেশি এবং ${tk(o.listed_price,1)} বা কম দিন`,'error'
       );
 
       return;
@@ -8718,7 +8793,7 @@ const A = {
     await refresh();
 
     toast(
-      `অর্ডার বাতিল হয়েছে, ${nf(S.config.penalty)} পয়েন্ট কাটা গেছে`
+      `অর্ডার বাতিল হয়েছে, ${nf(S.config.penalty)} পয়েন্ট কাটা গেছে`,'warning'
     );
   },
 
@@ -8778,7 +8853,7 @@ const A = {
       !BK.srcAddr
     ){
       toast(
-        'ঠিকানা দিন'
+        'ঠিকানা দিন','error'
       );
 
       return;
@@ -8786,7 +8861,7 @@ const A = {
 
     if(kg<100){
       toast(
-        'অন্তত ৩ মণ দিন'
+        'অন্তত ৩ মণ দিন','error'
       );
 
       return;
@@ -8891,7 +8966,7 @@ const A = {
     await refresh();
 
     toast(
-      'বুকিং বাতিল হয়েছে'
+      'বুকিং বাতিল হয়েছে','info'
     );
   },
 
@@ -8932,7 +9007,7 @@ const A = {
       !amount
     ){
       toast(
-        'টাকার পরিমাণ দিন'
+        'টাকার পরিমাণ দিন','error'
       );
 
       return;
@@ -8944,7 +9019,7 @@ const A = {
       !(+EN.mon>0)
     ){
       toast(
-        'কত মণ দিন'
+        'কত মণ দিন','error'
       );
 
       return;
@@ -8956,7 +9031,7 @@ const A = {
       !amount
     ){
       toast(
-        'বিক্রির টাকা দিন'
+        'বিক্রির টাকা দিন','error'
       );
 
       return;
@@ -9135,7 +9210,7 @@ const A = {
     await refresh();
 
     toast(
-      'প্লাস বন্ধ করা হয়েছে, মেয়াদ পর্যন্ত চালু থাকবে'
+      'প্লাস বন্ধ করা হয়েছে, মেয়াদ পর্যন্ত চালু থাকবে','info'
     );
   },
 
@@ -9229,7 +9304,7 @@ const A = {
       !TK.number
     ){
       toast(
-        'চালক, ১১ সংখ্যার মোবাইল আর গাড়ির নম্বর দিন'
+        'চালক, ১১ সংখ্যার মোবাইল আর গাড়ির নম্বর দিন','error'
       );
 
       return;
@@ -9330,7 +9405,7 @@ const A = {
     const time=($('#insp-time')?.value||'').trim();
     const reply=($('#insp-reply')?.value||'').trim();
     if(!time){
-      toast('পরিদর্শনের তারিখ ও সময় দিন');
+      toast('পরিদর্শনের তারিখ ও সময় দিন','error');
       return;
     }
     await api(`/inspections/${d.id}/propose-time`,'POST',{proposed_time:time,reply});
@@ -9388,7 +9463,7 @@ const A = {
       if(!r) return;
       await api(`/inspections/${d.id}/seller-verify`,'POST',{confirm:false,note:r.reason||''});
       await refresh();
-      toast('পরিদর্শন অস্বীকার করা হয়েছে');
+      toast('পরিদর্শন অস্বীকার করা হয়েছে','info');
     }
   },
 
@@ -9405,7 +9480,7 @@ const A = {
     if(!r) return;
     await api(`/inspections/${d.id}/decline`,'POST',{reply:r.reason||''});
     await refresh();
-    toast('পরিদর্শনে রাজি হওয়া হয়নি');
+    toast('পরিদর্শনে রাজি হওয়া হয়নি','info');
   },
 
   // Buyer cancels inspection
@@ -9418,7 +9493,7 @@ const A = {
     })) return;
     await api(`/inspections/${d.id}/cancel`,'POST');
     await refresh();
-    toast('পরিদর্শনের অনুরোধ বাতিল হয়েছে');
+    toast('পরিদর্শনের অনুরোধ বাতিল হয়েছে','info');
   },
 
 
@@ -9483,11 +9558,11 @@ const A = {
     const sp=+($('#tn-seller-pct')?.value||0);
     const note=($('#tn-note')?.value||'').trim();
     if(Math.abs(bp+sp-100)>0.01){
-      toast('ক্রেতা ও বিক্রেতার শতাংশের যোগফল ১০০ হতে হবে');
+      toast('ক্রেতা ও বিক্রেতার শতাংশের যোগফল ১০০ হতে হবে','error');
       return;
     }
     if(bp<0||sp<0||bp>100||sp>100){
-      toast('শতাংশ ০ থেকে ১০০-এর মধ্যে হতে হবে');
+      toast('শতাংশ ০ থেকে ১০০-এর মধ্যে হতে হবে','error');
       return;
     }
     await api(`/orders/${d.oid}/transport/propose`,'POST',{buyer_pct:bp,seller_pct:sp,note});
@@ -9523,7 +9598,7 @@ const A = {
     if(!r) return;
     await api(`/orders/${oid}/transport/proposals/${pid}/respond`,'POST',{action:'reject',note:r.reason||''});
     await refresh();
-    toast('পরিবহন প্রস্তাব প্রত্যাখ্যান করা হয়েছে');
+    toast('পরিবহন প্রস্তাব প্রত্যাখ্যান করা হয়েছে','info');
   },
 
   'tn-counter':d=>{
@@ -9872,7 +9947,7 @@ document.addEventListener(
         }
         catch(err){
           toast(
-            'ছবি পড়া যায়নি'
+            'ছবি পড়া যায়নি','error'
           );
         }
       }
@@ -9896,7 +9971,7 @@ document.addEventListener(
       }
       catch(err){
         toast(
-          'ছবি পড়া যায়নি'
+          'ছবি পড়া যায়নি','error'
         );
       }
     }
@@ -9977,7 +10052,7 @@ setInterval(
               .length>80
               ? '…'
               : ''
-          )
+          ),'info'
         );
 
         const bell=
@@ -10015,7 +10090,7 @@ setInterval(
   }
   catch(e){
     $('#view').innerHTML=
-      '<div class="empty">সার্ভার চালু হচ্ছে, কয়েক সেকেন্ড পরে পাতাটি রিফ্রেশ করুন।</div>';
+      '<div class="empty-st"><h3>সার্ভারের সাথে যোগাযোগ হচ্ছে না</h3><p>সার্ভার চালু হচ্ছে, কয়েক সেকেন্ড পরে পাতাটি রিফ্রেশ করুন।</p><a class="btn btn-green" href="">আবার চেষ্টা করুন</a></div>';
 
     applyLanguage(
       $('#view')

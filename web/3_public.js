@@ -32,7 +32,7 @@ ${(S.listings||[]).some(l=>l.status==='active')?`<section class="home-sec">
 
 /* ---------- login & register ---------- */
 let loginRole='farmer';
-let LG={phone:'',password:''};
+let LG={phone:'',password:'',err:''};
 let RG={name:'',biz:'',phone:'',password:'',confirm:'',place:'rajshahi',upazila:'',market:''}, RGE={};
 function pwInput(id, key, store, ac, ph){
   const v=(store==='LG'?LG:RG)[key];
@@ -46,8 +46,9 @@ V.login = () => {
     <h1>লগ ইন</h1><p class="muted sub">আপনি কে, বাছুন</p>
     <div class="choice c3">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪'],['admin','অপারেশন','🛠️']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div>
     ${loginRole!=='admin'?`<div class="panel" style="margin-top:16px">
-      <label class="field" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" data-lg="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(LG.phone)}"></label>
-      <label class="field"><span>পাসওয়ার্ড</span>${pwInput('lg-password','password','LG','current-password','আপনার পাসওয়ার্ড')}</label>
+      <label class="field${LG.err?' err':''}" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" data-lg="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(LG.phone)}" ${LG.err?'aria-invalid="true" aria-describedby="lg-err"':''}></label>
+      <label class="field${LG.err?' err':''}"><span>পাসওয়ার্ড</span>${pwInput('lg-password','password','LG','current-password','আপনার পাসওয়ার্ড')}</label>
+      ${LG.err?`<p class="form-error" id="lg-err" role="alert">${esc(LG.err)}</p>`:''}
       <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="login-phone">ঢুকুন</button>
       <p class="muted sm" style="margin-top:12px;text-align:center">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p>
       <p class="muted xs demo-pw">ডেমো অ্যাকাউন্টগুলোর পাসওয়ার্ড: <b data-i18n-skip>123456</b></p></div>`:''}
@@ -56,14 +57,14 @@ V.login = () => {
   </div>`;
 };
 V.register = () => {
-  const E=RGE, err=k=>E[k]?`<small class="ferr">${E[k]}</small>`:'', cls=k=>E[k]?' err':'';
+  const E=RGE, err=k=>E[k]?`<small class="ferr" id="rg-${k}-err">${E[k]}</small>`:'', cls=k=>E[k]?' err':'';
   return `<div class="auth"><h1>নতুন অ্যাকাউন্ট</h1><p class="muted sub">তথ্য দিন, তারপর মোবাইলে আসা কোড দিয়ে যাচাই করুন।</p>
   <div class="field" style="margin-top:0"><span>অ্যাকাউন্টের ধরন</span><div class="choice c2">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div></div>
   <div class="panel" style="margin-top:16px">
     <h3 class="form-sec">${ic('user')} ব্যক্তিগত তথ্য</h3>
-    <label class="field${cls('name')}"><span>পুরো নাম</span><input id="rg-name" data-rg="name" autocomplete="name" value="${esc(RG.name)}" placeholder="যেমন: রহিম উদ্দিন">${err('name')}</label>
+    <label class="field${cls('name')}"><span>পুরো নাম</span><input id="rg-name" data-rg="name" ${E.name?'aria-invalid="true" aria-describedby="rg-name-err"':''} autocomplete="name" value="${esc(RG.name)}" placeholder="যেমন: রহিম উদ্দিন">${err('name')}</label>
     ${loginRole==='paikar'?`<label class="field"><span>আড়ত / ব্যবসার নাম (ঐচ্ছিক)</span><input id="rg-biz" data-rg="biz" value="${esc(RG.biz)}"></label>`:''}
-    <label class="field${cls('phone')}"><span>মোবাইল নম্বর</span><input id="rg-phone" data-rg="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(RG.phone)}">${err('phone')}</label>
+    <label class="field${cls('phone')}"><span>মোবাইল নম্বর</span><input id="rg-phone" data-rg="phone" ${E.phone?'aria-invalid="true" aria-describedby="rg-phone-err"':''} inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(RG.phone)}">${err('phone')}</label>
     <h3 class="form-sec">${ic('lock')} পাসওয়ার্ড</h3>
     <div class="grid2 tight">
       <label class="field${cls('password')}"><span>পাসওয়ার্ড</span>${pwInput('rg-password','password','RG','new-password','অন্তত ৬ অক্ষর')}${err('password')}</label>
@@ -71,9 +72,10 @@ V.register = () => {
     <h3 class="form-sec">${ic('pin')} ঠিকানা</h3>
     <div class="grid2 tight">
       <label class="field"><span>জেলা</span><select id="rg-place" data-rg="place">${Object.entries(PLACES).map(([k,p])=>`<option value="${k}" ${RG.place===k?'selected':''}>${p.n}</option>`).join('')}</select></label>
-      <label class="field${cls('upazila')}"><span>উপজেলা</span><input id="rg-upazila" data-rg="upazila" value="${esc(RG.upazila)}" placeholder="যেমন: পবা">${err('upazila')}</label></div>
-    <label class="field${cls('market')}"><span>নিকটবর্তী বাজারের নাম</span><input id="rg-market" data-rg="market" value="${esc(RG.market)}" placeholder="যেমন: নওহাটা বাজার">${err('market')}</label>
+      <label class="field${cls('upazila')}"><span>উপজেলা</span><input id="rg-upazila" data-rg="upazila" ${E.upazila?'aria-invalid="true" aria-describedby="rg-upazila-err"':''} value="${esc(RG.upazila)}" placeholder="যেমন: পবা">${err('upazila')}</label></div>
+    <label class="field${cls('market')}"><span>নিকটবর্তী বাজারের নাম</span><input id="rg-market" data-rg="market" ${E.market?'aria-invalid="true" aria-describedby="rg-market-err"':''} value="${esc(RG.market)}" placeholder="যেমন: নওহাটা বাজার">${err('market')}</label>
     <p class="muted xs" style="margin-top:6px">এখন এই জেলাগুলোতে সেবা চালু আছে।</p>
+    ${E.form?`<p class="form-error" id="rg-err" role="alert">${esc(E.form)}</p>`:''}
     <button class="btn btn-green btn-wide" style="margin-top:18px" data-act="register">অ্যাকাউন্ট খুলুন</button>
     <p class="muted sm" style="margin-top:12px">শুধু কৃষক ও পাইকারদের জন্য পাইকারি প্ল্যাটফর্ম। সর্বনিম্ন অর্ডার ${monTxt(S.config.min_order)}।</p>
     <p class="muted sm" style="margin-top:6px;text-align:center">আগেই অ্যাকাউন্ট আছে? <a href="#/login">লগ ইন করুন</a></p></div></div>`;

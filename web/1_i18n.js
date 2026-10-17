@@ -17,6 +17,11 @@ function enDigits(v){ return String(v).replace(/[০-৯]/g,d=>String(BN_DIGITS.
 
 /* Long phrases first. These keep the English UI natural instead of word-by-word. */
 const I18N_PHRASES = [
+  ['লগ ইন হয়নি, আবার চেষ্টা করুন','Login failed, please try again'],
+  ['অ্যাকাউন্ট খোলা যায়নি, আবার চেষ্টা করুন','Could not create the account, please try again'],
+  ['সার্ভারের সাথে যোগাযোগ হচ্ছে না','Cannot reach the server'],
+  ['সার্ভার চালু হচ্ছে, কয়েক সেকেন্ড পরে পাতাটি রিফ্রেশ করুন।','The server is starting. Please refresh in a few seconds.'],
+  ['আবার চেষ্টা করুন','Try again'],
   ['তথ্য দিন, তারপর মোবাইলে আসা কোড দিয়ে যাচাই করুন।','Fill in your details, then verify with the code sent to your phone.'],
   ['অ্যাকাউন্টের ধরন','Account type'],
   ['ব্যক্তিগত তথ্য','Personal details'],

@@ -182,7 +182,7 @@ async function api(path, method='GET', body){
     try{ data=await r.json(); }catch(e){}
   }
   catch(e){
-    toast('সার্ভারের সাথে যোগাযোগ হচ্ছে না, একটু পরে চেষ্টা করুন');
+    toast('সার্ভারের সাথে যোগাযোগ হচ্ছে না, একটু পরে চেষ্টা করুন','error');
     throw e;
   }
 
@@ -190,7 +190,7 @@ async function api(path, method='GET', body){
 
   if(!r.ok){
     const d=data&&data.detail;
-    toast(typeof d==='string'?d:(Array.isArray(d)?'তথ্য ঠিকভাবে দিন':'কাজটি হয়নি, আবার চেষ্টা করুন'));
+    toast(typeof d==='string'?d:(Array.isArray(d)?'তথ্য ঠিকভাবে দিন':'কাজটি হয়নি, আবার চেষ্টা করুন'),'error');
     throw new Error(d);
   }
 
@@ -229,12 +229,18 @@ const roleBn = r => (isEn()?{farmer:'Farmer',paikar:'Wholesaler',admin:'Operatio
 
 let tT;
 
-function toast(m){
-  const t=$('#toast');
-  t.textContent=isEn()?translateBnText(m):m;
+/* kind: 'success' (default) | 'error' | 'warning' | 'info' — sets colour, icon and how screen readers announce it */
+function toast(m, kind='success'){
+  const t=$('#toast'), span=document.createElement('span');
+  span.textContent=isEn()?translateBnText(m):m;
+  t.className='toast t-'+kind;
+  t.setAttribute('role',kind==='error'?'alert':'status');
+  t.innerHTML=ic({error:'xc',warning:'alert',info:'info',success:'checkc'}[kind]||'checkc');
+  t.appendChild(span);
+  void t.offsetWidth;
   t.classList.add('on');
   clearTimeout(tT);
-  tT=setTimeout(()=>t.classList.remove('on'),3000);
+  tT=setTimeout(()=>t.classList.remove('on'),kind==='error'?5200:3200);
 }
 
 function say(text){
@@ -251,7 +257,7 @@ function say(text){
       speechSynthesis.speak(u);
     }
     else{
-      toast('🔊 '+spoken.slice(0,90));
+      toast('🔊 '+spoken.slice(0,90),'info');
     }
   }
   catch(e){}

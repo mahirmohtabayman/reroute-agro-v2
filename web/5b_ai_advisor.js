@@ -318,9 +318,9 @@ function taDecide(p, r){
   if (!r) { taRun(p); return; }                                   // AI unavailable: never block the trade
   if (r.status === 'loss') { taModal(p, r); return; }
   if (r.status === 'unknown') {
-    toast('নির্ভরযোগ্য লাভ-ক্ষতির হিসাবের জন্য উৎপাদন/কেনা খরচ দরকার। এখন হাতে থাকবে আনুমানিক ' + tk(r.in_hand));
+    toast('নির্ভরযোগ্য লাভ-ক্ষতির হিসাবের জন্য উৎপাদন/কেনা খরচ দরকার। এখন হাতে থাকবে আনুমানিক ' + tk(r.in_hand),'warning');
   } else if (r.side === 'buyer') {
-    toast(r.risk_range ? `আনুমানিক লাভ ${tk(r.net)}, তবে দাম কমলে লোকসানের ঝুঁকি আছে` : `আনুমানিক লাভজনক: প্রায় ${tk(r.net)} লাভ`);
+    toast(r.risk_range ? `আনুমানিক লাভ ${tk(r.net)}, তবে দাম কমলে লোকসানের ঝুঁকি আছে` : `আনুমানিক লাভজনক: প্রায় ${tk(r.net)} লাভ`, r.risk_range ? 'warning' : 'success');
   } else {
     toast(`আনুমানিক লাভজনক: খরচ বাদে প্রায় ${tk(r.profit)} লাভ`);
   }
@@ -383,7 +383,7 @@ document.addEventListener('click', e => {
   e.stopImmediatePropagation();
   if (TA.busy) return;
   TA.busy = true;
-  toast('লাভ-ক্ষতি হিসাব হচ্ছে...');
+  toast('লাভ-ক্ষতি হিসাব হচ্ছে...','info');
   advFetch(p.path).catch(() => null).then(r => { TA.busy = false; taDecide(p, r); });
 }, true);
 
@@ -404,7 +404,7 @@ document.addEventListener('click', e => {
 async function advDownload(fmt, source){
   try {
     const r = await fetch(`/api/ai/advisor/admin/export?fmt=${fmt}&source=${source}`, {headers: TOKEN ? {'X-Token': TOKEN} : {}});
-    if (!r.ok) { toast('Export হয়নি, আবার চেষ্টা করুন'); return; }
+    if (!r.ok) { toast('Export হয়নি, আবার চেষ্টা করুন','error'); return; }
     const blob = await r.blob(), cd = r.headers.get('Content-Disposition') || '', m = cd.match(/filename="([^"]+)"/);
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -412,9 +412,9 @@ async function advDownload(fmt, source){
     document.body.appendChild(a);
     a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
-    toast('ডাউনলোড শুরু হয়েছে');
+    toast('ডাউনলোড শুরু হয়েছে','info');
   } catch (e) {
-    toast('Export হয়নি, আবার চেষ্টা করুন');
+    toast('Export হয়নি, আবার চেষ্টা করুন','error');
   }
 }
 
