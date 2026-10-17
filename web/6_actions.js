@@ -535,6 +535,7 @@ document.addEventListener('input',e=>{
   const d=e.target.dataset||{};
   if(d.rg!==undefined){
     RG[d.rg]=e.target.value;
+    if(d.rg!=='password'&&d.rg!=='confirm') rgDraft();
     if(RGE[d.rg]){
       delete RGE[d.rg];
       const f=e.target.closest('.field');
@@ -792,6 +793,7 @@ const A = {
 
     OTP=null;
     RG={name:'',biz:'',phone:'',password:'',confirm:'',place:'rajshahi',upazila:'',market:''};
+    rgDraft(true);
     closeModal();
     setToken(r.token);
     await load();
