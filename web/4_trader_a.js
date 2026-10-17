@@ -29,7 +29,7 @@ V.dash = () => {
     <div class="row wrap-it"><a class="btn btn-green" href="#/listings/new">${ic('plus')} মাল বিক্রির জন্য দিন</a><a class="btn btn-line" href="#/market">${ic('cart')} কিনুন</a></div></div>
     ${A.map(([k,t,l])=>`<div class="alert ${k}">${ic(k==='spoil'?'alert':'info')}<span class="grow">${t}</span>${k==='spoil'&&!l.urgent?`<button class="btn btn-red btn-sm" data-act="urgent" data-id="${l.id}">জরুরি বিক্রি</button>`:`<a class="btn btn-line btn-sm" href="#/listings">দেখুন</a>`}</div>`).join('')}
     <div class="grid4" style="margin-bottom:22px">
-      <a class="kpi" href="#/rewards"><span class="kpi-ic">${ic('wallet')}</span><span class="muted sm">ওয়ালেট</span><strong>${tk(u.wallet)}</strong></a>
+      <a class="kpi kpi-feature" href="#/rewards"><span class="kpi-ic">${ic('wallet')}</span><span class="muted sm">ওয়ালেট</span><strong>${tk(u.wallet)}</strong></a>
       <a class="kpi" href="#/rewards"><span class="kpi-ic gold">${ic('star')}</span><span class="muted sm">পয়েন্ট</span><strong>${nf(u.pts)}</strong></a>
       <a class="kpi" href="#/listings"><span class="kpi-ic">${ic('package')}</span><span class="muted sm">চালু লিস্টিং</span><strong>${nf(active)}টি</strong></a>
       <a class="kpi" href="#/deals"><span class="kpi-ic blue">${ic('handshake')}</span><span class="muted sm">চলমান অর্ডার</span><strong>${nf(open)}টি</strong></a></div>

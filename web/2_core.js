@@ -121,6 +121,22 @@ function ic(name, cls=''){
   const k=EMOJI_ICON[name]||name, p=ICONS[k];
   return p?`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`:name;
 }
+/* Entrance motion: plays once after each navigation (and on first load) when real content replaces the
+   skeleton. Purely visual — it only toggles a body class that the CSS keys its reveal animation on. */
+const NAV_MOTION = (()=>{
+  let pending=true, t;
+  const view=document.getElementById('view');
+  const play=()=>{
+    document.body.classList.add('nav-anim');
+    clearTimeout(t);
+    t=setTimeout(()=>document.body.classList.remove('nav-anim'),900);
+  };
+  window.addEventListener('hashchange',()=>{ pending=true; });
+  if(view) new MutationObserver(()=>{
+    if(pending&&!view.querySelector('.sk-wrap')){ pending=false; play(); }
+  }).observe(view,{childList:true});
+  return play;
+})();
 const SAMPLE_TXT = 'নমুনা ছবি';
 function cropPhoto(crop, alt){
   return `<img src="/static/crops/${crop}.jpg" alt="${alt||''}" loading="lazy">`;
@@ -462,7 +478,7 @@ function shrinkImage(file, max=900){
 
 /* ---------- chrome ---------- */
 
-const LOGO = `<a class="logo" href="#/" aria-label="Reroute Agro"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect width="34" height="34" rx="9" fill="#166A3B"/><path d="M9.5 24.5C9.5 15.5 15 10 25 9.5c-.5 10-6 15-15.5 15z" fill="#E3F1E7"/><path d="M9.5 24.5 19.5 14.5" stroke="#166A3B" stroke-width="1.8" stroke-linecap="round"/><circle cx="25.2" cy="24.6" r="2.6" fill="#D99A1E"/></svg><span>Reroute <span class="full">Agro</span></span></a>`;
+const LOGO = `<a class="logo" href="#/" aria-label="Reroute Agro"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect width="34" height="34" rx="9" fill="#173D32"/><path d="M9.5 24.5C9.5 15.5 15 10 25 9.5c-.5 10-6 15-15.5 15z" fill="#D5EF91"/><path d="M9.5 24.5 19.5 14.5" stroke="#173D32" stroke-width="1.8" stroke-linecap="round"/><circle cx="25.2" cy="24.6" r="2.6" fill="#D99A1E"/></svg><span>Reroute <span class="full">Agro</span></span></a>`;
 
 const NAV_TRADER = [
   ['#/home','🏠','ড্যাশবোর্ড'],
