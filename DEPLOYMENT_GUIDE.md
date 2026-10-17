@@ -39,8 +39,9 @@ Nothing in this release was deployed automatically. Follow these steps yourself.
    - Build: `pip install -r requirements.txt && python build.py`
    - Start: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
    - Health check: `/api/health`
-5. Watch the log: `starting: APP_ENV=production, demo mode off, database PostgreSQL`, three
-   `applying migration …` lines, then `Application startup complete`.
+5. Watch the log: `starting: APP_ENV=production, …, database PostgreSQL`, one `applying migration …` line
+   per missing migration (upgrading from 3.0: `0004_smart_hisab` and `0005_trade_records`), then
+   `Application startup complete`.
 6. Create an operations account (Render's free plan has no shell, so run this **on your own computer** against
    Neon; it only inserts one row):
    ```bash
@@ -50,6 +51,9 @@ Nothing in this release was deployed automatically. Follow these steps yourself.
    ```
    It asks for a password (min 10 characters). Log in with role "অপারেশন".
 7. Check: `https://<your-app>.onrender.com/api/health` → `{"ok":true}`; log in; open `#/impact`.
+8. Smart Hisab check (3.1): log in as a demo farmer → **স্মার্ট হিসাব** → বিল/রসিদ → open an invoice →
+   **PDF ডাউনলোড** (the PDF must show Bengali text correctly) → রিপোর্ট → CSV. Then press the microphone
+   button bottom right and ask *আমার কত টাকা পাওনা আছে?* (typing works too).
 
 ## 4. Separate demo deployment (recommended for judging)
 1. Neon: create a new branch or database, e.g. `reroute_demo`. Never point a demo service at production data.
@@ -72,9 +76,13 @@ Nothing in this release was deployed automatically. Follow these steps yourself.
   plus the app start. Locally the app answers `/api/health` about 3 s after launch and the AI advisor is ready
   about 6 s after launch (the vegetable market is simulated in a background thread); Render's container wake-up
   comes on top and is not under the app's control. Open the site a minute before a demo.
-- Memory: measured locally at about 226 MB resident after start-up and a full test run (pandas, two models,
-  simulated market data), below the 512 MB free limit. No new runtime dependencies were added. Render's figure
-  can differ; check the service's Metrics tab after deploying.
+- Memory: measured locally at about 258 MB resident after start-up, many Smart Hisab pages, PDF downloads and
+  browser tests (3.0 was about 226 MB), below the 512 MB free limit. Render's figure can differ; check the
+  service's Metrics tab after deploying.
+- 3.1 adds `fpdf2`, `uharfbuzz` (Bengali shaping for PDFs) and their pinned dependencies `pillow`, `fonttools`,
+  `defusedxml`. All have ready-made Linux wheels for Python 3.12 (checked with `pip download`), so the build
+  command is unchanged. The Bengali font files are in `app/fonts/` (SIL Open Font License).
+- Receipt photos/PDFs that users attach in Smart Hisab are stored in the database, not on Render's disk.
 - Local disk is not persistent: all data lives in Neon.
 - Availability is not guaranteed on the free tier.
 

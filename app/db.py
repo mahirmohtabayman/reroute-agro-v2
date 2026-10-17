@@ -75,7 +75,9 @@ CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, val TEXT);
 
 TABLES = ["meta", "users", "stock", "listings", "offers", "offer_events", "orders", "bookings", "booking_events", "trucks",
           "inspections", "transport_negotiations", "transport_proposals", "payments", "wallet_tx", "points_tx", "entries", "notifs", "ratings",
-          "auth_sessions", "rate_hits", "pending_registrations"]
+          "auth_sessions", "rate_hits", "pending_registrations",
+          "invoice_adjustments", "receipts", "invoices", "due_payments", "dues", "documents", "audit_events", "counters",
+          "trade_records"]
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 PG = DATABASE_URL.startswith(("postgres://", "postgresql://"))
@@ -92,7 +94,7 @@ ADVISORY_KEY = 4_242_017      # one application-wide write lock on PostgreSQL
 
 
 def _pg_sql(sql):
-    sql = sql.replace("?", "%s")
+    sql = sql.replace("%", "%%").replace("?", "%s")     # a literal % (e.g. LIKE 'U%') must not read as a placeholder
     sql = re.sub(r"\bMAX\(0,", "GREATEST(0,", sql)
     return sql
 
@@ -282,9 +284,64 @@ def _m0003_indexes():
     """)
 
 
+def _m0004_smart_hisab():
+    """Smart Hisab: invoices, receipts, dues, documents, audit trail. Money in new tables is stored as integer
+    poisha (1/100 Taka) so sums are exact on both databases."""
+    for col in ("category TEXT", "entry_date TEXT", "counterparty TEXT", "document_id TEXT", "source TEXT",
+                "voided_at INTEGER", "void_reason TEXT"):
+        add_column("entries", *col.split())
+    _create("""
+    CREATE TABLE IF NOT EXISTS counters (name TEXT PRIMARY KEY, val INTEGER NOT NULL);
+    CREATE TABLE IF NOT EXISTS invoices (id TEXT PRIMARY KEY, number TEXT NOT NULL UNIQUE,
+      order_id TEXT NOT NULL UNIQUE REFERENCES orders(id), seller TEXT NOT NULL, buyer TEXT NOT NULL,
+      issued_at INTEGER NOT NULL, data TEXT NOT NULL, goods_p INTEGER NOT NULL, buyer_payable_p INTEGER NOT NULL,
+      seller_net_p INTEGER NOT NULL, data_class TEXT NOT NULL);
+    CREATE INDEX IF NOT EXISTS invoices_seller ON invoices (seller);
+    CREATE INDEX IF NOT EXISTS invoices_buyer ON invoices (buyer);
+    CREATE TABLE IF NOT EXISTS invoice_adjustments (id TEXT PRIMARY KEY, invoice_id TEXT NOT NULL REFERENCES invoices(id),
+      at INTEGER NOT NULL, kind TEXT NOT NULL, amount_p INTEGER NOT NULL DEFAULT 0, note TEXT, by_uid TEXT,
+      source_ref TEXT UNIQUE);
+    CREATE INDEX IF NOT EXISTS invoice_adjustments_invoice ON invoice_adjustments (invoice_id);
+    CREATE TABLE IF NOT EXISTS dues (id TEXT PRIMARY KEY, uid TEXT NOT NULL, direction TEXT NOT NULL,
+      counterparty TEXT NOT NULL, description TEXT, amount_p INTEGER NOT NULL, due_date TEXT, created INTEGER NOT NULL,
+      voided_at INTEGER, void_reason TEXT);
+    CREATE INDEX IF NOT EXISTS dues_uid ON dues (uid);
+    CREATE TABLE IF NOT EXISTS receipts (id TEXT PRIMARY KEY, number TEXT NOT NULL UNIQUE, uid TEXT NOT NULL,
+      invoice_id TEXT REFERENCES invoices(id), due_id TEXT REFERENCES dues(id), source_ref TEXT NOT NULL UNIQUE,
+      kind TEXT NOT NULL, direction TEXT NOT NULL, amount_p INTEGER NOT NULL, method TEXT, ref TEXT, at INTEGER NOT NULL,
+      pay_date TEXT NOT NULL, verification TEXT NOT NULL, note TEXT);
+    CREATE INDEX IF NOT EXISTS receipts_uid ON receipts (uid);
+    CREATE INDEX IF NOT EXISTS receipts_invoice ON receipts (invoice_id);
+    CREATE TABLE IF NOT EXISTS due_payments (id TEXT PRIMARY KEY, due_id TEXT NOT NULL REFERENCES dues(id),
+      amount_p INTEGER NOT NULL, pay_date TEXT NOT NULL, at INTEGER NOT NULL, note TEXT, receipt_id TEXT);
+    CREATE INDEX IF NOT EXISTS due_payments_due ON due_payments (due_id);
+    CREATE TABLE IF NOT EXISTS documents (id TEXT PRIMARY KEY, uid TEXT NOT NULL, kind TEXT NOT NULL, mime TEXT NOT NULL,
+      data TEXT NOT NULL, created INTEGER NOT NULL);
+    CREATE TABLE IF NOT EXISTS audit_events (id TEXT PRIMARY KEY, uid TEXT, entity TEXT NOT NULL, entity_id TEXT NOT NULL,
+      action TEXT NOT NULL, data TEXT, at INTEGER NOT NULL);
+    CREATE INDEX IF NOT EXISTS audit_events_entity ON audit_events (entity, entity_id)
+    """)
+
+
+def _m0005_trade_records():
+    """First-party transaction dataset for future model training (see app/dataset.py)."""
+    _create("""
+    CREATE TABLE IF NOT EXISTS trade_records (id TEXT PRIMARY KEY, order_id TEXT NOT NULL UNIQUE REFERENCES orders(id),
+      data_class TEXT NOT NULL, verification TEXT NOT NULL, eligible INTEGER NOT NULL, quality_notes TEXT,
+      crop TEXT NOT NULL, variety TEXT, grade TEXT, qty_original REAL NOT NULL, unit_original TEXT NOT NULL,
+      qty_kg REAL NOT NULL, seller_district TEXT, seller_role TEXT, buyer_district TEXT, buyer_market TEXT,
+      listing_created INTEGER, listing_price REAL, first_offer_price REAL, final_price REAL, completed_price REAL,
+      goods_total REAL, completed_at INTEGER, transport_mode TEXT, transport_total REAL, payment_status TEXT,
+      delivery_status TEXT, source TEXT NOT NULL, recorded_at INTEGER NOT NULL, duplicate_of TEXT);
+    CREATE INDEX IF NOT EXISTS trade_records_class ON trade_records (data_class, eligible)
+    """)
+
+
 MIGRATIONS = [("0001_legacy_columns", _m0001_legacy_columns),
               ("0002_auth_tables", _m0002_auth_tables),
-              ("0003_indexes", _m0003_indexes)]
+              ("0003_indexes", _m0003_indexes),
+              ("0004_smart_hisab", _m0004_smart_hisab),
+              ("0005_trade_records", _m0005_trade_records)]
 
 
 def migrate():
@@ -313,5 +370,5 @@ def reset():
     with _lock:
         # plus tables left by older versions of the app
         for t in TABLES + ["sessions", "reqs", "lots", "stats", "schema_migrations"]:
-            _execute(f"DROP TABLE IF EXISTS {t}")
+            _execute(f"DROP TABLE IF EXISTS {t}" + (" CASCADE" if PG else ""))
     migrate()

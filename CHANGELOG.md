@@ -1,6 +1,61 @@
 # Changelog
 
-## 3.0 — security, reliability and decision support (this release)
+## 3.1 — Smart Hisab, first-party trade data, Bangla assistant (this release)
+
+### Smart Hisab (one new navigation item, four tabs)
+- **হিসাব (overview)**: sales (platform vs user-reported), costs, profit/loss, receivables/payables for today,
+  this week/month/year, all time or a custom range; recent invoices and receipts.
+- **বিল/রসিদ**: invoices are issued automatically once an order's price and transport terms are final
+  (unique numbers `RA-YYYY-NNNNNN`, a frozen snapshot of parties, goods, fees and transport). Search by number,
+  crop or name; filter by date and payment status. Each invoice can be viewed, printed, downloaded as a PDF with
+  correct Bengali text, or shared (Web Share, falling back to copying the number).
+- Receipts (`RC-YYYY-NNNNNN`) are created from simulated payments, payouts, refunds and manual due payments —
+  once per source event. **An invoice is never proof of payment**: paid/partial/unpaid comes from receipts only.
+  Every platform receipt says *simulated (demo, not real money)*.
+- A cancelled order keeps its invoice; a cancellation adjustment is added instead of overwriting it.
+- **আয়-ব্যয়**: manual records (outside sale, crop purchase into stock, production/harvest/transport/storage/
+  packaging/labour/other costs, money received/paid against a due) labelled *user-reported (not verified)*,
+  with a likely-duplicate warning (same record, or a cost the platform already counts) that needs confirmation;
+  records are voided with a reason, never deleted; optional receipt photo/PDF stored in the database
+  (owner-only). Receivables/payables with due dates, partial payments, paid/partial/unpaid/overdue.
+- **রিপোর্ট**: sales by day/week/month, by product, expense categories (platform vs user-reported), P&L and
+  dues; CSV and PDF download.
+- P&L rules (Decimal, integer poisha in the database): sales counted once; purchases go to stock and become cost
+  when sold (no double counting); farmer production costs replace the listing cost for that crop; if any sold
+  crop has no known cost the profit is not shown: *লাভের হিসাব সম্পূর্ণ নয় — কিছু খরচের তথ্য পাওয়া যায়নি।*
+  The old "হিসাব খাতা" page now uses the same calculation.
+- Dashboard money panel links to Smart Hisab.
+
+### First-party trade data
+- `trade_records`: one row per completed order (crop, grade, original and kg quantity, districts, listing /
+  first offer / final price, transport, payment and delivery status, time), classified `real_platform` or
+  `demo_marketplace`, verified, with quality checks (price range, quantity range, price above listing, missing
+  listing/offer, duplicates within 10 minutes). Manual records and the simulated market file are reported as
+  separate, never-eligible classes.
+- Admin: `GET /api/admin/dataset` (summary) and `GET /api/admin/dataset/training.csv` — only eligible real
+  trades, no names, phones, user ids or order ids. No automatic retraining.
+
+### Bangla assistant
+- Floating microphone button (bottom right, above the mobile tab bar) on farmer and paikar pages. Typed or
+  spoken (browser speech recognition, `bn-BD`) questions: sales, profit, receivables, payables, latest bills,
+  pending orders, best market for a quantity, today's market price. Answers come only from the user's own
+  records and the existing AI services; market answers are labelled simulated; missing quantity is asked for.
+  The text is shown for checking before sending; the assistant is read-only and never makes a transaction.
+
+### Reliability and usability
+- API calls time out after 20 s; GET requests retry once; clear messages when the server cannot be reached.
+- Sign-up form and the Smart Hisab record form keep a draft on the device (passwords are never saved).
+- `python -m app.manage status` failed on PostgreSQL because of a literal `%` in SQL; literal `%` is now escaped
+  for PostgreSQL (regression test added).
+
+### New files and dependencies
+- `app/hisab.py`, `app/hisab_routes.py`, `app/pdfgen.py`, `app/dataset.py`, `app/assistant.py`,
+  `app/fonts/NotoSansBengali-{Regular,Bold}.ttf` (SIL Open Font License), `web/5d_hisab.js`.
+- `fpdf2==2.8.3`, `uharfbuzz==0.50.2` (Bengali text shaping) and their pinned dependencies `pillow`,
+  `fonttools`, `defusedxml`.
+- Migrations `0004_smart_hisab`, `0005_trade_records` (additive; see DATABASE_MIGRATIONS.md).
+
+## 3.0 — security, reliability and decision support
 
 ### Security (see SECURITY_REVIEW.md)
 - Public database reset removed; reset only for an admin on a demo/development deployment; never in production.

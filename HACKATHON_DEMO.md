@@ -41,11 +41,23 @@ which market leaves them more money after transport and spoilage, and trucks are
 - Admin tab (optional): `/#/admin/pool` — two bookings on the same route and day share one truck; each pays its
   weight share; savings per booking are shown, with the estimated distance method.
 
-**2:20–3:00 — Profit and impact.**
+**2:20–2:45 — Smart Hisab, invoice and voice.**
+- Tab A: **স্মার্ট হিসাব** → *বিল/রসিদ*: the new order already has an invoice (`RA-2026-…`); open it → status
+  comes from the simulated payment receipt → **PDF ডাউনলোড** / **প্রিন্ট** / **শেয়ার**.
+- *হিসাব* tab: sales, costs, profit/loss. If a cost is missing it says *লাভের হিসাব সম্পূর্ণ নয়* instead of
+  inventing a profit — "we never guess money".
+- *আয়-ব্যয়*: add an outside sale or a labour cost → it is labelled *নিজে লেখা (যাচাই করা নয়)*.
+- Press the green microphone button (bottom right) and say or type *আমার শেষ তিনটা বিল দেখাও* or
+  *আমার কত টাকা পাওনা আছে?* — answers come only from this user's records; the assistant never makes a payment.
+
+**2:45–3:00 — Impact and data.**
 - Tab A dashboard: money in motion, wallet, profit/loss box.
 - Tab C `/#/impact`: farmers, buyers, completed orders, volume, transport savings, simulated extra net
   proceeds, shared-truck share, spoilage-risk sales — **demo vs registered counts are separated** and every
   metric has *কীভাবে হিসাব* (how it is calculated).
+- Data strategy (one sentence): "Every completed trade becomes a verified first-party price record; demo,
+  manual and simulated data are labelled separately and never used for training — the admin can export only
+  eligible real trades, without personal data."
 - Close: "Real SMS OTP, real payment gateway and real daily market prices are the next steps."
 
 ## Fallback plan
@@ -54,6 +66,7 @@ which market leaves them more money after transport and spoilage, and trucks are
 | Render is asleep / slow | Open the site earlier; if still down, run locally: `APP_ENV=development ENABLE_DEMO_MODE=true DEMO_ADMIN_PASSWORD=… uvicorn app.main:app` and use `http://localhost:8000` |
 | No internet at the venue | Local run above works fully offline (SQLite, local models); Google Fonts fall back to the bundled Kalpurush font |
 | Microphone blocked / Firefox | Type the question in the same box (voice is optional) |
+| PDF download blocked by the browser | Use **প্রিন্ট** on the invoice page (prints only the invoice) |
 | AI says "AI প্রস্তুত হচ্ছে" | Wait ~10 s after a cold start; refresh |
 | Demo data got messy | Admin footer button **ডেমো নতুন করে শুরু** (demo deployment only) |
 | Everything fails | Screenshots in `docs/screenshots/` and the browser smoke test output (`tests/e2e/smoke.mjs`) |

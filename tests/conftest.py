@@ -33,7 +33,7 @@ if db.PG and not os.environ.get("_REROUTE_TEST_DB_EMPTIED"):
     # pytest imports this file as "conftest" and the tests import it again as "tests.conftest"
     os.environ["_REROUTE_TEST_DB_EMPTIED"] = "1"
     for t in db.TABLES + ["schema_migrations"]:
-        db.run(f"DROP TABLE IF EXISTS {t}")
+        db.run(f"DROP TABLE IF EXISTS {t} CASCADE")
 
 from app import auth, seed as SEED, settings  # noqa: E402
 from app.main import app  # noqa: E402

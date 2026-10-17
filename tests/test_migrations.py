@@ -74,3 +74,10 @@ def test_render_without_app_env_counts_as_production():
     env.pop("DATABASE_URL", None)
     r = start_server_process(env)
     assert r.returncode != 0 and "DATABASE_URL" in r.stderr
+
+
+def test_literal_percent_in_sql_works(client):
+    """`LIKE 'U%'` written inline (as in `manage status`) must work on PostgreSQL as well as SQLite."""
+    from app import db
+    assert db.val("SELECT COUNT(*) FROM users WHERE id LIKE 'U%' AND id LIKE ?", ("U%",)) >= 0
+    assert db.val("SELECT '100%'") == "100%"

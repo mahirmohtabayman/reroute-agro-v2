@@ -34,6 +34,15 @@ ${(S.listings||[]).some(l=>l.status==='active')?`<section class="home-sec">
 let loginRole='farmer';
 let LG={phone:'',password:'',err:''};
 let RG={name:'',biz:'',phone:'',password:'',confirm:'',place:'rajshahi',upazila:'',market:''}, RGE={};
+/* sign-up draft: typed details survive a reload on a weak connection; passwords are never saved */
+const RG_DRAFT='reroute-draft-register', RG_KEEP=['name','biz','phone','place','upazila','market'];
+function rgDraft(clear){
+  try{
+    if(clear) return localStorage.removeItem(RG_DRAFT);
+    localStorage.setItem(RG_DRAFT, JSON.stringify(Object.fromEntries(RG_KEEP.map(k=>[k,RG[k]]))));
+  }catch(e){}
+}
+try{ const d=JSON.parse(localStorage.getItem(RG_DRAFT)||'null'); if(d) RG_KEEP.forEach(k=>{ if(typeof d[k]==='string') RG[k]=d[k].slice(0,120); }); }catch(e){}
 function pwInput(id, key, store, ac, ph){
   const v=(store==='LG'?LG:RG)[key];
   return `<span class="pw-wrap"><input id="${id}" data-${store.toLowerCase()}="${key}" type="password" autocomplete="${ac}" placeholder="${ph}" value="${esc(v)}"><button type="button" class="pw-eye" data-act="pw-toggle" data-for="${id}" aria-label="পাসওয়ার্ড দেখুন">${ic('eye')}</button></span>`;

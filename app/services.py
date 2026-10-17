@@ -132,7 +132,8 @@ def inventory(uid):
         ls = db.one("SELECT COALESCE(SUM(available),0) a, COALESCE(SUM(reserved),0) r FROM listings "
                     "WHERE uid=? AND crop=? AND status IN ('active','paused','sold_out')", (uid, c))
         sold = (db.val("SELECT COALESCE(SUM(qty),0) FROM orders WHERE seller=? AND crop=? AND status='completed'", (uid, c)) or 0) \
-            + (db.val("SELECT COALESCE(SUM(qty),0) FROM entries WHERE uid=? AND crop=? AND kind='sale'", (uid, c)) or 0)
+            + (db.val("SELECT COALESCE(SUM(qty),0) FROM entries WHERE uid=? AND crop=? AND kind='sale' "
+                      "AND voided_at IS NULL", (uid, c)) or 0)
         bought = db.val("SELECT COALESCE(SUM(qty),0) FROM orders WHERE buyer=? AND crop=? AND status='completed'", (uid, c)) or 0
         incoming = db.val("SELECT COALESCE(SUM(qty),0) FROM orders WHERE buyer=? AND crop=? "
                           "AND status IN ('confirmed','handed_over')", (uid, c)) or 0
@@ -515,6 +516,7 @@ def create_order(o, accepted_by):
                             f"এখন {tk(order['buyer_total'])} পেমেন্ট করুন, {bn(PAY_HOURS)} ঘণ্টার মধ্যে।", "pay", f"#/order/{oid}")
         notify(seller["id"], f"✅ {mon(o['qty'])} মণ {crop_name(o['crop'])} বিক্রিতে রাজি হয়েছেন। "
                              f"{who(buyer)} পেমেন্ট করলেই অর্ডার নিশ্চিত হবে।", "order", f"#/order/{oid}")
+    books(oid)
     return order
 
 
@@ -735,6 +737,7 @@ def _apply_agreed_transport_to_order(order_id, buyer_amt, seller_amt, buyer_pct,
 
     notify(o["buyer"], f"✅ পরিবহন চুক্তি নিশ্চিত হয়েছে। এখন ৳{bn(buyer_total)} পেমেন্ট করুন।",
            "pay", f"#/order/{order_id}")
+    books(order_id)
 
 
 def get_transport_negotiation(order_id):
@@ -744,6 +747,18 @@ def get_transport_negotiation(order_id):
         return None
     proposals = db.q("SELECT * FROM transport_proposals WHERE negotiation=? ORDER BY created DESC", (tn["id"],))
     return {**tn, "proposals": proposals}
+
+
+def books(oid):
+    """Keep Smart Hisab in step with an order: issue its invoice once terms are final, add receipts for
+    (simulated) payments, payouts and refunds, an adjustment on cancellation, and the training-data record
+    on completion. Runs in the caller's transaction, so it commits or rolls back with the order change."""
+    from app import dataset, hisab
+    o = db.one("SELECT * FROM orders WHERE id=?", (oid,))
+    if o:
+        hisab.sync_order(o)
+        if o["status"] == "completed":
+            dataset.record_trade(o)
 
 
 def get_order(oid, u=None):
@@ -839,6 +854,7 @@ def confirm_payment(u, pid, account=None, pin=None):
                "order", f"#/order/{o['id']}")
         notify(o["buyer"], f"✅ অর্ডার নিশ্চিত হয়েছে! পেমেন্ট সফল (TXN: {txn})।",
                "order", f"#/order/{o['id']}")
+        books(o["id"])
     elif p["purpose"] == "booking":
         db.update("bookings", p["ref"], paid=1, status="requested", updated=now())
         booking_event(p["ref"], "requested", "পেমেন্টের পর বুকিং অনুরোধ")
@@ -895,6 +911,7 @@ def complete(u, oid):
     notify(seller["id"], f"🎉 বিক্রি সম্পূর্ণ! {tk(o['payout'] + cashback)} আপনার ওয়ালেটে জমা হয়েছে"
                          + (f" (৳{bn(cashback)} ক্যাশব্যাকসহ)" if cashback else "") + "।", "done", f"#/order/{oid}")
     notify(u["id"], f"🎉 কেনা সম্পূর্ণ। {mon(o['qty'])} মণ {crop_name(o['crop'])} আপনার মজুদে যোগ হয়েছে।", "done", f"#/order/{oid}")
+    books(oid)
 
 
 def award_points(o, seller, buyer):
@@ -937,6 +954,7 @@ def release_order(o, by, reason):
         db.update("bookings", o["booking"], status="cancelled", updated=now())
         booking_event(o["booking"], "cancelled", "অর্ডার বাতিল হয়েছে")
     db.update("orders", o["id"], status="cancelled", cancelled_at=now(), cancelled_by=by, reason=reason)
+    books(o["id"])
 
 
 def rate(u, oid, stars, text=None):
@@ -1112,7 +1130,7 @@ def add_entry(u, kind, crop, qty, amount, note):
     if kind == "stock":
         stock_add(u["id"], crop, qty, (amount / qty) if amount else None)
     e = {"id": nid("X"), "uid": u["id"], "kind": kind, "crop": crop, "qty": qty, "amount": amount,
-         "cost_basis": cost_basis, "note": note, "at": now()}
+         "cost_basis": cost_basis, "note": note, "at": now(), "source": "user_reported"}
     db.insert("entries", e)
     return e
 
@@ -1133,26 +1151,10 @@ def order_pnl(o, uid):
 
 
 def pnl(uid):
-    sales = db.q("SELECT * FROM orders WHERE seller=? AND status='completed'", (uid,))
-    buys = db.q("SELECT * FROM orders WHERE buyer=? AND status='completed'", (uid,))
-    ent = db.q("SELECT * FROM entries WHERE uid=?", (uid,))
-    revenue = sum(o["goods"] for o in sales) + sum(e["amount"] for e in ent if e["kind"] == "sale")
-    cashback = sum(o["cashback"] or 0 for o in sales)
-    known_cost = sum(o["cost_basis"] * o["qty"] for o in sales if o["cost_basis"] is not None) \
-        + sum(e["cost_basis"] * e["qty"] for e in ent if e["kind"] == "sale" and e["cost_basis"] is not None)
-    unknown_qty = sum(o["qty"] for o in sales if o["cost_basis"] is None) \
-        + sum(e["qty"] for e in ent if e["kind"] == "sale" and e["cost_basis"] is None)
-    transport = sum(o["t_seller"] - o["t_cs"] for o in sales) \
-        + sum(b["total"] - b["credit_used"] for b in db.q(
-            "SELECT * FROM bookings WHERE uid=? AND order_id IS NULL AND paid=1 AND status!='cancelled'", (uid,)))
-    fees = sum(o["fee"] - o["fee_disc"] for o in sales)
-    other = sum(e["amount"] for e in ent if e["kind"] == "expense")
-    bought = sum(o["goods"] + o["t_buyer"] - o["t_cb"] for o in buys)
-    expense = known_cost + transport + fees + other
-    return {"revenue": revenue, "cashback": cashback, "cost_of_goods": known_cost, "unknown_cost_qty": unknown_qty,
-            "transport": transport, "fees": fees, "other": other, "expense": expense,
-            "profit": revenue + cashback - expense, "exact": unknown_qty == 0, "purchases": bought,
-            "sales_count": len(sales), "buys_count": len(buys)}
+    """All-time profit & loss for the "মজুদ ও হিসাব" page and the dashboard. Computed by Smart Hisab
+    (app/hisab.py) so both pages always show the same numbers and use the same costing rules."""
+    from app import hisab
+    return hisab.legacy_pnl(uid)
 
 
 # ---------------------------------------------------------------- housekeeping

@@ -153,3 +153,38 @@ Checks done:
   "insufficient evidence").
 - No new accuracy figures were invented; the market-choice figures (e.g. ৳7.84/kg more than the local market)
   come from `models/veg_metrics.json` and are shown as simulated estimates.
+
+---
+
+# Audit round 2 — "Final all-in-one" prompt (2026-10-17, commit `6bc4dbf`, tag `checkpoint-before-smart-hisab`)
+
+The uploaded zip is identical to `6bc4dbf`. Status of each requested area **before** this round:
+
+| Area | Status found | Evidence | Action |
+|---|---|---|---|
+| Demo farmer/buyer one-click login | Working, default on | `ENABLE_DEMO_MODE` defaults to true; `test_demo_works_in_production_by_default` | keep |
+| Prototype OTP (Neon, hashed, expiry, attempts, replay) | Working | `tests/test_otp.py` (15 tests) | keep |
+| Admin protection, sessions, rate limits, reset guard | Working | `tests/test_security.py` | re-verify, keep |
+| Transactions / overselling / double payment / truck capacity | Working | `tests/test_transactions.py` | keep |
+| Accounting | **Partial**: "মজুদ ও হিসাব" page with stock, P&L and 3 manual entry kinds (`entries` table: sale / expense / stock). No categories, dates, dues, void/audit, reports | `app/services.py: add_entry, pnl`; `web/4_trader_c.js: V.books` | build **Smart Hisab** on top, reusing `entries` and the existing weighted-average stock cost |
+| Invoices / receipts / PDF | **Missing** | no invoice code anywhere (`grep invoice`) | new: invoices, adjustments, receipts, PDF with Bengali shaping |
+| Dues (receivable / payable, partial, overdue) | **Missing** (only implicit escrow) | — | new `dues`, `due_payments` |
+| Audit trail for financial changes | **Missing** | — | new `audit_events` |
+| Receipt attachments | **Missing**; no object storage configured | — | optional, stored in the database (durable on Neon, owner-only), size-limited |
+| First-party transaction dataset | **Partial**: admin export of completed orders with demo/real label (`ai_routes.transactions`) | no verification status, no eligibility rules, no duplicate detection, no unit normalisation record | new `trade_records` + validated training export |
+| Voice assistant | **Partial**: question box + mic on the AI page only, crop/qty parsing for advice | `web/5c_features.js: vaPanel`; `app/advisor.py: parse_query` | floating assistant on dashboards, account questions (sales, dues, profit, bills, pending orders, prices) |
+| Smart Selling Advisor, spoilage, pooling, impact, PWA | Working | `tests/test_features.py` | keep; small refinements only |
+| Request timeout / retry / form drafts | **Missing** | `api()` has no timeout; forms lose input on reload | add |
+
+New confirmed issues:
+
+| # | Location | Issue | Severity | Fix | Regression risk |
+|---|---|---|---|---|---|
+| R2-1 | `services.pnl` | Expenses have no category or date; profit cannot be shown per period; farmer production cost can be counted twice if entered both per-kg and as an expense | MEDIUM | Smart Hisab P&L with documented costing rules; legacy keys kept for the old page | low — old page keeps its fields |
+| R2-2 | `entries` | Entries cannot be corrected (no void), no audit trail | MEDIUM | void with reason + audit event; voided rows excluded everywhere | low |
+| R2-3 | `api()` (web) | No request timeout: a stalled mobile connection leaves the UI waiting forever | LOW | 20 s timeout + one retry for GET | low |
+| R2-4 | `db.reset` (PostgreSQL) | New foreign keys would block dropping `orders` during a demo reset | LOW | `DROP … CASCADE` on PostgreSQL | demo reset only |
+| R2-5 | `app/manage.py status` + `db._pg_sql` | A literal `%` in SQL (`LIKE 'U%'`) crashed `manage status` on PostgreSQL (the documented dry-run step) | LOW | escape `%` for PostgreSQL; regression test `test_literal_percent_in_sql_works` | none — no query used `%` as a literal placeholder |
+
+### Result of round 2
+All rows marked Missing/Partial above are implemented and tested (see TEST_REPORT.md). R2-1 … R2-5 fixed.

@@ -34,6 +34,20 @@ transport proposals (recipient only), payments (payer only, `uid` check), bookin
 the user view returns counts and their own costs, no other user's data). Profile edits cannot change `role`,
 `wallet`, `verified` or points (Pydantic model whitelists fields) — `test_role_in_payload_does_not_grant_admin`.
 
+## Smart Hisab, documents, dataset and assistant (3.1)
+- Every `/api/hisab/*` endpoint resolves the signed-in user server-side; ids in the URL are only looked up within
+  that user's rows. Invoices and receipts: seller, buyer or admin only — anyone else gets **404** (not 403), so
+  invoice ids cannot be probed (`test_invoices_and_receipts_are_private`, `test_dues_are_private`, `test_attachments_owner_only_and_validated`).
+- Receipt attachments are stored in the database (Neon), not on Render's disk; images are re-validated with the
+  same checks as listing photos, PDFs must start with `%PDF-`, max ~500 KB; served only to the owner with
+  `Content-Security-Policy: default-src 'none'; sandbox`, `nosniff`, `no-store`.
+- PDFs and CSVs are sent with `Cache-Control: private, no-store`; CSV cells come from the user's own data.
+- Training export (`/api/admin/dataset/training.csv`) is admin-only and contains no names, phone numbers, user
+  ids or order ids (test checks the CSV for each of them). Only verified, eligible real-platform trades.
+- The assistant endpoint is read-only (test compares row counts of orders, offers, payments, entries and dues
+  before/after 9 questions, including "buy" and "pay" commands) and answers only from the caller's own rows.
+- Money: Decimal and integer poisha, overpayment of a due refused, numbers unique under concurrency.
+
 ## Secrets and logging
 - No secret, URL or password in the repository; `.env.example` has placeholders only.
 - Passwords: PBKDF2-SHA256, 200k iterations. OTP codes: only an HMAC is stored; the code is returned once to
@@ -58,3 +72,9 @@ the user view returns counts and their own costs, no other user's data). Profile
    sign up without phone verification. Set `ENABLE_DEMO_MODE=false` before real users join (or use a separate
    deployment). Admin is never one-click; seeding and reset stay forbidden in production.
 9. No dependency vulnerability scan was run in this environment (pip-audit not installed).
+10. **User-reported records are not verified.** Smart Hisab labels them, but a user can enter anything; reports
+    that mix them with platform data say so.
+11. **Receipt attachments live in the database.** Fine at prototype scale (500 KB limit); with many users move them
+    to object storage (e.g. S3/R2) to keep the Neon database small.
+12. **Speech is recognised by the browser** (Chrome sends audio to Google's speech service). The app itself never
+    receives audio, only the text the user confirms.

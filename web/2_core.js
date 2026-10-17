@@ -175,14 +175,26 @@ let S = {users:[],listings:[],trucks:[],me:null,notifs:[]}, TOKEN=null, lastJSON
 try{ TOKEN = localStorage.getItem('reroute-token'); }catch(e){}
 function setToken(t){ TOKEN=t; try{ t?localStorage.setItem('reroute-token',t):localStorage.removeItem('reroute-token'); }catch(e){} }
 
-async function api(path, method='GET', body){
+/* opts.quiet: let the caller show the error itself; opts.timeout: ms (default 20 s).
+   Reads are retried once on a network error or timeout; writes never are, so nothing is submitted twice. */
+async function api(path, method='GET', body, opts={}){
   let r, data=null;
+  const attempt=async()=>{
+    const ctl=new AbortController(), tm=setTimeout(()=>ctl.abort(),opts.timeout||20000);
+    try{ return await fetch('/api'+path,{method,signal:ctl.signal,headers:{'Content-Type':'application/json',...(TOKEN?{'X-Token':TOKEN}:{})},body:body?JSON.stringify(body):undefined}); }
+    finally{ clearTimeout(tm); }
+  };
   try{
-    r = await fetch('/api'+path,{method,headers:{'Content-Type':'application/json',...(TOKEN?{'X-Token':TOKEN}:{})},body:body?JSON.stringify(body):undefined});
+    try{ r=await attempt(); }
+    catch(e){
+      if(method!=='GET') throw e;
+      await new Promise(res=>setTimeout(res,1500));
+      r=await attempt();
+    }
     try{ data=await r.json(); }catch(e){}
   }
   catch(e){
-    toast('সার্ভারের সাথে যোগাযোগ হচ্ছে না, একটু পরে চেষ্টা করুন','error');
+    toast(e.name==='AbortError'?'সার্ভার সাড়া দিচ্ছে না (ইন্টারনেট ধীর?), একটু পরে আবার চেষ্টা করুন':'সার্ভারের সাথে যোগাযোগ হচ্ছে না, একটু পরে চেষ্টা করুন','error');
     throw e;
   }
 
@@ -190,8 +202,11 @@ async function api(path, method='GET', body){
 
   if(!r.ok){
     const d=data&&data.detail;
-    toast(typeof d==='string'?d:(Array.isArray(d)?'তথ্য ঠিকভাবে দিন':'কাজটি হয়নি, আবার চেষ্টা করুন'),'error');
-    throw new Error(d);
+    const msg=typeof d==='string'?d:(Array.isArray(d)?'তথ্য ঠিকভাবে দিন':'কাজটি হয়নি, আবার চেষ্টা করুন');
+    if(!opts.quiet) toast(msg,'error');
+    const err=new Error(msg);
+    err.status=r.status;
+    throw err;
   }
 
   return data;

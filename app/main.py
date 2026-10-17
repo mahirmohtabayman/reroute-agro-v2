@@ -1002,6 +1002,8 @@ def reset(u=Depends(need_admin)):
 
 from app.ai_routes import router as ai_router  # noqa: E402
 app.include_router(ai_router)
+from app.hisab_routes import router as hisab_router  # noqa: E402
+app.include_router(hisab_router)
 
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
