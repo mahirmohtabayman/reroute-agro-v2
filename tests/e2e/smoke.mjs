@@ -120,6 +120,24 @@ check((await F.textContent('.as-msgs')).includes('লাভ'), 'journey: assista
 await P.goto(base + '/#/hisab/bills'); await P.waitForTimeout(1500);
 check((await P.textContent('.hb-body')).includes(invNo), 'journey: buyer sees the same invoice');
 
+// English mode, favicon, theme transition, wallet card
+{
+  const q = await page({ width: 1366, height: 900 }, { user_id: 'f1' });
+  await q.evaluate(() => localStorage.setItem('reroute-lang', 'en')); await q.reload(); await q.waitForTimeout(900);
+  await q.goto(base + '/#/rewards'); await q.waitForTimeout(1500);
+  const nav = await q.$$eval('.tnav a', a => a.map(x => x.textContent.trim()));
+  check(nav.length > 5 && nav.every(t => !/[ঀ-৿]/.test(t.replace(/[০-৯]/g, ''))), 'English mode: every menu item is English');
+  check((await q.textContent('.wallet-eyebrow')).trim() === 'Wallet Balance', 'English mode: wallet card label');
+  check(!/[ঀ-৿]/.test(await q.textContent('.rewards-head')), 'English mode: page heading fully English');
+  check(await q.$eval('link[rel="icon"][href^="/favicon.ico"]', l => !!l) && (await q.request.get(base + '/favicon.ico')).status() === 200, 'leaf favicon served');
+  const fs = await q.evaluate(() => parseFloat(getComputedStyle(document.querySelector('.wallet-value')).fontSize) > parseFloat(getComputedStyle(document.querySelector('.points-value')).fontSize));
+  check(fs, 'wallet balance is larger than the points value');
+  const smooth = await q.evaluate(async () => { const before = getComputedStyle(document.body).backgroundColor; document.querySelector('[data-act="theme"]').click();
+    await new Promise(r => setTimeout(r, 120)); const mid = getComputedStyle(document.body).backgroundColor; await new Promise(r => setTimeout(r, 400));
+    return mid !== before && mid !== getComputedStyle(document.body).backgroundColor; });
+  check(smooth, 'theme switch animates through intermediate colours');
+}
+
 // language switch and phone widths
 p = await page({ width: 320, height: 700 });
 await p.evaluate(() => localStorage.setItem('reroute-lang', 'en')); await p.reload(); await p.waitForTimeout(900);
