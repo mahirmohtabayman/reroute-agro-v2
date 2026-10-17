@@ -488,6 +488,70 @@ const REASONS = {
 };
 
 
+/* ---------- sign-up OTP (demo: the code is shown on screen, no SMS gateway yet) ---------- */
+let OTP=null, OTP_TIMER=null;
+const onlyDigits=v=>enDigits(String(v||'')).replace(/\D/g,'');
+
+function otpLeft(){
+  const s=Math.max(0,Math.round(((OTP&&OTP.expires)||0)-Date.now())/1000|0);
+  return s?`${bd(Math.floor(s/60))}:${bd(String(s%60).padStart(2,'0'))} মিনিটে মেয়াদ শেষ`:'কোডের মেয়াদ শেষ, আবার পাঠান';
+}
+
+function drawOtp(value=''){
+  modal(`<div class="body otp-box">
+    <div class="otp-ic">${ic('shield')}</div>
+    <h2>OTP যাচাই</h2>
+    <p class="muted sm">অ্যাকাউন্ট খুলতে <b data-i18n-skip>${esc(OTP.phone)}</b> নম্বরের কোডটি দিন</p>
+    <div class="otp-demo">
+      <div class="row" style="gap:8px">${ic('info')}<b>ডেমো যাচাই</b></div>
+      <p>এটি প্রোটোটাইপ, SMS গেটওয়ে এখনো চালু হয়নি। আপনার যাচাই কোড:</p>
+      <div class="otp-code" data-i18n-skip>${esc(OTP.demo_otp)}</div>
+      <p class="xs muted">উদাহরণ কোড · <span id="otp-left">${otpLeft()}</span></p>
+    </div>
+    <label class="field"><span>৫ সংখ্যার কোড দিন</span>
+      <input id="otp-in" class="otp-input" inputmode="numeric" maxlength="5" autocomplete="one-time-code" placeholder="_ _ _ _ _" value="${esc(value)}"></label>
+    ${OTP.err?`<p class="danger sm" style="margin-top:10px">${esc(OTP.err)}</p>`:''}
+    <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="otp-verify">যাচাই করে অ্যাকাউন্ট খুলুন</button>
+    <p class="muted sm" style="margin-top:12px">কোড পাননি? <button type="button" class="linkbtn" data-act="otp-resend">আবার পাঠান</button></p>
+  </div>`);
+
+  applyLanguage($('#modal'));
+  const inp=$('#otp-in');
+  if(inp) inp.focus();
+
+  clearInterval(OTP_TIMER);
+  OTP_TIMER=setInterval(()=>{
+    const el=$('#otp-left');
+    if(!OTP||!el){ clearInterval(OTP_TIMER); return; }
+    el.textContent=otpLeft();
+    applyLanguage(el);
+  },1000);
+}
+
+/* keep typed sign-up / login values across re-renders */
+document.addEventListener('input',e=>{
+  const d=e.target.dataset||{};
+  if(d.rg!==undefined){
+    RG[d.rg]=e.target.value;
+    if(RGE[d.rg]){
+      delete RGE[d.rg];
+      const f=e.target.closest('.field');
+      if(f){ f.classList.remove('err'); const m=f.querySelector('.ferr'); if(m) m.remove(); }
+    }
+  }
+  if(d.lg!==undefined) LG[d.lg]=e.target.value;
+});
+
+/* Enter submits the login, sign-up and OTP forms */
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter'||!e.target.matches('input')) return;
+  const d=e.target.dataset||{}, act=e.target.id==='otp-in'?'otp-verify':d.lg!==undefined?'login-phone':d.rg!==undefined?'register':null;
+  if(!act) return;
+  e.preventDefault();
+  const btn=document.querySelector(`[data-act="${act}"]`);
+  if(btn) btn.click();
+});
+
 const A = {
 
   close:()=>closeModal(),
@@ -617,57 +681,102 @@ const A = {
       user_id:d.id
     }),
 
-  'login-phone':async()=>
-    doLogin({
-      phone:
-        ($('#lg-phone').value||'')
-          .replace(/\D/g,''),
-      role:loginRole
-    }),
+  'login-phone':async()=>{
+    const phone=onlyDigits(LG.phone);
 
-  register:async()=>{
-    const b={
-      role:loginRole,
-      name:$('#rg-name').value.trim(),
-      phone:
-        ($('#rg-phone').value||'')
-          .replace(/\D/g,''),
-      place:$('#rg-place').value,
-      area:$('#rg-area').value.trim(),
-      biz:
-        $('#rg-biz')
-          ? $('#rg-biz').value.trim()
-          : null
-    };
-
-    if(
-      b.name.length<2
-      ||
-      !/^01\d{9}$/.test(b.phone)
-    ){
-      toast(
-        'নাম আর ০১ দিয়ে শুরু ১১ সংখ্যার নম্বর দিন'
-      );
-
+    if(!/^01\d{9}$/.test(phone)||!LG.password){
+      toast('মোবাইল নম্বর আর পাসওয়ার্ড দিন');
       return;
     }
 
-    const r=
-      await api(
-        '/register',
-        'POST',
-        b
-      );
+    await doLogin({
+      phone,
+      password:LG.password,
+      role:loginRole
+    });
 
+    LG.password='';
+  },
+
+  'pw-toggle':(d,el)=>{
+    const inp=document.getElementById(d.for);
+    if(!inp) return;
+    const show=inp.type==='password';
+    inp.type=show?'text':'password';
+    el.innerHTML=ic(show?'eyeoff':'eye');
+    el.setAttribute('aria-label',show?'পাসওয়ার্ড লুকান':'পাসওয়ার্ড দেখুন');
+  },
+
+  register:async()=>{
+    const phone=onlyDigits(RG.phone), E={};
+
+    if(RG.name.trim().length<2) E.name='পুরো নাম দিন';
+    if(!/^01\d{9}$/.test(phone)) E.phone='০১ দিয়ে শুরু ১১ সংখ্যার মোবাইল নম্বর দিন';
+    if(RG.password.length<6) E.password='পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে';
+    if(RG.confirm!==RG.password) E.confirm='দুটো পাসওয়ার্ড মিলছে না';
+    if(RG.upazila.trim().length<2) E.upazila='উপজেলার নাম দিন';
+    if(RG.market.trim().length<2) E.market='নিকটবর্তী বাজারের নাম দিন';
+
+    RGE=E;
+
+    if(Object.keys(E).length){
+      render();
+      const first=document.querySelector('.field.err input');
+      if(first) first.focus();
+      return;
+    }
+
+    const b={
+      role:loginRole,
+      name:RG.name.trim(),
+      phone,
+      password:RG.password,
+      confirm_password:RG.confirm,
+      place:RG.place,
+      upazila:RG.upazila.trim(),
+      market:RG.market.trim(),
+      biz:loginRole==='paikar'&&RG.biz.trim()?RG.biz.trim():null
+    };
+
+    const r=await api('/register','POST',b);
+
+    OTP={...r, phone, body:b, expires:Date.now()+r.expires_in*1000, err:''};
+    drawOtp();
+  },
+
+  'otp-verify':async()=>{
+    const inp=$('#otp-in'), code=onlyDigits(inp?inp.value:'');
+
+    if(code.length!==5){
+      OTP.err='৫ সংখ্যার কোডটি দিন';
+      drawOtp(code);
+      return;
+    }
+
+    let r;
+    try{
+      r=await api('/register/verify','POST',{reg_id:OTP.reg_id, otp:code});
+    }
+    catch(e){
+      OTP.err=e.message||'কোড মেলেনি';
+      drawOtp(code);
+      return;
+    }
+
+    OTP=null;
+    RG={name:'',biz:'',phone:'',password:'',confirm:'',place:'rajshahi',upazila:'',market:''};
+    closeModal();
     setToken(r.token);
-
     await load();
-
     go('#/home');
+    toast('অ্যাকাউন্ট খোলা হয়েছে');
+  },
 
-    toast(
-      'অ্যাকাউন্ট খোলা হয়েছে'
-    );
+  'otp-resend':async()=>{
+    const r=await api('/register','POST',OTP.body);
+    OTP={...OTP, ...r, expires:Date.now()+r.expires_in*1000, err:''};
+    drawOtp();
+    toast('নতুন কোড পাঠানো হয়েছে');
   },
 
   'f-crop':d=>{
@@ -2306,7 +2415,8 @@ const A = {
   'ac-save':async()=>{
     const b={
       name:AC.name,
-      area:AC.area
+      area:AC.area,
+      market:AC.market
     };
 
     if(me().role==='paikar'){

@@ -2529,6 +2529,7 @@ V.account = () => {
     AC={
       name:u.name,
       area:u.area||'',
+      market:u.market||'',
       biz:u.biz||'',
       photo:null
     };
@@ -2616,12 +2617,25 @@ V.account = () => {
       <label class="field">
 
         <span>
-          উপজেলা / বাজার
+          উপজেলা
         </span>
 
         <input
           data-ac="area"
           value="${esc(AC.area)}">
+
+      </label>
+
+
+      <label class="field">
+
+        <span>
+          নিকটবর্তী বাজারের নাম
+        </span>
+
+        <input
+          data-ac="market"
+          value="${esc(AC.market)}">
 
       </label>
 

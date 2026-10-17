@@ -3,7 +3,7 @@ Demo data. Everything after the user/truck rows is created through the same func
 (listing → offer → payment → truck → delivery), so stock, money, points and profit/loss always match.
 All people and businesses are fictional.
 """
-from app import db, services as S
+from app import auth, db, services as S
 from app.logic import DAY, HOUR
 
 MIN = 60_000
@@ -107,9 +107,10 @@ def seed():
     for k in kept:
         k.update(pts=0, wallet=0, fee_credit=0, transport_credit=0, plus_until=0, plus_cancelled=0)
         db.insert("users", k)
+    demo_hash = auth.hash_password(auth.DEMO_PASSWORD)
     for uid, role, name, biz, phone, place, area, verified, days in USERS:
         db.insert("users", {"id": uid, "role": role, "name": name, "biz": biz, "phone": phone, "place": place,
-                            "area": area, "verified": verified, "joined": BASE - days * DAY})
+                            "area": area, "verified": verified, "joined": BASE - days * DAY, "pw_hash": demo_hash})
     trucks = [S.add_truck(*t)["id"] for t in TRUCKS]
     T = dict(zip(["raj1", "nat2", "bog3", "nao4", "cha5", "dha6", "raj7"], trucks))
 

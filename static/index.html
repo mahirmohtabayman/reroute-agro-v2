@@ -8,7 +8,8 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'><path d='M6 15v14M28 15v14' stroke='%238A5A2B' stroke-width='2' stroke-linecap='round'/><path d='M7 6h3.33L7.67 13H3z' fill='%23D93D27'/><path d='M10.33 6h3.34L12.33 13H7.67z' fill='%23F6C453'/><path d='M13.67 6H17v7h-4.67z' fill='%23D93D27'/><path d='M17 6h3.33l1.34 7H17z' fill='%23F6C453'/><path d='M20.33 6h3.34l2.66 7H17z' fill='%23D93D27'/><path d='M23.67 6H27l4 7h-4.67z' fill='%23F6C453'/><path d='M3 13a2.33 2.33 0 0 0 4.67 0z' fill='%23D93D27'/><path d='M7.67 13a2.33 2.33 0 0 0 4.66 0z' fill='%23F6C453'/><path d='M12.33 13a2.33 2.33 0 0 0 4.67 0z' fill='%23D93D27'/><path d='M17 13a2.33 2.33 0 0 0 4.67 0z' fill='%23F6C453'/><path d='M21.67 13a2.33 2.33 0 0 0 4.66 0z' fill='%23D93D27'/><path d='M26.33 13a2.33 2.33 0 0 0 4.67 0z' fill='%23F6C453'/><circle cx='10' cy='21.5' r='2.4' fill='%23F29A2E'/><circle cx='15' cy='21.5' r='2.4' fill='%231E8A4C'/><circle cx='20' cy='21.5' r='2.4' fill='%23F6C453'/><circle cx='25' cy='21.5' r='2.4' fill='%23D93D27'/><rect x='4' y='24' width='26' height='3' rx='1.2' fill='%238A5A2B'/><rect x='7' y='27' width='20' height='4' rx='1' fill='%23B07A3E'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="/static/fonts/Kalpurush.woff2" as="font" type="font/woff2" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>
 try{
   var t=localStorage.getItem('reroute-theme');
@@ -58,8 +59,8 @@ try{
   --shadow-lg:0 24px 48px -16px rgba(20,35,26,.28);
   --focus:0 0 0 3px color-mix(in srgb,var(--green) 30%,transparent);
 
-  --font-head:"Anek Bangla","Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif;
-  --font-body:"Hind Siliguri","Anek Bangla","Noto Sans Bengali",system-ui,sans-serif;
+  --font-head:"Anek Bangla","Kalpurush","Noto Sans Bengali",system-ui,sans-serif;
+  --font-body:"Kalpurush","Anek Bangla","Noto Sans Bengali",system-ui,sans-serif;
 
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -121,6 +122,9 @@ try{
   --shadow-lg:0 24px 48px -16px rgba(0,0,0,.7);
   color-scheme:dark;
 }
+
+/* ---------- fonts: Kalpurush (self-hosted, Bangla script only) for body text, Anek Bangla for headings & Latin ---------- */
+@font-face{font-family:"Kalpurush"; src:url("/static/fonts/Kalpurush.woff2") format("woff2"); font-weight:100 900; font-style:normal; font-display:swap; size-adjust:110%; unicode-range:U+0980-09FF,U+200C-200D,U+25CC;}
 
 /* ---------- base ---------- */
 *,*::before,*::after{box-sizing:border-box;}
@@ -357,7 +361,7 @@ select{appearance:none; -webkit-appearance:none; background-image:url("data:imag
 .fresh.mid{color:#8F5E00;}
 .fresh.low{color:#BF3A22;}
 .info{padding:14px 16px 16px; display:flex; flex-direction:column; gap:4px; flex:1;}
-.info .crop-name{font-size:1.08rem; font-weight:700;}
+.info .crop-name{font-size:1.08rem; font-weight:700; font-family:var(--font-head);}
 .price{font-size:1.3rem; font-weight:700; color:var(--ink); line-height:1.3;}
 .price small{font-size:.8rem; color:var(--muted); font-weight:500; margin-left:1px;}
 .price s{font-size:.82rem; color:var(--muted); font-weight:500; margin-left:6px;}
@@ -654,6 +658,34 @@ footer .wrap{display:flex; justify-content:space-between; gap:12px; flex-wrap:wr
 .detail .kv{font-size:.92rem;}
 @media (max-width:560px){.pic .sample-more{display:none;} .lcard .seller-line .push-right{margin-left:0;}}
 
+/* ---------- sign-up, login & OTP ---------- */
+.form-sec{display:flex; align-items:center; gap:8px; font-size:.95rem; margin:22px 0 2px; padding-top:16px; border-top:1px solid var(--line); color:var(--ink);}
+.form-sec:first-child{margin-top:0; padding-top:0; border-top:0;}
+.form-sec .i{color:var(--green); width:18px; height:18px;}
+.grid2.tight{gap:0 14px;}
+.field.err input,.field.err select{border-color:var(--red); box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 18%,transparent);}
+.ferr{display:block; color:var(--red); font-size:.8rem; margin-top:5px; font-weight:500;}
+.pw-wrap{position:relative; display:block;}
+.pw-wrap input{padding-right:46px!important;}
+.pw-wrap input{font-size:1rem;}
+.auth p a{margin-left:4px;}
+.pw-eye{position:absolute; right:4px; top:50%; transform:translateY(-50%); width:38px; height:38px; border:0; background:transparent; color:var(--muted); border-radius:8px; display:grid; place-items:center;}
+.pw-eye:hover{background:var(--surface2); color:var(--ink);}
+.pw-eye .i{width:18px; height:18px;}
+.demo-pw{text-align:center; margin-top:8px; padding-top:10px; border-top:1px dashed var(--line);}
+.linkbtn{border:0; background:none; padding:0; color:var(--green); font-weight:600; text-decoration:underline; text-underline-offset:3px; cursor:pointer;}
+.otp-box{text-align:center;}
+.otp-box h2{justify-content:center; padding:0!important; margin-top:6px;}
+.otp-ic{display:grid; place-items:center; width:56px; height:56px; border-radius:50%; margin:0 auto; background:var(--green-soft); color:var(--green);}
+.otp-ic .i{width:28px; height:28px;}
+.otp-demo{margin-top:16px; text-align:left; background:var(--surface2); border:1px solid var(--line); border-radius:14px; padding:14px 16px;}
+.otp-demo .i{color:var(--green);}
+.otp-demo p{margin-top:6px; font-size:.9rem;}
+.otp-code{font-family:var(--font-head); font-size:2rem; font-weight:700; letter-spacing:.3em; text-align:center; margin:8px 0 2px; color:var(--ink); font-variant-numeric:tabular-nums;}
+.otp-demo .xs{text-align:center; margin-top:2px;}
+.otp-box .field{text-align:left;}
+.otp-input{text-align:center; font-size:1.5rem!important; letter-spacing:.5em; font-weight:600; font-family:var(--font-head);}
+
 /* ---------- motion ---------- */
 @keyframes view-in{from{opacity:0; transform:translateY(4px);}}
 @keyframes fade{from{opacity:0;}}
@@ -836,6 +868,53 @@ function enDigits(v){ return String(v).replace(/[০-৯]/g,d=>String(BN_DIGITS.
 
 /* Long phrases first. These keep the English UI natural instead of word-by-word. */
 const I18N_PHRASES = [
+  ['তথ্য দিন, তারপর মোবাইলে আসা কোড দিয়ে যাচাই করুন।','Fill in your details, then verify with the code sent to your phone.'],
+  ['অ্যাকাউন্টের ধরন','Account type'],
+  ['ব্যক্তিগত তথ্য','Personal details'],
+  ['পুরো নাম','Full name'],
+  ['আড়ত / ব্যবসার নাম (ঐচ্ছিক)','Business name (optional)'],
+  ['পাসওয়ার্ড আবার দিন','Confirm password'],
+  ['অন্তত ৬ অক্ষর','At least 6 characters'],
+  ['একই পাসওয়ার্ড','Same password'],
+  ['আপনার পাসওয়ার্ড','Your password'],
+  ['নিকটবর্তী বাজারের নাম','Nearest market'],
+  ['এখন এই জেলাগুলোতে সেবা চালু আছে।','Service is currently available in these districts.'],
+  ['আগেই অ্যাকাউন্ট আছে?','Already have an account?'],
+  ['লগ ইন করুন','Log in'],
+  ['ডেমো অ্যাকাউন্টগুলোর পাসওয়ার্ড:','Password for demo accounts:'],
+  ['পাসওয়ার্ড দেখুন','Show password'],
+  ['পাসওয়ার্ড লুকান','Hide password'],
+  ['পুরো নাম দিন','Enter your full name'],
+  ['০১ দিয়ে শুরু ১১ সংখ্যার মোবাইল নম্বর দিন','Enter an 11-digit mobile number starting with 01'],
+  ['পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে','Password must be at least 6 characters'],
+  ['দুটো পাসওয়ার্ড মিলছে না','The two passwords do not match'],
+  ['উপজেলার নাম দিন','Enter your upazila'],
+  ['নিকটবর্তী বাজারের নাম দিন','Enter your nearest market'],
+  ['মোবাইল নম্বর আর পাসওয়ার্ড দিন','Enter your mobile number and password'],
+  ['মোবাইল নম্বর বা পাসওয়ার্ড ঠিক নেই','Wrong mobile number or password'],
+  ['OTP যাচাই','OTP verification'],
+  ['নম্বরের কোডটি দিন','enter the code for this number'],
+  ['অ্যাকাউন্ট খুলতে','To create your account,'],
+  ['ডেমো যাচাই','Demo verification notice'],
+  ['এটি প্রোটোটাইপ, SMS গেটওয়ে এখনো চালু হয়নি। আপনার যাচাই কোড:','This is a prototype. SMS gateway is not enabled. Your verification code is:'],
+  ['উদাহরণ কোড','Example OTP'],
+  ['মিনিটে মেয়াদ শেষ','until it expires'],
+  ['কোডের মেয়াদ শেষ, আবার পাঠান','Code expired, send again'],
+  ['৫ সংখ্যার কোড দিন','Enter your 5-digit OTP'],
+  ['৫ সংখ্যার কোডটি দিন','Enter the 5-digit code'],
+  ['যাচাই করে অ্যাকাউন্ট খুলুন','Verify & Create Account'],
+  ['কোড পাননি?',"Didn't get the code?"],
+  ['আবার পাঠান','Resend'],
+  ['নতুন কোড পাঠানো হয়েছে','A new code has been sent'],
+  ['অ্যাকাউন্ট খোলা হয়েছে','Account created'],
+  ['এই নম্বরে আগেই অ্যাকাউন্ট আছে, লগ ইন করুন','This number already has an account, please log in'],
+  ['কোডের মেয়াদ শেষ। আবার অ্যাকাউন্ট খুলুন বোতাম চাপুন।','The code has expired. Press Create account again.'],
+  ['অনেকবার ভুল কোড দেওয়া হয়েছে। আবার শুরু করুন।','Too many wrong codes. Please start again.'],
+  ['কোড মেলেনি।','Wrong code.'],
+  ['বার চেষ্টা করা যাবে।','attempts left.'],
+  ['পাসওয়ার্ড','Password'],
+  ['ঠিকানা','Address'],
+  ['উপজেলা','Upazila'],
   ['আপনি পাচ্ছেন','Active for you'],
   ['কীভাবে কেনাবেচা হয়','How trading works'],
   ['সব লিস্টিং দেখুন','See all listings'],
@@ -1645,6 +1724,8 @@ const ICONS = {
   leaf:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
   award:'<circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/>',
   calc:'<rect width="16" height="20" x="4" y="2" rx="2"/><path d="M8 6h8M16 14v4M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/>',
+  eye:'<path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/>',
+  eyeoff:'<path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="m2 2 20 20"/>',
   volume:'<path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.4 18.4a9 9 0 0 0 0-12.7"/>'
 };
 const EMOJI_ICON = {
@@ -2275,6 +2356,12 @@ ${(S.listings||[]).some(l=>l.status==='active')?`<section class="home-sec">
 
 /* ---------- login & register ---------- */
 let loginRole='farmer';
+let LG={phone:'',password:''};
+let RG={name:'',biz:'',phone:'',password:'',confirm:'',place:'rajshahi',upazila:'',market:''}, RGE={};
+function pwInput(id, key, store, ac, ph){
+  const v=(store==='LG'?LG:RG)[key];
+  return `<span class="pw-wrap"><input id="${id}" data-${store.toLowerCase()}="${key}" type="password" autocomplete="${ac}" placeholder="${ph}" value="${esc(v)}"><button type="button" class="pw-eye" data-act="pw-toggle" data-for="${id}" aria-label="পাসওয়ার্ড দেখুন">${ic('eye')}</button></span>`;
+}
 V.login = () => {
   const demo = {farmer:['f1','f2','f5'], paikar:['p1','p2','p4'], admin:['a1']}[loginRole];
   const names = {f1:['রহিম উদ্দিন','কৃষক, রাজশাহী: নতুন অফার ও পরিদর্শনের অনুরোধ আছে'],f2:['করিমা বেগম','কৃষক, নাটোর'],f5:['হালিমা খাতুন','কৃষক, রাজশাহী: জরুরি বিক্রি চলছে'],
@@ -2282,23 +2369,39 @@ V.login = () => {
   return `<div class="auth">
     <h1>লগ ইন</h1><p class="muted sub">আপনি কে, বাছুন</p>
     <div class="choice c3">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪'],['admin','অপারেশন','🛠️']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div>
-    ${loginRole!=='admin'?`<div class="panel" style="margin-top:16px"><label class="field" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" inputmode="tel" placeholder="01XXXXXXXXX"></label>
-      <button class="btn btn-green btn-wide" style="margin-top:12px" data-act="login-phone">ঢুকুন</button>
-      <p class="muted sm" style="margin-top:12px;text-align:center">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p></div>`:''}
+    ${loginRole!=='admin'?`<div class="panel" style="margin-top:16px">
+      <label class="field" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" data-lg="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(LG.phone)}"></label>
+      <label class="field"><span>পাসওয়ার্ড</span>${pwInput('lg-password','password','LG','current-password','আপনার পাসওয়ার্ড')}</label>
+      <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="login-phone">ঢুকুন</button>
+      <p class="muted sm" style="margin-top:12px;text-align:center">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p>
+      <p class="muted xs demo-pw">ডেমো অ্যাকাউন্টগুলোর পাসওয়ার্ড: <b data-i18n-skip>123456</b></p></div>`:''}
     <div class="or">ডেমো অ্যাকাউন্ট, এক চাপে ঢুকুন</div>
     <div class="demo-list">${demo.map(id=>`<button class="opt" data-act="login" data-id="${id}"><span class="av">${ic(loginRole==='paikar'?'🏪':loginRole==='admin'?'🛠️':'🧑‍🌾')}</span><span class="grow"><strong>${names[id][0]}</strong><span class="muted">${names[id][1]}</span></span>${ic('next')}</button>`).join('')}</div>
   </div>`;
 };
-V.register = () => `<div class="auth"><h1>নতুন অ্যাকাউন্ট</h1>
-  <div class="choice c2" style="margin-top:16px">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div>
+V.register = () => {
+  const E=RGE, err=k=>E[k]?`<small class="ferr">${E[k]}</small>`:'', cls=k=>E[k]?' err':'';
+  return `<div class="auth"><h1>নতুন অ্যাকাউন্ট</h1><p class="muted sub">তথ্য দিন, তারপর মোবাইলে আসা কোড দিয়ে যাচাই করুন।</p>
+  <div class="field" style="margin-top:0"><span>অ্যাকাউন্টের ধরন</span><div class="choice c2">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div></div>
   <div class="panel" style="margin-top:16px">
-    <label class="field" style="margin-top:0"><span>নাম</span><input id="rg-name"></label>
-    ${loginRole==='paikar'?`<label class="field"><span>আড়ত / ব্যবসার নাম</span><input id="rg-biz"></label>`:''}
-    <label class="field"><span>মোবাইল নম্বর</span><input id="rg-phone" inputmode="tel" placeholder="01XXXXXXXXX"></label>
-    <div class="grid2" style="gap:10px"><label class="field"><span>জেলা</span><select id="rg-place">${Object.entries(PLACES).map(([k,p])=>`<option value="${k}">${p.n}</option>`).join('')}</select></label>
-    <label class="field"><span>উপজেলা / বাজার</span><input id="rg-area"></label></div>
+    <h3 class="form-sec">${ic('user')} ব্যক্তিগত তথ্য</h3>
+    <label class="field${cls('name')}"><span>পুরো নাম</span><input id="rg-name" data-rg="name" autocomplete="name" value="${esc(RG.name)}" placeholder="যেমন: রহিম উদ্দিন">${err('name')}</label>
+    ${loginRole==='paikar'?`<label class="field"><span>আড়ত / ব্যবসার নাম (ঐচ্ছিক)</span><input id="rg-biz" data-rg="biz" value="${esc(RG.biz)}"></label>`:''}
+    <label class="field${cls('phone')}"><span>মোবাইল নম্বর</span><input id="rg-phone" data-rg="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(RG.phone)}">${err('phone')}</label>
+    <h3 class="form-sec">${ic('lock')} পাসওয়ার্ড</h3>
+    <div class="grid2 tight">
+      <label class="field${cls('password')}"><span>পাসওয়ার্ড</span>${pwInput('rg-password','password','RG','new-password','অন্তত ৬ অক্ষর')}${err('password')}</label>
+      <label class="field${cls('confirm')}"><span>পাসওয়ার্ড আবার দিন</span>${pwInput('rg-confirm','confirm','RG','new-password','একই পাসওয়ার্ড')}${err('confirm')}</label></div>
+    <h3 class="form-sec">${ic('pin')} ঠিকানা</h3>
+    <div class="grid2 tight">
+      <label class="field"><span>জেলা</span><select id="rg-place" data-rg="place">${Object.entries(PLACES).map(([k,p])=>`<option value="${k}" ${RG.place===k?'selected':''}>${p.n}</option>`).join('')}</select></label>
+      <label class="field${cls('upazila')}"><span>উপজেলা</span><input id="rg-upazila" data-rg="upazila" value="${esc(RG.upazila)}" placeholder="যেমন: পবা">${err('upazila')}</label></div>
+    <label class="field${cls('market')}"><span>নিকটবর্তী বাজারের নাম</span><input id="rg-market" data-rg="market" value="${esc(RG.market)}" placeholder="যেমন: নওহাটা বাজার">${err('market')}</label>
+    <p class="muted xs" style="margin-top:6px">এখন এই জেলাগুলোতে সেবা চালু আছে।</p>
     <button class="btn btn-green btn-wide" style="margin-top:18px" data-act="register">অ্যাকাউন্ট খুলুন</button>
-    <p class="muted sm" style="margin-top:12px">শুধু কৃষক ও পাইকারদের জন্য পাইকারি প্ল্যাটফর্ম। সর্বনিম্ন অর্ডার ${monTxt(S.config.min_order)}।</p></div></div>`;
+    <p class="muted sm" style="margin-top:12px">শুধু কৃষক ও পাইকারদের জন্য পাইকারি প্ল্যাটফর্ম। সর্বনিম্ন অর্ডার ${monTxt(S.config.min_order)}।</p>
+    <p class="muted sm" style="margin-top:6px;text-align:center">আগেই অ্যাকাউন্ট আছে? <a href="#/login">লগ ইন করুন</a></p></div></div>`;
+};
 
 /* ---------- market: all public listings with search & filters ---------- */
 const F = {q:'',crop:'all',place:'all',max:'',min:'',seller:'all',sold:false,sort:'new'};
@@ -2402,7 +2505,7 @@ V.profile = id => {
   if(!PROFILE||PROFILE.user.id!==id){ api('/users/'+id).then(p=>{ PROFILE=p; render(); }).catch(()=>{}); return skeleton('page'); }
   const p=PROFILE, u=p.user, months=Math.max(1,Math.round((Date.now()-u.joined)/(30*DAY)));
   return `<div class="panel"><div class="row">${avatar(u,true)}<div class="grow"><h1>${esc(dispName(u))}</h1>
-      <div class="muted">${roleBn(u.role)}${u.role==='paikar'?', মালিক '+esc(u.name):''} · ${u.area?esc(u.area)+', ':''}${PLACES[u.place].n}</div>
+      <div class="muted">${roleBn(u.role)}${u.role==='paikar'?', মালিক '+esc(u.name):''} · ${u.area?esc(u.area)+', ':''}${PLACES[u.place].n}${u.market?` · ${esc(u.market)}`:''}</div>
       <div style="margin-top:4px">${verBadge(u)||'<span class="pill p-grey">যাচাই হয়নি</span>'} ${stars(u)}</div></div></div>
     <div class="grid4" style="margin-top:14px">
       <div class="kpi"><span class="muted sm">সম্পূর্ণ লেনদেন</span><strong>${nf(p.completed)}টি</strong></div>
@@ -5430,6 +5533,7 @@ V.account = () => {
     AC={
       name:u.name,
       area:u.area||'',
+      market:u.market||'',
       biz:u.biz||'',
       photo:null
     };
@@ -5517,12 +5621,25 @@ V.account = () => {
       <label class="field">
 
         <span>
-          উপজেলা / বাজার
+          উপজেলা
         </span>
 
         <input
           data-ac="area"
           value="${esc(AC.area)}">
+
+      </label>
+
+
+      <label class="field">
+
+        <span>
+          নিকটবর্তী বাজারের নাম
+        </span>
+
+        <input
+          data-ac="market"
+          value="${esc(AC.market)}">
 
       </label>
 
@@ -6914,6 +7031,70 @@ const REASONS = {
 };
 
 
+/* ---------- sign-up OTP (demo: the code is shown on screen, no SMS gateway yet) ---------- */
+let OTP=null, OTP_TIMER=null;
+const onlyDigits=v=>enDigits(String(v||'')).replace(/\D/g,'');
+
+function otpLeft(){
+  const s=Math.max(0,Math.round(((OTP&&OTP.expires)||0)-Date.now())/1000|0);
+  return s?`${bd(Math.floor(s/60))}:${bd(String(s%60).padStart(2,'0'))} মিনিটে মেয়াদ শেষ`:'কোডের মেয়াদ শেষ, আবার পাঠান';
+}
+
+function drawOtp(value=''){
+  modal(`<div class="body otp-box">
+    <div class="otp-ic">${ic('shield')}</div>
+    <h2>OTP যাচাই</h2>
+    <p class="muted sm">অ্যাকাউন্ট খুলতে <b data-i18n-skip>${esc(OTP.phone)}</b> নম্বরের কোডটি দিন</p>
+    <div class="otp-demo">
+      <div class="row" style="gap:8px">${ic('info')}<b>ডেমো যাচাই</b></div>
+      <p>এটি প্রোটোটাইপ, SMS গেটওয়ে এখনো চালু হয়নি। আপনার যাচাই কোড:</p>
+      <div class="otp-code" data-i18n-skip>${esc(OTP.demo_otp)}</div>
+      <p class="xs muted">উদাহরণ কোড · <span id="otp-left">${otpLeft()}</span></p>
+    </div>
+    <label class="field"><span>৫ সংখ্যার কোড দিন</span>
+      <input id="otp-in" class="otp-input" inputmode="numeric" maxlength="5" autocomplete="one-time-code" placeholder="_ _ _ _ _" value="${esc(value)}"></label>
+    ${OTP.err?`<p class="danger sm" style="margin-top:10px">${esc(OTP.err)}</p>`:''}
+    <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="otp-verify">যাচাই করে অ্যাকাউন্ট খুলুন</button>
+    <p class="muted sm" style="margin-top:12px">কোড পাননি? <button type="button" class="linkbtn" data-act="otp-resend">আবার পাঠান</button></p>
+  </div>`);
+
+  applyLanguage($('#modal'));
+  const inp=$('#otp-in');
+  if(inp) inp.focus();
+
+  clearInterval(OTP_TIMER);
+  OTP_TIMER=setInterval(()=>{
+    const el=$('#otp-left');
+    if(!OTP||!el){ clearInterval(OTP_TIMER); return; }
+    el.textContent=otpLeft();
+    applyLanguage(el);
+  },1000);
+}
+
+/* keep typed sign-up / login values across re-renders */
+document.addEventListener('input',e=>{
+  const d=e.target.dataset||{};
+  if(d.rg!==undefined){
+    RG[d.rg]=e.target.value;
+    if(RGE[d.rg]){
+      delete RGE[d.rg];
+      const f=e.target.closest('.field');
+      if(f){ f.classList.remove('err'); const m=f.querySelector('.ferr'); if(m) m.remove(); }
+    }
+  }
+  if(d.lg!==undefined) LG[d.lg]=e.target.value;
+});
+
+/* Enter submits the login, sign-up and OTP forms */
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter'||!e.target.matches('input')) return;
+  const d=e.target.dataset||{}, act=e.target.id==='otp-in'?'otp-verify':d.lg!==undefined?'login-phone':d.rg!==undefined?'register':null;
+  if(!act) return;
+  e.preventDefault();
+  const btn=document.querySelector(`[data-act="${act}"]`);
+  if(btn) btn.click();
+});
+
 const A = {
 
   close:()=>closeModal(),
@@ -7043,57 +7224,102 @@ const A = {
       user_id:d.id
     }),
 
-  'login-phone':async()=>
-    doLogin({
-      phone:
-        ($('#lg-phone').value||'')
-          .replace(/\D/g,''),
-      role:loginRole
-    }),
+  'login-phone':async()=>{
+    const phone=onlyDigits(LG.phone);
 
-  register:async()=>{
-    const b={
-      role:loginRole,
-      name:$('#rg-name').value.trim(),
-      phone:
-        ($('#rg-phone').value||'')
-          .replace(/\D/g,''),
-      place:$('#rg-place').value,
-      area:$('#rg-area').value.trim(),
-      biz:
-        $('#rg-biz')
-          ? $('#rg-biz').value.trim()
-          : null
-    };
-
-    if(
-      b.name.length<2
-      ||
-      !/^01\d{9}$/.test(b.phone)
-    ){
-      toast(
-        'নাম আর ০১ দিয়ে শুরু ১১ সংখ্যার নম্বর দিন'
-      );
-
+    if(!/^01\d{9}$/.test(phone)||!LG.password){
+      toast('মোবাইল নম্বর আর পাসওয়ার্ড দিন');
       return;
     }
 
-    const r=
-      await api(
-        '/register',
-        'POST',
-        b
-      );
+    await doLogin({
+      phone,
+      password:LG.password,
+      role:loginRole
+    });
 
+    LG.password='';
+  },
+
+  'pw-toggle':(d,el)=>{
+    const inp=document.getElementById(d.for);
+    if(!inp) return;
+    const show=inp.type==='password';
+    inp.type=show?'text':'password';
+    el.innerHTML=ic(show?'eyeoff':'eye');
+    el.setAttribute('aria-label',show?'পাসওয়ার্ড লুকান':'পাসওয়ার্ড দেখুন');
+  },
+
+  register:async()=>{
+    const phone=onlyDigits(RG.phone), E={};
+
+    if(RG.name.trim().length<2) E.name='পুরো নাম দিন';
+    if(!/^01\d{9}$/.test(phone)) E.phone='০১ দিয়ে শুরু ১১ সংখ্যার মোবাইল নম্বর দিন';
+    if(RG.password.length<6) E.password='পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে';
+    if(RG.confirm!==RG.password) E.confirm='দুটো পাসওয়ার্ড মিলছে না';
+    if(RG.upazila.trim().length<2) E.upazila='উপজেলার নাম দিন';
+    if(RG.market.trim().length<2) E.market='নিকটবর্তী বাজারের নাম দিন';
+
+    RGE=E;
+
+    if(Object.keys(E).length){
+      render();
+      const first=document.querySelector('.field.err input');
+      if(first) first.focus();
+      return;
+    }
+
+    const b={
+      role:loginRole,
+      name:RG.name.trim(),
+      phone,
+      password:RG.password,
+      confirm_password:RG.confirm,
+      place:RG.place,
+      upazila:RG.upazila.trim(),
+      market:RG.market.trim(),
+      biz:loginRole==='paikar'&&RG.biz.trim()?RG.biz.trim():null
+    };
+
+    const r=await api('/register','POST',b);
+
+    OTP={...r, phone, body:b, expires:Date.now()+r.expires_in*1000, err:''};
+    drawOtp();
+  },
+
+  'otp-verify':async()=>{
+    const inp=$('#otp-in'), code=onlyDigits(inp?inp.value:'');
+
+    if(code.length!==5){
+      OTP.err='৫ সংখ্যার কোডটি দিন';
+      drawOtp(code);
+      return;
+    }
+
+    let r;
+    try{
+      r=await api('/register/verify','POST',{reg_id:OTP.reg_id, otp:code});
+    }
+    catch(e){
+      OTP.err=e.message||'কোড মেলেনি';
+      drawOtp(code);
+      return;
+    }
+
+    OTP=null;
+    RG={name:'',biz:'',phone:'',password:'',confirm:'',place:'rajshahi',upazila:'',market:''};
+    closeModal();
     setToken(r.token);
-
     await load();
-
     go('#/home');
+    toast('অ্যাকাউন্ট খোলা হয়েছে');
+  },
 
-    toast(
-      'অ্যাকাউন্ট খোলা হয়েছে'
-    );
+  'otp-resend':async()=>{
+    const r=await api('/register','POST',OTP.body);
+    OTP={...OTP, ...r, expires:Date.now()+r.expires_in*1000, err:''};
+    drawOtp();
+    toast('নতুন কোড পাঠানো হয়েছে');
   },
 
   'f-crop':d=>{
@@ -8732,7 +8958,8 @@ const A = {
   'ac-save':async()=>{
     const b={
       name:AC.name,
-      area:AC.area
+      area:AC.area,
+      market:AC.market
     };
 
     if(me().role==='paikar'){

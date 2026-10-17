@@ -8,12 +8,13 @@ from pathlib import Path
 
 DB_PATH = Path(os.environ.get("DB_PATH", Path(__file__).resolve().parents[1] / "data" / "reroute.db"))
 _lock = threading.RLock()
-SCHEMA_VERSION = 7
+SCHEMA_VERSION = 8
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, role TEXT, name TEXT, biz TEXT, phone TEXT UNIQUE, place TEXT,
   area TEXT, photo TEXT, verified INTEGER DEFAULT 0, joined INTEGER, pts INTEGER DEFAULT 0, wallet REAL DEFAULT 0,
-  fee_credit REAL DEFAULT 0, transport_credit REAL DEFAULT 0, plus_until INTEGER DEFAULT 0, plus_cancelled INTEGER DEFAULT 0);
+  fee_credit REAL DEFAULT 0, transport_credit REAL DEFAULT 0, plus_until INTEGER DEFAULT 0, plus_cancelled INTEGER DEFAULT 0,
+  market TEXT, pw_hash TEXT);
 CREATE TABLE IF NOT EXISTS stock (uid TEXT, crop TEXT, qty REAL DEFAULT 0, cost REAL, PRIMARY KEY (uid, crop));
 CREATE TABLE IF NOT EXISTS listings (id TEXT PRIMARY KEY, uid TEXT, crop TEXT, qty_total REAL, available REAL,
   reserved REAL DEFAULT 0, sold REAL DEFAULT 0, price REAL, moq REAL, grade TEXT, quality TEXT, harvest INTEGER,
@@ -78,6 +79,8 @@ MIGRATIONS = [
     """CREATE TABLE IF NOT EXISTS transport_proposals (id TEXT PRIMARY KEY, negotiation TEXT, proposer TEXT, recipient TEXT,
       buyer_pct REAL, seller_pct REAL, buyer_amt REAL, seller_amt REAL,
       status TEXT, note TEXT, created INTEGER, version INTEGER)""",
+    """ALTER TABLE users ADD COLUMN market TEXT""",
+    """ALTER TABLE users ADD COLUMN pw_hash TEXT""",
 ]
 
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()

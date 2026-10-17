@@ -17,7 +17,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from app import db, services as S
+from app import auth, db, services as S
 from app.ai import PriceAI
 from app.logic import (CASHBACK, CASHBACK_MIN, CROPS, FEE_MAX, FEE_MIN, FEE_RATE, MIN_ORDER_KG, PLACES, PLUS_DAYS,
                        PLUS_PRICE, REDEEM, VEHICLES, CANCEL_PENALTY, COMMISSION, SERVICE, PLUS_SERVICE_OFF,
@@ -34,6 +34,8 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 if db.needs_seed():
     from app.seed import seed
     seed()
+# demo accounts (seeded ids, not self-registered "U…" ids) can also log in with the demo password
+db.run("UPDATE users SET pw_hash=? WHERE pw_hash IS NULL AND id NOT LIKE 'U%'", (auth.hash_password(auth.DEMO_PASSWORD),))
 AI = PriceAI()
 
 # ---------------------------------------------------------------- keep the public demo fresh
@@ -100,7 +102,7 @@ def need_admin(u=Depends(need_user)):
 
 
 # ---------------------------------------------------------------- shaping data
-PUBLIC_USER = "id, role, name, biz, place, area, verified, joined, (photo IS NOT NULL) AS has_photo"
+PUBLIC_USER = "id, role, name, biz, place, area, market, verified, joined, (photo IS NOT NULL) AS has_photo"
 
 
 def public_users():
@@ -125,7 +127,7 @@ def shape_listing(l):
 
 
 def private_me(u):
-    me = {k: v for k, v in u.items() if k != "photo"}
+    me = {k: v for k, v in u.items() if k not in ("photo", "pw_hash")}
     me["has_photo"] = u["photo"] is not None
     me["plus_active"] = S.is_plus(u)
     me["bulk"] = S.is_bulk(u["id"])
@@ -242,6 +244,7 @@ def admin_bundle():
 class LoginIn(BaseModel):
     user_id: Optional[str] = None
     phone: Optional[str] = None
+    password: Optional[str] = None
     role: Optional[str] = None
 
 
@@ -249,37 +252,69 @@ class RegisterIn(BaseModel):
     role: str = Field(pattern="^(farmer|paikar)$")
     name: str = Field(min_length=2, max_length=60)
     phone: str = Field(pattern=r"^01\d{9}$")
+    password: str = Field(min_length=6, max_length=64)
+    confirm_password: str = Field(min_length=6, max_length=64)
     place: str
-    area: Optional[str] = Field(None, max_length=60)
+    upazila: str = Field(min_length=2, max_length=60)
+    market: str = Field(min_length=2, max_length=60)
     biz: Optional[str] = Field(None, max_length=80)
+
+
+class OtpIn(BaseModel):
+    reg_id: str = Field(min_length=8, max_length=64)
+    otp: str = Field(pattern=r"^\d{5}$")
 
 
 @app.post("/api/login")
 def login(body: LoginIn):
-    u = S.user(body.user_id) if body.user_id else db.one("SELECT * FROM users WHERE phone=? AND role=?",
-                                                         ((body.phone or "").strip(), body.role))
-    if not u:
-        raise HTTPException(404, "এই নম্বরে অ্যাকাউন্ট নেই। ডেমো অ্যাকাউন্ট বাছুন বা নতুন খুলুন।")
+    if body.user_id:
+        # one-click login is only for the seeded demo accounts, never for registered ones
+        u = S.user(body.user_id) if not body.user_id.startswith("U") else None
+        if not u:
+            raise HTTPException(404, "ডেমো অ্যাকাউন্ট পাওয়া যায়নি")
+        return {"token": sign(u["id"]), "user": private_me(u)}
+    u = db.one("SELECT * FROM users WHERE phone=? AND role=?", ((body.phone or "").strip(), body.role))
+    if not u or not auth.check_password(body.password or "", u.get("pw_hash")):
+        raise HTTPException(401 if u else 404, "মোবাইল নম্বর বা পাসওয়ার্ড ঠিক নেই")
     return {"token": sign(u["id"]), "user": private_me(u)}
 
 
 @app.post("/api/register")
 def register(body: RegisterIn):
+    """Step 1 of sign-up: check the details and send an OTP (demo: returned in the response)."""
     if body.place not in PLACES:
         raise HTTPException(400, "জেলা ঠিক নেই")
+    if body.password != body.confirm_password:
+        raise HTTPException(400, "দুটো পাসওয়ার্ড মিলছে না")
     if db.one("SELECT id FROM users WHERE phone=?", (body.phone,)):
         raise HTTPException(409, "এই নম্বরে আগেই অ্যাকাউন্ট আছে, লগ ইন করুন")
+    data = body.model_dump(exclude={"password", "confirm_password"})
+    data["pw_hash"] = auth.hash_password(body.password)
+    reg_id, otp = auth.start_otp(data)
+    return {"reg_id": reg_id, "demo_otp": otp, "expires_in": auth.OTP_TTL}
+
+
+@app.post("/api/register/verify")
+def register_verify(body: OtpIn):
+    """Step 2 of sign-up: the code matches, so the account is created."""
+    data, err = auth.check_otp(body.reg_id, body.otp)
+    if err:
+        raise HTTPException(400, err)
+    if db.one("SELECT id FROM users WHERE phone=?", (data["phone"],)):
+        raise HTTPException(409, "এই নম্বরে আগেই অ্যাকাউন্ট আছে, লগ ইন করুন")
     uid = S.nid("U")
-    db.insert("users", {"id": uid, "role": body.role, "name": body.name.strip(), "phone": body.phone,
-                        "place": body.place, "area": body.area,
-                        "biz": (body.biz or f"{body.name}-এর আড়ত") if body.role == "paikar" else None,
-                        "joined": S.now()})
+    name = data["name"].strip()
+    db.insert("users", {"id": uid, "role": data["role"], "name": name, "phone": data["phone"],
+                        "place": data["place"], "area": data["upazila"].strip(), "market": data["market"].strip(),
+                        "biz": (data["biz"] or f"{name}-এর আড়ত") if data["role"] == "paikar" else None,
+                        "pw_hash": data["pw_hash"], "joined": S.now()})
     return {"token": sign(uid), "user": private_me(S.user(uid))}
 
 
 class ProfileIn(BaseModel):
     name: Optional[str] = Field(None, min_length=2, max_length=60)
     area: Optional[str] = Field(None, max_length=60)
+    market: Optional[str] = Field(None, max_length=60)
     biz: Optional[str] = Field(None, max_length=80)
     photo: Optional[str] = None
 
