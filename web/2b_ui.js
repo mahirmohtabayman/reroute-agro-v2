@@ -88,7 +88,9 @@ function setDrawer(open){
 function toggleSide(){
   if(sideIsDrawer()){ setDrawer(!document.body.classList.contains('side-open')); return; }
   const compact=!document.body.classList.contains('side-compact');
+  document.body.classList.add('side-anim');
   document.body.classList.toggle('side-compact',compact);
+  clearTimeout(toggleSide.t); toggleSide.t=setTimeout(()=>document.body.classList.remove('side-anim'),400);
   try{ localStorage.setItem(SIDE_KEY,compact?'1':'0'); }catch(e){}
   const b=document.querySelector('[data-ui="side-toggle"]');
   if(b) b.setAttribute('aria-expanded',String(!compact));

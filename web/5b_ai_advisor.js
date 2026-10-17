@@ -1,5 +1,5 @@
 /* =====================================================================
-   Reroute Agro — একটিমাত্র "AI পরামর্শ"
+   Reroute Agro — একটিমাত্র "এআই পরামর্শ"
    * কৃষক: আজকের দর ও ৩ দিনের পূর্বাভাস · প্রস্তাবিত বিক্রয়মূল্য · কোথায় বেচলে লাভ · সম্ভাব্য লাভ/লোকসান
    * পাইকার: আজকের দর ও ৩ দিনের পূর্বাভাস · প্রস্তাবিত ক্রয়মূল্য · কোথা থেকে কিনবেন/কোথায় বেচবেন · লাভ/লোকসান
    * Smart Trade Alert: অফার / রাজি / পাল্টা দাম / লিস্টিং পাঠানোর আগে ওই লেনদেনের লাভ-ক্ষতি
@@ -9,13 +9,13 @@
 
 /* ---------- menu: one AI option instead of two ---------- */
 (function advNav(){
-  const item = ['#/advisor', '🤖', 'AI পরামর্শ'];
+  const item = ['#/advisor', '🤖', 'এআই পরামর্শ'];
   const old = NAV_TRADER.findIndex(n => n[0] === '#/prices');
   const has = NAV_TRADER.findIndex(n => n[0] === '#/advisor');
   if (old >= 0 && has >= 0) NAV_TRADER.splice(old, 1);
   else if (old >= 0) NAV_TRADER.splice(old, 1, item);
   else if (has < 0) NAV_TRADER.push(item);
-  if (!NAV_ADMIN.some(n => n[0] === '#/admin/ai')) NAV_ADMIN.push(['#/admin/ai', '🤖', 'AI ডেটা']);
+  if (!NAV_ADMIN.some(n => n[0] === '#/admin/ai')) NAV_ADMIN.push(['#/admin/ai', '🤖', 'এআই ডেটা']);
 })();
 
 /* ---------- English for the new texts (longer phrases first) ---------- */
@@ -34,10 +34,10 @@ I18N_PHRASES.unshift(
   ['সিমুলেটেড ডেমো ডেটা', 'simulated demo data'],
   ['লাভ-ক্ষতি হিসাব হচ্ছে', 'Calculating profit and loss'],
   ['আনুমানিক লাভজনক', 'Likely profitable'],
-  ['লেনদেনের ডেটা ও AI মূল্যায়ন', 'Transaction data & AI evaluation'],
+  ['লেনদেনের ডেটা ও এআই মূল্যায়ন', 'Transaction data & AI evaluation'],
   ['মডেল মূল্যায়ন', 'Model evaluation'],
   ['নতুন করে প্রশিক্ষণ', 'Retraining'],
-  ['AI ডেটা', 'AI data']
+  ['এআই ডেটা', 'AI data']
 );
 
 /* ---------- state & data ---------- */
@@ -96,8 +96,8 @@ function advDefaults(){
   }
 }
 
-const advLoading = t => `<div class="sk-wrap" role="status" aria-busy="true" style="margin-top:6px"><span class="sr-only">${t || 'AI হিসাব করছে...'}</span><div class="sk sk-block" style="margin-top:0"></div><div class="sk sk-block"></div></div>
-  <p class="muted sm" style="text-align:center;margin-top:8px">${ic('🤖')} ${t || 'AI হিসাব করছে...'} প্রথমবার কয়েক সেকেন্ড লাগতে পারে।</p>`;
+const advLoading = t => `<div class="sk-wrap" role="status" aria-busy="true" style="margin-top:6px"><span class="sr-only">${t || 'এআই হিসাব করছে...'}</span><div class="sk sk-block" style="margin-top:0"></div><div class="sk sk-block"></div></div>
+  <p class="muted sm" style="text-align:center;margin-top:8px">${ic('🤖')} ${t || 'এআই হিসাব করছে...'} প্রথমবার কয়েক সেকেন্ড লাগতে পারে।</p>`;
 const advPct = v => `${v > 0 ? '+' : ''}${nf(v, 1)}%`;
 const advMoney = v => `<b style="color:var(--${v >= 0 ? 'green' : 'red'})">${v < 0 ? '−' : ''}${tk(Math.abs(v))}</b>`;
 const advArrow = v => v >= 2 ? `<span style="color:var(--green)">▲ ${advPct(v)}</span>`
@@ -206,8 +206,8 @@ function advBuyer(){
     const homeNet = top.calc.net, better = rs && !rs.is_home && rs.net > homeNet;
     html += `<div class="panel" style="border:2px solid var(--${homeNet >= 0 ? 'blue' : 'red'});margin-bottom:14px">
       <h2 style="color:var(--${homeNet >= 0 ? 'blue' : 'red'})">${ic('🤖')} মূল পরামর্শ</h2>
-      <p style="margin-top:8px;font-size:1.05rem"><b>${esc(nm)}</b> (${PLACES[top.place].n}) থেকে ${tk(top.price, 1)}/কেজিতে কিনুন।</p>
-      <p class="muted" style="margin-top:4px">${homeName}-এ বেচলে আনুমানিক ${homeNet >= 0 ? 'লাভ' : 'লোকসান'} ${advMoney(homeNet)}${better ? `; ${esc(rs.resale_name)}-এ বেচলে আরও বেশি, প্রায় ${advMoney(rs.net)}` : ''}।</p>
+      <p style="margin-top:8px;font-size:1.05rem">সেরা উৎস: <b>${esc(nm)}</b> (${PLACES[top.place].n}), ${tk(top.price, 1)}/কেজি দরে কিনুন।</p>
+      <p class="muted" style="margin-top:4px"><span>${homeName}-এ বেচলে আনুমানিক ${homeNet >= 0 ? 'লাভ' : 'লোকসান'}:</span> ${advMoney(homeNet)}${better ? ` · <span>${esc(rs.resale_name)}-এ বেচলে আরও বেশি:</span> ${advMoney(rs.net)}` : ''}</p>
       ${top.kind === 'listing' ? `<a class="btn btn-blue btn-sm" style="margin-top:10px" href="#/listing/${top.listing}">লিস্টিং দেখুন ও অফার দিন</a>` : ''}</div>`;
   } else {
     html += `<div class="panel"><p class="muted">এই মুহূর্তে ${c} কেনার মতো উৎস পাওয়া যায়নি।</p></div>`;
@@ -263,10 +263,10 @@ function advBuyer(){
 V.advisor = () => {
   advDefaults();
   const buyer = advRole() === 'buyer';
-  return `<div class="phead"><div><h1>${ic('🤖')} AI পরামর্শ</h1>
+  return `<div class="phead"><div><h1>${ic('🤖')} এআই পরামর্শ</h1>
       <p class="muted">${buyer ? 'বাজারদর · ৩ দিনের পূর্বাভাস · কত দামে কিনবেন · কোথা থেকে কিনে কোথায় বেচবেন · লাভ-লোকসান' : 'বাজারদর · ৩ দিনের পূর্বাভাস · কত দামে বেচবেন · কোথায় বেচবেন · লাভ-লোকসান'}</p></div></div>
     ${buyer ? advBuyer() : advFarmer()}
-    <p class="muted xs" style="margin-top:10px">অফার বা অর্ডার দেওয়ার সময়ও AI নিজে থেকে ওই লেনদেনের লাভ-ক্ষতি দেখে নেয়, লোকসানের ঝুঁকি থাকলে জানায়।</p>`;
+    <p class="muted xs" style="margin-top:10px">অফার বা অর্ডার দেওয়ার সময়ও এআই নিজে থেকে ওই লেনদেনের লাভ-ক্ষতি দেখে নেয়, লোকসানের ঝুঁকি থাকলে জানায়।</p>`;
 };
 
 /* =====================================================================
@@ -345,7 +345,7 @@ function taModal(p, r){
     if (r.spoil_pct >= 5) reasons.push('পথে পচনের ঝুঁকি বেশি');
     tips.push(`${tk(r.breakeven, 1)}/কেজি বা কম দামে কিনলে লোকসান হবে না (৮% লাভ রাখতে ${tk(r.target, 1)}/কেজি)।`);
     if (r.alt_market) tips.push(`${esc(r.alt_market.name)}-এ বেচলে ফল আনুমানিক ${tk(r.alt_market.net)}।`);
-    tips.push('অন্য সরবরাহকারীর অফার দেখুন — AI পরামর্শ পাতায় কম দামের উৎস আছে।');
+    tips.push('অন্য সরবরাহকারীর অফার দেখুন — এআই পরামর্শ পাতায় কম দামের উৎস আছে।');
   } else {
     rows = [['বিক্রি', `${tk(r.revenue)} (${monTxt(r.kg)} × ${tk(r.price, 1)})`],
       ['প্ল্যাটফর্ম ফি', '−' + tk(r.fee), 'minus'],
@@ -364,7 +364,7 @@ function taModal(p, r){
     <div style="margin-top:10px">${bill(rows)}</div>
     ${reasons.length ? `<p class="sm" style="margin-top:10px"><b>কারণ:</b> ${reasons.join('; ')}।</p>` : ''}
     <div class="note sm" style="margin-top:10px">${ic('💡')} ${tips.join('<br>')}</div>
-    <p class="muted xs" style="margin-top:8px">হিসাবটি আনুমানিক; বিক্রির দাম ${buy ? 'AI পূর্বাভাস (সিমুলেটেড ডেমো ডেটা) থেকে' : 'আপনার দেওয়া দাম ও খরচ থেকে'}। সিদ্ধান্ত আপনার।</p>
+    <p class="muted xs" style="margin-top:8px">হিসাবটি আনুমানিক; বিক্রির দাম ${buy ? 'এআই পূর্বাভাস (সিমুলেটেড ডেমো ডেটা) থেকে' : 'আপনার দেওয়া দাম ও খরচ থেকে'}। সিদ্ধান্ত আপনার।</p>
     <div class="row wrap-it" style="margin-top:14px">
       <button class="btn btn-soft grow" data-ta="cancel">বাতিল</button>
       ${p.edit ? '<button class="btn btn-blue grow" data-ta="edit">দাম বদলান</button>' : ''}
@@ -404,7 +404,7 @@ document.addEventListener('click', e => {
 async function advDownload(fmt, source){
   try {
     const r = await fetch(`/api/ai/advisor/admin/export?fmt=${fmt}&source=${source}`, {headers: TOKEN ? {'X-Token': TOKEN} : {}});
-    if (!r.ok) { toast('Export হয়নি, আবার চেষ্টা করুন','error'); return; }
+    if (!r.ok) { toast('ডাউনলোড হয়নি, আবার চেষ্টা করুন','error'); return; }
     const blob = await r.blob(), cd = r.headers.get('Content-Disposition') || '', m = cd.match(/filename="([^"]+)"/);
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -414,14 +414,14 @@ async function advDownload(fmt, source){
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
     toast('ডাউনলোড শুরু হয়েছে','info');
   } catch (e) {
-    toast('Export হয়নি, আবার চেষ্টা করুন','error');
+    toast('ডাউনলোড হয়নি, আবার চেষ্টা করুন','error');
   }
 }
 
 V.adminAI = () => {
   const ev = advGet('/ai/advisor/admin/evaluation', 30000), tx = advGet('/ai/advisor/admin/transactions?limit=15', 30000);
-  let html = `<div class="phead"><div><h1>${ic('🤖')} লেনদেনের ডেটা ও AI মূল্যায়ন</h1>
-      <p class="muted">শুধু সম্পন্ন লেনদেন। নাম, ফোন বা ব্যক্তিগত তথ্য export হয় না।</p></div>
+  let html = `<div class="phead"><div><h1>${ic('🤖')} লেনদেনের ডেটা ও এআই মূল্যায়ন</h1>
+      <p class="muted">শুধু সম্পন্ন লেনদেন। নাম, ফোন বা ব্যক্তিগত তথ্য ডাউনলোড ফাইলে থাকে না।</p></div>
     <div class="row wrap-it"><button class="btn btn-green btn-sm" data-adv="dl" data-v="xlsx" data-src="all">${ic('⬇️')} Excel</button>
       <button class="btn btn-line btn-sm" data-adv="dl" data-v="csv" data-src="all">${ic('⬇️')} CSV</button>
       <button class="btn btn-soft btn-sm" data-adv="dl" data-v="xlsx" data-src="platform">${ic('⬇️')} শুধু আসল লেনদেন</button>
@@ -438,8 +438,8 @@ V.adminAI = () => {
       ${D.by_crop.map(c => `<tr><td>${CROPS[c.crop].i} ${esc(c.name)}</td><td class="num">${nf(c.all)}</td><td class="num">${nf(c.platform)}</td><td class="num">${monTxt(c.kg)}</td><td class="num">${c.avg_price != null ? tk(c.avg_price, 1) : '—'}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">এখনো কোনো সম্পন্ন লেনদেন নেই</td></tr>'}
     </table></div>
     <p class="muted xs" style="margin-top:6px">${D.first ? `আসল ডেটা: ${esc(D.first)} থেকে ${esc(D.last)} (${nf(D.span_days)} দিন)` : 'আসল ডেটা এখনো নেই; ডেমো অ্যাকাউন্টের লেনদেন আলাদা চিহ্নিত।'}</p></div>
-    <div class="panel"><h3>নতুন করে প্রশিক্ষণ (Retraining)</h3>
-      <p style="margin-top:6px">${R.ready ? '<span class="pill p-green">প্রস্তুত</span> যথেষ্ট আসল ডেটা আছে।' : '<span class="pill p-gold">এখনো নয়</span> জোর করে Retraining করা হবে না।'}</p>
+    <div class="panel"><h3>নতুন করে প্রশিক্ষণ</h3>
+      <p style="margin-top:6px">${R.ready ? '<span class="pill p-green">প্রস্তুত</span> যথেষ্ট আসল ডেটা আছে।' : '<span class="pill p-gold">এখনো নয়</span> জোর করে নতুন প্রশিক্ষণ চালানো হবে না।'}</p>
       <ul class="sm" style="margin:8px 0 0;padding-left:18px">${R.reasons.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
       <p class="sm" style="margin-top:10px"><b>নিয়ম:</b> ডেটা যাচাই ও পরিষ্কার → পুরনো সময়ের ডেটায় প্রশিক্ষণ → পরের সময়ের (না-দেখা) ডেটায় পরীক্ষা → ভুলের মাপ (MAPE) → নতুন মডেল পুরনোটার চেয়ে ভালো হলেই বদলানো হবে।</p>
       <p class="muted xs" style="margin-top:6px">চালানোর কমান্ড: <code>${esc(R.command)}</code></p></div></div>
@@ -449,7 +449,7 @@ V.adminAI = () => {
       <tr><th>কত দিন আগে</th><th class="num">মডেলের ভুল (MAPE)</th><th class="num">"দাম একই থাকবে" ধরলে ভুল</th><th class="num">ওঠা-নামা ঠিক বলেছে</th></tr>
       ${Object.entries(M.horizons || {}).map(([h, v]) => `<tr><td>${nf(+h)} দিন</td><td class="num b">${nf(v.mape_model, 1)}%</td><td class="num">${nf(v.mape_naive, 1)}%</td><td class="num">${nf(v.direction_accuracy, 1)}%</td></tr>`).join('')}
     </table></div>
-    ${M.market_choice ? `<p class="sm" style="margin-top:8px">বাজার বাছাই পরীক্ষা: ${nf(M.market_choice.cases)}টি ক্ষেত্রে AI-র পরামর্শ মানলে স্থানীয় হাটের চেয়ে গড়ে মণপ্রতি ${tk(M.market_choice.avg_extra_tk_per_mon)} বেশি; ${nf(M.market_choice.not_worse_than_local, 1)}% ক্ষেত্রে স্থানীয়ের চেয়ে খারাপ নয়।</p>` : ''}</div>
+    ${M.market_choice ? `<p class="sm" style="margin-top:8px">বাজার বাছাই পরীক্ষা: ${nf(M.market_choice.cases)}টি ক্ষেত্রে এআই-এর পরামর্শ মানলে স্থানীয় হাটের চেয়ে গড়ে মণপ্রতি ${tk(M.market_choice.avg_extra_tk_per_mon)} বেশি; ${nf(M.market_choice.not_worse_than_local, 1)}% ক্ষেত্রে স্থানীয়ের চেয়ে খারাপ নয়।</p>` : ''}</div>
   <div class="panel"><h3>সাম্প্রতিক সম্পন্ন লেনদেন</h3><div class="scroll"><table class="tbl" style="margin-top:6px">
     <tr><th>তারিখ</th><th>ফসল</th><th class="num">পরিমাণ</th><th>রুট</th><th class="num">দাম/কেজি</th><th class="num">মোট</th><th class="num">ট্রাক</th><th>উৎস</th></tr>
     ${tx.rows.map(r => `<tr><td class="sm">${esc(r.completed_date)}</td><td>${CROPS[r.crop].i} ${esc(r.crop_bn)}</td><td class="num">${monTxt(r.qty_kg)}</td>
@@ -467,7 +467,7 @@ function advMigrateLinks(){
   document.querySelectorAll('#view a[href="#/prices"]').forEach(a => {
     a.setAttribute('href', '#/advisor');
     const s = a.querySelector('span'), st = a.querySelector('strong');
-    if (s) s.textContent = 'AI পরামর্শ';
+    if (s) s.textContent = 'এআই পরামর্শ';
     if (st) st.textContent = 'বাজারদর, পূর্বাভাস ও লাভ-ক্ষতি';
     applyLanguage(a);
   });

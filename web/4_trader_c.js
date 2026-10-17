@@ -504,7 +504,7 @@ V.books = () => {
 
       <div class="kpi">
         <span class="muted sm">
-          মোট বিক্রি
+          মোট বিক্রয়
         </span>
 
         <strong>
@@ -569,7 +569,7 @@ V.books = () => {
         ${
           bill([
             [
-              'মোট বিক্রি (Reroute + বাইরে)',
+              'মোট বিক্রয় (Reroute + বাইরে)',
               tk(P.revenue)
             ],
 
@@ -2316,7 +2316,7 @@ V.rewards = () => {
            WALLET COLUMN
            ============================== -->
 
-      <div>
+      <div class="rw-wallet">
 
 
         <div class="panel wallet-hero">
@@ -2328,7 +2328,7 @@ V.rewards = () => {
             <div>
 
               <span class="wallet-eyebrow">
-                ওয়ালেট ব্যালান্স
+                ওয়ালেট ব্যালেন্স
               </span>
 
               <div class="wallet-value">
@@ -2341,7 +2341,7 @@ V.rewards = () => {
             <div
               class="wallet-icon"
               aria-hidden="true">
-              ${ic('💳')}
+              ${ic('wallet')}
             </div>
 
 

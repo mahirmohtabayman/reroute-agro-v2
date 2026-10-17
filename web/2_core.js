@@ -445,8 +445,8 @@ function drawPay(){
     modal(`<div class="body"><h2>${ic('card')} পেমেন্ট</h2><p class="muted" style="margin-top:4px">${P.title}</p>
       <div class="pay-total"><span>মোট</span><b>${tk(P.amount)}</b></div>
       <p class="warn sm" style="margin-top:10px"><b>সিমুলেটেড পেমেন্ট:</b> এটি প্রোটোটাইপ, কোনো আসল টাকা লেনদেন বা ব্যাংক/বিকাশ/নগদ সংযোগ হয় না।</p>
-      <div class="choice">${[['bkash','বিকাশ','মোবাইল নম্বর ও পিন'],['nagad','নগদ','মোবাইল নম্বর ও পিন'],['card','ডেবিট/ক্রেডিট কার্ড','ভিসা, মাস্টারকার্ড'],['wallet',`Reroute ওয়ালেট`,`ব্যালান্স ${tk(w)}`]].map(([k,n,d])=>
-        `<button class="opt" data-act="pay-method" data-v="${k}" ${k==='wallet'&&w<P.amount?'disabled':''}><strong>${n}</strong><span class="muted">${k==='wallet'&&w<P.amount?'ব্যালান্স যথেষ্ট নয়':d}</span></button>`).join('')}</div>
+      <div class="choice">${[['bkash','বিকাশ','মোবাইল নম্বর ও পিন'],['nagad','নগদ','মোবাইল নম্বর ও পিন'],['card','ডেবিট/ক্রেডিট কার্ড','ভিসা, মাস্টারকার্ড'],['wallet',`Reroute ওয়ালেট`,`ব্যালেন্স ${tk(w)}`]].map(([k,n,d])=>
+        `<button class="opt" data-act="pay-method" data-v="${k}" ${k==='wallet'&&w<P.amount?'disabled':''}><strong>${n}</strong><span class="muted">${k==='wallet'&&w<P.amount?'ব্যালেন্স যথেষ্ট নয়':d}</span></button>`).join('')}</div>
       <p class="note" style="margin-top:14px">টাকা Reroute-এ জমা থাকে, মাল বুঝে পেলে তবেই বিক্রেতা পান। পেমেন্ট সার্ভারে যাচাই হওয়ার পরই অবস্থা বদলায়।</p></div>`);
   }
   else if(P.step==='gateway'){
@@ -581,6 +581,7 @@ function renderChrome(){
   const u=me(), r=routeBase();
 
   document.body.classList.toggle('authed',!!u);
+  if(u||lastJSON) document.documentElement.classList.remove('pre-auth');   /* the account has loaded (or there is none) */
   renderDemoFooter(u);
 
   if(!u){

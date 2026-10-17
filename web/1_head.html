@@ -7,8 +7,12 @@
 <meta name="description" content="কৃষক ও পাইকারের সরাসরি পাইকারি বাজার: দরদাম, নিরাপদ পেমেন্ট, নিজস্ব ট্রাক, মজুদ ও লাভ-ক্ষতির হিসাব">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#173D32">
-<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'><path d='M6 15v14M28 15v14' stroke='%238A5A2B' stroke-width='2' stroke-linecap='round'/><path d='M7 6h3.33L7.67 13H3z' fill='%23D93D27'/><path d='M10.33 6h3.34L12.33 13H7.67z' fill='%23F6C453'/><path d='M13.67 6H17v7h-4.67z' fill='%23D93D27'/><path d='M17 6h3.33l1.34 7H17z' fill='%23F6C453'/><path d='M20.33 6h3.34l2.66 7H17z' fill='%23D93D27'/><path d='M23.67 6H27l4 7h-4.67z' fill='%23F6C453'/><path d='M3 13a2.33 2.33 0 0 0 4.67 0z' fill='%23D93D27'/><path d='M7.67 13a2.33 2.33 0 0 0 4.66 0z' fill='%23F6C453'/><path d='M12.33 13a2.33 2.33 0 0 0 4.67 0z' fill='%23D93D27'/><path d='M17 13a2.33 2.33 0 0 0 4.67 0z' fill='%23F6C453'/><path d='M21.67 13a2.33 2.33 0 0 0 4.66 0z' fill='%23D93D27'/><path d='M26.33 13a2.33 2.33 0 0 0 4.67 0z' fill='%23F6C453'/><circle cx='10' cy='21.5' r='2.4' fill='%23F29A2E'/><circle cx='15' cy='21.5' r='2.4' fill='%231E8A4C'/><circle cx='20' cy='21.5' r='2.4' fill='%23F6C453'/><circle cx='25' cy='21.5' r='2.4' fill='%23D93D27'/><rect x='4' y='24' width='26' height='3' rx='1.2' fill='%238A5A2B'/><rect x='7' y='27' width='20' height='4' rx='1' fill='%23B07A3E'/></svg>">
+<!-- favicon: the Reroute Agro leaf logo (same artwork as the header logo); ?v=2 replaces cached old icons -->
+<link rel="icon" href="/favicon.ico?v=2" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="/static/icons/logo.svg?v=2">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=2">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16.png?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="/static/fonts/Kalpurush.woff2" as="font" type="font/woff2" crossorigin>
@@ -17,6 +21,9 @@
 try{
   var t=localStorage.getItem('reroute-theme');
   if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;
+  /* signed in: keep the sidebar's space from the first paint so the page does not jump when the account loads */
+  if(localStorage.getItem('reroute-token'))document.documentElement.classList.add('pre-auth');
+  if(localStorage.getItem('reroute-side-compact')==='1')document.documentElement.classList.add('pre-compact');
 }catch(e){}
 </script>
 
@@ -62,6 +69,16 @@ try{
 
   --hero-bg:#173D32;
   --overlay:rgba(16,26,22,.55);
+
+  /* signed-in sidebar and wallet card */
+  --side-bg:#EEF5EB;
+  --side-hover:#E2EEDF;
+  --side-active:#D5E8D6;
+  --wallet-a:#173D32;
+  --wallet-b:#22644B;
+  --wallet-ink:#FFFFFF;
+  --wallet-sub:#CFE3D6;
+  --wallet-accent:#D5EF91;
 
   --r-sm:8px;
   --r:12px;
@@ -119,6 +136,14 @@ try{
     --blue-soft:#18283D;
     --hero-bg:#0E2A21;
     --overlay:rgba(4,10,7,.66);
+    --side-bg:#172B22;
+    --side-hover:#1E3629;
+    --side-active:#244633;
+    --wallet-a:#1E4434;
+    --wallet-b:#153127;
+    --wallet-ink:#F1F6F0;
+    --wallet-sub:#B9D3C2;
+    --wallet-accent:#C6EA83;
     --shadow:0 1px 2px rgba(0,0,0,.35);
     --shadow-md:0 2px 4px rgba(0,0,0,.25),0 14px 30px -14px rgba(0,0,0,.7);
     --shadow-lg:0 28px 56px -18px rgba(0,0,0,.8);
@@ -154,6 +179,14 @@ try{
   --blue-soft:#18283D;
   --hero-bg:#0E2A21;
   --overlay:rgba(4,10,7,.66);
+  --side-bg:#172B22;
+  --side-hover:#1E3629;
+  --side-active:#244633;
+  --wallet-a:#1E4434;
+  --wallet-b:#153127;
+  --wallet-ink:#F1F6F0;
+  --wallet-sub:#B9D3C2;
+  --wallet-accent:#C6EA83;
   --shadow:0 1px 2px rgba(0,0,0,.35);
   --shadow-md:0 2px 4px rgba(0,0,0,.25),0 14px 30px -14px rgba(0,0,0,.7);
   --shadow-lg:0 28px 56px -18px rgba(0,0,0,.8);
@@ -244,7 +277,7 @@ a:hover{color:var(--green-hover);}
 .btn-line:hover{border-color:var(--green); color:var(--green);}
 .btn-sm{padding:6px 12px; min-height:34px; font-size:.86rem; border-radius:8px;}
 .btn-sm .i{width:16px; height:16px;}
-.btn-wide{width:100%; padding:12px 16px; min-height:48px; font-size:1rem;}
+.btn-wide{width:100%; padding:12px 16px; min-height:48px; font-size:1rem; white-space:normal; text-align:center; line-height:1.3;}
 .btn[disabled]{opacity:.45; cursor:not-allowed;}
 :root[data-theme="dark"] .btn-red,:root[data-theme="dark"] .btn-blue{color:#0B120E;}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn-red,:root:not([data-theme="light"]) .btn-blue{color:#0B120E;}}
@@ -345,7 +378,7 @@ header.top{position:sticky; top:env(safe-area-inset-top,0px); z-index:30; backgr
 .sheet a>span .i{width:18px; height:18px;}
 
 /* ---------- page scaffolding ---------- */
-main{padding:28px 0 72px; min-height:72vh;}
+main{padding:28px 0 72px; min-height:100vh;}   /* footer starts below the fold, so content arriving after load never pushes it on screen (CLS) */
 .phead{display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:20px;}
 .phead h1{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
 .phead h1 .i{width:26px; height:26px; color:var(--green); stroke-width:1.8;}
@@ -495,8 +528,9 @@ a.kpi:hover{color:var(--ink); border-color:var(--line2);}
 .kpi .kpi-ic.gold{background:var(--gold-soft); color:var(--gold);}
 .kpi .kpi-ic.blue{background:var(--blue-soft); color:var(--blue);}
 .kpi.hl{border-color:var(--red); box-shadow:0 0 0 1px var(--red);}
-.kpi.link{display:flex; align-items:center; gap:14px;}
-.kpi.link strong{font-size:.98rem; font-weight:600;}
+.kpi.link{display:flex; align-items:center; gap:14px; min-width:0;}
+.kpi.link strong{font-size:.98rem; font-weight:600; overflow-wrap:anywhere;}
+.kpi.link>div:not(.ic-tile){min-width:0; flex:1;}
 .kpi.link .go{margin-left:auto; color:var(--muted);}
 .todo{display:flex; gap:14px; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); padding:12px 16px; margin-bottom:10px; text-decoration:none; color:var(--ink); position:relative; overflow:hidden;}
 .todo::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--harvest);}
@@ -580,20 +614,23 @@ footer .wrap{display:flex; justify-content:space-between; gap:12px; flex-wrap:wr
 .rewards-grid{gap:18px;}
 .points-card{position:relative; overflow:hidden; border-color:color-mix(in srgb,var(--harvest) 45%,var(--line)); background:linear-gradient(160deg,color-mix(in srgb,var(--gold-soft) 85%,var(--surface)),var(--surface) 70%);}
 .rewards-eyebrow{display:inline-flex; align-items:center; gap:7px; font-weight:600; color:var(--gold);}
-.points-value{font-family:var(--font-head); font-size:clamp(2.3rem,5vw,3.2rem); font-weight:700; line-height:1.05; color:var(--ink); margin-top:8px; letter-spacing:-.02em;}
+.points-value{font-family:var(--font-head); font-size:clamp(2rem,4.2vw,2.7rem); font-weight:700; line-height:1.05; color:var(--ink); margin-top:8px; letter-spacing:-.02em;}
 .rewards-badges{margin-top:12px; gap:8px;}
 .rewards-rules{margin:10px 0 0; padding-left:20px; display:grid; gap:6px;}
-.wallet-hero{position:relative; overflow:hidden; isolation:isolate; padding:24px; border-color:color-mix(in srgb,var(--green) 30%,var(--line)); background:linear-gradient(160deg,color-mix(in srgb,var(--green-soft) 90%,var(--surface)),var(--surface) 70%);}
-.wallet-hero::before{content:""; position:absolute; inset:0 0 auto 0; height:3px; background:var(--green); z-index:2;}
+.wallet-hero{position:relative; overflow:hidden; isolation:isolate; padding:26px 26px 22px; border:1px solid color-mix(in srgb,var(--wallet-accent) 22%,transparent); color:var(--wallet-ink); background:linear-gradient(145deg,var(--wallet-a) 0%,var(--wallet-b) 100%); box-shadow:0 18px 40px -22px color-mix(in srgb,var(--wallet-a) 85%,transparent),var(--shadow);}
+.wallet-hero::before{content:""; position:absolute; inset:0 0 auto 0; height:3px; background:linear-gradient(90deg,var(--wallet-accent),var(--harvest)); z-index:2;}
 .wallet-hero-top{position:relative; z-index:2; display:flex; align-items:flex-start; justify-content:space-between; gap:16px;}
-.wallet-eyebrow{display:block; font-weight:600; color:var(--muted); font-size:.9rem;}
-.wallet-value{font-family:var(--font-head); font-size:clamp(2.4rem,5.5vw,3.4rem); font-weight:700; line-height:1.05; color:var(--ink); margin-top:7px; letter-spacing:-.025em;}
-.wallet-icon{width:52px; height:52px; border-radius:14px; display:grid; place-items:center; font-size:1.5rem; background:var(--surface); color:var(--green); border:1px solid var(--line);}
-.wallet-icon .i{width:24px; height:24px;}
-.wallet-divider{position:relative; z-index:2; height:1px; background:var(--line); margin:18px 0 14px;}
-.wallet-usable{position:relative; z-index:2; display:flex; align-items:center; gap:8px; font-size:.9rem; font-weight:600; color:var(--green);}
-.wallet-check{width:22px; height:22px; border-radius:50%; display:grid; place-items:center; background:var(--green); color:var(--on-green); font-size:.75rem;}
-.wallet-glow{display:none;}
+.wallet-hero-top>div:first-child{min-width:0;}
+.wallet-eyebrow{display:block; font-weight:600; color:var(--wallet-sub); font-size:.95rem; letter-spacing:.01em;}
+.wallet-value{font-family:var(--font-head); font-size:clamp(2.6rem,6vw,3.8rem); font-weight:700; line-height:1.05; color:var(--wallet-ink); margin-top:8px; letter-spacing:-.025em; font-variant-numeric:tabular-nums; overflow-wrap:anywhere;}
+.wallet-icon{flex:none; width:54px; height:54px; border-radius:16px; display:grid; place-items:center; font-size:1.5rem; background:color-mix(in srgb,var(--wallet-ink) 10%,transparent); color:var(--wallet-accent); border:1px solid color-mix(in srgb,var(--wallet-ink) 18%,transparent);}
+.wallet-icon .i{width:26px; height:26px;}
+.wallet-divider{position:relative; z-index:2; height:1px; background:color-mix(in srgb,var(--wallet-ink) 16%,transparent); margin:20px 0 14px;}
+.wallet-usable{position:relative; z-index:2; display:flex; align-items:center; gap:8px; font-size:.92rem; font-weight:600; color:var(--wallet-accent);}
+.wallet-check{width:22px; height:22px; border-radius:50%; display:grid; place-items:center; background:var(--wallet-accent); color:var(--wallet-a); font-size:.75rem;}
+.wallet-glow{position:absolute; z-index:1; width:260px; height:260px; right:-90px; top:-110px; border-radius:50%; background:radial-gradient(circle,color-mix(in srgb,var(--wallet-accent) 22%,transparent),transparent 68%); pointer-events:none;}
+/* phones: the balance card comes first, the rest keeps its order */
+@media (max-width:900px){ .rewards-grid>div{display:contents;} .rewards-grid .wallet-hero{order:-1;} }
 
 /* ---------- interaction ---------- */
 .btn,.opt,.chip,.tabs button,.iconbtn,.x{transition:transform .12s ease,background-color .15s ease,border-color .15s ease,color .15s ease,box-shadow .15s ease;}
@@ -678,6 +715,7 @@ footer .wrap{display:flex; justify-content:space-between; gap:12px; flex-wrap:wr
 /* ---------- dashboard ---------- */
 .dash-head h1{font-size:1.7rem;}
 .dash-grid{display:grid; grid-template-columns:1.45fr 1fr; gap:24px; align-items:start;}
+.dash-grid>*{min-width:0;}
 .dash-grid .sec-title{margin-top:0;}
 .pnl-rows>div{display:flex; justify-content:space-between; align-items:baseline; padding:9px 0; border-bottom:1px solid var(--line);}
 .pnl-rows b{font-size:1.15rem; font-weight:700; font-variant-numeric:tabular-nums;}
@@ -801,28 +839,73 @@ a.kpi.kpi-feature:hover{color:#F1F6F0; border-color:transparent;}
   .iconbtn.ring{animation:ring .9s ease-in-out;}
   .track .st.now i{animation:here 2.2s ease-out infinite;}
 }
-.theme-anim,.theme-anim *{transition:background-color .34s var(--ease) .04s,color .34s var(--ease) .04s,border-color .34s var(--ease) .04s,fill .34s var(--ease) .04s,box-shadow .34s var(--ease) .04s!important;}
+/* Theme switch: the colour tokens are registered as animatable colours, so one transition on the root
+   element moves every surface, text, border, gradient and freshly rendered element together. Only while
+   the user switches (class theme-anim), never during navigation; off with reduced motion. */
+@property --bg{syntax:'<color>'; inherits:true; initial-value:#F7F8F2;}
+@property --surface{syntax:'<color>'; inherits:true; initial-value:#FFFFFF;}
+@property --surface2{syntax:'<color>'; inherits:true; initial-value:#EEF2EA;}
+@property --surface3{syntax:'<color>'; inherits:true; initial-value:#E3E9DF;}
+@property --ink{syntax:'<color>'; inherits:true; initial-value:#1C2922;}
+@property --ink2{syntax:'<color>'; inherits:true; initial-value:#33443A;}
+@property --muted{syntax:'<color>'; inherits:true; initial-value:#5E6C63;}
+@property --line{syntax:'<color>'; inherits:true; initial-value:#E1E7DF;}
+@property --line2{syntax:'<color>'; inherits:true; initial-value:#CDD6CB;}
+@property --brand{syntax:'<color>'; inherits:true; initial-value:#173D32;}
+@property --brand-hover{syntax:'<color>'; inherits:true; initial-value:#1F5141;}
+@property --on-brand{syntax:'<color>'; inherits:true; initial-value:#FFFFFF;}
+@property --green{syntax:'<color>'; inherits:true; initial-value:#1E7550;}
+@property --green-hover{syntax:'<color>'; inherits:true; initial-value:#173D32;}
+@property --green-soft{syntax:'<color>'; inherits:true; initial-value:#E3F1E7;}
+@property --on-green{syntax:'<color>'; inherits:true; initial-value:#FFFFFF;}
+@property --lime{syntax:'<color>'; inherits:true; initial-value:#D5EF91;}
+@property --lime-soft{syntax:'<color>'; inherits:true; initial-value:#F1F8DC;}
+@property --on-lime{syntax:'<color>'; inherits:true; initial-value:#173D32;}
+@property --red{syntax:'<color>'; inherits:true; initial-value:#C0393B;}
+@property --red-soft{syntax:'<color>'; inherits:true; initial-value:#FBE7E6;}
+@property --gold{syntax:'<color>'; inherits:true; initial-value:#8A5A00;}
+@property --gold-soft{syntax:'<color>'; inherits:true; initial-value:#FCF1D7;}
+@property --harvest{syntax:'<color>'; inherits:true; initial-value:#C98A12;}
+@property --blue{syntax:'<color>'; inherits:true; initial-value:#2867B2;}
+@property --blue-soft{syntax:'<color>'; inherits:true; initial-value:#E6EEF8;}
+@property --hero-bg{syntax:'<color>'; inherits:true; initial-value:#173D32;}
+@property --overlay{syntax:'<color>'; inherits:true; initial-value:rgba(16,26,22,.55);}
+@property --side-bg{syntax:'<color>'; inherits:true; initial-value:#EEF5EB;}
+@property --side-hover{syntax:'<color>'; inherits:true; initial-value:#E2EEDF;}
+@property --side-active{syntax:'<color>'; inherits:true; initial-value:#D5E8D6;}
+@property --wallet-a{syntax:'<color>'; inherits:true; initial-value:#173D32;}
+@property --wallet-b{syntax:'<color>'; inherits:true; initial-value:#22644B;}
+@property --wallet-ink{syntax:'<color>'; inherits:true; initial-value:#FFFFFF;}
+@property --wallet-sub{syntax:'<color>'; inherits:true; initial-value:#CFE3D6;}
+@property --wallet-accent{syntax:'<color>'; inherits:true; initial-value:#D5EF91;}
+:root.theme-anim{transition-property:--bg,--surface,--surface2,--surface3,--ink,--ink2,--muted,--line,--line2,--brand,--brand-hover,--on-brand,--green,--green-hover,--green-soft,--on-green,--lime,--lime-soft,--on-lime,--red,--red-soft,--gold,--gold-soft,--harvest,--blue,--blue-soft,--hero-bg,--overlay,--side-bg,--side-hover,--side-active,--wallet-a,--wallet-b,--wallet-ink,--wallet-sub,--wallet-accent;transition-duration:300ms;transition-timing-function:cubic-bezier(.4,0,.2,1);}
 
 /* ---------- signed-in navigation: collapsible sidebar (desktop) / drawer (tablet & mobile) ---------- */
 .menu-btn{display:none;}
 body.authed .menu-btn{display:grid;}
 .drawer-head{display:none;}
+body.authed .tnav a:focus-visible{outline:2px solid var(--green); outline-offset:-2px;}
 .tnav .nav-label{white-space:nowrap;}
 @media (min-width:1024px){
   body.authed{--side:236px;}
   body.authed.side-compact{--side:72px;}
   body.authed header.top .hrow{max-width:none; padding-left:16px; padding-right:24px;}
-  body.authed .tnav{position:fixed; z-index:25; top:calc(65px + env(safe-area-inset-top,0px)); bottom:0; left:0; width:var(--side); border-bottom:0; border-right:1px solid var(--line); background:var(--surface); overflow-x:hidden; overflow-y:auto; padding:18px 12px 24px; transition:width var(--dur-3) var(--ease);}
+  body.authed .tnav{position:fixed; z-index:25; top:calc(65px + env(safe-area-inset-top,0px)); bottom:0; left:0; width:var(--side); border-bottom:0; border-right:1px solid color-mix(in srgb,var(--green) 12%,var(--line)); background:var(--side-bg); overflow-x:hidden; overflow-y:auto; padding:18px 12px 24px;}
   body.authed .tnav .wrap{flex-direction:column; gap:2px; padding:0; max-width:none; overflow:visible;}
   body.authed .tnav a{border-bottom:0; margin:0; border-radius:10px; padding:10px 12px; font-size:.95rem; position:relative; color:var(--ink2); transition:background-color var(--dur-2) var(--ease),color var(--dur-2) var(--ease),padding var(--dur-3) var(--ease);}
   body.authed .tnav a .i{width:18px; height:18px; color:var(--muted); transition:color var(--dur-2) var(--ease);}
-  body.authed .tnav a:hover{background:var(--surface2); color:var(--ink);}
+  body.authed .tnav a:hover{background:var(--side-hover); color:var(--ink);}
   body.authed .tnav a:hover .i{color:var(--ink2);}
-  body.authed .tnav a.on{background:var(--surface2); color:var(--ink); font-weight:600;}
+  body.authed .tnav a.on{background:var(--side-active); color:var(--ink); font-weight:600;}
   body.authed .tnav a.on .i{color:var(--green);}
   body.authed .tnav a.on::before{content:""; position:absolute; left:-12px; top:8px; bottom:8px; width:3px; border-radius:0 3px 3px 0; background:var(--green);}
   body.authed .tnav a .cnt{margin-left:auto;}
-  body.authed main,body.authed footer{margin-left:var(--side); transition:margin-left var(--dur-3) var(--ease);}
+  body.authed main,body.authed footer{margin-left:var(--side);}
+  html.pre-auth body:not(.authed) main,html.pre-auth body:not(.authed) footer{margin-left:236px;}
+  html.pre-auth.pre-compact body:not(.authed) main,html.pre-auth.pre-compact body:not(.authed) footer{margin-left:72px;}
+  /* the sidebar width animates only when the user collapses or expands it, never while a page loads (no layout shift) */
+  body.authed.side-anim .tnav{transition:width var(--dur-3) var(--ease);}
+  body.authed.side-anim main,body.authed.side-anim footer{transition:margin-left var(--dur-3) var(--ease);}
   body.authed main .wrap,body.authed footer .wrap{max-width:1180px; padding-left:32px; padding-right:32px;}
   /* compact: icons only, labels kept for screen readers and shown as tooltips */
   body.authed.side-compact .tnav{padding-left:10px; padding-right:10px;}
@@ -832,13 +915,14 @@ body.authed .menu-btn{display:grid;}
   body.authed.side-compact .tnav a.on::before{left:-10px;}
 }
 @media (max-width:1023px){
-  body.authed .tnav{display:block; position:fixed; z-index:57; top:0; bottom:0; left:0; width:min(300px,86vw); border:0; border-right:1px solid var(--line); background:var(--surface); box-shadow:var(--shadow-lg); padding:12px 12px calc(20px + env(safe-area-inset-bottom,0px)); overflow-y:auto; transform:translateX(-104%); visibility:hidden; transition:transform var(--dur-3) var(--ease),visibility 0s linear var(--dur-3);}
+  body.authed .tnav{display:block; position:fixed; z-index:57; top:0; bottom:0; left:0; width:min(300px,86vw); border:0; border-right:1px solid color-mix(in srgb,var(--green) 12%,var(--line)); background:var(--side-bg); box-shadow:var(--shadow-lg); padding:12px 12px calc(20px + env(safe-area-inset-bottom,0px)); overflow-y:auto; transform:translateX(-104%); visibility:hidden; transition:transform var(--dur-3) var(--ease),visibility 0s linear var(--dur-3);}
   body.authed.side-open .tnav{transform:none; visibility:visible; transition:transform var(--dur-3) var(--ease),visibility 0s;}
   body.authed .drawer-head{display:flex; align-items:center; justify-content:space-between; padding:4px 4px 12px 8px; margin-bottom:6px; border-bottom:1px solid var(--line);}
   body.authed .tnav .wrap{flex-direction:column; gap:2px; padding:0; overflow:visible;}
   body.authed .tnav a{border-bottom:0; margin:0; border-radius:10px; padding:12px; font-size:.98rem; color:var(--ink2);}
   body.authed .tnav a .i{width:19px; height:19px; color:var(--muted);}
-  body.authed .tnav a.on{background:var(--surface2); color:var(--ink); font-weight:600;}
+  body.authed .tnav a:hover{background:var(--side-hover); color:var(--ink);}
+  body.authed .tnav a.on{background:var(--side-active); color:var(--ink); font-weight:600;}
   body.authed .tnav a.on .i{color:var(--green);}
   body.authed .tnav a .cnt{margin-left:auto;}
   body.side-open{overflow:hidden;}
@@ -929,7 +1013,7 @@ body.authed .menu-btn{display:grid;}
   .choice.c4{grid-template-columns:repeat(2,1fr);}
 }
 @media (prefers-reduced-motion:reduce){
-  .sheet,.toast,.btn,.opt,.chip,.lcard,.lcard .pic img,.todo,a.kpi,.theme-anim,.theme-anim *,.tnav,.tnav a,body.authed::before,body.authed main,body.authed footer,.npanel{transition:none!important;}
+  .sheet,.toast,.btn,.opt,.chip,.lcard,.lcard .pic img,.todo,a.kpi,:root.theme-anim,.tnav,.tnav a,body.authed::before,body.authed main,body.authed footer,.npanel{transition:none!important;}
   .sk::after,.btn[data-busy]::after,.opt[data-busy]::after{animation:appear .01s .3s forwards;}
 }
 
@@ -979,7 +1063,8 @@ body.authed .menu-btn{display:grid;}
 .ms-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:10px; margin-top:8px;}
 .ms-grid>div{display:flex; flex-direction:column; gap:2px; min-width:0;} .ms-grid b{font-variant-numeric:tabular-nums;}
 .ms-tx{list-style:none; margin:12px 0 8px; padding:0; display:grid; gap:6px; font-size:.9rem;}
-.ms-tx li{display:flex; justify-content:space-between; gap:10px; border-bottom:1px dashed var(--line); padding-bottom:4px;}
+.ms-tx li{display:flex; justify-content:space-between; gap:10px; border-bottom:1px dashed var(--line); padding-bottom:4px; min-width:0;}
+.ms-tx li b{flex:none; white-space:nowrap;}
 .ms-tx li span{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .ms-tx .pos{color:var(--green);} .ms-tx .neg{color:var(--red);}
 .tl{list-style:none; display:flex; flex-wrap:wrap; gap:6px 0; padding:0; margin:12px 0 16px;}

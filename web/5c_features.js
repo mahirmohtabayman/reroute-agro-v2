@@ -57,7 +57,7 @@ I18N_PHRASES.unshift(
   ['নিশ্চিত অর্ডার', 'Confirmed orders'],
   ['চলমান ডেলিভারি', 'Deliveries in progress'],
   ['তাজা থাকার সময় কম (২ দিন বা কম)', 'Freshness running out (2 days or less)'],
-  ['AI বাজার সুযোগ', 'AI market opportunity'],
+  ['এআই বাজার সুযোগ', 'AI market opportunity'],
   ['কোন বাজারে বেচলে হাতে বেশি থাকবে দেখুন', 'See which market leaves you the most money'],
   ['পুরো হিসাব দেখুন', 'See full accounts'],
   ['কিছু বিক্রির উৎপাদন খরচ জানা নেই, তাই লাভের হিসাব আংশিক। "মজুদ ও হিসাব"-এ খরচ লিখুন।', 'Production cost is unknown for some sales, so profit is partial. Add costs in "Stock & accounts".'],
@@ -425,7 +425,7 @@ function actionCentre(){
     [deliveries, 'চলমান ডেলিভারি', '#/transport', 'truck'],
     [fresh, 'তাজা থাকার সময় কম (২ দিন বা কম)', '#/listings', 'leaf'],
   ].filter(x => x[0] > 0);
-  const ai = u.role === 'farmer' ? `<a class="ac-item ac-ai" href="#/advisor">${ic('sparkles')}<span><b>AI বাজার সুযোগ</b><span class="muted xs">কোন বাজারে বেচলে হাতে বেশি থাকবে দেখুন</span></span></a>` : '';
+  const ai = u.role === 'farmer' ? `<a class="ac-item ac-ai" href="#/advisor">${ic('sparkles')}<span><b>এআই বাজার সুযোগ</b><span class="muted xs">কোন বাজারে বেচলে হাতে বেশি থাকবে দেখুন</span></span></a>` : '';
   if (!items.length && !ai) return '';
   return `<section class="ac" aria-labelledby="ac-h"><h2 class="sec-title" id="ac-h">আজকের কাজের কেন্দ্র</h2><div class="ac-grid">
     ${items.map(([n, t, h, i]) => `<a class="ac-item" href="${h}">${ic(i)}<span><b>${nf(n)}</b> <span class="sm">${t}</span></span></a>`).join('')}${ai}</div></section>`;

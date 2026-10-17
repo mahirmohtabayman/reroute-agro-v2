@@ -195,7 +195,7 @@ const I18N_PHRASES = [
   ['আবার চেষ্টা','Try again'],
   ['পরে করব','Do it later'],
   ['পেমেন্ট করুন','Pay now'],
-  ['ব্যালান্স যথেষ্ট নয়','Insufficient balance'],
+  ['ব্যালেন্স যথেষ্ট নয়','Insufficient balance'],
   ['কার্ড নম্বর (১৬ সংখ্যা)','Card number (16 digits)'],
   ['ডেবিট/ক্রেডিট কার্ড','Debit/Credit Card'],
   ['মোবাইল নম্বর ও পিন','Mobile number and PIN'],
@@ -213,12 +213,12 @@ const I18N_PHRASES = [
   ['সম্পূর্ণ লেনদেন','Completed transactions'],
   ['মোট পরিমাণ','Total quantity'],
   ['চালু লিস্টিং','Active listings'],
-  ['AI পরামর্শ','AI Advice'],
+  ['এআই পরামর্শ','AI Advice'],
   ['কোথায় বেচবেন','Where to sell'],
   ['কোথায় কিনবেন','Where to buy'],
   ['বাজারের অবস্থা','Market overview'],
   ['মূল পরামর্শ','Key Recommendation'],
-  ['AI হিসাব করছে...','AI is calculating...'],
+  ['এআই হিসাব করছে...','AI is calculating...'],
   ['সবচেয়ে লাভ','Best return'],
   ['লাভ বেশি','Higher return'],
   ['স্থানীয় হাট','Local market'],
@@ -290,7 +290,7 @@ const I18N_PHRASES = [
   ['হালনাগাদ হয়েছে','Updated successfully'],
   ['অনুরোধ পাঠানো হয়েছে','Request sent'],
   ['Reroute Agro · Social Catalyst | ডেমো সংস্করণ','Reroute Agro · Social Catalyst | Demo version'],
-  ['AI দামের মডেল','AI Price Model'],
+  ['এআই দামের মডেল','AI Price Model'],
   ['দামের চার্ট','Price chart'],
   ['প্রশিক্ষণ','Training'],
   ['অদেখা সময়ে পরীক্ষা','Out-of-sample test'],
@@ -350,7 +350,7 @@ const I18N_WORDS = {
   'কেজি':'kg','মণ':'maund','কিমি':'km','টাকা':'BDT','মোট':'Total','প্রতি':'per','সর্বনিম্ন':'Minimum','সর্বোচ্চ':'Maximum','আনুমানিক':'Estimated','প্রায়':'about',
   'বিক্রি':'Sell','কেনা':'Buy','কিনুন':'Buy','কিনবেন':'buy','কিনতে':'buy','বেচবেন':'sell','পাঠান':'Send','পাঠালে':'if sent','পাঠাবেন':'send',
   'তোলা':'pickup','তোলার':'pickup','পৌঁছেছে':'Delivered','পৌঁছে':'delivered','পথে':'In transit','হস্তান্তর':'Handover','ফেরত':'Refund','জমা':'secured',
-  'পেমেন্ট':'Payment','নগদ':'Nagad','বিকাশ':'bKash','কার্ড':'Card','ব্যালান্স':'Balance','পিন':'PIN','নম্বর':'Number','মোবাইল':'Mobile','নাম':'Name',
+  'পেমেন্ট':'Payment','নগদ':'Nagad','বিকাশ':'bKash','কার্ড':'Card','ব্যালেন্স':'Balance','পিন':'PIN','নম্বর':'Number','মোবাইল':'Mobile','নাম':'Name',
   'জেলা':'District','এলাকা':'Area','উপজেলা':'Upazila','ছবি':'Photo','মান':'Quality','গ্রেড':'Grade','রিভিউ':'Reviews','রেটিং':'Rating','যাচাই':'Verify','যাচাইকৃত':'Verified',
   'জাতীয়':'National','পরিচয়পত্র':'ID','লাইসেন্স':'License','চালক':'Driver','গাড়ি':'Vehicle','সব':'All','সবাই':'Everyone','কোনো':'Any','কিছু':'Some','আরও':'More','অন্য':'Other','শুধু':'Only',
   'এই':'This','এখানে':'Here','থেকে':'from','পর্যন্ত':'until','দেখুন':'View','ফিরুন':'Back','ঢুকুন':'Enter','বের':'Logout','সংরক্ষণ':'Save','প্রকাশ':'Publish',
@@ -383,7 +383,7 @@ const I18N_UI_FIXES = [
   ['আসসালামু আলাইকুম,','Welcome,'],
   ['চলমান অর্ডার','Active orders'],
   ['এ পর্যন্ত লাভ-ক্ষতি','Profit & loss to date'],
-  ['মোট বিক্রি','Total sales'],
+  ['মোট বিক্রয়','Total sales'],
   ['মোট খরচ','Total costs'],
   ['আনুমানিক লাভ','Estimated profit'],
   ['কোথায় বেচলে/কিনলে লাভ','Find the most profitable market'],
@@ -425,7 +425,7 @@ const I18N_UI_FIXES = [
   ['প্রোফাইল যাচাই হলে +৫০','Earn +50 points when your profile is verified.'],
   ['রাজি হওয়ার পর অর্ডার বাতিল করলে −১০','Lose 10 points if you cancel an order after accepting it.'],
   ['ভুয়া লেনদেন ঠেকাতে: পয়েন্ট আসে শুধু পেমেন্ট হওয়া ও মাল পৌঁছানো অর্ডারে, অন্তত ৳৫,০০০-এর বিক্রিতে, আর একই ক্রেতা-বিক্রেতা জোড়া সপ্তাহে ৩ বারের বেশি নয়।','To prevent misuse, points are awarded only for paid and delivered orders, sales of at least ৳5,000, and no more than three qualifying transactions per week between the same buyer and seller.'],
-  ['ওয়ালেট ব্যালান্স','Wallet balance'],
+  ['ওয়ালেট ব্যালেন্স','Wallet balance'],
   ['পেমেন্টে ব্যবহার করা যায়','Available for payments'],
   ['ওয়ালেটের লেনদেন','Wallet transactions'],
   ['পয়েন্টের ইতিহাস','Points history'],
@@ -467,7 +467,7 @@ const I18N_UI_FIXES = [
   ['মালের উৎপাদন/কেনা খরচ দেওয়া নেই, তাই লাভ সম্পূর্ণ নয়।','Some production or purchase costs are missing, so the profit figure is incomplete.'],
   ['পেমেন্ট করতে হবে','Payment required'],
   ['পেমেন্ট করুন','Pay now'],
-  ['ব্যালান্স যথেষ্ট নয়','Insufficient wallet balance'],
+  ['ব্যালেন্স যথেষ্ট নয়','Insufficient wallet balance'],
   ['ক্রেতার পেমেন্টের অপেক্ষা।','Waiting for buyer payment.'],
   ['মাল পৌঁছালে ক্রেতা নিশ্চিত করবেন, তখন টাকা আপনার ওয়ালেটে যাবে।','The buyer will confirm delivery, then the payment will be released to your wallet.'],
   ['আপনার টাকা Reroute-এ জমা আছে।','Your payment is being held securely by Reroute.'],
@@ -517,12 +517,70 @@ function romanizeBn(s){
     .trim();
 }
 
+/* filled by web/1b_i18n_catalog.js; empty until it has loaded */
+var I18N_CAT = null;
+
+function i18nCatalog(s, depth=0){
+  if (!I18N_CAT || depth > 3) return null;
+  const lead = s.match(/^\s*/)[0], trail = s.match(/\s*$/)[0], core = I18N_CAT.norm(s);
+  if (!core) return null;
+  const one = i18nCatalogOne(core, depth);
+  if (one !== null) return lead + one + trail;
+  /* several sentences in one text node: translate each sentence that the catalogue knows */
+  const parts = core.split(/(।\s*|\s·\s|;\s|\.\s)/);
+  if (parts.length < 3) return null;
+  let hits = 0;
+  const out = parts.map((p, i) => {
+    if (i % 2) return /^।/.test(p) ? '. ' : p;
+    if (!/[\u0980-\u09ff]/.test(p)) return enDigits(p);
+    const t = i18nCatalogOne(p.trim(), depth);
+    if (t === null) return translateBnText(p);   /* a name or place stays as written */
+    hits++; return t;
+  });
+  return hits ? lead + out.join('').replace(/\.\. /g, '. ').replace(/\.\s*$/, '.').trim() + trail : null;
+}
+
+/* one sentence: exact text, then "{}" patterns; leading/trailing separators (·, :, ।) are kept aside */
+function i18nCatalogOne(core, depth){
+  const full = I18N_CAT.exact.get(core);
+  if (full !== undefined) return full;
+  const m0 = core.match(/^([·•|:,।–—-]\s*)?(.*?)(\s*[·•|:,।]+)?$/);
+  const pre = (m0[1] || '').replace(/।\s*/, '. '), body = m0[2], post = (m0[3] || '').replace(/।/g, '.');
+  for (const [b, keepPost] of [[body, true], [body + '।', false]]) {
+    const ex = I18N_CAT.exact.get(b);
+    if (ex !== undefined) return pre + (keepPost ? ex.replace(/[.:]$/, '') + post : ex);
+  }
+  return i18nCatalogPat(core, '', '', depth) ?? i18nCatalogPat(body, pre, post, depth)
+    ?? i18nCatalogPat(body + '।', pre, '', depth);
+}
+
+function i18nCatalogPat(body, pre, post, depth){
+  for (const p of I18N_CAT.pats) {
+    if (p.key && !body.includes(p.key)) continue;
+    const m = body.match(p.re);
+    if (!m) continue;
+    const vals = m.slice(1).map(v => {
+      if (!/[\u0980-\u09ff]/.test(v.replace(/৳/g, ''))) return enDigits(v);
+      const c = i18nCatalog(v, depth + 1);
+      return c !== null ? c : translateBnText(v);
+    });
+    return pre + p.en.replace(/\{(\d+)\}/g, (x, i) => vals[+i] !== undefined ? vals[+i] : '') + post;
+  }
+  return null;
+}
+
 function translateBnText(input){
   if (input == null) return input;
 
   let s = String(input);
+  /* surrounding spaces separate this text from the next element; keep them */
+  const edgeL = s.match(/^\s*/)[0] ? ' ' : '', edgeR = /\S\s+$/.test(s) ? ' ' : '';
 
   if (!/[\u0980-\u09ff]/.test(s)) return enDigits(s);
+
+  /* 1. whole-sentence catalogue (web/1b_i18n_catalog.js) */
+  const hit = i18nCatalog(s);
+  if (hit !== null) return hit;
 
   for (const [bn,en] of I18N_UI_FIXES) {
     if (s.includes(bn)) s = s.split(bn).join(en);
@@ -585,7 +643,11 @@ function translateBnText(input){
     'days'
   );
 
-  return s;
+
+  /* all or nothing: a text that cannot be fully translated (a name, a place, a user's note, or a
+     sentence missing from the catalogue) keeps its original language instead of mixing the two */
+  if (/[\u0980-\u09f2\u09f4-\u09ff]/.test(s)) return String(input);
+  return edgeL + s + edgeR;
 }
 
 function langBtn(){
@@ -626,6 +688,7 @@ function syncDocumentLanguage(){
 }
 
 const I18N_TEXT_ORIG = new WeakMap();
+const I18N_TEXT_LAST = new WeakMap();
 const I18N_ATTR_ORIG = new WeakMap();
 const I18N_ATTRS = [
   'aria-label',
@@ -668,7 +731,8 @@ function translateTextNode(node){
     return;
   }
 
-  if (!I18N_TEXT_ORIG.has(node)) {
+  /* the app may change a text in place (timers, counters): a value we did not write is the new original */
+  if (!I18N_TEXT_ORIG.has(node) || (node.nodeValue !== I18N_TEXT_ORIG.get(node) && node.nodeValue !== I18N_TEXT_LAST.get(node))) {
     I18N_TEXT_ORIG.set(node,node.nodeValue);
   }
 
@@ -677,6 +741,7 @@ function translateTextNode(node){
     ? translateBnText(original)
     : original;
 
+  I18N_TEXT_LAST.set(node,next);
   if (node.nodeValue !== next) {
     node.nodeValue = next;
   }
@@ -701,14 +766,16 @@ function translateElementAttrs(el){
   for (const attr of I18N_ATTRS) {
     if (!el.hasAttribute(attr)) continue;
 
-    if (!(attr in saved)) {
-      saved[attr] = el.getAttribute(attr);
+    const cur = el.getAttribute(attr);
+    if (!(attr in saved) || (cur !== saved[attr] && cur !== saved['~' + attr])) {
+      saved[attr] = cur;
     }
 
     const next = isEn()
       ? translateBnText(saved[attr])
       : saved[attr];
 
+    saved['~' + attr] = next;
     if (el.getAttribute(attr) !== next) {
       el.setAttribute(attr,next);
     }
@@ -779,6 +846,10 @@ function startI18nObserver(){
         translateTextNode(mutation.target);
       }
 
+      if (mutation.type === 'attributes') {
+        translateElementAttrs(mutation.target);
+      }
+
       for (const node of mutation.addedNodes) {
         applyLanguage(node);
       }
@@ -790,7 +861,9 @@ function startI18nObserver(){
     {
       subtree:true,
       childList:true,
-      characterData:true
+      characterData:true,
+      attributes:true,
+      attributeFilter:I18N_ATTRS
     }
   );
 

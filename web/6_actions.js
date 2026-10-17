@@ -503,7 +503,7 @@ function drawOtp(value=''){
   modal(`<div class="body otp-box">
     <div class="otp-ic">${ic('shield')}</div>
     <h2>OTP যাচাই</h2>
-    <p class="muted sm">অ্যাকাউন্ট খুলতে <b data-i18n-skip>${esc(OTP.phone)}</b> নম্বরের কোডটি দিন</p>
+    <p class="muted sm">অ্যাকাউন্ট খুলতে এই নম্বরের কোডটি দিন: <b data-i18n-skip>${esc(OTP.phone)}</b></p>
     <div class="otp-demo">
       <div class="row" style="gap:8px">${ic('info')}<b>প্রোটোটাইপ মোড</b></div>
       <p>প্রোটোটাইপ মোড: SMS সেবা এখনো চালু করা হয়নি। আপনার ডেমো ভেরিফিকেশন কোড:</p>
@@ -863,11 +863,12 @@ const A = {
       document.body
     );
 
-    setTimeout(
+    clearTimeout(window.__themeT);
+    window.__themeT=setTimeout(
       ()=>r.classList.remove(
         'theme-anim'
       ),
-      400
+      360
     );
   },
 

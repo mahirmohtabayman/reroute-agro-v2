@@ -39,7 +39,7 @@ V.dash = () => {
       :emptyState('sprout','এখন হাতে কোনো কাজ নেই','নতুন অফার, পেমেন্ট বা ট্রাকের খবর এলে এখানে দেখাবে।','',true)}
     </div><div>
     <h2 class="sec-title">এ পর্যন্ত লাভ-ক্ষতি</h2>
-    <div class="panel"><div class="pnl-rows"><div><span class="muted sm">মোট বিক্রি</span><b>${tk(P.revenue)}</b></div>
+    <div class="panel"><div class="pnl-rows"><div><span class="muted sm">মোট বিক্রয়</span><b>${tk(P.revenue)}</b></div>
       <div><span class="muted sm">মোট খরচ</span><b>${tk(P.expense)}</b></div>
       <div class="pnl-total"><span class="muted sm">${P.exact?'লাভ':'আনুমানিক লাভ'}</span><b style="color:var(--${P.profit>=0?'green':'red'})">${tk(P.profit+0)}</b></div></div>
       ${!P.exact?`<p class="warn sm" style="margin-top:10px">${monTxt(P.unknown_cost_qty)} মালের উৎপাদন/কেনা খরচ দেওয়া নেই, তাই লাভ সম্পূর্ণ নয়।</p>`:''}

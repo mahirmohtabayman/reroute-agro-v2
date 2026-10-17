@@ -20,7 +20,7 @@ const HB_I18N = [
   ['বিক্রি, খরচ, বিল, রসিদ, পাওনা-দেনা আর লাভ-ক্ষতি এক জায়গায়', 'Sales, costs, bills, receipts, dues and profit/loss in one place'],
   ['এই সপ্তাহ', 'This week'], ['এই মাস', 'This month'], ['এই বছর', 'This year'], ['সব সময়', 'All time'], ['নিজের মতো', 'Custom'],
   ['শুরু ও শেষের তারিখ বাছুন।', 'Pick a start and an end date.'], ['হিসাব তৈরি হচ্ছে...', 'Preparing your accounts...'],
-  ['মোট বিক্রি', 'Total sales'], ['মোট খরচ', 'Total costs'], ['লাভ / ক্ষতি', 'Profit / loss'], ['পাওনা / দেনা (বাকি)', 'Receivable / payable (outstanding)'],
+  ['মোট বিক্রয়', 'Total sales'], ['মোট খরচ', 'Total costs'], ['লাভ / ক্ষতি', 'Profit / loss'], ['পাওনা / দেনা (বাকি)', 'Receivable / payable (outstanding)'],
   ['মালের খরচ', 'Cost of goods'], [' · অন্য ', ' · other '], ['টি মেয়াদ পেরিয়েছে', ' overdue'],
   ['নিজে লেখা (যাচাই করা নয়)', 'User-reported (not verified)'], ['সিমুলেটেড (ডেমো, আসল টাকা নয়)', 'Simulated (demo, not real money)'],
   ['নিজে লেখা', 'user-reported'], ['প্ল্যাটফর্ম লেনদেন', 'Platform transaction'],
@@ -151,7 +151,7 @@ function hbOverview(){
   if (!d) return hbPeriodPicker() + (fxFailed(path) ? fxErr() : advLoading('হিসাব তৈরি হচ্ছে...'));
   const p = d.pnl, empty = !p.revenue && !p.total_expenses && !d.recent_invoices.length && !d.counts.records;
   return hbPeriodPicker() + `<div class="grid4 hb-kpis">
-      <div class="kpi"><span class="muted sm">মোট বিক্রি</span><strong>${tk(p.revenue)}</strong><span class="muted xs">প্ল্যাটফর্ম ${tk(p.revenue_platform)} · নিজে লেখা ${tk(p.revenue_external)}</span></div>
+      <div class="kpi"><span class="muted sm">মোট বিক্রয়</span><strong>${tk(p.revenue)}</strong><span class="muted xs">প্ল্যাটফর্ম ${tk(p.revenue_platform)} · নিজে লেখা ${tk(p.revenue_external)}</span></div>
       <div class="kpi"><span class="muted sm">মোট খরচ</span><strong>${tk(p.total_expenses + p.cost_of_goods)}</strong><span class="muted xs">মালের খরচ ${tk(p.cost_of_goods)} · অন্য ${tk(p.total_expenses)}</span></div>
       <div class="kpi ${p.profit_complete ? (p.profit >= 0 ? 'kpi-good' : 'kpi-bad') : ''}"><span class="muted sm">লাভ / ক্ষতি</span>
         <strong>${p.profit_complete ? (p.profit < 0 ? '−' : '') + tk(Math.abs(p.profit)) : '—'}</strong>
@@ -354,13 +354,13 @@ function asDraw(){
   if (!AS.open) return;
   panel.innerHTML = `<header class="as-head"><b>${ic('mic')} বাংলা সহকারী</b>
       <button class="iconbtn" data-as="close" aria-label="সহকারী বন্ধ করুন">${ic('x')}</button></header>
-    <div class="as-msgs" aria-live="polite" data-i18n-skip>${AS.msgs.length ? AS.msgs.map(m => m.me
-      ? `<p class="as-me">${esc(m.text)}</p>`
+    <div class="as-msgs" aria-live="polite">${AS.msgs.length ? AS.msgs.map(m => m.me
+      ? `<p class="as-me" data-i18n-skip>${esc(m.text)}</p>`
       : `<div class="as-bot"><p>${esc(m.text)}</p>${m.items && m.items.length ? `<ul>${m.items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>` : ''}
           ${m.links && m.links.length ? `<p class="as-links">${m.links.map(l => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join(' · ')}</p>` : ''}
           ${m.simulated ? '<span class="demo-tag">সিমুলেটেড বাজারদর</span>' : ''}
           ${'speechSynthesis' in window ? `<button class="linkbtn xs" data-as="say" data-i="${AS.msgs.indexOf(m)}">${ic('volume')} শুনুন</button>` : ''}</div>`).join('')
-      : `<div class="as-bot"><p>আপনার হিসাব বা বাজার নিয়ে জিজ্ঞেস করুন, যেমন:</p><ul>${['আমার এই মাসে কত টাকার বিক্রি হয়েছে?', 'আমার কত টাকা পাওনা আছে?', 'আমার শেষ তিনটা বিল দেখাও', 'আজ আলুর বাজারদর কত?'].map(q => `<li><button class="linkbtn" data-as="ex">${q}</button></li>`).join('')}</ul></div>`}
+      : `<div class="as-bot"><p>আপনার হিসাব বা বাজার নিয়ে জিজ্ঞেস করুন, যেমন:</p><ul>${['আমার এই মাসে কত টাকার বিক্রি হয়েছে?', 'আমার কত টাকা পাওনা আছে?', 'আমার শেষ তিনটা বিল দেখাও', 'আজ আলুর বাজারদর কত?'].map(q => `<li><button class="linkbtn" data-as="ex" data-q="${esc(q)}">${q}</button></li>`).join('')}</ul></div>`}
       ${AS.busy ? `<p class="as-bot muted">${'ভাবছি...'}</p>` : ''}</div>
     <div class="as-input">
       <label class="sr-only" for="as-in">প্রশ্ন লিখুন বা বলুন</label>
@@ -416,7 +416,7 @@ document.addEventListener('click', async e => {
     const k = a.dataset.as;
     if (k === 'close') { AS.open = false; asDraw(); $('#as-fab').focus(); }
     if (k === 'send') asSend(($('#as-in') || {}).value);
-    if (k === 'ex') asSend(a.textContent);
+    if (k === 'ex') asSend(a.dataset.q || a.textContent);   /* always the Bangla question, also in English mode */
     if (k === 'mic') asMic();
     if (k === 'say') { const m = AS.msgs[+a.dataset.i]; if (m) say([m.text, ...(m.items || [])].join('। ')); }
     return;

@@ -224,7 +224,7 @@ V.ai = () => {
   const bt=s.dates.map((d,i)=>s.backtest[d]!=null?`${x(i)},${y(s.backtest[d])}`:null).filter(Boolean);
   if(bt.length) g+=`<polyline fill="none" style="stroke:var(--green)" stroke-width="2.5" stroke-dasharray="6 5" points="${bt.join(' ')}"/>`;
   g+=`<circle cx="${x(all.length-1)}" cy="${y(s.forecast.price)}" r="6" style="fill:var(--red)"/></svg>`;
-  return `<div class="phead"><div><h1>${ic('sparkles')} AI দামের মডেল</h1><p class="muted">আসল ডেটায় প্রশিক্ষিত ও যাচাই করা: Food Commodity Price (OHLC) Dataset of Bangladesh</p></div></div>
+  return `<div class="phead"><div><h1>${ic('sparkles')} এআই দামের মডেল</h1><p class="muted">আসল ডেটায় প্রশিক্ষিত ও যাচাই করা: Food Commodity Price (OHLC) Dataset of Bangladesh</p></div></div>
     <div class="grid4"><div class="kpi"><span class="muted sm">প্রশিক্ষণ</span><strong>${nf(M.markets)}টি বাজার</strong><span class="muted sm">২০০৮–২০২২</span></div>
       <div class="kpi"><span class="muted sm">অদেখা সময়ে পরীক্ষা</span><strong>২০২৩–২০২৫</strong><span class="muted sm">${nf(M.test_rows)}টি পূর্বাভাস</span></div>
       <div class="kpi"><span class="muted sm">দাম বাড়বে না কমবে</span><strong>${nf(M.direction_accuracy_pct,1)}% সঠিক</strong></div>
