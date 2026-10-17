@@ -54,5 +54,7 @@ the user view returns counts and their own costs, no other user's data). Profile
    are weaker (per-phone limits still hold). An attacker can delay one phone's logins for 15 minutes.
 6. **Global write lock**: correct but serialises all writes; fine for a prototype, not for high traffic.
 7. **Payments are simulated** (PIN 12345). No real gateway, no webhooks, no reconciliation.
-8. **Demo mode on a production database** lets anyone use the demo accounts; keep demo on a separate deployment.
+8. **Demo mode is on by default** for the hackathon: anyone can use the seeded farmer/paikar demo accounts and
+   sign up without phone verification. Set `ENABLE_DEMO_MODE=false` before real users join (or use a separate
+   deployment). Admin is never one-click; seeding and reset stay forbidden in production.
 9. No dependency vulnerability scan was run in this environment (pip-audit not installed).

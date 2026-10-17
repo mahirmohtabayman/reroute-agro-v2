@@ -61,7 +61,8 @@
 ### Breaking changes (intended)
 - Existing logins end once (old tokens are rejected).
 - `SECRET_KEY` and `DATABASE_URL` required in production.
-- Demo accounts, one-click login and sign-up need `ENABLE_DEMO_MODE=true`.
-- Seeded admin `123456` password removed; use `manage create-admin` or `DEMO_ADMIN_PASSWORD`.
+- Demo mode is on by default (demo accounts, one-click login for non-admin demo accounts, on-screen prototype OTP);
+  `ENABLE_DEMO_MODE=false` turns it off for a real launch.
+- Seeded admin `123456` password removed; set `DEMO_ADMIN_PASSWORD` or use `manage create-admin`.
 - `POST /api/login` returns 401 for both unknown phone and wrong password (was 404/401 — avoids revealing
   which numbers are registered). All other API request/response shapes are unchanged; new fields were only added.

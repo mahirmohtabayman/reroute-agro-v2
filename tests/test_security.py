@@ -62,15 +62,35 @@ def test_startup_does_not_seed_production_even_if_empty(monkeypatch):
     assert not called
 
 
-def test_production_removes_demo_admin_password(client, monkeypatch):
-    monkeypatch.setattr(settings, "IS_PROD", True)
+def test_demo_mode_off_removes_demo_admin_password(client, monkeypatch):
+    monkeypatch.setattr(settings, "DEMO_MODE", False)
     SEED.set_demo_passwords()
     assert db.val("SELECT pw_hash FROM users WHERE id='a1'") is None
     r = client.post("/api/login", json={"phone": ADMIN_PHONE, "password": ADMIN_PW, "role": "admin"})
     assert r.status_code == 401
-    monkeypatch.setattr(settings, "IS_PROD", False)
+    monkeypatch.setattr(settings, "DEMO_MODE", True)
     SEED.set_demo_passwords()
     assert admin_token(client)
+
+
+def test_demo_works_in_production_by_default(client, monkeypatch):
+    """Hackathon default: on Render (production) with no extra settings, judges get demo accounts and the
+    on-screen prototype OTP; seeding and reset stay forbidden."""
+    import subprocess, sys, os
+    env = {k: v for k, v in os.environ.items() if k not in ("ENABLE_DEMO_MODE", "APP_ENV")}
+    env["RENDER"] = "true"
+    out = subprocess.run([sys.executable, "-c", "from app import settings; print(settings.IS_PROD, settings.DEMO_MODE)"],
+                         env=env, capture_output=True, text=True, cwd=os.path.dirname(os.path.dirname(__file__)))
+    assert out.stdout.split() == ["True", "True"], out.stderr[-500:]
+    monkeypatch.setattr(settings, "IS_PROD", True)
+    assert client.post("/api/login", json={"user_id": "f1"}).status_code == 200
+    from tests.conftest import new_phone
+    r = client.post("/api/register", json={"role": "farmer", "name": "বিচারক", "phone": new_phone(), "password": "secret12",
+                                           "confirm_password": "secret12", "place": "rajshahi", "upazila": "পবা",
+                                           "market": "পবা বাজার"})
+    assert r.status_code == 200 and len(r.json()["demo_otp"]) == 5
+    assert client.post("/api/register/verify", json={"reg_id": r.json()["reg_id"], "otp": r.json()["demo_otp"]}).status_code == 200
+    assert client.post("/api/reset", headers=H(admin_token(client))).status_code == 403
 
 
 def test_demo_auto_refresh_is_off_by_default():

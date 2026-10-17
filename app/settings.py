@@ -2,7 +2,8 @@
 
 APP_ENV           production | demo | development. Unset on Render (RENDER is set there) → production,
                   otherwise development.
-ENABLE_DEMO_MODE  true/false (default false). Turns on the seeded demo accounts, one-click demo login for
+ENABLE_DEMO_MODE  true/false (default TRUE: this is a hackathon prototype that judges use with demo accounts).
+                  Set it to false for a real launch. Turns on the seeded demo accounts, one-click demo login for
                   non-admin demo accounts and the on-screen prototype OTP. Never seeds or resets a database
                   that already has data.
 SECRET_KEY        required (≥ 32 characters) outside development. Used to hash sign-up OTP codes.
@@ -30,7 +31,7 @@ if APP_ENV not in ("production", "demo", "development"):
     raise ConfigError(f"APP_ENV must be production, demo or development (got {APP_ENV!r})")
 IS_PROD = APP_ENV == "production"
 IS_DEV = APP_ENV == "development"
-DEMO_MODE = _flag("ENABLE_DEMO_MODE")
+DEMO_MODE = _flag("ENABLE_DEMO_MODE", default=True)
 
 _secret = os.environ.get("SECRET_KEY", "")
 if len(_secret) < 32:

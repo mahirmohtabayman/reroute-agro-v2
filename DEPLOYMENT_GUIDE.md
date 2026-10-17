@@ -9,8 +9,8 @@ Nothing in this release was deployed automatically. Follow these steps yourself.
 | `APP_ENV` | `production` | `demo` | On Render it defaults to `production` when unset |
 | `DATABASE_URL` | Neon URL (required) | a **separate** Neon database or branch | `postgresql://…?sslmode=require`. Without it the server refuses to start |
 | `SECRET_KEY` | ≥ 32 random chars (required) | ≥ 32 random chars | `python -c "import secrets; print(secrets.token_urlsafe(48))"`. Hashes OTP codes. Changing it invalidates pending sign-up codes only |
-| `ENABLE_DEMO_MODE` | `false` | `true` | Demo accounts, one-click demo login (never admin), on-screen prototype OTP |
-| `DEMO_ADMIN_PASSWORD` | not set | ≥ 10 chars | Password for the seeded demo admin `01300000000`; ignored in production |
+| `ENABLE_DEMO_MODE` | default `true` (hackathon); `false` for a real launch | `true` | Demo accounts, one-click demo login (never admin), on-screen prototype OTP |
+| `DEMO_ADMIN_PASSWORD` | optional, ≥ 10 chars | ≥ 10 chars | Password for the seeded demo admin `01300000000` while demo mode is on; without it the demo admin cannot log in |
 | `DEMO_AUTO_REFRESH` | not set | optional `true` | Rebuild idle demo data every `DEMO_TTL_HOURS` (12) |
 | `ALLOWED_ORIGINS` | usually empty | usually empty | Only if another website must call the API |
 | `TRUSTED_PROXIES` | `1` | `1` | Render adds one proxy hop |
@@ -21,19 +21,19 @@ Nothing in this release was deployed automatically. Follow these steps yourself.
 
 ## 2. Important: what changes for the current live site
 1. **`SECRET_KEY` must be set** or the new release will not start on Render (by design).
-2. **`ENABLE_DEMO_MODE` defaults to `false`.** With it off: no demo accounts, no one-click login, and **new
-   sign-ups are closed** (there is no SMS gateway, so phone ownership cannot be verified). For the hackathon
-   demo, set `ENABLE_DEMO_MODE=true` — ideally on a separate demo service with its own database (step 4).
+2. **Demo mode is ON by default** (hackathon prototype): demo accounts with one-click login (never admin) and
+   sign-up with the on-screen prototype OTP work without any extra setting. For a real launch set
+   `ENABLE_DEMO_MODE=false`: demo accounts disappear and sign-up closes until an SMS gateway is added.
 3. Everyone has to **log in once again** (old tokens were forgeable and are no longer accepted).
-4. **The seeded admin `01300000000` no longer accepts `123456`.** In production, create a real admin (step 3).
-   On a demo deployment, set `DEMO_ADMIN_PASSWORD`.
+4. **The seeded admin `01300000000` no longer accepts `123456`.** Set `DEMO_ADMIN_PASSWORD` (10+ characters) to
+   use it, or create a real admin with `manage create-admin` (step 3).
 5. Demo data is **never rebuilt automatically in production** and the public reset endpoint is gone.
 
 ## 3. Production (existing service)
 1. Back up Neon (see DATABASE_MIGRATIONS.md → Upgrade steps).
 2. Push this code to the GitHub branch Render deploys from (you upload it manually, as before).
 3. Render dashboard → your service → **Environment**:
-   - add `SECRET_KEY` (generated value), `APP_ENV=production`, `ENABLE_DEMO_MODE=false` (or `true`, see 2.2),
+   - add `SECRET_KEY` (generated value), `APP_ENV=production`, optional `DEMO_ADMIN_PASSWORD`,
      `TRUSTED_PROXIES=1`; keep `DATABASE_URL`.
 4. Deploy. Build command and start command are unchanged:
    - Build: `pip install -r requirements.txt && python build.py`

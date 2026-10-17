@@ -130,12 +130,13 @@ def startup():
 
 def set_demo_passwords():
     """Demo farmer/paikar accounts get the public demo password only while demo mode is on. A seeded admin can
-    log in only with DEMO_ADMIN_PASSWORD on a demo deployment; otherwise its password is removed."""
+    log in only with DEMO_ADMIN_PASSWORD (set in the environment, never public) while demo mode is on;
+    otherwise its password is removed."""
     with db.tx():
         if settings.DEMO_MODE:
             db.run("UPDATE users SET pw_hash=? WHERE pw_hash IS NULL AND role<>'admin' AND id NOT LIKE ?",
                    (auth.hash_password(auth.DEMO_PASSWORD), "U%"))
-        admin_pw = settings.DEMO_ADMIN_PASSWORD if settings.DEMO_MODE and not settings.IS_PROD else None
+        admin_pw = settings.DEMO_ADMIN_PASSWORD if settings.DEMO_MODE else None
         db.run("UPDATE users SET pw_hash=? WHERE role='admin' AND id NOT LIKE ?",
                (auth.hash_password(admin_pw) if admin_pw else None, "U%"))
 
