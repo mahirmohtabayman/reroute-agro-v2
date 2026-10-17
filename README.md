@@ -1,144 +1,285 @@
-# 🍅 Reroute Agro
+<div align="center">
 
-**কৃষক ও পাইকারের পাইকারি বাজার: সরাসরি দরদাম, AI বিক্রয় পরামর্শ, শেয়ার্ড ট্রাক, মজুদ ও লাভ-ক্ষতির হিসাব।** পেমেন্ট সিমুলেটেড (প্রোটোটাইপ, আসল টাকা লেনদেন হয় না)।
-Built for **Hack for Humanity**.
+<img src="static/icons/icon-192.png" width="72" alt="Reroute Agro logo">
 
-| | |
-|---|---|
-| 🌐 লাইভ প্রোটোটাইপ | https://reroute-agro-k0of.onrender.com |
-| 📸 শোকেস: ছবি, ডেমো অ্যাকাউন্ট, ট্যুর | GitHub Pages (`docs/`) |
-| 🔑 ডেমো | পেমেন্ট পিন **১২৩৪৫** (সিমুলেটেড পেমেন্ট, শুধু ডেমো ডিপ্লয়মেন্টে) |
-| 📚 ডকুমেন্টেশন | [Deployment](DEPLOYMENT_GUIDE.md) · [Security](SECURITY_REVIEW.md) · [Migrations](DATABASE_MIGRATIONS.md) · [Tests](TEST_REPORT.md) · [Demo script](HACKATHON_DEMO.md) · [Audit](PROJECT_AUDIT.md) · [Changelog](CHANGELOG.md) |
+# Reroute Agro
 
-<p align="center"><img src="docs/screenshots/09_order_tracking.jpg" width="49%"> <img src="docs/screenshots/07_negotiation.jpg" width="49%"></p>
-<p align="center"><img src="docs/screenshots/11_operations_trucks.jpg" width="49%"> <img src="docs/screenshots/12_prices_farmer.jpg" width="49%"></p>
+**আপনার ফসল, সঠিক বাজার, ভালো সিদ্ধান্ত।**<br>
+A Bangla-first wholesale marketplace that connects farmers and paikars (wholesale buyers) in Bangladesh, with
+AI-assisted selling decisions, shared truck transport and built-in bookkeeping.
 
-## সমস্যা
-বাংলাদেশে ফল ও সবজির প্রায় ২৫ থেকে ৪০ ভাগ তোলার পর বাজারে পৌঁছানোর আগেই নষ্ট হয়ে যায়। মৌসুমে সবাই একই হাটে মাল আনেন, দাম পড়ে যায়, অথচ কয়েক ঘণ্টা দূরের বাজারে তখনও দাম ভালো। কৃষক জানেন না কে কিনবে, পাইকার জানেন না কার কাছে তাজা মাল আছে, আর ট্রাক ভাড়া কত পড়বে সেটা আগে থেকে বোঝার উপায় নেই। Reroute Agro এই তিনটা সমস্যা এক জায়গায় সমাধান করার চেষ্টা করেছে।
+[Live prototype](https://reroute-agro-k0of.onrender.com) · [Demo script](HACKATHON_DEMO.md) · [Deployment guide](DEPLOYMENT_GUIDE.md) · [Changelog](CHANGELOG.md)
 
-## সমাধান
-| | কৃষক | পাইকার |
-|---|---|---|
-| বিক্রি | ছবি, মান, পরিমাণ, সর্বনিম্ন অর্ডার দিয়ে লিস্টিং | নিজের মজুদ থেকে লিস্টিং |
-| কেনা | অন্য কৃষক/পাইকারের মাল (পাইকারি, অন্তত ৫ মণ) | খোঁজ ও ফিল্টার করে, আগে ভিডিও/সরাসরি দেখে, অফার |
-| দরদাম | রাজি / পাল্টা দাম / না | তালিকার দাম বা কম দামে অফার, পাল্টা দামে রাজি / না |
-| টাকা | মাল বুঝে দিলে ওয়ালেটে, ১% ফি | বিকাশ / নগদ / কার্ড / ওয়ালেট (সবই সিমুলেটেড), টাকা Reroute-এ জমা থাকে |
-| পরিবহন | Reroute ট্রাক, ভাড়া ভাগ করা যায় | Reroute ট্রাক বা নিজের ট্রাক |
-| হিসাব | মজুদ, বিক্রির ইতিহাস, লাভ-ক্ষতি | মজুদ, কেনা-বেচার ইতিহাস, লাভ-ক্ষতি |
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.143-009688?logo=fastapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169E1?logo=postgresql&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-1.8-F7931E?logo=scikitlearn&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-149%20passed-2E7D32)
+![Status](https://img.shields.io/badge/status-hackathon%20prototype-B8860B)
 
-## কেনাবেচা। 
-কৃষক ছবি, মান আর পরিমাণ দিয়ে মাল বাজারে তোলেন। পাইকার খুঁজে, ফিল্টার করে, চাইলে আগে ভিডিও কলে বা গিয়ে মাল দেখে অফার দেন। বিক্রেতা রাজি হতে পারেন, পাল্টা দাম দিতে পারেন, বা না বলতে পারেন। শুধু পাইকারি, সর্বনিম্ন অর্ডার ৫ মণ।
+</div>
 
-টাকা। ক্রেতা বিকাশ, নগদ, কার্ড বা ওয়ালেট দিয়ে পেমেন্ট করেন (এখন ডেমো গেটওয়ে)। টাকা Reroute-এ জমা থাকে, ক্রেতা মাল বুঝে পেয়েছি চাপলে তবেই বিক্রেতার ওয়ালেটে যায়। ২৪ ঘণ্টায় পেমেন্ট না হলে অর্ডার নিজে থেকে বাতিল হয়ে মাল আবার বাজারে ফেরে।
+> **Prototype notice.** Payments are simulated (no real money moves), the sign-up code is shown on screen
+> because no SMS gateway is connected, and daily vegetable prices are simulated. Every such screen is labelled
+> in the app. Built for **Hack for Humanity**.
 
-### 🚚 Reroute ট্রাক (আলাদা মডিউল)
-- নিজস্ব বহর: পিকআপ ১.৫ টন, মিনি ট্রাক ৩.৫ টন, ট্রাক ৭ টন। অর্ডারের সাথে বা আলাদা বুক করা যায়।
-- ধাপ: **বুকিং অনুরোধ → নিশ্চিত (ট্রাক দেওয়া) → মাল তোলার সময় ঠিক → পথে → পৌঁছেছে**। প্রতি ধাপে কৃষক ও পাইকার নোটিফিকেশন পান।
-- ভাড়া = দূরত্ব × গাড়ির ধরন × ওজন। কম মাল হলে শেয়ার্ড ট্রাক (নিজের ভাগ + ২০%), পুরো ট্রাকে ফেরার পথের মালের জন্য ১৫% কম। উপরে ৮% সেবা চার্জ। বাজারে নিজে ট্রাক ভাড়ার চেয়ে প্রায় ২০–৪৮% কম; বুক করার আগেই দুটোই দেখায়।
-- অপারেশন টিমের প্যানেল: বুকিং সারি (অগ্রাধিকার আগে), ট্রাক দেওয়া, সময় ঠিক, পথে, পৌঁছানো ও আসল ভাড়া; বহরে ট্রাক যোগ, মেরামতে পাঠানো।
-
-### 💰 আয়ের মডেল (একই সেবার জন্য দুবার চার্জ নেই)
-| উৎস | হার |
-|---|---|
-| প্ল্যাটফর্ম ফি | বিক্রির ১% (ন্যূনতম ৳১০, সর্বোচ্চ ৳৫০০), শুধু বিক্রেতার কাছ থেকে |
-| ট্রাক সেবা চার্জ | ভাড়ার ৮%, ব্যবহারকারী দেন |
-| ট্রাক মালিকের কমিশন | ভাড়ার ৭% |
-| Reroute প্লাস (পাইকার) | ৳৯৯৯ / ৩০ দিন: জরুরি মালের খবর আগে, ট্রাক সেবা চার্জে ২৫% ছাড়, অগ্রাধিকার |
-
-প্ল্যাটফর্মে থাকার কারণ: টাকার নিরাপত্তা (এসক্রো), সস্তা ট্রাক, রেকর্ড ও হিসাব, রেটিং, পয়েন্ট।
-
-### ⭐ পয়েন্ট ও পুরস্কার
-- **আয়:** সম্পূর্ণ বিক্রিতে প্রতি মণে ১, কেনায় প্রতি ২ মণে ১, Reroute ট্রাকে মাল পৌঁছালে +১০, ছবি ও মানের তথ্যসহ লিস্টিংয়ের প্রথম বিক্রিতে +১০, প্রোফাইল যাচাইয়ে +৫০।
-- **ব্যবহার:** ২০০ পয়েন্টে পরিবহনে ৳১০০ ছাড়, ৩০০ পয়েন্টে পরের বিক্রির ফি-তে ৳১৫০ ছাড়।
-- **ক্যাশব্যাক:** যাচাইকৃত কৃষকের ৳২০,০০০+ সফল বিক্রিতে ৳৫০ (সপ্তাহে ৩ বার)। ফি থেকেই আসে, তাই আয় কমে না।
-- **অগ্রাধিকার ট্রাক:** যাচাইকৃত কৃষক ও প্লাস সদস্য। **নিয়মিত ক্রেতা:** ৩০ দিনে ৫+ কেনায় সেবা চার্জে ২০% ছাড়।
-- **ভুয়া লেনদেন ঠেকাতে:** পয়েন্ট শুধু পেমেন্ট হওয়া ও সম্পূর্ণ অর্ডারে, অন্তত ৳৫,০০০-এর বিক্রিতে, একই ক্রেতা-বিক্রেতা জোড়া সপ্তাহে ৩ বারের বেশি নয়।
-
-### 📒 মজুদ, ইতিহাস, লাভ-ক্ষতি
-- **মজুদ:** হাতে আছে, বাজারে তালিকায়, অর্ডারে আটকে, তালিকার বাইরে, এ পর্যন্ত বিক্রি/কেনা, পথে আসছে, গড় খরচ। অর্ডার সম্পূর্ণ হলে নিজে থেকে বদলায়।
-- **ইতিহাস:** ধরন, ফসল, অবস্থা, সময় ও নাম দিয়ে ফিল্টার; তালিকার দাম বনাম চূড়ান্ত দাম, পরিবহন ও ফি।
-- **লাভ-ক্ষতি:** বিক্রি − মালের খরচ − পরিবহন − ফি − অন্যান্য খরচ। খরচ জানা না থাকলে "আনুমানিক" বলে, ভুল দাবি করে না। প্রতি অর্ডারের আলাদা হিসাব আর একটি ক্যালকুলেটর।
-- প্ল্যাটফর্মের বাইরের বিক্রি, মজুদ ও খরচ হাতে লেখা যায়।
-
-### 💡 দাম ও পরামর্শ (সহজ ভাষায়)
-আজকের বাজার দর → আপনার খরচ → বিক্রি করলে কত থাকবে → কোথায় বিক্রি করলে বেশি লাভ (পাইকারের জন্য: কার কাছ থেকে কিনে বেচলে লাভ, সর্বোচ্চ কত দামে কেনা যায়)। **সবজির বাজারদর ডেমো অনুমান, পাতায় স্পষ্ট লেখা।** Reroute-এর গড় দাম আসল লিস্টিং থেকে।
-
-### 🤖 AI (আসল ডেটা)
-*Food Commodity Price (OHLC) Dataset of Bangladesh*: ৭৬টি বাজার, ২০০৭–২০২৫। Gradient boosting মডেল পরের মাসের দাম বলে; অদেখা ২০২৩–২০২৫-এ দাম বাড়বে না কমবে **৭০.৮%** সঠিক, গড় ভুল ১.৭৩% (সাধারণ অনুমানে ১.৭৭%)। ডেটাসেটে সবজি নেই, তাই পাইলটে কৃষি বিপণন অধিদপ্তরের সবজির দামে একই মডেল চলবে। পরিবহনে নষ্টের হিসাবে ওই জেলার ওই মাসের গড় তাপমাত্রা ব্যবহার হয়।
-
-### 🔒 গোপনীয়তা
-পাবলিক প্রোফাইলে শুধু নাম, ছবি, ধরন, এলাকা, যাচাই, রেটিং, সম্পূর্ণ লেনদেনের সংখ্যা ও চালু লিস্টিং। ফোন নম্বর শুধু পেমেন্ট হওয়া অর্ডারের দুই পক্ষ দেখেন। টাকার হিসাব নিজে ছাড়া কেউ দেখে না।
+<p align="center">
+  <img src="docs/screenshots/readme_home.jpg" width="49%" alt="Home page">
+  <img src="docs/screenshots/readme_advisor.jpg" width="49%" alt="AI selling advisor">
+</p>
+<p align="center">
+  <img src="docs/screenshots/readme_hisab.jpg" width="49%" alt="Smart Hisab overview">
+  <img src="docs/screenshots/readme_invoice.jpg" width="49%" alt="Invoice">
+</p>
+<p align="center">
+  <img src="docs/screenshots/readme_mobile_dashboard.jpg" width="24%" alt="Mobile dashboard">
+  <img src="docs/screenshots/readme_mobile_assistant.jpg" width="24%" alt="Bangla assistant on mobile">
+  <img src="docs/screenshots/readme_market.jpg" width="49%" alt="Marketplace">
+</p>
 
 ---
 
-## 🧪 ডেমো
-লগ ইন পাতায় এক চাপে ঢোকা যায় (সব মানুষ ও ব্যবসা কাল্পনিক):
-| অ্যাকাউন্ট | যা দেখবেন |
-|---|---|
-| **রহিম উদ্দিন** (কৃষক) | একটি কম দামের অফার (রাজি / পাল্টা দাম / না), একটি পরিদর্শনের অনুরোধ |
-| **করিম ট্রেডার্স** (পাইকার) | একটি পাল্টা দাম, রাজি হলে পেমেন্ট |
-| **বগুড়া সবজি ঘর** (পাইকার) | পথে থাকা মাল, পৌঁছালে "বুঝে পেয়েছি" |
-| **Reroute অপারেশন টিম** | ট্রাক বুকিং, বহর, যাচাই, আয় |
+## Contents
+- [The problem](#the-problem)
+- [Features](#features)
+- [Try the demo](#try-the-demo)
+- [Architecture](#architecture)
+- [Getting started](#getting-started)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Data and AI](#data-and-ai)
+- [Security and privacy](#security-and-privacy)
+- [Project structure](#project-structure)
+- [Roadmap](#roadmap)
+- [Documentation](#documentation)
 
-ডেমো পেমেন্ট পিন **১২৩৪৫** (অন্য পিনে ব্যর্থ পেমেন্ট দেখায়)। ফুটারের "ডেমো নতুন করে শুরু" সব আগের অবস্থায় ফেরায়। ডেমো ডেটা অ্যাপের আসল ফাংশন দিয়ে তৈরি, তাই মজুদ, টাকা, পয়েন্ট ও লাভ-ক্ষতি একে অপরের সাথে মেলে।
+## The problem
+A large share of Bangladesh's fruit and vegetables is lost between harvest and sale. In season, farmers bring
+their crop to the same nearby haat on the same day, prices collapse, while a market a few hours away still pays
+more. Farmers do not know who will buy or which market leaves them the most money after transport and spoilage;
+paikars do not know who has fresh stock; and trucks are booked one load at a time.
 
-## 🏗 Architecture
+Reroute Agro brings the three decisions — **whom to sell to, where to sell, and how to move the crop** — into one
+mobile-first app in Bangla, and keeps the farmer's accounts at the same time.
+
+## Features
+
+### Marketplace and negotiation
+- Listings with photos, grade, quantity, minimum order and harvest date; search and filters.
+- Offers, counter-offers and acceptance with a timeline of every step; video or in-person inspection requests.
+- Escrow-style simulated payment (bKash, Nagad, card, wallet): money is released to the seller only after the
+  buyer confirms receipt. Unpaid orders are cancelled automatically and the stock returns to the market.
+- Platform fee 1 % of the sale (min ৳10, max ৳500), charged to the seller only.
+
+### Reroute Trucks
+- Own fleet (1.5 t pickup, 3.5 t mini truck, 7 t truck) booked with an order or separately.
+- Booking flow: requested → confirmed → pickup scheduled → in transit → delivered, with notifications.
+- Transport cost split negotiated between buyer and seller before payment.
+- **Truck pooling:** bookings on the same route and day share a truck; each party pays its weight share, and the
+  saving versus a standalone trip is shown.
+
+### AI decision support
+- **Smart Selling Advisor:** for each market, the expected price, revenue, transport, other costs and *net
+  proceeds* for sending today, tomorrow or later; a clear decision (sell now / another market / wait /
+  insufficient evidence) with the reasons and the risks.
+- **Spoilage risk** (low / medium / high) from shelf life, days since harvest and temperature.
+- **Ask in Bangla:** type or speak *"আমার ২০ মণ টমেটো কোন বাজারে বিক্রি করলে বেশি লাভ হবে?"*; the app shows
+  what it understood and asks for anything missing before giving advice.
+
+### Smart Hisab — bookkeeping (স্মার্ট হিসাব)
+- **Overview:** sales, costs, profit/loss and receivables/payables for any period.
+- **Bills & receipts:** invoices issued automatically when an order's terms are final (`RA-2026-000001`),
+  receipts for every payment (`RC-…`); view, print, share or download as PDF with correct Bengali text.
+  An invoice is never treated as proof of payment.
+- **Income & expenses:** outside sales, crop purchases and cost categories, labelled *user-reported*, with
+  duplicate warnings; records are voided with a reason, never deleted; optional receipt photo.
+- **Receivables & payables** with due dates and partial payments; **reports** by day, week, month and product
+  as CSV or PDF.
+- Profit is shown only when all costs are known; otherwise the app says
+  *লাভের হিসাব সম্পূর্ণ নয় — কিছু খরচের তথ্য পাওয়া যায়নি।*
+
+### Bangla assistant
+A floating microphone button on farmer and paikar pages answers questions such as *"আমার কত টাকা পাওনা আছে?"*,
+*"এই মাসে আমার লাভ কত?"* or *"আমার শেষ তিনটা বিল দেখাও"* from the user's own records. It is read-only and never
+makes a payment or an order.
+
+### Also included
+Rewards points and cashback with anti-abuse rules, Reroute Plus membership for paikars, an impact dashboard with
+demo and registered data kept separate, an operations panel (bookings, fleet, verification, pooling), English
+interface, light/dark theme, and an installable PWA with an offline page.
+
+## Try the demo
+Open the [live prototype](https://reroute-agro-k0of.onrender.com) (the free server may take up to a minute to
+wake up) and choose a demo account on the login page. All people and businesses in the demo data are fictional.
+
+| Account | Role | What to try |
+|---|---|---|
+| রহিম উদ্দিন | Farmer | answer an offer, AI advisor, Smart Hisab, Bangla assistant |
+| করিম ট্রেডার্স | Paikar | accept a counter-offer and pay |
+| বগুড়া সবজি ঘর | Paikar | confirm receipt of goods in transit |
+| Operations (`01300000000`) | Admin | password login only (`DEMO_ADMIN_PASSWORD`); bookings, fleet, pooling, impact |
+
+Simulated payment PIN: **12345** (any other PIN shows a failed payment). A new account can be created with the
+on-screen prototype code. A step-by-step judging script is in [HACKATHON_DEMO.md](HACKATHON_DEMO.md).
+
+## Architecture
+
 ```mermaid
-flowchart TD
-    W["web/* (ফ্রন্টএন্ডের সোর্স)"] -->|python build.py| B["ব্রাউজার: static/index.html<br/>HTML/CSS/JS, মোবাইল-ফার্স্ট"]
-    B -->|"fetch /api/* (প্রতি ৫ সেকেন্ডে)"| M["app/main.py · FastAPI<br/>রাউট, টোকেন লগইন"]
+flowchart LR
+    subgraph Client["Browser (mobile-first PWA)"]
+        UI["static/index.html<br/>built from web/*"]
+    end
 
-    M --> S["app/services.py<br/>লিস্টিং, অফার, পেমেন্ট, অর্ডার, ট্রাক, পয়েন্ট"]
-    S --> L["app/logic.py<br/>দাম, ফি, ট্রাক ভাড়া, পুরস্কার"]
-    S --> D[("app/db.py<br/>SQLite বা PostgreSQL")]
-    SE["app/seed.py<br/>ডেমো ডেটা"] --> D
+    subgraph API["FastAPI · app/"]
+        MAIN["main.py<br/>auth, marketplace, orders, trucks"]
+        HISAB["hisab_routes.py · hisab.py<br/>invoices, receipts, records, dues, reports"]
+        AI["ai_routes.py · advisor.py · veg_ai.py<br/>selling advice, spoilage, forecasts"]
+        ASSIST["assistant.py<br/>Bangla questions (read-only)"]
+        POOL["pooling.py · impact.py"]
+        PDF["pdfgen.py<br/>Bengali PDFs"]
+        DATA["dataset.py<br/>verified trade records"]
+    end
 
-    M --> A["app/ai.py<br/>মাসিক দামের পূর্বাভাস"]
-    R["data/raw<br/>আসল দামের ডেটা"] --> T["ml/train.py"] --> PM["models/price_model.joblib"] --> A
+    DB[("PostgreSQL (Neon)<br/>SQLite for local development")]
+    MODELS["models/*.joblib<br/>trained in ml/"]
 
-    M --> V["app/ai_routes.py + veg_ai.py<br/>সবজির AI পরামর্শ"]
-    VS["ml/vegsim.py<br/>সিমুলেটেড সবজির দাম"] --> TV["ml/train_veg.py<br/>১–৩ দিনের মডেল"] --> V
-
-    classDef fe fill:#EEEDFE,stroke:#534AB7,color:#26215C
-    classDef be fill:#E1F5EE,stroke:#0F6E56,color:#04342C
-    classDef ml fill:#FAECE7,stroke:#993C1D,color:#4A1B0C
-    class W,B fe
-    class M,S,L,D,SE,A,V be
-    class R,T,PM,VS,TV ml
+    UI -- "fetch /api/*" --> MAIN
+    UI --> HISAB
+    UI --> AI
+    UI --> ASSIST
+    MAIN --> DB
+    HISAB --> DB
+    HISAB --> PDF
+    POOL --> DB
+    DATA --> DB
+    ASSIST --> HISAB
+    ASSIST --> AI
+    AI --> MODELS
 ```
-```
 
-## ▶️ Run
+| Layer | Technology |
+|---|---|
+| Frontend | Vanilla JavaScript, HTML and CSS in `web/`, concatenated into one page by `build.py`; no framework, no build toolchain |
+| Backend | Python 3.12, FastAPI, Pydantic, Uvicorn |
+| Database | PostgreSQL on Neon in production; SQLite for local development; versioned additive migrations |
+| Machine learning | pandas, NumPy, scikit-learn gradient boosting, joblib |
+| Documents | fpdf2 with HarfBuzz text shaping and Noto Sans Bengali |
+| Hosting | Render (web service) + Neon (database) |
+
+## Getting started
+
+Requirements: Python 3.12 or newer.
+
 ```bash
-pip install -r requirements.txt
-uvicorn app.main:app --reload        # http://127.0.0.1:8000   API docs: /docs
-python build.py                      # after editing web/*, rebuild static/index.html
-python -m ml.train                   # retrain the price model
+git clone <this repository>
+cd reroute-agro
+python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
+pip install -r requirements.txt -r requirements-dev.txt
+python build.py                                         # builds static/index.html from web/*
+
+APP_ENV=development ENABLE_DEMO_MODE=true DEMO_ADMIN_PASSWORD=admin-demo-pass-1 \
+  uvicorn app.main:app --reload
 ```
-## 🌐 Deploy & keep it available
-- **Render:** New + → Blueprint → this repo (`render.yaml`).
-- **Keep awake:** a free UptimeRobot HTTP monitor on `<live-url>/api/health` every 5 minutes (Render's free 750 h/month covers one service all month).
-- **Demo data is never rebuilt in production.** On a separate demo deployment (`APP_ENV=demo`, `ENABLE_DEMO_MODE=true`) an admin can rebuild it from the footer button, or set `DEMO_AUTO_REFRESH=true` to rebuild idle demo data every `DEMO_TTL_HOURS`. See DEPLOYMENT_GUIDE.md and SECURITY_REVIEW.md.
-- **GitHub Pages showcase:** Settings → Pages → branch `main`, folder `/docs`. Set `LIVE_URL` / `VIDEO_URL` at the top of `docs/index.html`; the page shows whether the live server is up and always shows the screenshots.
 
-## 🗺 Next
-Real bKash/Nagad gateway, DAM vegetable prices, Bangla IVR calls for farmers, GPS truck tracking, more districts and crops.
+Open http://127.0.0.1:8000. Without `DATABASE_URL` the app uses a local SQLite file and loads the demo data on
+first start. Interactive API documentation is at `/docs`. Run `python build.py` again after editing anything in
+`web/`.
 
-## 🤖 AI পরামর্শ (সিমুলেটেড সবজি ডেটা)
-মেনুতে **🤖 AI পরামর্শ** (`#/advisor`), তিনটি অংশ:
-- **কৃষক: কোথায় ও কবে বেচবেন।** প্রতিটি বাজারে, আজ/কাল/পরশু পাঠালে হাতে কত থাকবে: AI-র দামের পূর্বাভাস − পথে ও অপেক্ষায় নষ্ট − বাজার খরচ ও Reroute ফি − ট্রাক ভাড়া। সবচেয়ে লাভের বাজার, কোথায় কম পাবেন, উৎপাদন খরচ দিলে কোথায় লোকসান, আর কারণ (আমদানি বেশি/কম, দাম বাড়বে/কমবে)।
-- **পাইকার: কোথায় কম দামে ভালো মাল।** Reroute লিস্টিং ও জেলার বাজার, পৌঁছে খরচ বনাম কাল নিজের বাজারে বেচার পূর্বাভাসিত দাম; মান, তাজা থাকার দিন, রেটিং; কোথায় শিগগির দাম কমবে; ৮% লাভ রাখতে সর্বোচ্চ কেনা দাম।
-- **বাজারের অবস্থা।** সব বাজারে আজকের দাম, আগামী ৩ দিন, আমদানি, glut সতর্কতা।
+All settings are described in [.env.example](.env.example). The most important ones:
 
-**ডেটা:** `data/simulated/veg_prices_bd_sim.csv` (সিমুলেটেড, প্রতিটি সারিতে লেখা) ৬টি বাজার × ৭টি সবজি, ২০২১ থেকে প্রতিদিন। নিয়মগুলো `ml/vegsim.py`-তে, বিবরণ `data/simulated/README.md`-এ। আবহাওয়ার মাসিক গড় আসল Food Commodity Price Dataset থেকে।
-**মডেল:** `ml/train_veg.py`, gradient boosting, ১–৩ দিনের দাম। অদেখা জুলাই ২০২৫–অক্টোবর ২০২৬-এ: কালকের দামে গড় ভুল ৬.৫% ("দাম একই থাকবে" ধরলে ৮.০%), ৩ দিনে ১০.১% (১৩.২%); AI-র বাজার বাছাই মানলে স্থানীয় হাটের চেয়ে গড়ে মণে ৳৩১৪ বেশি (সিমুলেশনের ফল, আসল দাবি নয়)।
-সার্ভার প্রতিদিন আজ পর্যন্ত ডেটা বানিয়ে পূর্বাভাস নতুন করে। কোড: `app/veg_ai.py`, `app/ai_routes.py`, `web/5b_ai_advisor.js`; `main.py`-তে শুধু router যোগ।
+| Variable | Purpose |
+|---|---|
+| `APP_ENV` | `production`, `demo` or `development` (defaults to `production` on Render) |
+| `DATABASE_URL` | PostgreSQL connection string; required outside development |
+| `SECRET_KEY` | 32+ random characters; required outside development |
+| `ENABLE_DEMO_MODE` | demo accounts and on-screen sign-up code (default `true`) |
+| `DEMO_ADMIN_PASSWORD` | password for the demo operations account (10+ characters) |
+
+Useful commands:
+
 ```bash
-python -m ml.vegsim        # dataset
-python -m ml.train_veg     # model + metrics
+python -m app.manage status                 # environment, migrations, account counts
+python -m app.manage create-admin --phone 01XXXXXXXXX --name "Operations"
+python -m ml.vegsim && python -m ml.train_veg   # rebuild the simulated vegetable data and model
+python -m ml.train                          # retrain the monthly price model
 ```
 
-## 🗄️ Database
-- `DATABASE_URL` দিলে **PostgreSQL** (যেমন ফ্রি Neon/Supabase): রিস্টার্ট বা নতুন deploy-এর পরও ডেটা থাকে।
-- না দিলে শুধু লোকাল ডেভেলপমেন্টে (`APP_ENV=development`) **SQLite** `data/reroute.db`। প্রোডাকশনে `DATABASE_URL` ছাড়া সার্ভার চালুই হবে না, কখনো অস্থায়ী SQLite ব্যবহার করবে না।
-- ডেমো রিফ্রেশে ডেমোর কেনাবেচা নতুন হয়, কিন্তু নিজে খোলা অ্যাকাউন্ট থাকে।
+## Testing
+
+```bash
+pytest -q                                                    # SQLite
+TEST_DATABASE_URL=postgresql://…/scratch_db pytest -q        # PostgreSQL (the database is wiped!)
+node tests/e2e/smoke.mjs http://localhost:8000 <admin password>   # browser journey (Playwright)
+```
+
+150 backend tests cover security, sign-up codes, concurrent payments and orders, Smart Hisab accounting,
+the trade dataset, the assistant and database migrations. They pass on both SQLite and PostgreSQL (one test per
+database applies only to the other). The browser test walks a full trade from listing to invoice and assistant
+answer. Results and what is not yet verified: [TEST_REPORT.md](TEST_REPORT.md).
+
+## Deployment
+The app runs as a single Render web service with a Neon PostgreSQL database (`render.yaml`):
+
+- Build: `pip install -r requirements.txt && python build.py`
+- Start: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- Health check: `/api/health`
+
+Database migrations run automatically on start-up and only ever add tables and columns. Production never seeds
+or resets data. Back up Neon before upgrading. Full steps, a separate demo deployment and rollback:
+[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) and [DATABASE_MIGRATIONS.md](DATABASE_MIGRATIONS.md).
+
+## Data and AI
+We label every number by where it comes from.
+
+| Source | Used for | Status |
+|---|---|---|
+| *Food Commodity Price (OHLC) Dataset of Bangladesh* — 76 markets, 2007–2025 | monthly price model | real data; on unseen 2023–2025 data the model predicts the direction of change correctly **70.8 %** of the time, mean error 1.73 % (naive 1.77 %) |
+| `data/simulated/veg_prices_bd_sim.csv` — 6 markets × 7 vegetables, daily | 1–3 day vegetable forecasts and the selling advisor | **simulated** (the dataset has no vegetables); next-day error 6.5 % vs 8.0 % naive. A pilot would use Department of Agricultural Marketing prices |
+| Completed trades on the platform | `trade_records` dataset | classified as real, demo, user-reported or simulated; only verified real trades are eligible for training, exported without personal data. Models are never retrained automatically |
+
+Advice is decision support, not a guarantee; the advisor says *insufficient evidence* rather than guess.
+
+## Security and privacy
+- Server-side sessions, hashed passwords and sign-up codes, rate limits on login and sign-up.
+- The operations account always needs a password; one-click login exists only for demo farmer and paikar accounts.
+- Every write runs in one database transaction; double payments, overselling and negative wallets are prevented
+  and tested under concurrency.
+- Users see only their own invoices, receipts, records and money; phone numbers are shared only between the two
+  parties of a paid order.
+- Security headers, upload validation, request size limits, no secrets in the repository.
+
+Details and known limitations: [SECURITY_REVIEW.md](SECURITY_REVIEW.md).
+
+## Project structure
+```
+app/            FastAPI application (routes, services, accounting, AI, PDFs, migrations)
+web/            frontend source, built into static/index.html by build.py
+static/         built page, icons, PWA manifest and service worker
+ml/             model training and the vegetable price simulator
+models/         trained models and their metrics
+data/           raw price data and the labelled simulated dataset
+tests/          pytest suite and the Playwright end-to-end test
+docs/           GitHub Pages showcase and screenshots
+```
+
+## Roadmap
+- Real SMS verification and a licensed payment gateway (bKash / Nagad).
+- Daily vegetable prices from the Department of Agricultural Marketing to replace the simulated data.
+- GPS truck tracking and more districts and crops.
+- Voice calls (IVR) in Bangla for farmers without smartphones.
+- Retraining on verified first-party trade data, with human review before deployment.
+
+## Documentation
+| Document | Contents |
+|---|---|
+| [HACKATHON_DEMO.md](HACKATHON_DEMO.md) | 3-minute demo script and fallback plan |
+| [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) | Render and Neon setup, environment variables, upgrade checks |
+| [DATABASE_MIGRATIONS.md](DATABASE_MIGRATIONS.md) | migration list, accounting rules, rollback |
+| [SECURITY_REVIEW.md](SECURITY_REVIEW.md) | threat review, fixes and remaining risks |
+| [TEST_REPORT.md](TEST_REPORT.md) | what was tested, results, what still needs live verification |
+| [PROJECT_AUDIT.md](PROJECT_AUDIT.md) · [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | audit findings and work plan |
+| [CHANGELOG.md](CHANGELOG.md) | release history |
+
+<div align="center">
+<sub>Reroute Agro · Social Catalyst · Built for Hack for Humanity</sub>
+</div>

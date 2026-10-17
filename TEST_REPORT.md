@@ -46,12 +46,17 @@ Migrations `0001`–`0003` applied; no seeding; seeded admin's public password r
 
 | Test | Result |
 |---|---|
-| `tests/e2e/smoke.mjs` (11 checks: OTP notice + sign-up, admin password-only login, farmer action centre + money summary, Smart Selling decision, Bangla question, admin pooling, impact metrics, English headline, no horizontal scroll at 320/375/768 px on 4 pages, no JS errors) | **ALL PASSED** |
+| `tests/e2e/smoke.mjs` — **27 checks** (3.0 checks + full journey with two new accounts: listing → offer with Reroute truck → counter → accept → truck split agreed → simulated bKash payment → admin assigns truck + pickup → handover → completed → invoice in Smart Hisab → paid + "simulated" label → PDF download → overview totals → assistant lists the invoice and answers profit → buyer sees the same invoice; no horizontal scroll at 320/375/768 px on 8 pages incl. 4 Smart Hisab tabs; no JS errors) | **ALL PASSED** |
+| Smart Hisab browser check (`hb.mjs`): 4 tabs, invoice page, PDF + print view, record save, duplicate confirmation + cancel, new due + partial payment, CSV/PDF reports, assistant panel, 375/320 px, dark mode, assistant button hidden for guests and admin | **passed** (only the expected 409 from the duplicate case) |
+| English mode scan of Smart Hisab pages | all interface text translated; remaining Bangla is user data (names, places, descriptions) and assistant answers (Bangla assistant by design) |
 | Existing regression scripts: order → transport agreement → payment → confirmed; sign-up/OTP/login/wrong password/demo password; admin verification; theme persistence; sidebar/drawer at 360–1440 px; photo upload/replace/remove incl. demo accounts; password change; forgot password generic answer + rate limit; admin temporary password | **passed, no JS errors** (expected 400/401/429 responses from the negative cases) |
 | PWA: service worker registers and controls the page; images load through it; cache holds only static files and the offline page, **no /api/ responses**; with the server unreachable the offline page is shown | **passed** |
 | Full layout audit: 37 pages (public, farmer, paikar, admin incl. advisor, impact, pooling) × widths 320/375/768/1024/1440 × light/dark = **370 page views**, checking horizontal overflow and JS/console errors | First run: **1 issue** — new-listing page 29 px too wide at 320 px (a long text value in the cost summary did not wrap). Fixed; re-run at 320 px light+dark (74 page views): **no issues** |
+| Full layout audit 3.1: **43 pages** (adds `#/hisab`, `/bills`, `/entries`, `/reports` for farmer; `#/hisab`, `/reports` for paikar) × 320/375/768/1024/1440 × light/dark = **430 page views** | **no issues** (no horizontal overflow, no JS/console errors) |
 
 ## 4. Not tested / needs production verification
+- Smart Hisab on the live Neon database (migrations 0004/0005 were only tested on a local PostgreSQL copy of the
+  previous release's schema with demo data); PDF download on Render; Web Share on a real phone.
 - **Neon and Render were not touched**: deployment, real Neon SSL connection, cold-start time on Render,
   memory on Render — verify after deploying (DEPLOYMENT_GUIDE.md §3).
 - Real SMS delivery and real payments do not exist (simulated by design).
