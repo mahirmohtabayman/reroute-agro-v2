@@ -312,7 +312,9 @@ def login(body: LoginIn, request: Request):
     # only failed attempts are counted, so a user who types the right password is never blocked
     if auth.hits(f"login-fail-phone:{phone}", 900) >= 10 or auth.hits(f"login-fail-ip:{ip}", 900) >= 50:
         too_many("অনেকবার ভুল পাসওয়ার্ড দেওয়া হয়েছে। ১৫ মিনিট পরে আবার চেষ্টা করুন।")
-    u = db.one("SELECT * FROM users WHERE phone=? AND role=?", (phone, body.role)) if phone else None
+    # phone numbers are unique, so the account is found by phone alone; the role tab picked on the login page
+    # does not matter (the app then opens the right dashboard for the account's real role)
+    u = db.one("SELECT * FROM users WHERE phone=?", (phone,)) if phone else None
     if not u or not auth.check_password(body.password or "", u.get("pw_hash")):
         auth.hit(f"login-fail-phone:{phone}")
         auth.hit(f"login-fail-ip:{ip}")

@@ -110,6 +110,9 @@ def test_admin_public_demo_password_rejected(client):
 
 def test_admin_password_login_works(client):
     assert admin_token(client)
+    # works whichever role tab was selected on the login page
+    r = client.post("/api/login", json={"phone": ADMIN_PHONE, "password": ADMIN_PW, "role": "farmer"})
+    assert r.status_code == 200 and r.json()["user"]["role"] == "admin"
 
 
 def test_demo_login_disabled_without_demo_mode(client, monkeypatch):
@@ -129,9 +132,10 @@ def test_registered_account_cannot_use_one_click_login(client):
 
 def test_role_in_payload_does_not_grant_admin(client):
     _, u, phone = register(client)
+    # the role sent by the login page is ignored: the account keeps its real role
     r = client.post("/api/login", json={"phone": phone, "password": "secret12", "role": "admin"})
-    assert r.status_code == 401
-    tok = client.post("/api/login", json={"phone": phone, "password": "secret12", "role": "farmer"}).json()["token"]
+    assert r.status_code == 200 and r.json()["user"]["role"] == "farmer"
+    tok = r.json()["token"]
     assert client.post(f"/api/admin/users/{u['id']}/verify", headers=H(tok)).status_code == 403
     assert client.get("/api/ai/advisor/admin/transactions", headers=H(tok)).status_code == 403
     # profile edits cannot change role

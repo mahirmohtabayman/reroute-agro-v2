@@ -137,6 +137,10 @@ def set_demo_passwords():
             db.run("UPDATE users SET pw_hash=? WHERE pw_hash IS NULL AND role<>'admin' AND id NOT LIKE ?",
                    (auth.hash_password(auth.DEMO_PASSWORD), "U%"))
         admin_pw = settings.DEMO_ADMIN_PASSWORD if settings.DEMO_MODE else None
+        n = db.val("SELECT COUNT(*) FROM users WHERE role='admin' AND id NOT LIKE ?", ("U%",)) or 0
+        log.info("demo admin login (01300000000): %s", "enabled with DEMO_ADMIN_PASSWORD" if admin_pw and n
+                 else "no demo admin account in this database" if not n
+                 else "disabled (set DEMO_ADMIN_PASSWORD, 10+ characters)" if settings.DEMO_MODE else "disabled (demo mode off)")
         db.run("UPDATE users SET pw_hash=? WHERE role='admin' AND id NOT LIKE ?",
                (auth.hash_password(admin_pw) if admin_pw else None, "U%"))
 
