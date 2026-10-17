@@ -1016,6 +1016,8 @@ async def static_cache(request, call_next):
     path = request.url.path
     if path.startswith("/static/") and response.status_code == 200 and not path.endswith(".html"):
         response.headers.setdefault("Cache-Control", "public, max-age=604800")
+    elif path == "/favicon.ico" and response.status_code == 200:
+        response.headers.setdefault("Cache-Control", "public, max-age=604800")
     elif path in ("/", "/sw.js", "/offline.html", "/manifest.webmanifest"):
         response.headers["Cache-Control"] = "no-cache"
     return response
@@ -1035,6 +1037,11 @@ def service_worker():
 @app.get("/manifest.webmanifest")
 def manifest():
     return FileResponse(STATIC / "manifest.webmanifest", media_type="application/manifest+json")
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return FileResponse(STATIC / "favicon.ico", media_type="image/x-icon")
 
 
 @app.get("/offline.html")

@@ -107,7 +107,7 @@ def answer(u, text, veg=None):
             if not p["revenue"]:
                 out["text"] = f"{when} আপনার কোনো বিক্রি হিসাবে নেই।"
             else:
-                out["text"] = (f"{when} আপনার মোট বিক্রি {tk(p['revenue'])}: প্ল্যাটফর্মে {tk(p['revenue_platform'])}, "
+                out["text"] = (f"{when} আপনার মোট বিক্রয় {tk(p['revenue'])}: প্ল্যাটফর্মে {tk(p['revenue_platform'])}, "
                                f"নিজে লেখা {tk(p['revenue_external'])}। এটা বিক্রির মোট দাম, হাতে পাওয়া টাকা নয়।")
         elif p["profit_complete"]:
             word = "লাভ" if p["profit"] >= 0 else "লোকসান"
@@ -164,7 +164,7 @@ def answer(u, text, veg=None):
     elif intent in ("best_market", "market_price"):
         out["simulated"] = True
         if veg is None or not veg.ready:
-            out["text"] = "AI এখনো প্রস্তুত হচ্ছে, কয়েক সেকেন্ড পরে আবার জিজ্ঞেস করুন।"
+            out["text"] = "এআই এখনো প্রস্তুত হচ্ছে, কয়েক সেকেন্ড পরে আবার জিজ্ঞেস করুন।"
             return out
         crop = q["crop"]
         place = q["place"] or (u["place"] if u["place"] in PLACES else "rajshahi")
@@ -175,7 +175,7 @@ def answer(u, text, veg=None):
             out["text"] = (f"আজ {PLACES[place][0]}-এ {CROPS[crop][0]}-এর আনুমানিক দর কেজিপ্রতি {tk(mine, 1)}। "
                            f"সবচেয়ে বেশি {PLACES[best][0] if best in PLACES else best}-এ {tk(today[best][crop], 1)}। "
                            f"(সিমুলেটেড ডেমো বাজারদর, {veg.state['date']})")
-            out["links"].append({"label": "AI পরামর্শ", "href": "#/advisor"})
+            out["links"].append({"label": "এআই পরামর্শ", "href": "#/advisor"})
         else:
             if not q["qty_kg"]:
                 out["missing"] = ["qty"]

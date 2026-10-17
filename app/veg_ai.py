@@ -3,7 +3,7 @@ Reroute Agro AI advisor (prototype trained on SIMULATED vegetable market data).
 
 Every day the market simulator (ml/vegsim.py) produces data up to today, the trained model
 (models/veg_model.joblib) forecasts each market's price 1–3 days ahead, and this module turns
-the forecasts into plain advice inside ONE "AI পরামর্শ" page:
+the forecasts into plain advice inside ONE "এআই পরামর্শ" page:
 
 * farmers   – today's price + 3-day forecast, a suggested selling price, which market and which day
               gives the most money in hand, and the expected profit / loss;

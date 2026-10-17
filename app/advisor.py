@@ -203,7 +203,7 @@ def provenance(veg, adv):
     m = veg.metrics or {}
     h = m.get("horizons", {})
     return {
-        "data": "simulated", "data_bn": "সিমুলেটেড ডেমো বাজারদর (ml/vegsim.py), আসল সরকারি দৈনিক দর নয়",
+        "data": "simulated", "data_bn": "সিমুলেটেড ডেমো বাজারদর, আসল সরকারি দৈনিক দর নয়",
         "data_date": adv["date"], "forecast_horizon_days": [1, 2, 3],
         "model": type(veg.model).__name__ if veg.model is not None else None,
         "model_bn": "গ্রেডিয়েন্ট বুস্টিং রিগ্রেশন (HistGradientBoosting), দামের দৈনিক পরিবর্তন পূর্বাভাস" if veg.model is not None else "মডেল লোড হয়নি",

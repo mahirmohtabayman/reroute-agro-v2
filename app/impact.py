@@ -61,7 +61,7 @@ def summary(days=0, veg_metrics=None, now=None):
                                  "def_en": (f"Estimate on SIMULATED data: in the AI market-choice back-test, farmers kept on average Tk "
                                             f"{extra_per_kg}/kg more than at the local market; multiplied by the kg farmers sold. "
                                             "Not a measured gain.") if extra_per_kg is not None else "Model back-test not available.",
-                                 "def": (f"আনুমানিক ও সিমুলেটেড: AI বাজার-বাছাইয়ের ব্যাক-টেস্টে স্থানীয় হাটের চেয়ে গড়ে কেজিতে "
+                                 "def": (f"আনুমানিক ও সিমুলেটেড: এআই বাজার-বাছাইয়ের ব্যাক-টেস্টে স্থানীয় হাটের চেয়ে গড়ে কেজিতে "
                                          f"৳{extra_per_kg} বেশি হাতে থেকেছে (সিমুলেটেড ডেটা) × কৃষকের বিক্রি করা কেজি। "
                                          "বাস্তবে মাপা লাভ নয়।") if extra_per_kg is not None else "মডেলের ব্যাক-টেস্ট পাওয়া যায়নি।"},
         "shared_transport": {**pooling.participation(), "kind": "pct",

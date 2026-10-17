@@ -1,8 +1,8 @@
 """
-AI পরামর্শ API. Kept separate so the rest of the app is untouched: main.py only does
+এআই পরামর্শ API. Kept separate so the rest of the app is untouched: main.py only does
 `app.include_router(ai_router)`.
 
-* /api/ai/advisor/farmer, /buyer, /market   – the single "AI পরামর্শ" page (farmer or paikar view)
+* /api/ai/advisor/farmer, /buyer, /market   – the single "এআই পরামর্শ" page (farmer or paikar view)
 * /api/ai/advisor/trade-check                – Smart Trade Alert before an offer / acceptance / counter / listing
 * /api/ai/advisor/admin/...                  – completed-transaction dataset, CSV / Excel export, model evaluation
 
@@ -24,7 +24,7 @@ from app import advisor as ADVISOR, db, services as S
 from app.logic import CROPS, PLACES, transport_quote
 from app.veg_ai import SHELF, SPLIT_BUYER, VegAI
 
-router = APIRouter(prefix="/api/ai/advisor", tags=["AI পরামর্শ (simulated market data)"])
+router = APIRouter(prefix="/api/ai/advisor", tags=["এআই পরামর্শ (simulated market data)"])
 VEG = VegAI()
 BD_TZ = timezone(timedelta(hours=6))          # Asia/Dhaka, no daylight saving
 RETRAIN_MIN_PER_CROP = 200                    # real completed deals needed per crop before retraining
@@ -54,7 +54,7 @@ def _admin(x_token):
 
 def _ready():
     if not VEG.ready:
-        raise HTTPException(503, "AI প্রস্তুত হচ্ছে, কয়েক সেকেন্ড পরে আবার চেষ্টা করুন")
+        raise HTTPException(503, "এআই প্রস্তুত হচ্ছে, কয়েক সেকেন্ড পরে আবার চেষ্টা করুন")
 
 
 def _check(place, crop):
@@ -73,7 +73,7 @@ def _stock_cost(uid, crop):
     return r["cost"] if r and r["cost"] is not None else None
 
 
-# ---------------------------------------------------------------- the AI পরামর্শ page
+# ---------------------------------------------------------------- the এআই পরামর্শ page
 @router.get("/status")
 def status():
     return {"ready": VEG.ready, "date": VEG.state["date"] if VEG.ready else None, "metrics": VEG.metrics,
