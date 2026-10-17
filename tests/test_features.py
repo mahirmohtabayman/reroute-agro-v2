@@ -266,3 +266,16 @@ def test_pwa_files_served_and_api_never_cached(client):
     assert "ইন্টারনেট সংযোগ নেই" in client.get("/offline.html").text
     assert "max-age=604800" in client.get("/static/icons/icon-192.png").headers["cache-control"]
     assert client.get("/").headers["cache-control"] == "no-cache"
+
+
+def test_favicon_assets_are_served(client):
+    """The leaf logo favicon set exists and is cacheable; the page no longer embeds the old icon."""
+    ico = client.get("/favicon.ico")
+    assert ico.status_code == 200 and ico.content[:4] == b"\x00\x00\x01\x00"
+    for f in ("logo.svg", "favicon-16.png", "favicon-32.png", "favicon-48.png", "apple-touch-icon.png",
+              "icon-192.png", "icon-512.png", "icon-512-maskable.png"):
+        r = client.get(f"/static/icons/{f}")
+        assert r.status_code == 200, f
+    page = client.get("/").text
+    assert '/favicon.ico?v=2' in page and "/static/icons/logo.svg?v=2" in page
+    assert "8A5A2B" not in page.split("</head>")[0]          # the old market-stall favicon is gone
