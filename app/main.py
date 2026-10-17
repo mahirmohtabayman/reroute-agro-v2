@@ -3,84 +3,103 @@ Reroute Agro API (FastAPI)
 Run locally:  uvicorn app.main:app --reload      →  http://127.0.0.1:8000      API docs: /docs
 """
 import base64
-import hashlib
-import hmac
+import binascii
+import functools
 import json
 import logging
-import os
 from pathlib import Path
 from typing import List, Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from app import auth, db, services as S
+from app import auth, db, impact as IMPACT, pooling as POOL, seed as SEED, services as S, settings
 from app.ai import PriceAI
 from app.logic import (CASHBACK, CASHBACK_MIN, CROPS, FEE_MAX, FEE_MIN, FEE_RATE, MIN_ORDER_KG, PLACES, PLUS_DAYS,
                        PLUS_PRICE, REDEEM, VEHICLES, CANCEL_PENALTY, COMMISSION, SERVICE, PLUS_SERVICE_OFF,
                        BULK_SERVICE_OFF, POOL_FACTOR, MIN_SHARE, FULL_LOAD, RETURN_LOAD, OFFLINE_MARKUP, SPEED)
 
 logging.basicConfig(level=logging.INFO)
+log = logging.getLogger("reroute")
 STATIC = Path(__file__).resolve().parents[1] / "static"
-SECRET = os.environ.get("SECRET_KEY", "reroute-agro-demo-secret").encode()
 
 app = FastAPI(title="Reroute Agro API", version="2.1",
               description="কৃষক ও পাইকারের পাইকারি বাজার: পরিদর্শন, অফার-দরদাম, পরিবহন চুক্তি, অনলাইন পেমেন্ট, নিজস্ব ট্রাক")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+if settings.ALLOWED_ORIGINS:
+    app.add_middleware(CORSMiddleware, allow_origins=settings.ALLOWED_ORIGINS, allow_methods=["GET", "POST", "PATCH"],
+                       allow_headers=["Content-Type", "X-Token"])
 
-if db.needs_seed():
-    from app.seed import seed
-    seed()
-# demo accounts (seeded ids, not self-registered "U…" ids) can also log in with the demo password
-db.run("UPDATE users SET pw_hash=? WHERE pw_hash IS NULL AND id NOT LIKE ?", (auth.hash_password(auth.DEMO_PASSWORD), "U%"))
+log.info("starting: APP_ENV=%s, demo mode %s, database %s", settings.APP_ENV, "on" if settings.DEMO_MODE else "off",
+         "PostgreSQL" if db.PG else "SQLite (development)")
+db.migrate()
+SEED.startup()
 AI = PriceAI()
 
-# ---------------------------------------------------------------- keep the public demo fresh
-DEMO_TTL = int(os.environ.get("DEMO_TTL_HOURS", "12")) * 3_600_000
-DEMO_IDLE = 30 * 60_000
-_last_write = [0]
+SECURITY_HEADERS = {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "camera=(), geolocation=(), microphone=(self)",
+    # the single-page app uses inline scripts/styles; everything else is same-origin except Google Fonts
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' "
+                               "https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; "
+                               "img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; "
+                               "frame-ancestors 'none'; form-action 'self'",
+}
 
 
 @app.middleware("http")
-async def track_writes(request, call_next):
+async def guard(request, call_next):
+    size = request.headers.get("content-length")
+    if size and size.isdigit() and int(size) > settings.MAX_BODY_BYTES:
+        return JSONResponse({"detail": "অনুরোধটি অনেক বড় (ছবি ছোট করে দিন)"}, status_code=413)
     if request.method != "GET" and request.url.path.startswith("/api/"):
-        _last_write[0] = db.now_ms()
-    return await call_next(request)
+        SEED.note_write()
+    response = await call_next(request)
+    for k, v in SECURITY_HEADERS.items():
+        response.headers.setdefault(k, v)
+    if settings.IS_PROD:
+        response.headers.setdefault("Strict-Transport-Security", "max-age=31536000")
+    return response
 
 
-def refresh_demo_if_stale():
-    if os.environ.get("DEMO_AUTO_REFRESH", "1") != "1":
-        return
-    try:
-        seeded = int(db.val("SELECT val FROM meta WHERE key='seeded_at'") or 0)
-    except Exception:
-        seeded = 0
-    t = db.now_ms()
-    if t - seeded > DEMO_TTL and t - _last_write[0] > DEMO_IDLE:
-        from app.seed import seed
-        seed()
+def atomic(fn):
+    """Run a mutating endpoint as one database transaction: all of its writes happen, or none."""
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        with db.tx():
+            return fn(*args, **kwargs)
+    return wrapper
+
+
+def client_ip(request: Request):
+    """The caller's address. Behind Render's proxy the trustworthy entry is the one the proxy appended
+    (counted from the right), not the first one, which the client can write itself."""
+    parts = [p.strip() for p in (request.headers.get("x-forwarded-for") or "").split(",") if p.strip()]
+    if settings.TRUSTED_PROXIES and len(parts) >= settings.TRUSTED_PROXIES:
+        return parts[-settings.TRUSTED_PROXIES]
+    return request.client.host if request.client else "unknown"
+
+
+def too_many(msg="অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।"):
+    raise HTTPException(429, msg)
 
 
 # ---------------------------------------------------------------- auth
-def sign(uid):
-    sig = hmac.new(SECRET, uid.encode(), hashlib.sha256).hexdigest()[:32]
-    return f"{base64.urlsafe_b64encode(uid.encode()).decode()}.{sig}"
+def is_demo(u):
+    """Seeded demo accounts have short ids (f1, p2, a1…); self-registered accounts start with "U"."""
+    return not u["id"].startswith("U")
 
 
 def get_user(x_token: Optional[str] = Header(None)):
-    if not x_token or "." not in x_token:
-        return None
-    b64, sig = x_token.rsplit(".", 1)
-    try:
-        uid = base64.urlsafe_b64decode(b64.encode()).decode()
-    except Exception:
-        return None
-    if not hmac.compare_digest(sig, hmac.new(SECRET, uid.encode(), hashlib.sha256).hexdigest()[:32]):
-        return None
-    return S.user(uid)
+    uid = auth.session_uid(x_token)
+    u = S.user(uid) if uid else None
+    if u and is_demo(u) and not settings.DEMO_MODE:
+        return None             # demo accounts only exist on demo deployments
+    return u
 
 
 def need_user(u=Depends(get_user)):
@@ -140,7 +159,8 @@ CONFIG = {"vehicles": VEHICLES, "service": SERVICE, "commission": COMMISSION, "p
           "return_load": RETURN_LOAD, "offline": OFFLINE_MARKUP, "speed": SPEED, "fee_rate": FEE_RATE,
           "fee_min": FEE_MIN, "fee_max": FEE_MAX, "min_order": MIN_ORDER_KG, "plus_price": PLUS_PRICE,
           "plus_days": PLUS_DAYS, "redeem": REDEEM, "cashback": CASHBACK, "cashback_min": CASHBACK_MIN,
-          "penalty": CANCEL_PENALTY, "demo_pin": S.DEMO_PIN}
+          "penalty": CANCEL_PENALTY, "demo_pin": S.DEMO_PIN, "demo_mode": settings.DEMO_MODE,
+          "app_env": settings.APP_ENV}
 
 
 @app.get("/api/health")
@@ -150,8 +170,9 @@ def health():
 
 @app.get("/api/state")
 def state(u=Depends(get_user)):
-    refresh_demo_if_stale()
-    S.housekeeping(u["id"] if u else None)
+    SEED.refresh_if_stale()
+    with db.tx():
+        S.housekeeping(u["id"] if u else None)
     if u:
         u = S.user(u["id"])
     out = {"config": CONFIG, "climate": AI.climate, "users": public_users(),
@@ -252,7 +273,7 @@ class LoginIn(BaseModel):
 class RegisterIn(BaseModel):
     role: str = Field(pattern="^(farmer|paikar)$")
     name: str = Field(min_length=2, max_length=60)
-    phone: str = Field(pattern=r"^01\d{9}$")
+    phone: str = Field(max_length=20)
     password: str = Field(min_length=6, max_length=64)
     confirm_password: str = Field(min_length=6, max_length=64)
     place: str
@@ -266,50 +287,104 @@ class OtpIn(BaseModel):
     otp: str = Field(pattern=r"^\d{5}$")
 
 
+class ResendIn(BaseModel):
+    reg_id: str = Field(min_length=8, max_length=64)
+
+
+def signed_in(u):
+    return {"token": auth.new_session(u["id"]), "user": private_me(u)}
+
+
+LOGIN_FAIL = "মোবাইল নম্বর বা পাসওয়ার্ড ঠিক নেই"
+
+
 @app.post("/api/login")
-def login(body: LoginIn):
+def login(body: LoginIn, request: Request):
     if body.user_id:
-        # one-click login is only for the seeded demo accounts, never for registered ones
-        u = S.user(body.user_id) if not body.user_id.startswith("U") else None
-        if not u:
+        # one-click login: demo deployments only, and never for an admin account
+        if not settings.DEMO_MODE:
+            raise HTTPException(403, "ডেমো লগ ইন এখন বন্ধ")
+        u = S.user(body.user_id)
+        if not u or not is_demo(u) or u["role"] == "admin":
             raise HTTPException(404, "ডেমো অ্যাকাউন্ট পাওয়া যায়নি")
-        return {"token": sign(u["id"]), "user": private_me(u)}
-    u = db.one("SELECT * FROM users WHERE phone=? AND role=?", ((body.phone or "").strip(), body.role))
+        return signed_in(u)
+    phone, ip = auth.normalize_phone(body.phone), client_ip(request)
+    # only failed attempts are counted, so a user who types the right password is never blocked
+    if auth.hits(f"login-fail-phone:{phone}", 900) >= 10 or auth.hits(f"login-fail-ip:{ip}", 900) >= 50:
+        too_many("অনেকবার ভুল পাসওয়ার্ড দেওয়া হয়েছে। ১৫ মিনিট পরে আবার চেষ্টা করুন।")
+    u = db.one("SELECT * FROM users WHERE phone=? AND role=?", (phone, body.role)) if phone else None
     if not u or not auth.check_password(body.password or "", u.get("pw_hash")):
-        raise HTTPException(401 if u else 404, "মোবাইল নম্বর বা পাসওয়ার্ড ঠিক নেই")
-    return {"token": sign(u["id"]), "user": private_me(u)}
+        auth.hit(f"login-fail-phone:{phone}")
+        auth.hit(f"login-fail-ip:{ip}")
+        raise HTTPException(401, LOGIN_FAIL)
+    if is_demo(u) and not settings.DEMO_MODE:
+        raise HTTPException(401, LOGIN_FAIL)
+    return signed_in(u)
+
+
+@app.post("/api/logout")
+def logout(x_token: Optional[str] = Header(None)):
+    auth.end_session(x_token)
+    return {"ok": True}
 
 
 @app.post("/api/register")
-def register(body: RegisterIn):
-    """Step 1 of sign-up: check the details and send an OTP (demo: returned in the response)."""
+def register(body: RegisterIn, request: Request):
+    """Step 1 of sign-up: check the details and create a pending registration with a one-time code.
+    There is no SMS gateway: the code is returned only in demo mode, for the on-screen prototype notice."""
+    phone = auth.normalize_phone(body.phone)
+    if not phone:
+        raise HTTPException(400, "০১ দিয়ে শুরু ১১ সংখ্যার মোবাইল নম্বর দিন")
     if body.place not in PLACES:
         raise HTTPException(400, "জেলা ঠিক নেই")
     if body.password != body.confirm_password:
         raise HTTPException(400, "দুটো পাসওয়ার্ড মিলছে না")
-    if db.one("SELECT id FROM users WHERE phone=?", (body.phone,)):
+    if not settings.DEMO_MODE:
+        raise HTTPException(503, "নতুন অ্যাকাউন্ট খোলা এখন বন্ধ: SMS সেবা এখনো চালু হয়নি।")
+    if not auth.allow(f"register-phone:{phone}", 5, 3600) or not auth.allow(f"register-ip:{client_ip(request)}", 30, 3600):
+        too_many()
+    if db.one("SELECT id FROM users WHERE phone=?", (phone,)):
         raise HTTPException(409, "এই নম্বরে আগেই অ্যাকাউন্ট আছে, লগ ইন করুন")
     data = body.model_dump(exclude={"password", "confirm_password"})
+    data["phone"] = phone
     data["pw_hash"] = auth.hash_password(body.password)
     reg_id, otp = auth.start_otp(data)
-    return {"reg_id": reg_id, "demo_otp": otp, "expires_in": auth.OTP_TTL}
+    return {"reg_id": reg_id, "demo_otp": otp, "expires_in": auth.OTP_TTL, "prototype": True}
+
+
+@app.post("/api/register/resend")
+def register_resend(body: ResendIn, request: Request):
+    if not settings.DEMO_MODE:
+        raise HTTPException(503, "SMS সেবা এখনো চালু হয়নি।")
+    if not auth.allow(f"resend-ip:{client_ip(request)}", 20, 3600):
+        too_many()
+    otp, err = auth.resend_otp(body.reg_id)
+    if err:
+        raise HTTPException(400, err)
+    return {"reg_id": body.reg_id, "demo_otp": otp, "expires_in": auth.OTP_TTL, "prototype": True}
 
 
 @app.post("/api/register/verify")
-def register_verify(body: OtpIn):
-    """Step 2 of sign-up: the code matches, so the account is created."""
-    data, err = auth.check_otp(body.reg_id, body.otp)
+def register_verify(body: OtpIn, request: Request):
+    """Step 2 of sign-up: the code matches, so the account is created — atomically, exactly once."""
+    if not auth.allow(f"verify-ip:{client_ip(request)}", 60, 3600):
+        too_many()
+    with db.tx():
+        data, err = auth.check_otp(body.reg_id, body.otp)
+        uid = None
+        if data and not db.one("SELECT id FROM users WHERE phone=?", (data["phone"],)):
+            uid = S.nid("U")
+            name = data["name"].strip()
+            db.insert("users", {"id": uid, "role": data["role"], "name": name, "phone": data["phone"],
+                                "place": data["place"], "area": data["upazila"].strip(), "market": data["market"].strip(),
+                                "biz": (data["biz"] or f"{name}-এর আড়ত") if data["role"] == "paikar" else None,
+                                "pw_hash": data["pw_hash"], "joined": S.now()})
+        elif data:
+            err = "এই নম্বরে আগেই অ্যাকাউন্ট আছে, লগ ইন করুন"
+    # outside the transaction: a wrong code's attempt count is already committed
     if err:
-        raise HTTPException(400, err)
-    if db.one("SELECT id FROM users WHERE phone=?", (data["phone"],)):
-        raise HTTPException(409, "এই নম্বরে আগেই অ্যাকাউন্ট আছে, লগ ইন করুন")
-    uid = S.nid("U")
-    name = data["name"].strip()
-    db.insert("users", {"id": uid, "role": data["role"], "name": name, "phone": data["phone"],
-                        "place": data["place"], "area": data["upazila"].strip(), "market": data["market"].strip(),
-                        "biz": (data["biz"] or f"{name}-এর আড়ত") if data["role"] == "paikar" else None,
-                        "pw_hash": data["pw_hash"], "joined": S.now()})
-    return {"token": sign(uid), "user": private_me(S.user(uid))}
+        raise HTTPException(409 if data else 400, err)
+    return signed_in(S.user(uid))
 
 
 class ProfileIn(BaseModel):
@@ -321,18 +396,36 @@ class ProfileIn(BaseModel):
     remove_photo: Optional[bool] = None
 
 
-def is_demo(u):
-    """Seeded demo accounts have short ids (f1, p2, a1…); self-registered accounts start with "U"."""
-    return not u["id"].startswith("U")
+IMAGE_MAGIC = {"image/jpeg": (b"\xff\xd8\xff",), "image/png": (b"\x89PNG\r\n\x1a\n",),
+               "image/gif": (b"GIF87a", b"GIF89a"), "image/webp": (b"RIFF",)}
+
+
+def decode_image(data):
+    """(media type, bytes) of a stored data-URL photo, or None if it is not an allowed raster image.
+    SVG and anything else are refused: served from our own origin they could run script."""
+    try:
+        head, b64 = (data or "").split(",", 1)
+        mime = head[5:].split(";")[0].lower() if head.startswith("data:") and head.endswith(";base64") else ""
+        raw = base64.b64decode(b64, validate=True)
+    except (ValueError, binascii.Error):
+        return None
+    if mime not in IMAGE_MAGIC or not raw.startswith(IMAGE_MAGIC[mime]):
+        return None
+    if mime == "image/webp" and raw[8:12] != b"WEBP":
+        return None
+    return mime, raw
 
 
 def check_image(data):
-    if not data.startswith("data:image/") or len(data) > 600_000:
+    if len(data or "") > 600_000:
         raise HTTPException(400, "ছবি ছোট করে দিন (৪০০ কেবি পর্যন্ত)")
+    if not decode_image(data):
+        raise HTTPException(400, "শুধু JPG, PNG, WebP বা GIF ছবি দেওয়া যাবে")
     return data
 
 
 @app.post("/api/me")
+@atomic
 def edit_me(body: ProfileIn, u=Depends(need_user)):
     fields = {k: v for k, v in body.model_dump().items() if v is not None}
     remove = fields.pop("remove_photo", False)
@@ -349,9 +442,12 @@ def edit_me(body: ProfileIn, u=Depends(need_user)):
 
 
 def image_response(data):
-    head, b64 = data.split(",", 1)
-    return Response(base64.b64decode(b64), media_type=head[5:].split(";")[0],
-                    headers={"Cache-Control": "public, max-age=86400"})
+    img = decode_image(data)
+    if not img:                 # e.g. an SVG stored before uploads were validated
+        raise HTTPException(404, "ছবি নেই")
+    return Response(img[1], media_type=img[0],
+                    headers={"Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff",
+                             "Content-Security-Policy": "default-src 'none'; sandbox"})
 
 
 @app.get("/api/users/{uid}/photo")
@@ -391,6 +487,7 @@ class ListingIn(BaseModel):
 
 
 @app.post("/api/listings")
+@atomic
 def create_listing(body: ListingIn, u=Depends(need_trader)):
     if len(body.photos) > 3:
         raise HTTPException(400, "সর্বোচ্চ ৩টি ছবি")
@@ -410,11 +507,13 @@ class ListingEdit(BaseModel):
 
 
 @app.patch("/api/listings/{lid}")
+@atomic
 def edit_listing(lid: str, body: ListingEdit, u=Depends(need_trader)):
     return shape_listing(S.update_listing(u, lid, **body.model_dump()))
 
 
 @app.post("/api/listings/{lid}/urgent")
+@atomic
 def urgent(lid: str, u=Depends(need_trader)):
     return {"discount": S.make_urgent(u, lid)}
 
@@ -437,6 +536,7 @@ class InspectIn(BaseModel):
 
 
 @app.post("/api/inspections")
+@atomic
 def inspect(body: InspectIn, u=Depends(need_trader)):
     return S.request_inspection(u, body.listing, body.kind, body.pref, body.note)
 
@@ -447,18 +547,21 @@ class ProposeTimeIn(BaseModel):
 
 
 @app.post("/api/inspections/{iid}/propose-time")
+@atomic
 def inspection_propose_time(iid: str, body: ProposeTimeIn, u=Depends(need_trader)):
     """Farmer proposes an inspection date/time."""
     return S.farmer_propose_time(u, iid, body.proposed_time, body.reply)
 
 
 @app.post("/api/inspections/{iid}/confirm-schedule")
+@atomic
 def inspection_confirm_schedule(iid: str, u=Depends(need_trader)):
     """Buyer confirms the farmer's proposed time — sets status to 'scheduled'."""
     return S.buyer_confirm_schedule(u, iid)
 
 
 @app.post("/api/inspections/{iid}/buyer-done")
+@atomic
 def inspection_buyer_done(iid: str, u=Depends(need_trader)):
     """Buyer reports they have inspected the produce."""
     return S.buyer_report_inspection_done(u, iid)
@@ -470,6 +573,7 @@ class VerifyIn(BaseModel):
 
 
 @app.post("/api/inspections/{iid}/seller-verify")
+@atomic
 def inspection_seller_verify(iid: str, body: VerifyIn, u=Depends(need_trader)):
     """Farmer confirms or disputes buyer's inspection report."""
     return S.seller_verify_inspection(u, iid, body.confirm, body.note)
@@ -480,6 +584,7 @@ class ReplyIn(BaseModel):
 
 
 @app.post("/api/inspections/{iid}/decline")
+@atomic
 def inspection_decline(iid: str, body: ReplyIn = ReplyIn(), u=Depends(need_trader)):
     """Farmer declines the inspection request."""
     S.decline_inspection(u, iid, body.reply)
@@ -487,6 +592,7 @@ def inspection_decline(iid: str, body: ReplyIn = ReplyIn(), u=Depends(need_trade
 
 
 @app.post("/api/inspections/{iid}/cancel")
+@atomic
 def inspection_cancel(iid: str, u=Depends(need_trader)):
     """Buyer cancels their inspection request."""
     S.cancel_inspection(u, iid)
@@ -495,6 +601,7 @@ def inspection_cancel(iid: str, u=Depends(need_trader)):
 
 # Legacy single-action endpoint — kept for backward compatibility
 @app.post("/api/inspections/{iid}/{action}")
+@atomic
 def inspection_action(iid: str, action: str, body: ReplyIn = ReplyIn(), u=Depends(need_trader)):
     """Legacy: schedule/decline/done/cancel via single endpoint."""
     if action == "schedule":
@@ -522,6 +629,7 @@ class OfferIn(BaseModel):
 
 
 @app.post("/api/offers")
+@atomic
 def offer(body: OfferIn, u=Depends(need_trader)):
     return S.make_offer(u, body.listing, body.qty, body.price, body.transport, body.split, body.note)
 
@@ -532,6 +640,7 @@ class OfferAction(BaseModel):
 
 
 @app.post("/api/offers/{oid}/{action}")
+@atomic
 def offer_action(oid: str, action: str, body: OfferAction = OfferAction(), u=Depends(need_trader)):
     if action not in ("accept", "reject", "counter", "cancel"):
         raise HTTPException(404, "অজানা কাজ")
@@ -546,6 +655,7 @@ class TransportProposalIn(BaseModel):
 
 
 @app.post("/api/orders/{oid}/transport/propose")
+@atomic
 def transport_propose(oid: str, body: TransportProposalIn, u=Depends(need_trader)):
     """Propose a new transport cost split (buyer_pct + seller_pct must = 100)."""
     return S.propose_transport_split(u, oid, body.buyer_pct, body.seller_pct, body.note)
@@ -557,6 +667,7 @@ class TransportRespondIn(BaseModel):
 
 
 @app.post("/api/orders/{oid}/transport/proposals/{pid}/respond")
+@atomic
 def transport_respond(oid: str, pid: str, body: TransportRespondIn, u=Depends(need_trader)):
     """Accept or reject a transport cost proposal."""
     return S.respond_transport_proposal(u, oid, pid, body.action, body.note)
@@ -580,6 +691,7 @@ class PayIn(BaseModel):
 
 
 @app.post("/api/payments")
+@atomic
 def pay(body: PayIn, u=Depends(need_user)):
     return S.start_payment(u, body.purpose, body.ref, body.method)
 
@@ -590,6 +702,7 @@ class ConfirmIn(BaseModel):
 
 
 @app.post("/api/payments/{pid}/confirm")
+@atomic
 def pay_confirm(pid: str, body: ConfirmIn, u=Depends(need_user)):
     return S.confirm_payment(u, pid, body.account, body.pin)
 
@@ -599,18 +712,21 @@ class ReasonIn(BaseModel):
 
 
 @app.post("/api/orders/{oid}/handover")
+@atomic
 def order_handover(oid: str, u=Depends(need_trader)):
     S.handover(u, oid)
     return {"ok": True}
 
 
 @app.post("/api/orders/{oid}/complete")
+@atomic
 def order_complete(oid: str, u=Depends(need_trader)):
     S.complete(u, oid)
     return {"ok": True}
 
 
 @app.post("/api/orders/{oid}/cancel")
+@atomic
 def order_cancel(oid: str, body: ReasonIn = ReasonIn(), u=Depends(need_trader)):
     S.cancel_order(u, oid, body.reason)
     return {"ok": True}
@@ -622,6 +738,7 @@ class RateIn(BaseModel):
 
 
 @app.post("/api/orders/{oid}/rate")
+@atomic
 def order_rate(oid: str, body: RateIn, u=Depends(need_trader)):
     S.rate(u, oid, body.stars, body.text)
     return {"ok": True}
@@ -644,6 +761,7 @@ class BookingIn(BaseModel):
 
 
 @app.post("/api/bookings")
+@atomic
 def book(body: BookingIn, u=Depends(need_trader)):
     if body.crop not in CROPS:
         raise HTTPException(400, "ফসল ঠিক নেই")
@@ -652,6 +770,7 @@ def book(body: BookingIn, u=Depends(need_trader)):
 
 
 @app.post("/api/bookings/{bid}/cancel")
+@atomic
 def booking_cancel(bid: str, u=Depends(need_trader)):
     S.cancel_booking(u, bid)
     return {"ok": True}
@@ -659,11 +778,13 @@ def booking_cancel(bid: str, u=Depends(need_trader)):
 
 # ---------------------------------------------------------------- rewards, Plus, records, notifications
 @app.post("/api/rewards/{rid}")
+@atomic
 def redeem(rid: str, u=Depends(need_trader)):
     return S.redeem(u, rid)
 
 
 @app.post("/api/plus/{action}")
+@atomic
 def plus(action: str, u=Depends(need_trader)):
     if action == "cancel":
         S.cancel_plus(u)
@@ -683,17 +804,20 @@ class EntryIn(BaseModel):
 
 
 @app.post("/api/entries")
+@atomic
 def entry(body: EntryIn, u=Depends(need_trader)):
     return S.add_entry(u, body.kind, body.crop, body.qty, body.amount, body.note)
 
 
 @app.post("/api/notifs/read")
+@atomic
 def read_all(u=Depends(need_user)):
     db.run('UPDATE notifs SET read=1 WHERE "to"=?', (u["id"],))
     return {"ok": True}
 
 
 @app.post("/api/notifs/{nid}/read")
+@atomic
 def read_one(nid: str, u=Depends(need_user)):
     db.run('UPDATE notifs SET read=1 WHERE id=? AND "to"=?', (nid, u["id"]))
     return {"ok": True}
@@ -709,6 +833,7 @@ class StatusIn(BaseModel):
 
 
 @app.post("/api/admin/bookings/{bid}")
+@atomic
 def admin_booking(bid: str, body: StatusIn, u=Depends(need_admin)):
     S.set_booking_status(bid, body.status, body.note, body.truck, body.pickup_time, body.actual_fare)
     return {"ok": True}
@@ -725,6 +850,7 @@ class TruckIn(BaseModel):
 
 
 @app.post("/api/admin/trucks")
+@atomic
 def admin_add_truck(body: TruckIn, u=Depends(need_admin)):
     return S.add_truck(**body.model_dump())
 
@@ -734,6 +860,7 @@ class TruckStatus(BaseModel):
 
 
 @app.patch("/api/admin/trucks/{tid}")
+@atomic
 def admin_truck_status(tid: str, body: TruckStatus, u=Depends(need_admin)):
     busy = db.val("SELECT COUNT(*) FROM bookings WHERE truck=? AND status IN ('confirmed','pickup_scheduled','in_transit')", (tid,))
     if busy:
@@ -743,6 +870,7 @@ def admin_truck_status(tid: str, body: TruckStatus, u=Depends(need_admin)):
 
 
 @app.post("/api/admin/users/{uid}/verify")
+@atomic
 def admin_verify(uid: str, u=Depends(need_admin)):
     t = S.user(uid)
     if not t or t["verified"]:
@@ -765,11 +893,10 @@ GENERIC_FORGOT = ("অনুরোধ পাওয়া গেছে। এই 
 @app.post("/api/password/forgot")
 def password_forgot(body: ForgotIn, request: Request):
     """No SMS gateway yet, so recovery is operator-assisted. The answer is identical whether or not the number exists."""
-    ip = (request.headers.get("x-forwarded-for") or (request.client.host if request.client else "")).split(",")[0].strip()
-    phone = "".join(ch for ch in body.phone if ch.isdigit())
-    if not auth.allow(f"forgot-ip:{ip}", 10, 3600) or not auth.allow(f"forgot-phone:{phone}", 3, 3600):
+    phone = auth.normalize_phone(body.phone)
+    if not auth.allow(f"forgot-ip:{client_ip(request)}", 10, 3600) or not auth.allow(f"forgot-phone:{phone}", 3, 3600):
         raise HTTPException(429, "অনেকবার চেষ্টা করা হয়েছে। এক ঘণ্টা পরে আবার চেষ্টা করুন।")
-    u = db.one("SELECT id, role, name, biz FROM users WHERE phone=?", (phone,)) if len(phone) == 11 else None
+    u = db.one("SELECT id, role, name, biz FROM users WHERE phone=?", (phone,)) if phone else None
     if u and u["id"].startswith("U"):
         who = u["biz"] if u["role"] == "paikar" and u["biz"] else u["name"]
         for a in db.q("SELECT id FROM users WHERE role='admin'"):
@@ -779,6 +906,7 @@ def password_forgot(body: ForgotIn, request: Request):
 
 
 @app.post("/api/admin/users/{uid}/reset-password")
+@atomic
 def admin_reset_password(uid: str, u=Depends(need_admin)):
     """Admin sets a one-time temporary password after verifying the user by phone. Shown to the admin once only."""
     t = S.user(uid)
@@ -786,6 +914,7 @@ def admin_reset_password(uid: str, u=Depends(need_admin)):
         raise HTTPException(400, "শুধু নিবন্ধিত অ্যাকাউন্টের পাসওয়ার্ড রিসেট করা যায়")
     pw = auth.temp_password()
     db.update("users", uid, pw_hash=auth.hash_password(pw))
+    auth.end_all_sessions(uid)
     S.notify(uid, "আপনার পাসওয়ার্ড অপারেশন টিম রিসেট করেছে। লগ ইন করে অ্যাকাউন্ট পাতা থেকে নতুন পাসওয়ার্ড দিন।", "info", "#/account")
     return {"temp_password": pw}
 
@@ -797,7 +926,7 @@ class PasswordIn(BaseModel):
 
 
 @app.post("/api/me/password")
-def change_password(body: PasswordIn, u=Depends(need_user)):
+def change_password(body: PasswordIn, u=Depends(need_user), x_token: Optional[str] = Header(None)):
     if is_demo(u):
         raise HTTPException(403, "ডেমো অ্যাকাউন্টের পাসওয়ার্ড বদলানো যায় না")
     if not auth.allow(f"pwchange:{u['id']}", 10, 3600):
@@ -807,7 +936,41 @@ def change_password(body: PasswordIn, u=Depends(need_user)):
     if body.new_password != body.confirm_password:
         raise HTTPException(400, "দুটো পাসওয়ার্ড মিলছে না")
     db.update("users", u["id"], pw_hash=auth.hash_password(body.new_password))
+    auth.end_all_sessions(u["id"], keep_token=x_token)      # other devices are signed out
     return {"ok": True}
+
+
+# ---------------------------------------------------------------- truck pooling & impact
+class PoolAssignIn(BaseModel):
+    bookings: List[str] = Field(min_length=1, max_length=20)
+    truck: str
+
+
+@app.get("/api/admin/pool")
+def admin_pool(u=Depends(need_admin)):
+    return POOL.suggestions()
+
+
+@app.post("/api/admin/pool/assign")
+@atomic
+def admin_pool_assign(body: PoolAssignIn, u=Depends(need_admin)):
+    """Put a pooled group on one truck: all bookings or none (capacity is re-checked for each)."""
+    for bid in body.bookings:
+        S.set_booking_status(bid, "confirmed", "শেয়ার্ড ট্রাকে যুক্ত (পুলিং)", body.truck)
+    return {"ok": True}
+
+
+@app.get("/api/pool/mine")
+def my_pool(u=Depends(need_trader)):
+    return POOL.for_user(u["id"])
+
+
+@app.get("/api/impact")
+def impact(days: int = 0):
+    if days not in (0, 7, 30, 90, 365):
+        raise HTTPException(400, "সময়সীমা ঠিক নেই")
+    from app.ai_routes import VEG
+    return IMPACT.summary(days, VEG.metrics)
 
 
 # ---------------------------------------------------------------- AI + demo + frontend
@@ -825,9 +988,13 @@ def ai_predict(market: str, product: str):
 
 
 @app.post("/api/reset")
-def reset():
-    from app.seed import seed
-    seed()
+@atomic
+def reset(u=Depends(need_admin)):
+    """Rebuild the demo data. Admin only, and only on a demo or development deployment with demo mode on —
+    never in production. Self-registered accounts are kept."""
+    if settings.IS_PROD or not settings.DEMO_MODE:
+        raise HTTPException(403, "এই সার্ভারে ডেমো নতুন করে শুরু করা যায় না")
+    SEED.seed()
     return {"ok": True}
 
 
@@ -837,6 +1004,35 @@ app.include_router(ai_router)
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 
+@app.middleware("http")
+async def static_cache(request, call_next):
+    """Public static files (fonts, photos, icons) are cached by browsers for a week; the page itself is
+    revalidated every time so a new deploy shows at once."""
+    response = await call_next(request)
+    path = request.url.path
+    if path.startswith("/static/") and response.status_code == 200 and not path.endswith(".html"):
+        response.headers.setdefault("Cache-Control", "public, max-age=604800")
+    elif path in ("/", "/sw.js", "/offline.html", "/manifest.webmanifest"):
+        response.headers["Cache-Control"] = "no-cache"
+    return response
+
+
 @app.get("/")
 def index():
     return FileResponse(STATIC / "index.html")
+
+
+@app.get("/sw.js")
+def service_worker():
+    # served from the root so it may control the whole site (it never caches /api/ responses)
+    return FileResponse(STATIC / "sw.js", media_type="application/javascript")
+
+
+@app.get("/manifest.webmanifest")
+def manifest():
+    return FileResponse(STATIC / "manifest.webmanifest", media_type="application/manifest+json")
+
+
+@app.get("/offline.html")
+def offline():
+    return FileResponse(STATIC / "offline.html")

@@ -3,13 +3,13 @@ const V = {};
 /* ---------- minimal home (before login) ---------- */
 V.home = () => `<section class="hero"><div class="hero-in">
   <span class="eyebrow">${ic('sprout')} কৃষক ও পাইকারের পাইকারি বাজার</span>
-  <h1>কৃষকের মাল, পাইকারের বাজার</h1>
-  <p class="lead">সরাসরি কেনাবেচা ও দরদাম, নিরাপদ পেমেন্ট, আর নিজস্ব ট্রাকে কম খরচে পরিবহন।</p>
+  <h1>আপনার ফসল, সঠিক বাজার, ভালো সিদ্ধান্ত।</h1>
+  <p class="lead">বাজার তুলনা করুন, সরাসরি দরদাম করুন, আর কম খরচে পরিবহন ঠিক করুন: সব এক কৃষি প্ল্যাটফর্মে।</p>
   <div class="cta">
-    <button class="btn btn-green" data-act="pick-role" data-role="farmer">${ic('farmer')} আমি কৃষক</button>
-    <button class="btn btn-blue" data-act="pick-role" data-role="paikar">${ic('store')} আমি পাইকার</button>
+    <button class="btn btn-green" data-act="pick-role" data-role="farmer">${ic('farmer')} কৃষক হিসেবে শুরু করুন</button>
+    <button class="btn btn-blue" data-act="pick-role" data-role="paikar">${ic('store')} পাইকার হিসেবে শুরু করুন</button>
   </div>
-  <p class="hero-link"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন ${ic('arrow')}</a></p>
+  <p class="hero-link"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন ${ic('arrow')}</a> · <a href="#/impact">প্ল্যাটফর্মের প্রভাব ${ic('arrow')}</a></p>
 </div>
 <div class="hero-visual" aria-hidden="true">
   <figure>${cropPhoto('tomato')}</figure>
@@ -39,26 +39,29 @@ function pwInput(id, key, store, ac, ph){
   return `<span class="pw-wrap"><input id="${id}" data-${store.toLowerCase()}="${key}" type="password" autocomplete="${ac}" placeholder="${ph}" value="${esc(v)}"><button type="button" class="pw-eye" data-act="pw-toggle" data-for="${id}" aria-label="পাসওয়ার্ড দেখুন">${ic('eye')}</button></span>`;
 }
 V.login = () => {
-  const demo = {farmer:['f1','f2','f5'], paikar:['p1','p2','p4'], admin:['a1']}[loginRole];
+  // one-click demo accounts: demo deployments only, never for the operations (admin) role
+  const demo = demoMode() ? ({farmer:['f1','f2','f5'], paikar:['p1','p2','p4']}[loginRole]||[]) : [];
   const names = {f1:['রহিম উদ্দিন','কৃষক, রাজশাহী: নতুন অফার ও পরিদর্শনের অনুরোধ আছে'],f2:['করিমা বেগম','কৃষক, নাটোর'],f5:['হালিমা খাতুন','কৃষক, রাজশাহী: জরুরি বিক্রি চলছে'],
-    p1:['করিম ট্রেডার্স','পাইকার, ঢাকা: পাল্টা দামের উত্তর দিতে হবে'],p2:['ঢাকা ফ্রেশ হাব','পাইকার, ঢাকা: প্লাস সদস্য'],p4:['বগুড়া সবজি ঘর','পাইকার, বগুড়া: মাল পথে আছে'],a1:['Reroute অপারেশন টিম','ট্রাক বুকিং, বহর ও প্ল্যাটফর্মের হিসাব']};
+    p1:['করিম ট্রেডার্স','পাইকার, ঢাকা: পাল্টা দামের উত্তর দিতে হবে'],p2:['ঢাকা ফ্রেশ হাব','পাইকার, ঢাকা: প্লাস সদস্য'],p4:['বগুড়া সবজি ঘর','পাইকার, বগুড়া: মাল পথে আছে']};
   return `<div class="auth">
     <h1>লগ ইন</h1><p class="muted sub">আপনি কে, বাছুন</p>
     <div class="choice c3">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪'],['admin','অপারেশন','🛠️']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div>
-    ${loginRole!=='admin'?`<div class="panel" style="margin-top:16px">
+    <div class="panel" style="margin-top:16px">
       <label class="field${LG.err?' err':''}" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" data-lg="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(LG.phone)}" ${LG.err?'aria-invalid="true" aria-describedby="lg-err"':''}></label>
       <label class="field${LG.err?' err':''}"><span class="label-row">পাসওয়ার্ড<button type="button" class="linkbtn sm" data-ui="forgot">পাসওয়ার্ড ভুলে গেছেন?</button></span>${pwInput('lg-password','password','LG','current-password','আপনার পাসওয়ার্ড')}</label>
       ${LG.err?`<p class="form-error" id="lg-err" role="alert">${esc(LG.err)}</p>`:''}
       <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="login-phone">ঢুকুন</button>
-      <p class="muted sm" style="margin-top:12px;text-align:center">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p>
-      <p class="muted xs demo-pw">ডেমো অ্যাকাউন্টগুলোর পাসওয়ার্ড: <b data-i18n-skip>123456</b></p></div>`:''}
-    <div class="or">ডেমো অ্যাকাউন্ট, এক চাপে ঢুকুন</div>
-    <div class="demo-list">${demo.map(id=>`<button class="opt" data-act="login" data-id="${id}"><span class="av">${ic(loginRole==='paikar'?'🏪':loginRole==='admin'?'🛠️':'🧑‍🌾')}</span><span class="grow"><strong>${names[id][0]}</strong><span class="muted">${names[id][1]}</span></span>${ic('next')}</button>`).join('')}</div>
+      ${loginRole!=='admin'?`<p class="muted sm" style="margin-top:12px;text-align:center">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p>`
+        :`<p class="muted xs" style="margin-top:12px;text-align:center">অপারেশন টিমের অ্যাকাউন্ট শুধু Reroute তৈরি করে।</p>`}
+      ${demo.length?`<p class="muted xs demo-pw">ডেমো অ্যাকাউন্টগুলোর পাসওয়ার্ড: <b data-i18n-skip>123456</b></p>`:''}</div>
+    ${demo.length?`<div class="or">ডেমো অ্যাকাউন্ট, এক চাপে ঢুকুন</div>
+    <div class="demo-list">${demo.map(id=>`<button class="opt" data-act="login" data-id="${id}"><span class="av">${ic(loginRole==='paikar'?'🏪':loginRole==='admin'?'🛠️':'🧑‍🌾')}</span><span class="grow"><strong>${names[id][0]}</strong><span class="muted">${names[id][1]}</span></span>${ic('next')}</button>`).join('')}</div>`:''}
   </div>`;
 };
 V.register = () => {
   const E=RGE, err=k=>E[k]?`<small class="ferr" id="rg-${k}-err">${E[k]}</small>`:'', cls=k=>E[k]?' err':'';
   return `<div class="auth"><h1>নতুন অ্যাকাউন্ট</h1><p class="muted sub">তথ্য দিন, তারপর মোবাইলে আসা কোড দিয়ে যাচাই করুন।</p>
+  ${demoMode()?'':`<p class="note" role="status" style="margin-bottom:16px">নতুন অ্যাকাউন্ট খোলা এখন বন্ধ: SMS সেবা এখনো চালু হয়নি। চালু হলে এখানে নিবন্ধন করা যাবে।</p>`}
   <div class="field" style="margin-top:0"><span>অ্যাকাউন্টের ধরন</span><div class="choice c2">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div></div>
   <div class="panel" style="margin-top:16px">
     <h3 class="form-sec">${ic('user')} ব্যক্তিগত তথ্য</h3>

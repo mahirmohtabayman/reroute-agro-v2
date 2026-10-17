@@ -1,13 +1,14 @@
 # 🍅 Reroute Agro
 
-**কৃষক ও পাইকারের পাইকারি বাজার: সরাসরি দরদাম, নিরাপদ পেমেন্ট, নিজস্ব ট্রাক, মজুদ ও লাভ-ক্ষতির হিসাব।**
+**কৃষক ও পাইকারের পাইকারি বাজার: সরাসরি দরদাম, AI বিক্রয় পরামর্শ, শেয়ার্ড ট্রাক, মজুদ ও লাভ-ক্ষতির হিসাব।** পেমেন্ট সিমুলেটেড (প্রোটোটাইপ, আসল টাকা লেনদেন হয় না)।
 Built for **Hack for Humanity**.
 
 | | |
 |---|---|
 | 🌐 লাইভ প্রোটোটাইপ | https://reroute-agro-k0of.onrender.com |
 | 📸 শোকেস: ছবি, ডেমো অ্যাকাউন্ট, ট্যুর | GitHub Pages (`docs/`) |
-| 🔑 ডেমো | পেমেন্ট পিন **১২৩৪৫** |
+| 🔑 ডেমো | পেমেন্ট পিন **১২৩৪৫** (সিমুলেটেড পেমেন্ট, শুধু ডেমো ডিপ্লয়মেন্টে) |
+| 📚 ডকুমেন্টেশন | [Deployment](DEPLOYMENT_GUIDE.md) · [Security](SECURITY_REVIEW.md) · [Migrations](DATABASE_MIGRATIONS.md) · [Tests](TEST_REPORT.md) · [Demo script](HACKATHON_DEMO.md) · [Audit](PROJECT_AUDIT.md) · [Changelog](CHANGELOG.md) |
 
 <p align="center"><img src="docs/screenshots/09_order_tracking.jpg" width="49%"> <img src="docs/screenshots/07_negotiation.jpg" width="49%"></p>
 <p align="center"><img src="docs/screenshots/11_operations_trucks.jpg" width="49%"> <img src="docs/screenshots/12_prices_farmer.jpg" width="49%"></p>
@@ -21,7 +22,7 @@ Built for **Hack for Humanity**.
 | বিক্রি | ছবি, মান, পরিমাণ, সর্বনিম্ন অর্ডার দিয়ে লিস্টিং | নিজের মজুদ থেকে লিস্টিং |
 | কেনা | অন্য কৃষক/পাইকারের মাল (পাইকারি, অন্তত ৫ মণ) | খোঁজ ও ফিল্টার করে, আগে ভিডিও/সরাসরি দেখে, অফার |
 | দরদাম | রাজি / পাল্টা দাম / না | তালিকার দাম বা কম দামে অফার, পাল্টা দামে রাজি / না |
-| টাকা | মাল বুঝে দিলে ওয়ালেটে, ১% ফি | বিকাশ / নগদ / কার্ড / ওয়ালেট, টাকা Reroute-এ জমা থাকে |
+| টাকা | মাল বুঝে দিলে ওয়ালেটে, ১% ফি | বিকাশ / নগদ / কার্ড / ওয়ালেট (সবই সিমুলেটেড), টাকা Reroute-এ জমা থাকে |
 | পরিবহন | Reroute ট্রাক, ভাড়া ভাগ করা যায় | Reroute ট্রাক বা নিজের ট্রাক |
 | হিসাব | মজুদ, বিক্রির ইতিহাস, লাভ-ক্ষতি | মজুদ, কেনা-বেচার ইতিহাস, লাভ-ক্ষতি |
 
@@ -117,7 +118,7 @@ python -m ml.train                   # retrain the price model
 ## 🌐 Deploy & keep it available
 - **Render:** New + → Blueprint → this repo (`render.yaml`).
 - **Keep awake:** a free UptimeRobot HTTP monitor on `<live-url>/api/health` every 5 minutes (Render's free 750 h/month covers one service all month).
-- **Demo stays fresh:** when the demo data is older than 12 h and nobody has changed anything for 30 min, it is rebuilt automatically (`DEMO_TTL_HOURS`, `DEMO_AUTO_REFRESH`). Footer button "ডেমো নতুন করে শুরু" resets it any time.
+- **Demo data is never rebuilt in production.** On a separate demo deployment (`APP_ENV=demo`, `ENABLE_DEMO_MODE=true`) an admin can rebuild it from the footer button, or set `DEMO_AUTO_REFRESH=true` to rebuild idle demo data every `DEMO_TTL_HOURS`. See DEPLOYMENT_GUIDE.md and SECURITY_REVIEW.md.
 - **GitHub Pages showcase:** Settings → Pages → branch `main`, folder `/docs`. Set `LIVE_URL` / `VIDEO_URL` at the top of `docs/index.html`; the page shows whether the live server is up and always shows the screenshots.
 
 ## 🗺 Next
@@ -139,5 +140,5 @@ python -m ml.train_veg     # model + metrics
 
 ## 🗄️ Database
 - `DATABASE_URL` দিলে **PostgreSQL** (যেমন ফ্রি Neon/Supabase): রিস্টার্ট বা নতুন deploy-এর পরও ডেটা থাকে।
-- না দিলে **SQLite** `data/reroute.db` (Render-এর ফ্রি ডিস্কে রিস্টার্টে মুছে যায়)।
+- না দিলে শুধু লোকাল ডেভেলপমেন্টে (`APP_ENV=development`) **SQLite** `data/reroute.db`। প্রোডাকশনে `DATABASE_URL` ছাড়া সার্ভার চালুই হবে না, কখনো অস্থায়ী SQLite ব্যবহার করবে না।
 - ডেমো রিফ্রেশে ডেমোর কেনাবেচা নতুন হয়, কিন্তু নিজে খোলা অ্যাকাউন্ট থাকে।

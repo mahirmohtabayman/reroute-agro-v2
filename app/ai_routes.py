@@ -18,7 +18,9 @@ from xml.sax.saxutils import escape
 
 from fastapi import APIRouter, Header, HTTPException, Response
 
-from app import db, services as S
+from pydantic import BaseModel, Field
+
+from app import advisor as ADVISOR, db, services as S
 from app.logic import CROPS, PLACES, transport_quote
 from app.veg_ai import SHELF, SPLIT_BUYER, VegAI
 
@@ -91,6 +93,51 @@ def farmer(src: str, crop: str, qty: float, days_left: Optional[int] = None, cos
         raise HTTPException(400, "তাজা থাকার দিন ঠিক নেই")
     u = _user(x_token)
     return VEG.advice(src, crop, qty, days_left, cost, bool(u and S.is_plus(u)))
+
+
+@router.get("/smart-sell")
+def smart_sell(src: str, crop: str, qty: float, days_left: Optional[int] = None, cost: Optional[float] = None,
+               x_token: Optional[str] = Header(None)):
+    """Smart Selling Advisor: one recommendation (sell now / wait / other market / insufficient evidence) with
+    revenue, costs, net proceeds, profit (when the cost is known), risks, reasons and data provenance."""
+    _ready()
+    _check(src, crop)
+    _qty(qty)
+    if cost is not None and cost < 0:
+        raise HTTPException(400, "উৎপাদন খরচ ঠিক নেই")
+    if days_left is not None and not 1 <= days_left <= 60:
+        raise HTTPException(400, "তাজা থাকার দিন ঠিক নেই")
+    u = _user(x_token)
+    adv = VEG.advice(src, crop, qty, days_left, cost, bool(u and S.is_plus(u)))
+    out = ADVISOR.decide(adv, VEG.model is not None, temp=VEG.state["temp"].get(src, 27.0))
+    out.update({"src": src, "crop": crop, "kg": qty, "days_left": adv["days_left"], "cost": cost,
+                "markets": [{k: o[k] for k in ("market", "name", "send_in_days", "price", "net", "net_lo", "net_hi",
+                                                "truck", "spoil_pct", "vs_local")} for o in adv["markets"]],
+                "provenance": ADVISOR.provenance(VEG, adv), "simulated": True})
+    return out
+
+
+@router.get("/spoilage")
+def spoilage(crop: str, harvest_days_ago: int = 0, travel_hours: float = 0, wait_days: int = 0,
+             storage: str = "ambient", place: str = "rajshahi"):
+    """Crop Freshness & Spoilage Risk (prototype rule set, see app/advisor.py RISK_RULES)."""
+    _check(place, crop)
+    if not 0 <= harvest_days_ago <= 60 or not 0 <= travel_hours <= 72 or not 0 <= wait_days <= 30 \
+            or storage not in ("ambient", "cool"):
+        raise HTTPException(400, "তথ্য ঠিক নেই")
+    temp = VEG.state["temp"].get(place, 27.0) if VEG.ready else 27.0
+    days_left = CROPS[crop][1] - harvest_days_ago
+    return ADVISOR.spoilage_risk(crop, days_left, travel_hours, wait_days, temp, storage)
+
+
+class AskIn(BaseModel):
+    text: str = Field(min_length=1, max_length=300)
+
+
+@router.post("/parse")
+def parse(body: AskIn):
+    """Understand a typed or spoken question. Only extracts fields; it never runs a transaction."""
+    return ADVISOR.parse_query(body.text)
 
 
 @router.get("/buyer")

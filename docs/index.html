@@ -60,21 +60,21 @@ footer{color:var(--mu);font-size:.88rem;text-align:center;padding:30px 0 40px}
 <header class="wrap">
   <div class="logo"><svg width="64" height="64" viewBox="0 0 34 34" aria-hidden="true"><path d="M6 15v14M28 15v14" stroke="#8A5A2B" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M7 6h3.33L7.67 13H3z" fill="#D93D27"/><path d="M10.33 6h3.34L12.33 13H7.67z" fill="#F6C453"/><path d="M13.67 6H17v7h-4.67z" fill="#D93D27"/><path d="M17 6h3.33l1.34 7H17z" fill="#F6C453"/><path d="M20.33 6h3.34l2.66 7h-4.66z" fill="#D93D27"/><path d="M23.67 6H27l4 7h-4.67z" fill="#F6C453"/><path d="M3 13a2.33 2.33 0 0 0 4.67 0z" fill="#D93D27"/><path d="M7.67 13a2.33 2.33 0 0 0 4.66 0z" fill="#F6C453"/><path d="M12.33 13a2.33 2.33 0 0 0 4.67 0z" fill="#D93D27"/><path d="M17 13a2.33 2.33 0 0 0 4.67 0z" fill="#F6C453"/><path d="M21.67 13a2.33 2.33 0 0 0 4.66 0z" fill="#D93D27"/><path d="M26.33 13a2.33 2.33 0 0 0 4.67 0z" fill="#F6C453"/><circle cx="10" cy="21.5" r="2.4" fill="#F29A2E"/><circle cx="15" cy="21.5" r="2.4" fill="#1E8A4C"/><circle cx="20" cy="21.5" r="2.4" fill="#F6C453"/><circle cx="25" cy="21.5" r="2.4" fill="#D93D27"/><rect x="4" y="24" width="26" height="3" rx="1.2" fill="#8A5A2B"/><rect x="7" y="27" width="20" height="4" rx="1" fill="#B07A3E"/></svg></div>
   <h1>Reroute Agro</h1>
-  <p class="lead">কৃষক ও পাইকারের পাইকারি বাজার: সরাসরি দরদাম, নিরাপদ পেমেন্ট, নিজস্ব ট্রাকে কম খরচে পরিবহন, আর মজুদ ও লাভ-ক্ষতির হিসাব।</p>
+  <p class="lead">কৃষক ও পাইকারের পাইকারি বাজার: সরাসরি দরদাম, AI বিক্রয় পরামর্শ, শেয়ার্ড ট্রাকে কম খরচে পরিবহন, আর মজুদ ও লাভ-ক্ষতির হিসাব। পেমেন্ট সিমুলেটেড।</p>
   <div class="status" id="status"><span class="dot" id="dot"></span><span id="stxt">লাইভ সার্ভার দেখা হচ্ছে...</span></div>
   <div class="cta"><a class="btn" id="live" href="#">লাইভ প্রোটোটাইপ খুলুন</a><a class="btn alt" id="video" href="#" hidden>▶ ডেমো ভিডিও</a><a class="btn alt" id="repo" href="#">GitHub কোড</a></div>
-  <div class="pills" style="justify-content:center;margin-top:18px"><span>FastAPI + SQLite</span><span>অনলাইন পেমেন্ট (ডেমো)</span><span>নিজস্ব ট্রাক মডিউল</span><span>AI দামের মডেল</span><span>বাংলা, মোবাইল-বান্ধব</span></div>
+  <div class="pills" style="justify-content:center;margin-top:18px"><span>FastAPI + PostgreSQL</span><span>অনলাইন পেমেন্ট (ডেমো)</span><span>নিজস্ব ট্রাক মডিউল</span><span>AI দামের মডেল</span><span>বাংলা, মোবাইল-বান্ধব</span></div>
 </header>
 
 <main class="wrap">
   <div class="grid2">
     <div class="panel"><h2>🔑 ডেমো অ্যাকাউন্ট</h2>
-      <p>লাইভ সাইটে <b>লগ ইন</b> পাতায় এক চাপে ঢোকা যায়।</p>
+      <p>ডেমো ডিপ্লয়মেন্টে (<code>ENABLE_DEMO_MODE=true</code>) <b>লগ ইন</b> পাতায় কৃষক ও পাইকারের ডেমো অ্যাকাউন্টে এক চাপে ঢোকা যায়। অপারেশন টিম শুধু পাসওয়ার্ড দিয়ে।</p>
       <table><tr><th>অ্যাকাউন্ট</th><th>কী দেখবেন</th></tr>
         <tr><td>রহিম উদ্দিন (কৃষক)</td><td>কম দামের অফার, পরিদর্শনের অনুরোধ</td></tr>
         <tr><td>ঢাকা ফ্রেশ হাব (পাইকার)</td><td>পাল্টা দামে রাজি হয়ে পেমেন্ট</td></tr>
         <tr><td>করিম ট্রেডার্স (পাইকার)</td><td>পাল্টা দাম, নিজের লিস্টিং, মজুদ</td></tr>
-        <tr><td>Reroute অপারেশন টিম</td><td>ট্রাক বুকিং, বহর, আয়ের হিসাব</td></tr></table>
+        <tr><td>Reroute অপারেশন টিম (পাসওয়ার্ড)</td><td>ট্রাক বুকিং, শেয়ার্ড ট্রাক, প্রভাবের হিসাব</td></tr></table>
       <p class="note">ডেমো পেমেন্ট পিন <b>১২৩৪৫</b>। অন্য পিন দিলে ব্যর্থ পেমেন্ট দেখায়। সব মানুষ ও ব্যবসা কাল্পনিক।</p></div>
     <div class="panel"><h2>🧭 ৩ মিনিটের ট্যুর</h2><ol>
       <li><b>রহিম উদ্দিন</b> → "এখন আপনার কাজ" → অফারে <b>পাল্টা দাম</b>।</li>
@@ -82,7 +82,7 @@ footer{color:var(--mu);font-size:.88rem;text-align:center;padding:30px 0 40px}
       <li><b>অপারেশন টিম</b> → ট্রাক দিন → মাল তোলার সময় ঠিক।</li>
       <li>রহিম → <b>ট্রাকে মাল তুলে দিয়েছি</b>; পাইকার → <b>মাল বুঝে পেয়েছি</b> → রেটিং।</li>
       <li>রহিম → <b>মজুদ ও হিসাব</b>, <b>দাম ও পরামর্শ</b>।</li></ol>
-      <p class="note">ফ্রি সার্ভার, তাই প্রথমবার খুলতে ৩০–৬০ সেকেন্ড লাগতে পারে। ডেমো কিছুক্ষণ কেউ ব্যবহার না করলে নিজে থেকে নতুন হয়; দরকারে ফুটারের "ডেমো নতুন করে শুরু" চাপুন।</p></div>
+      <p class="note">ফ্রি সার্ভার, তাই প্রথমবার খুলতে ৩০–৬০ সেকেন্ড লাগতে পারে। ডেমো ডিপ্লয়মেন্টে অপারেশন টিম ফুটারের "ডেমো নতুন করে শুরু" দিয়ে ডেটা নতুন করতে পারে; প্রোডাকশনে এটি বন্ধ।</p></div>
   </div>
 
   <h2 class="sec">📸 প্রোটোটাইপ দেখতে কেমন</h2>

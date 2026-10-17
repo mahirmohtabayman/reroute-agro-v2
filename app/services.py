@@ -20,7 +20,7 @@ from fastapi import HTTPException
 from app import db
 from app.logic import (CANCEL_PENALTY, CASHBACK, CASHBACK_MIN, CASHBACK_WEEK, COMMISSION, CREDIT_MAX_SHARE, CROPS,
                        DAY, HOUR, MIN_ORDER_KG, MON, OFFER_HOURS, PAY_HOURS, PLACES, PLUS_DAYS, PLUS_PRICE, REDEEM,
-                       bn, crop_name, mon, place_name, platform_fee, tk, transport_quote)
+                       VEHICLES, bn, crop_name, mon, place_name, platform_fee, tk, transport_quote)
 
 _clock = [None]
 
@@ -64,6 +64,10 @@ def eff_price(l):
 
 # ---------------------------------------------------------------- notifications, wallet, points
 def notify(to, text, kind="info", link=None):
+    """In-app notification for one user. An identical unread one from the last 10 minutes is not repeated."""
+    if db.val('SELECT COUNT(*) FROM notifs WHERE "to"=? AND text=? AND COALESCE(link,\'\')=? AND read=0 AND at>?',
+              (to, text, link or "", now() - 10 * 60_000)):
+        return
     db.insert("notifs", {"id": nid("N"), "to": to, "text": text, "kind": kind, "link": link, "at": now(), "read": 0})
 
 
@@ -72,7 +76,9 @@ def seen(uid, link):
 
 
 def wallet(uid, amount, kind, ref=None, note=None):
-    db.run("UPDATE users SET wallet=wallet+? WHERE id=?", (amount, uid))
+    """Credit (amount > 0) or debit a wallet and write the ledger row. A debit never takes the balance below zero."""
+    if not db.run("UPDATE users SET wallet=wallet+? WHERE id=? AND wallet+?>=-0.005", (amount, uid, amount)):
+        fail(400, "ওয়ালেটে যথেষ্ট টাকা নেই")
     db.insert("wallet_tx", {"id": nid("W"), "uid": uid, "amount": round(amount, 2), "kind": kind, "ref": ref,
                             "note": note, "at": now()})
 
@@ -784,20 +790,31 @@ def start_payment(u, purpose, ref, method):
 
 
 def confirm_payment(u, pid, account=None, pin=None):
-    """The gateway's callback. Real gateways verify on their server; the demo checks PIN 12345."""
+    """SIMULATED gateway callback: no real money moves. Real gateways verify on their server; the demo checks
+    PIN 12345. Runs inside the request's transaction, so the checks below and the money movement are atomic."""
+    u = user(u["id"])                      # fresh balance, not the one read before the transaction started
     p = db.one("SELECT * FROM payments WHERE id=?", (pid,))
     if not p or p["uid"] != u["id"] or p["status"] != "pending":
         fail(400, "পেমেন্ট পাওয়া যায়নি")
     ok, msg = True, None
-    if p["method"] == "wallet":
+    # the thing being paid for must still be unpaid — checked before any money moves
+    if p["purpose"] == "order":
+        o = get_order(p["ref"])
+        if o["status"] != "awaiting_payment" or o["buyer"] != u["id"]:
+            ok, msg = False, "এই অর্ডারের পেমেন্ট আগেই হয়ে গেছে বা অর্ডারটি আর চালু নেই। টাকা কাটা হয়নি।"
+    elif p["purpose"] == "booking":
+        b = db.one("SELECT * FROM bookings WHERE id=?", (p["ref"],))
+        if not b or b["paid"] or b["status"] != "awaiting_payment":
+            ok, msg = False, "এই বুকিংয়ের পেমেন্ট আগেই হয়ে গেছে। টাকা কাটা হয়নি।"
+    if ok and p["method"] == "wallet":
         if (u["wallet"] or 0) < p["amount"]:
             ok, msg = False, f"ওয়ালেটে যথেষ্ট টাকা নেই (আছে {tk(u['wallet'] or 0)})"
-    elif p["method"] in ("bkash", "nagad"):
+    elif ok and p["method"] in ("bkash", "nagad"):
         if not account or not (len(account) == 11 and account.startswith("01") and account.isdigit()):
             ok, msg = False, "সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন"
         elif pin != DEMO_PIN:
             ok, msg = False, "পিন ভুল। পেমেন্ট হয়নি, আপনার টাকা কাটা হয়নি।"
-    elif p["method"] == "card":
+    elif ok and p["method"] == "card":
         if not account or len(account.replace(" ", "")) != 16 or pin != DEMO_PIN:
             ok, msg = False, "কার্ড যাচাই হয়নি। পেমেন্ট হয়নি।"
     if not ok:
@@ -809,11 +826,9 @@ def confirm_payment(u, pid, account=None, pin=None):
                                                      "plus": "প্লাস সাবস্ক্রিপশন"}[p["purpose"]])
     db.update("payments", pid, status="success", verified_at=now(), txn=txn, message="পেমেন্ট সফল")
     if p["purpose"] == "order":
-        o = get_order(p["ref"])
-        # Idempotency: only confirm once
-        if o["status"] != "awaiting_payment":
-            return {**p, "status": "success", "txn": txn, "message": "পেমেন্ট ইতিমধ্যে প্রক্রিয়া হয়েছে"}
-        db.update("orders", o["id"], status="confirmed", paid_at=now(), payment=pid)
+        if not db.run("UPDATE orders SET status='confirmed', paid_at=?, payment=? WHERE id=? AND status='awaiting_payment'",
+                      (now(), pid, o["id"])):
+            fail(409, "অর্ডারের অবস্থা বদলে গেছে, আবার চেষ্টা করুন")
         seen(u["id"], f"#/order/{o['id']}")
         if o["booking"]:
             db.update("bookings", o["booking"], paid=1, status="requested", updated=now())
@@ -954,6 +969,7 @@ def quote_for(u, src, dst, qty):
 
 
 def create_booking(u, src, src_addr, dst, dst_addr, crop, qty, date):
+    u = user(u["id"])
     qd = quote_for(u, src, dst, qty)
     credit = min(u["transport_credit"] or 0, qd["total"] * CREDIT_MAX_SHARE)
     b = {"id": nid("B"), "uid": u["id"], "order_id": None, "pickup_place": src, "pickup_addr": src_addr,
@@ -994,11 +1010,20 @@ def set_booking_status(bid, status, note=None, truck=None, pickup_time=None, act
         fail(400, "এই বুকিং এখন বদলানো যাবে না")
     if status not in BOOKING_FLOW or BOOKING_FLOW.index(status) <= BOOKING_FLOW.index(b["status"]):
         fail(400, "পরের ধাপেই যাওয়া যাবে")
+    if status != "confirmed" and not b["truck"]:
+        fail(400, "আগে ট্রাক ঠিক করে বুকিং নিশ্চিত করুন")
     fields = {"status": status, "updated": now()}
     if status == "confirmed":
         t = db.one("SELECT * FROM trucks WHERE id=?", (truck,)) if truck else None
         if not t or t["status"] not in ("available", "booked"):
             fail(400, "চালু ট্রাক বাছুন (একই রুটের বুকিং একই ট্রাকে যেতে পারে)")
+        load = truck_load(truck)
+        if b["trucks_n"] and b["trucks_n"] > 1 and load:
+            fail(400, "এই বুকিংয়ে একাধিক ট্রাক লাগে, তাই অন্য বুকিং থাকা ট্রাকে দেওয়া যাবে না")
+        cap = VEHICLES[t["vehicle"]]["cap"]
+        if (b["trucks_n"] or 1) == 1 and load + b["qty"] > cap:
+            fail(400, f"ট্রাকে জায়গা নেই: ধারণক্ষমতা {bn(cap)} কেজি, আগেই বুক {bn(load)} কেজি, "
+                      f"এই বুকিং {bn(b['qty'])} কেজি")
         fields["truck"] = truck
         if t["status"] == "available":
             db.update("trucks", truck, status="booked")
@@ -1034,6 +1059,12 @@ def set_booking_status(bid, status, note=None, truck=None, pickup_time=None, act
         points(b["uid"], 10, "transport", bid, "Reroute ট্রাক ব্যবহার")
 
 
+def truck_load(tid):
+    """Kilograms already assigned to a truck by bookings that have not been delivered or cancelled."""
+    return db.val("SELECT COALESCE(SUM(qty),0) FROM bookings WHERE truck=? "
+                  "AND status IN ('confirmed','pickup_scheduled','in_transit')", (tid,)) or 0
+
+
 def add_truck(company, driver, phone, number, vehicle, place, areas):
     t = {"id": nid("T"), "company": company, "driver": driver, "phone": phone, "number": number, "vehicle": vehicle,
          "place": place, "areas": areas, "status": "available", "trips": 0}
@@ -1043,6 +1074,7 @@ def add_truck(company, driver, phone, number, vehicle, place, areas):
 
 # ---------------------------------------------------------------- points, Plus, entries
 def redeem(u, rid):
+    u = user(u["id"])
     if rid not in REDEEM:
         fail(404, "এই পুরস্কার নেই")
     name, cost, field, value = REDEEM[rid]

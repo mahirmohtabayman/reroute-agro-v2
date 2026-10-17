@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Reroute Agro | কৃষক ও পাইকারের পাইকারি বাজার</title>
 <meta name="description" content="কৃষক ও পাইকারের সরাসরি পাইকারি বাজার: দরদাম, নিরাপদ পেমেন্ট, নিজস্ব ট্রাক, মজুদ ও লাভ-ক্ষতির হিসাব">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#173D32">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'><path d='M6 15v14M28 15v14' stroke='%238A5A2B' stroke-width='2' stroke-linecap='round'/><path d='M7 6h3.33L7.67 13H3z' fill='%23D93D27'/><path d='M10.33 6h3.34L12.33 13H7.67z' fill='%23F6C453'/><path d='M13.67 6H17v7h-4.67z' fill='%23D93D27'/><path d='M17 6h3.33l1.34 7H17z' fill='%23F6C453'/><path d='M20.33 6h3.34l2.66 7H17z' fill='%23D93D27'/><path d='M23.67 6H27l4 7h-4.67z' fill='%23F6C453'/><path d='M3 13a2.33 2.33 0 0 0 4.67 0z' fill='%23D93D27'/><path d='M7.67 13a2.33 2.33 0 0 0 4.66 0z' fill='%23F6C453'/><path d='M12.33 13a2.33 2.33 0 0 0 4.67 0z' fill='%23D93D27'/><path d='M17 13a2.33 2.33 0 0 0 4.67 0z' fill='%23F6C453'/><path d='M21.67 13a2.33 2.33 0 0 0 4.66 0z' fill='%23D93D27'/><path d='M26.33 13a2.33 2.33 0 0 0 4.67 0z' fill='%23F6C453'/><circle cx='10' cy='21.5' r='2.4' fill='%23F29A2E'/><circle cx='15' cy='21.5' r='2.4' fill='%231E8A4C'/><circle cx='20' cy='21.5' r='2.4' fill='%23F6C453'/><circle cx='25' cy='21.5' r='2.4' fill='%23D93D27'/><rect x='4' y='24' width='26' height='3' rx='1.2' fill='%238A5A2B'/><rect x='7' y='27' width='20' height='4' rx='1' fill='%23B07A3E'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -465,6 +468,7 @@ a.item:hover{background:var(--surface2);}
 .bill div{display:flex; justify-content:space-between; gap:12px; padding:4px 0;}
 .bill div>span{color:var(--ink2);}
 .bill b{font-weight:600; white-space:nowrap;}
+@media (max-width:420px){ .bill b{white-space:normal; text-align:right; min-width:0;} } /* long text values wrap; amounts have no spaces */
 .bill .minus b{color:var(--red);}
 .bill .plus b{color:var(--green);}
 .bill .tot{border-top:1px solid var(--line2); margin-top:6px; padding-top:9px; font-size:1.06rem; font-weight:700;}
@@ -928,6 +932,65 @@ body.authed .menu-btn{display:grid;}
   .sheet,.toast,.btn,.opt,.chip,.lcard,.lcard .pic img,.todo,a.kpi,.theme-anim,.theme-anim *,.tnav,.tnav a,body.authed::before,body.authed main,body.authed footer,.npanel{transition:none!important;}
   .sk::after,.btn[data-busy]::after,.opt[data-busy]::after{animation:appear .01s .3s forwards;}
 }
+
+/* ---------- decision-support features (web/5c_features.js) ---------- */
+.ss-panel{border:2px solid var(--line); margin-bottom:14px;}
+.ss-panel.ss-green{border-color:var(--green);} .ss-panel.ss-blue{border-color:var(--blue);}
+.ss-panel.ss-gold{border-color:var(--gold);} .ss-panel.ss-grey{border-color:var(--line2);}
+.ss-head{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px;}
+.ss-head h2{margin:0;}
+.ss-pill{font-size:.85rem; padding:3px 12px; background:var(--surface2); color:var(--ink);}
+.ss-green .ss-pill{background:var(--green-soft); color:var(--green);} .ss-blue .ss-pill{background:var(--blue-soft); color:var(--blue);}
+.ss-gold .ss-pill{background:var(--gold-soft); color:var(--gold);}
+.ss-lead{margin:8px 0 12px; font-size:1.05rem;}
+.ss-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px;}
+.ss-fig{display:flex; flex-direction:column; gap:2px; padding:10px 12px; border-radius:var(--r-sm); background:var(--surface2); min-width:0;}
+.ss-fig b{font-size:1.12rem; font-variant-numeric:tabular-nums;}
+.ss-fig.strong{background:var(--green-soft);} .ss-fig.strong b{color:var(--green); font-size:1.25rem;}
+.ss-cols{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:14px;}
+.ss-cols h3{margin:0 0 4px; font-size:1rem;}
+.ss-list{margin:4px 0 0; padding-left:18px; display:grid; gap:4px;}
+.ss-src{margin-top:12px; border-top:1px solid var(--line); padding-top:8px;}
+.ss-src summary{cursor:pointer; font-size:.88rem; color:var(--muted); display:inline-flex; gap:6px; align-items:center;}
+.va-row{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+.va-row input{flex:1 1 220px; min-width:0;}
+.va-out{margin-top:12px; display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
+.va-out p,.va-out .btn{flex-basis:100%;} .va-out .btn{flex-basis:auto;}
+.risk-box{margin-top:10px; padding:12px; border-radius:var(--r-sm); background:var(--surface2); border-left:4px solid var(--green);}
+.risk-box.risk-medium{border-left-color:var(--gold);} .risk-box.risk-high{border-left-color:var(--red);}
+.risk-box .ss-list{margin:8px 0;}
+.pool-card{margin-bottom:12px;}
+.cap-bar{height:10px; border-radius:99px; background:var(--surface2); overflow:hidden; margin-top:8px;}
+.cap-bar.sm{height:8px; margin-top:0;}
+.cap-bar span{display:block; height:100%; background:var(--green); border-radius:inherit; transition:width var(--dur-3) var(--ease);}
+.note-panel{background:var(--blue-soft); border-color:transparent;}
+.imp-grid{gap:12px;}
+.imp-kpi{min-width:0;} .imp-kpi details{margin-top:4px;} .imp-kpi summary{cursor:pointer; color:var(--muted);}
+.fx-chart{width:100%; height:auto; max-height:220px; margin-top:8px;}
+.fx-chart .bar{fill:var(--green);} .fx-chart .bar-t{fill:var(--muted); font-size:10px;} .fx-chart .axis{stroke:var(--line2);}
+.big-num{display:block; font-size:2rem; margin:6px 0; color:var(--green);}
+.ac{margin-bottom:18px;}
+.ac-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px;}
+.ac-item{display:flex; gap:10px; align-items:center; padding:12px 14px; border-radius:var(--r); background:var(--surface); border:1px solid var(--line);
+  color:var(--ink); text-decoration:none; transition:border-color var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);}
+.ac-item:hover{border-color:var(--green); transform:translateY(-1px);}
+.ac-item .i{color:var(--green); flex:none;} .ac-item>span{display:flex; flex-direction:column; min-width:0;}
+.ac-ai{background:var(--lime-soft);}
+.ms-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:10px; margin-top:8px;}
+.ms-grid>div{display:flex; flex-direction:column; gap:2px; min-width:0;} .ms-grid b{font-variant-numeric:tabular-nums;}
+.ms-tx{list-style:none; margin:12px 0 8px; padding:0; display:grid; gap:6px; font-size:.9rem;}
+.ms-tx li{display:flex; justify-content:space-between; gap:10px; border-bottom:1px dashed var(--line); padding-bottom:4px;}
+.ms-tx li span{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.ms-tx .pos{color:var(--green);} .ms-tx .neg{color:var(--red);}
+.tl{list-style:none; display:flex; flex-wrap:wrap; gap:6px 0; padding:0; margin:12px 0 16px;}
+.tl li{display:flex; align-items:center; gap:6px; font-size:.86rem; color:var(--muted);}
+.tl li+li::before{content:""; width:18px; height:2px; background:var(--line2); margin:0 6px;}
+.tl .dot{width:24px; height:24px; border-radius:50%; display:inline-grid; place-items:center; background:var(--surface2); font-size:.75rem; flex:none;}
+.tl .dot .i{width:14px; height:14px;}
+.tl li.done{color:var(--ink);} .tl li.done .dot{background:var(--green); color:var(--on-green);}
+.tl li.cur{color:var(--ink); font-weight:600;} .tl li.cur .dot{background:var(--lime); color:var(--on-lime);}
+.tl li.end .dot{background:var(--red-soft); color:var(--red);}
+@media (max-width:640px){ .ss-cols{grid-template-columns:1fr;} .va-row .btn{flex:1 1 auto;} }
 </style>
 </head>
 
@@ -947,11 +1010,13 @@ body.authed .menu-btn{display:grid;}
 <footer>
   <div class="wrap">
     <span>
-      © Reroute Agro · Social Catalyst | ডেমো সংস্করণ
+      © Reroute Agro · Social Catalyst<span id="foot-demo" hidden> | ডেমো সংস্করণ</span>
     </span>
 
     <button
       class="btn btn-line btn-sm"
+      id="foot-reset"
+      hidden
       data-act="reset">
       ডেমো নতুন করে শুরু
     </button>

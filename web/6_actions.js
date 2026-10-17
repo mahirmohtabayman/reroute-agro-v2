@@ -491,6 +491,8 @@ const REASONS = {
 /* ---------- sign-up OTP (demo: the code is shown on screen, no SMS gateway yet) ---------- */
 let OTP=null, OTP_TIMER=null;
 const onlyDigits=v=>enDigits(String(v||'')).replace(/\D/g,'');
+/* Bangladeshi mobile number in 01XXXXXXXXX form (accepts +880 / 880 / 00880 prefixes), same rule as the server */
+const bdPhone=v=>{ let d=onlyDigits(v); if(d.startsWith('00880')) d=d.slice(4); if(d.startsWith('880')&&d.length===13) d=d.slice(2); return d; };
 
 function otpLeft(){
   const s=Math.max(0,Math.round(((OTP&&OTP.expires)||0)-Date.now())/1000|0);
@@ -503,10 +505,10 @@ function drawOtp(value=''){
     <h2>OTP যাচাই</h2>
     <p class="muted sm">অ্যাকাউন্ট খুলতে <b data-i18n-skip>${esc(OTP.phone)}</b> নম্বরের কোডটি দিন</p>
     <div class="otp-demo">
-      <div class="row" style="gap:8px">${ic('info')}<b>ডেমো যাচাই</b></div>
-      <p>এটি প্রোটোটাইপ, SMS গেটওয়ে এখনো চালু হয়নি। আপনার যাচাই কোড:</p>
+      <div class="row" style="gap:8px">${ic('info')}<b>প্রোটোটাইপ মোড</b></div>
+      <p>প্রোটোটাইপ মোড: SMS সেবা এখনো চালু করা হয়নি। আপনার ডেমো ভেরিফিকেশন কোড:</p>
       <div class="otp-code" data-i18n-skip>${esc(OTP.demo_otp)}</div>
-      <p class="xs muted">উদাহরণ কোড · <span id="otp-left">${otpLeft()}</span></p>
+      <p class="xs muted">এই কোড শুধু এই নিবন্ধনের জন্য, সার্ভারে যাচাই হয়। এটি ফোন নম্বরের মালিকানা প্রমাণ করে না। · <span id="otp-left">${otpLeft()}</span></p>
     </div>
     <label class="field"><span>৫ সংখ্যার কোড দিন</span>
       <input id="otp-in" class="otp-input" inputmode="numeric" maxlength="5" autocomplete="one-time-code" placeholder="_ _ _ _ _" value="${esc(value)}" ${OTP.err?'aria-invalid="true"':''}></label>
@@ -633,6 +635,8 @@ const A = {
   logout:async()=>{
     closeSheet();
 
+    // end the session on the server too, so the token cannot be reused
+    try{ await api('/logout','POST'); }catch(e){}
     setToken(null);
 
     await load();
@@ -686,7 +690,7 @@ const A = {
     }),
 
   'login-phone':async()=>{
-    const phone=onlyDigits(LG.phone);
+    const phone=bdPhone(LG.phone);
 
     if(!/^01\d{9}$/.test(phone)||!LG.password){
       LG.err='মোবাইল নম্বর আর পাসওয়ার্ড দিন';
@@ -723,7 +727,7 @@ const A = {
   },
 
   register:async()=>{
-    const phone=onlyDigits(RG.phone), E={};
+    const phone=bdPhone(RG.phone), E={};
 
     if(RG.name.trim().length<2) E.name='পুরো নাম দিন';
     if(!/^01\d{9}$/.test(phone)) E.phone='০১ দিয়ে শুরু ১১ সংখ্যার মোবাইল নম্বর দিন';
@@ -763,7 +767,7 @@ const A = {
       return;
     }
 
-    OTP={...r, phone, body:b, expires:Date.now()+r.expires_in*1000, err:''};
+    OTP={...r, phone, expires:Date.now()+r.expires_in*1000, err:''};
     drawOtp();
   },
 
@@ -796,7 +800,9 @@ const A = {
   },
 
   'otp-resend':async()=>{
-    const r=await api('/register','POST',OTP.body);
+    let r;
+    try{ r=await api('/register/resend','POST',{reg_id:OTP.reg_id}); }
+    catch(e){ OTP.err=e.message||'নতুন কোড পাঠানো যায়নি'; drawOtp(); return; }
     OTP={...OTP, ...r, expires:Date.now()+r.expires_in*1000, err:''};
     drawOtp();
     toast('নতুন কোড পাঠানো হয়েছে','info');
@@ -3446,6 +3452,11 @@ setInterval(
 
   render();
 })();
+
+/* installable app: the service worker caches only public static files and an offline page (static/sw.js) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
 </script>
 </body>
 </html>

@@ -139,7 +139,7 @@ const UI = {
   forgot:()=>drawForgot(),
 
   'forgot-send':async()=>{
-    const phone=onlyDigits($('#fp-phone').value);
+    const phone=bdPhone($('#fp-phone').value);
     if(!/^01\d{9}$/.test(phone)){ drawForgot({phone,err:'০১ দিয়ে শুরু ১১ সংখ্যার মোবাইল নম্বর দিন'}); return; }
     let r;
     try{ r=await api('/password/forgot','POST',{phone}); }

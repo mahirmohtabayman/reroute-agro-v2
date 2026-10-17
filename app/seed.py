@@ -3,8 +3,12 @@ Demo data. Everything after the user/truck rows is created through the same func
 (listing → offer → payment → truck → delivery), so stock, money, points and profit/loss always match.
 All people and businesses are fictional.
 """
-from app import auth, db, services as S
+import logging
+
+from app import auth, db, services as S, settings
 from app.logic import DAY, HOUR
+
+log = logging.getLogger("reroute.seed")
 
 MIN = 60_000
 
@@ -95,22 +99,74 @@ def deal(listing, buyer, qty, price, transport="reroute", split="half", counter=
     return order
 
 
+def ensure_demo_allowed():
+    if settings.IS_PROD or not settings.DEMO_MODE:
+        raise RuntimeError("Demo seeding is only allowed with ENABLE_DEMO_MODE=true on a demo or development "
+                           "deployment (APP_ENV=demo or development). It never runs in production.")
+
+
 def seed():
-    """(Re)build the demo. Accounts people registered themselves are kept (balances start fresh)."""
-    global BASE
-    try:
-        kept = db.q("SELECT * FROM users WHERE id LIKE ?", ("U%",))
-    except Exception:
-        kept = []
+    """(Re)build the demo database. Accounts people registered themselves are kept (balances start fresh).
+    Refuses to run in production or without demo mode."""
+    ensure_demo_allowed()
+    kept = db.q("SELECT * FROM users WHERE id LIKE ?", ("U%",))
+    log.warning("rebuilding demo data (%d registered accounts kept)", len(kept))
     db.reset()
+    with db.tx():
+        _build(kept)
+    set_demo_passwords()
+
+
+def startup():
+    """Called once when the server starts. Never deletes anything: seeds only an empty database, and only on a
+    demo or development deployment with demo mode on."""
+    if db.user_count() == 0:
+        if settings.DEMO_MODE and not settings.IS_PROD:
+            seed()
+        else:
+            log.info("database has no users; demo data is not loaded (demo mode off or production)")
+    set_demo_passwords()
+
+
+def set_demo_passwords():
+    """Demo farmer/paikar accounts get the public demo password only while demo mode is on. A seeded admin can
+    log in only with DEMO_ADMIN_PASSWORD on a demo deployment; otherwise its password is removed."""
+    with db.tx():
+        if settings.DEMO_MODE:
+            db.run("UPDATE users SET pw_hash=? WHERE pw_hash IS NULL AND role<>'admin' AND id NOT LIKE ?",
+                   (auth.hash_password(auth.DEMO_PASSWORD), "U%"))
+        admin_pw = settings.DEMO_ADMIN_PASSWORD if settings.DEMO_MODE and not settings.IS_PROD else None
+        db.run("UPDATE users SET pw_hash=? WHERE role='admin' AND id NOT LIKE ?",
+               (auth.hash_password(admin_pw) if admin_pw else None, "U%"))
+
+
+# ---------------------------------------------------------------- optional refresh of an idle demo database
+_last_write = [0]
+
+
+def note_write():
+    _last_write[0] = db.now_ms()
+
+
+def refresh_if_stale():
+    """Demo deployments only (APP_ENV=demo, ENABLE_DEMO_MODE=true, DEMO_AUTO_REFRESH=true)."""
+    if not settings.DEMO_AUTO_REFRESH:
+        return
+    seeded = int(db.get_meta("seeded_at") or 0)
+    t = db.now_ms()
+    if t - seeded > settings.DEMO_TTL_HOURS * 3_600_000 and t - _last_write[0] > 30 * 60_000:
+        seed()
+
+
+def _build(kept):
+    global BASE
     BASE = db.now_ms()
     for k in kept:
         k.update(pts=0, wallet=0, fee_credit=0, transport_credit=0, plus_until=0, plus_cancelled=0)
         db.insert("users", k)
-    demo_hash = auth.hash_password(auth.DEMO_PASSWORD)
     for uid, role, name, biz, phone, place, area, verified, days in USERS:
         db.insert("users", {"id": uid, "role": role, "name": name, "biz": biz, "phone": phone, "place": place,
-                            "area": area, "verified": verified, "joined": BASE - days * DAY, "pw_hash": demo_hash})
+                            "area": area, "verified": verified, "joined": BASE - days * DAY, "pw_hash": None})
     trucks = [S.add_truck(*t)["id"] for t in TRUCKS]
     T = dict(zip(["raj1", "nat2", "bog3", "nao4", "cha5", "dha6", "raj7"], trucks))
 
@@ -211,6 +267,9 @@ def seed():
     if not pid:
         pid = S.start_payment(U("f6"), "booking", b2["id"], "nagad")["id"]
     S.confirm_payment(U("f6"), pid, "01552340981", S.DEMO_PIN)
+    # a second paid booking on the same route and day with a compatible crop: shows up as a pooling opportunity
+    b3 = S.create_booking(U("f9"), "natore", "লালপুর বাজার", "bogura", "মহাস্থান হাট", "brinjal", 700, "আগামীকাল")
+    S.confirm_payment(U("f9"), S.start_payment(U("f9"), "booking", b3["id"], "bkash")["id"], "01881204576", S.DEMO_PIN)
 
     at(hours=3)
     o_cnt = S.make_offer(U("p1"), l2b["id"], 1200, 25, note="নিয়মিত নেব, দাম একটু কম হলে ভালো")

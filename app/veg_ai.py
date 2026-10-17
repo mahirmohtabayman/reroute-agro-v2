@@ -229,7 +229,7 @@ class VegAI:
                 "best": best, "local_today": local_now, "markets": ranked, "grid": grid,
                 "suggest": self.suggest_sell(src, crop, kg, cost, plus),
                 "warnings": self.overview(crop)["warnings"], "metrics": self.metrics.get("market_choice"),
-                "simulated": True}
+                "options": options, "simulated": True}
 
     def suggest_sell(self, src, crop, kg, cost=None, plus=False):
         """A fair asking price on Reroute: between what the local haat pays today and the most a paikar

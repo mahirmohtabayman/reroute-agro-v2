@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Reroute Agro | কৃষক ও পাইকারের পাইকারি বাজার</title>
 <meta name="description" content="কৃষক ও পাইকারের সরাসরি পাইকারি বাজার: দরদাম, নিরাপদ পেমেন্ট, নিজস্ব ট্রাক, মজুদ ও লাভ-ক্ষতির হিসাব">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#173D32">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'><path d='M6 15v14M28 15v14' stroke='%238A5A2B' stroke-width='2' stroke-linecap='round'/><path d='M7 6h3.33L7.67 13H3z' fill='%23D93D27'/><path d='M10.33 6h3.34L12.33 13H7.67z' fill='%23F6C453'/><path d='M13.67 6H17v7h-4.67z' fill='%23D93D27'/><path d='M17 6h3.33l1.34 7H17z' fill='%23F6C453'/><path d='M20.33 6h3.34l2.66 7H17z' fill='%23D93D27'/><path d='M23.67 6H27l4 7h-4.67z' fill='%23F6C453'/><path d='M3 13a2.33 2.33 0 0 0 4.67 0z' fill='%23D93D27'/><path d='M7.67 13a2.33 2.33 0 0 0 4.66 0z' fill='%23F6C453'/><path d='M12.33 13a2.33 2.33 0 0 0 4.67 0z' fill='%23D93D27'/><path d='M17 13a2.33 2.33 0 0 0 4.67 0z' fill='%23F6C453'/><path d='M21.67 13a2.33 2.33 0 0 0 4.66 0z' fill='%23D93D27'/><path d='M26.33 13a2.33 2.33 0 0 0 4.67 0z' fill='%23F6C453'/><circle cx='10' cy='21.5' r='2.4' fill='%23F29A2E'/><circle cx='15' cy='21.5' r='2.4' fill='%231E8A4C'/><circle cx='20' cy='21.5' r='2.4' fill='%23F6C453'/><circle cx='25' cy='21.5' r='2.4' fill='%23D93D27'/><rect x='4' y='24' width='26' height='3' rx='1.2' fill='%238A5A2B'/><rect x='7' y='27' width='20' height='4' rx='1' fill='%23B07A3E'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -465,6 +468,7 @@ a.item:hover{background:var(--surface2);}
 .bill div{display:flex; justify-content:space-between; gap:12px; padding:4px 0;}
 .bill div>span{color:var(--ink2);}
 .bill b{font-weight:600; white-space:nowrap;}
+@media (max-width:420px){ .bill b{white-space:normal; text-align:right; min-width:0;} } /* long text values wrap; amounts have no spaces */
 .bill .minus b{color:var(--red);}
 .bill .plus b{color:var(--green);}
 .bill .tot{border-top:1px solid var(--line2); margin-top:6px; padding-top:9px; font-size:1.06rem; font-weight:700;}
@@ -928,6 +932,65 @@ body.authed .menu-btn{display:grid;}
   .sheet,.toast,.btn,.opt,.chip,.lcard,.lcard .pic img,.todo,a.kpi,.theme-anim,.theme-anim *,.tnav,.tnav a,body.authed::before,body.authed main,body.authed footer,.npanel{transition:none!important;}
   .sk::after,.btn[data-busy]::after,.opt[data-busy]::after{animation:appear .01s .3s forwards;}
 }
+
+/* ---------- decision-support features (web/5c_features.js) ---------- */
+.ss-panel{border:2px solid var(--line); margin-bottom:14px;}
+.ss-panel.ss-green{border-color:var(--green);} .ss-panel.ss-blue{border-color:var(--blue);}
+.ss-panel.ss-gold{border-color:var(--gold);} .ss-panel.ss-grey{border-color:var(--line2);}
+.ss-head{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px;}
+.ss-head h2{margin:0;}
+.ss-pill{font-size:.85rem; padding:3px 12px; background:var(--surface2); color:var(--ink);}
+.ss-green .ss-pill{background:var(--green-soft); color:var(--green);} .ss-blue .ss-pill{background:var(--blue-soft); color:var(--blue);}
+.ss-gold .ss-pill{background:var(--gold-soft); color:var(--gold);}
+.ss-lead{margin:8px 0 12px; font-size:1.05rem;}
+.ss-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px;}
+.ss-fig{display:flex; flex-direction:column; gap:2px; padding:10px 12px; border-radius:var(--r-sm); background:var(--surface2); min-width:0;}
+.ss-fig b{font-size:1.12rem; font-variant-numeric:tabular-nums;}
+.ss-fig.strong{background:var(--green-soft);} .ss-fig.strong b{color:var(--green); font-size:1.25rem;}
+.ss-cols{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:14px;}
+.ss-cols h3{margin:0 0 4px; font-size:1rem;}
+.ss-list{margin:4px 0 0; padding-left:18px; display:grid; gap:4px;}
+.ss-src{margin-top:12px; border-top:1px solid var(--line); padding-top:8px;}
+.ss-src summary{cursor:pointer; font-size:.88rem; color:var(--muted); display:inline-flex; gap:6px; align-items:center;}
+.va-row{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+.va-row input{flex:1 1 220px; min-width:0;}
+.va-out{margin-top:12px; display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
+.va-out p,.va-out .btn{flex-basis:100%;} .va-out .btn{flex-basis:auto;}
+.risk-box{margin-top:10px; padding:12px; border-radius:var(--r-sm); background:var(--surface2); border-left:4px solid var(--green);}
+.risk-box.risk-medium{border-left-color:var(--gold);} .risk-box.risk-high{border-left-color:var(--red);}
+.risk-box .ss-list{margin:8px 0;}
+.pool-card{margin-bottom:12px;}
+.cap-bar{height:10px; border-radius:99px; background:var(--surface2); overflow:hidden; margin-top:8px;}
+.cap-bar.sm{height:8px; margin-top:0;}
+.cap-bar span{display:block; height:100%; background:var(--green); border-radius:inherit; transition:width var(--dur-3) var(--ease);}
+.note-panel{background:var(--blue-soft); border-color:transparent;}
+.imp-grid{gap:12px;}
+.imp-kpi{min-width:0;} .imp-kpi details{margin-top:4px;} .imp-kpi summary{cursor:pointer; color:var(--muted);}
+.fx-chart{width:100%; height:auto; max-height:220px; margin-top:8px;}
+.fx-chart .bar{fill:var(--green);} .fx-chart .bar-t{fill:var(--muted); font-size:10px;} .fx-chart .axis{stroke:var(--line2);}
+.big-num{display:block; font-size:2rem; margin:6px 0; color:var(--green);}
+.ac{margin-bottom:18px;}
+.ac-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px;}
+.ac-item{display:flex; gap:10px; align-items:center; padding:12px 14px; border-radius:var(--r); background:var(--surface); border:1px solid var(--line);
+  color:var(--ink); text-decoration:none; transition:border-color var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);}
+.ac-item:hover{border-color:var(--green); transform:translateY(-1px);}
+.ac-item .i{color:var(--green); flex:none;} .ac-item>span{display:flex; flex-direction:column; min-width:0;}
+.ac-ai{background:var(--lime-soft);}
+.ms-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:10px; margin-top:8px;}
+.ms-grid>div{display:flex; flex-direction:column; gap:2px; min-width:0;} .ms-grid b{font-variant-numeric:tabular-nums;}
+.ms-tx{list-style:none; margin:12px 0 8px; padding:0; display:grid; gap:6px; font-size:.9rem;}
+.ms-tx li{display:flex; justify-content:space-between; gap:10px; border-bottom:1px dashed var(--line); padding-bottom:4px;}
+.ms-tx li span{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.ms-tx .pos{color:var(--green);} .ms-tx .neg{color:var(--red);}
+.tl{list-style:none; display:flex; flex-wrap:wrap; gap:6px 0; padding:0; margin:12px 0 16px;}
+.tl li{display:flex; align-items:center; gap:6px; font-size:.86rem; color:var(--muted);}
+.tl li+li::before{content:""; width:18px; height:2px; background:var(--line2); margin:0 6px;}
+.tl .dot{width:24px; height:24px; border-radius:50%; display:inline-grid; place-items:center; background:var(--surface2); font-size:.75rem; flex:none;}
+.tl .dot .i{width:14px; height:14px;}
+.tl li.done{color:var(--ink);} .tl li.done .dot{background:var(--green); color:var(--on-green);}
+.tl li.cur{color:var(--ink); font-weight:600;} .tl li.cur .dot{background:var(--lime); color:var(--on-lime);}
+.tl li.end .dot{background:var(--red-soft); color:var(--red);}
+@media (max-width:640px){ .ss-cols{grid-template-columns:1fr;} .va-row .btn{flex:1 1 auto;} }
 </style>
 </head>
 
@@ -947,11 +1010,13 @@ body.authed .menu-btn{display:grid;}
 <footer>
   <div class="wrap">
     <span>
-      © Reroute Agro · Social Catalyst | ডেমো সংস্করণ
+      © Reroute Agro · Social Catalyst<span id="foot-demo" hidden> | ডেমো সংস্করণ</span>
     </span>
 
     <button
       class="btn btn-line btn-sm"
+      id="foot-reset"
+      hidden
       data-act="reset">
       ডেমো নতুন করে শুরু
     </button>
@@ -1833,7 +1898,7 @@ const MONTHS_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','
 const MONTHS = MONTHS_BN;
 const dateBn = t => { const d=new Date(t), m=isEn()?MONTHS_EN:MONTHS_BN; return `${bd(d.getDate())} ${m[d.getMonth()]}`; };
 function ago(t){ const m=Math.round((Date.now()-t)/6e4); if(m<60) return isEn()?`${nf(Math.max(1,m))} min ago`:`${nf(Math.max(1,m))} মিনিট আগে`; const h=Math.round(m/60); if(h<24) return isEn()?`${nf(h)} hr ago`:`${nf(h)} ঘণ্টা আগে`; const d=Math.round(h/24); return d<30?(isEn()?`${nf(d)} days ago`:`${nf(d)} দিন আগে`):(isEn()?`${nf(Math.round(d/30))} months ago`:`${nf(Math.round(d/30))} মাস আগে`); }
-const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pill = ([t,c]) => `<span class="pill ${c}">${t}</span>`;
 
 /* ---------- icons: inline SVG line icons (24px grid). ic() also accepts the emoji
@@ -2222,6 +2287,7 @@ function drawPay(){
   if(P.step==='method'){
     modal(`<div class="body"><h2>${ic('card')} পেমেন্ট</h2><p class="muted" style="margin-top:4px">${P.title}</p>
       <div class="pay-total"><span>মোট</span><b>${tk(P.amount)}</b></div>
+      <p class="warn sm" style="margin-top:10px"><b>সিমুলেটেড পেমেন্ট:</b> এটি প্রোটোটাইপ, কোনো আসল টাকা লেনদেন বা ব্যাংক/বিকাশ/নগদ সংযোগ হয় না।</p>
       <div class="choice">${[['bkash','বিকাশ','মোবাইল নম্বর ও পিন'],['nagad','নগদ','মোবাইল নম্বর ও পিন'],['card','ডেবিট/ক্রেডিট কার্ড','ভিসা, মাস্টারকার্ড'],['wallet',`Reroute ওয়ালেট`,`ব্যালান্স ${tk(w)}`]].map(([k,n,d])=>
         `<button class="opt" data-act="pay-method" data-v="${k}" ${k==='wallet'&&w<P.amount?'disabled':''}><strong>${n}</strong><span class="muted">${k==='wallet'&&w<P.amount?'ব্যালান্স যথেষ্ট নয়':d}</span></button>`).join('')}</div>
       <p class="note" style="margin-top:14px">টাকা Reroute-এ জমা থাকে, মাল বুঝে পেলে তবেই বিক্রেতা পান। পেমেন্ট সার্ভারে যাচাই হওয়ার পরই অবস্থা বদলায়।</p></div>`);
@@ -2346,10 +2412,19 @@ function todoCount(){
   tNegTodo;
 }
 
+/* demo-only footer items: the label on demo deployments, the reset button for an admin outside production */
+const demoMode=()=>!!(S.config&&S.config.demo_mode);
+function renderDemoFooter(u){
+  const label=$('#foot-demo'), reset=$('#foot-reset');
+  if(label) label.hidden=!demoMode();
+  if(reset) reset.hidden=!(demoMode()&&S.config.app_env!=='production'&&u&&u.role==='admin');
+}
+
 function renderChrome(){
   const u=me(), r=routeBase();
 
   document.body.classList.toggle('authed',!!u);
+  renderDemoFooter(u);
 
   if(!u){
     $('#hrow').innerHTML =
@@ -2662,7 +2737,7 @@ const UI = {
   forgot:()=>drawForgot(),
 
   'forgot-send':async()=>{
-    const phone=onlyDigits($('#fp-phone').value);
+    const phone=bdPhone($('#fp-phone').value);
     if(!/^01\d{9}$/.test(phone)){ drawForgot({phone,err:'০১ দিয়ে শুরু ১১ সংখ্যার মোবাইল নম্বর দিন'}); return; }
     let r;
     try{ r=await api('/password/forgot','POST',{phone}); }
@@ -2703,13 +2778,13 @@ const V = {};
 /* ---------- minimal home (before login) ---------- */
 V.home = () => `<section class="hero"><div class="hero-in">
   <span class="eyebrow">${ic('sprout')} কৃষক ও পাইকারের পাইকারি বাজার</span>
-  <h1>কৃষকের মাল, পাইকারের বাজার</h1>
-  <p class="lead">সরাসরি কেনাবেচা ও দরদাম, নিরাপদ পেমেন্ট, আর নিজস্ব ট্রাকে কম খরচে পরিবহন।</p>
+  <h1>আপনার ফসল, সঠিক বাজার, ভালো সিদ্ধান্ত।</h1>
+  <p class="lead">বাজার তুলনা করুন, সরাসরি দরদাম করুন, আর কম খরচে পরিবহন ঠিক করুন: সব এক কৃষি প্ল্যাটফর্মে।</p>
   <div class="cta">
-    <button class="btn btn-green" data-act="pick-role" data-role="farmer">${ic('farmer')} আমি কৃষক</button>
-    <button class="btn btn-blue" data-act="pick-role" data-role="paikar">${ic('store')} আমি পাইকার</button>
+    <button class="btn btn-green" data-act="pick-role" data-role="farmer">${ic('farmer')} কৃষক হিসেবে শুরু করুন</button>
+    <button class="btn btn-blue" data-act="pick-role" data-role="paikar">${ic('store')} পাইকার হিসেবে শুরু করুন</button>
   </div>
-  <p class="hero-link"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন ${ic('arrow')}</a></p>
+  <p class="hero-link"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন ${ic('arrow')}</a> · <a href="#/impact">প্ল্যাটফর্মের প্রভাব ${ic('arrow')}</a></p>
 </div>
 <div class="hero-visual" aria-hidden="true">
   <figure>${cropPhoto('tomato')}</figure>
@@ -2739,26 +2814,29 @@ function pwInput(id, key, store, ac, ph){
   return `<span class="pw-wrap"><input id="${id}" data-${store.toLowerCase()}="${key}" type="password" autocomplete="${ac}" placeholder="${ph}" value="${esc(v)}"><button type="button" class="pw-eye" data-act="pw-toggle" data-for="${id}" aria-label="পাসওয়ার্ড দেখুন">${ic('eye')}</button></span>`;
 }
 V.login = () => {
-  const demo = {farmer:['f1','f2','f5'], paikar:['p1','p2','p4'], admin:['a1']}[loginRole];
+  // one-click demo accounts: demo deployments only, never for the operations (admin) role
+  const demo = demoMode() ? ({farmer:['f1','f2','f5'], paikar:['p1','p2','p4']}[loginRole]||[]) : [];
   const names = {f1:['রহিম উদ্দিন','কৃষক, রাজশাহী: নতুন অফার ও পরিদর্শনের অনুরোধ আছে'],f2:['করিমা বেগম','কৃষক, নাটোর'],f5:['হালিমা খাতুন','কৃষক, রাজশাহী: জরুরি বিক্রি চলছে'],
-    p1:['করিম ট্রেডার্স','পাইকার, ঢাকা: পাল্টা দামের উত্তর দিতে হবে'],p2:['ঢাকা ফ্রেশ হাব','পাইকার, ঢাকা: প্লাস সদস্য'],p4:['বগুড়া সবজি ঘর','পাইকার, বগুড়া: মাল পথে আছে'],a1:['Reroute অপারেশন টিম','ট্রাক বুকিং, বহর ও প্ল্যাটফর্মের হিসাব']};
+    p1:['করিম ট্রেডার্স','পাইকার, ঢাকা: পাল্টা দামের উত্তর দিতে হবে'],p2:['ঢাকা ফ্রেশ হাব','পাইকার, ঢাকা: প্লাস সদস্য'],p4:['বগুড়া সবজি ঘর','পাইকার, বগুড়া: মাল পথে আছে']};
   return `<div class="auth">
     <h1>লগ ইন</h1><p class="muted sub">আপনি কে, বাছুন</p>
     <div class="choice c3">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪'],['admin','অপারেশন','🛠️']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div>
-    ${loginRole!=='admin'?`<div class="panel" style="margin-top:16px">
+    <div class="panel" style="margin-top:16px">
       <label class="field${LG.err?' err':''}" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" data-lg="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(LG.phone)}" ${LG.err?'aria-invalid="true" aria-describedby="lg-err"':''}></label>
       <label class="field${LG.err?' err':''}"><span class="label-row">পাসওয়ার্ড<button type="button" class="linkbtn sm" data-ui="forgot">পাসওয়ার্ড ভুলে গেছেন?</button></span>${pwInput('lg-password','password','LG','current-password','আপনার পাসওয়ার্ড')}</label>
       ${LG.err?`<p class="form-error" id="lg-err" role="alert">${esc(LG.err)}</p>`:''}
       <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="login-phone">ঢুকুন</button>
-      <p class="muted sm" style="margin-top:12px;text-align:center">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p>
-      <p class="muted xs demo-pw">ডেমো অ্যাকাউন্টগুলোর পাসওয়ার্ড: <b data-i18n-skip>123456</b></p></div>`:''}
-    <div class="or">ডেমো অ্যাকাউন্ট, এক চাপে ঢুকুন</div>
-    <div class="demo-list">${demo.map(id=>`<button class="opt" data-act="login" data-id="${id}"><span class="av">${ic(loginRole==='paikar'?'🏪':loginRole==='admin'?'🛠️':'🧑‍🌾')}</span><span class="grow"><strong>${names[id][0]}</strong><span class="muted">${names[id][1]}</span></span>${ic('next')}</button>`).join('')}</div>
+      ${loginRole!=='admin'?`<p class="muted sm" style="margin-top:12px;text-align:center">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p>`
+        :`<p class="muted xs" style="margin-top:12px;text-align:center">অপারেশন টিমের অ্যাকাউন্ট শুধু Reroute তৈরি করে।</p>`}
+      ${demo.length?`<p class="muted xs demo-pw">ডেমো অ্যাকাউন্টগুলোর পাসওয়ার্ড: <b data-i18n-skip>123456</b></p>`:''}</div>
+    ${demo.length?`<div class="or">ডেমো অ্যাকাউন্ট, এক চাপে ঢুকুন</div>
+    <div class="demo-list">${demo.map(id=>`<button class="opt" data-act="login" data-id="${id}"><span class="av">${ic(loginRole==='paikar'?'🏪':loginRole==='admin'?'🛠️':'🧑‍🌾')}</span><span class="grow"><strong>${names[id][0]}</strong><span class="muted">${names[id][1]}</span></span>${ic('next')}</button>`).join('')}</div>`:''}
   </div>`;
 };
 V.register = () => {
   const E=RGE, err=k=>E[k]?`<small class="ferr" id="rg-${k}-err">${E[k]}</small>`:'', cls=k=>E[k]?' err':'';
   return `<div class="auth"><h1>নতুন অ্যাকাউন্ট</h1><p class="muted sub">তথ্য দিন, তারপর মোবাইলে আসা কোড দিয়ে যাচাই করুন।</p>
+  ${demoMode()?'':`<p class="note" role="status" style="margin-bottom:16px">নতুন অ্যাকাউন্ট খোলা এখন বন্ধ: SMS সেবা এখনো চালু হয়নি। চালু হলে এখানে নিবন্ধন করা যাবে।</p>`}
   <div class="field" style="margin-top:0"><span>অ্যাকাউন্টের ধরন</span><div class="choice c2">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div></div>
   <div class="panel" style="margin-top:16px">
     <h3 class="form-sec">${ic('user')} ব্যক্তিগত তথ্য</h3>
@@ -2928,15 +3006,15 @@ V.ai = () => {
 function myTodos(){
   const id=me().id, T=[];
   (S.offers||[]).forEach(o=>{ const c=CROPS[o.crop].n;
-    if(o.status==='pending'&&o.waiting==='seller'&&o.seller===id) T.push(['📩',`${dispName(user(o.buyer))} ${monTxt(o.qty)} ${c} কিনতে চান, ${tk(o.price,1)}/কেজি`,'রাজি, পাল্টা দাম বা না বলুন',`#/offer/${o.id}`]);
-    if(o.status==='countered'&&o.waiting==='buyer'&&o.buyer===id) T.push(['↔️',`${dispName(user(o.seller))} পাল্টা দাম দিয়েছেন: ${tk(o.price,1)}/কেজি`,'রাজি হলে পেমেন্ট করুন',`#/offer/${o.id}`]); });
+    if(o.status==='pending'&&o.waiting==='seller'&&o.seller===id) T.push(['📩',`${esc(dispName(user(o.buyer)))} ${monTxt(o.qty)} ${c} কিনতে চান, ${tk(o.price,1)}/কেজি`,'রাজি, পাল্টা দাম বা না বলুন',`#/offer/${o.id}`]);
+    if(o.status==='countered'&&o.waiting==='buyer'&&o.buyer===id) T.push(['↔️',`${esc(dispName(user(o.seller)))} পাল্টা দাম দিয়েছেন: ${tk(o.price,1)}/কেজি`,'রাজি হলে পেমেন্ট করুন',`#/offer/${o.id}`]); });
   (S.orders||[]).forEach(o=>{ const c=CROPS[o.crop].n, b=(S.bookings||[]).find(x=>x.id===o.booking);
     if(o.status==='awaiting_payment'&&o.buyer===id) T.push(['💳',`${monTxt(o.qty)} ${c}: ${tk(o.buyer_total)} পেমেন্ট করুন`,'পেমেন্ট হলে অর্ডার নিশ্চিত হবে',`#/order/${o.id}`]);
     if(o.status==='confirmed'&&o.seller===id&&o.transport==='self') T.push(['📦',`${monTxt(o.qty)} ${c} পাইকারকে বুঝিয়ে দিন`,'দিয়ে "হস্তান্তর করেছি" চাপুন',`#/order/${o.id}`]);
-    if(o.status==='confirmed'&&o.seller===id&&b&&b.status==='pickup_scheduled') T.push(['🚚',`ট্রাক আসছে: ${b.pickup_time||''}`,`${monTxt(o.qty)} ${c} তৈরি রাখুন, তুলে দিয়ে নিশ্চিত করুন`,`#/order/${o.id}`]);
+    if(o.status==='confirmed'&&o.seller===id&&b&&b.status==='pickup_scheduled') T.push(['🚚',`ট্রাক আসছে: ${esc(b.pickup_time||'')}`,`${monTxt(o.qty)} ${c} তৈরি রাখুন, তুলে দিয়ে নিশ্চিত করুন`,`#/order/${o.id}`]);
     if(o.status==='handed_over'&&o.buyer===id) T.push(['✅',`${monTxt(o.qty)} ${c} পৌঁছালে বুঝে নিন`,'"মাল বুঝে পেয়েছি" চাপলে বিক্রেতা টাকা পাবেন',`#/order/${o.id}`]);
-    if(o.status==='completed'&&!(S.rated||[]).includes(o.id)&&o.completed_at>Date.now()-14*DAY) T.push(['⭐',`${dispName(user(o.buyer===id?o.seller:o.buyer))}-কে রেটিং দিন`,`${monTxt(o.qty)} ${c}`,`#/order/${o.id}`]); });
-  (S.inspections||[]).forEach(i=>{ if(i.status==='requested'&&i.seller===id) T.push(['🔍',`${dispName(user(i.buyer))} মাল দেখতে চান (${i.kind==='video'?'ভিডিও':'সরাসরি'})`,esc(i.pref),`#/inspection/${i.id}`]); });
+    if(o.status==='completed'&&!(S.rated||[]).includes(o.id)&&o.completed_at>Date.now()-14*DAY) T.push(['⭐',`${esc(dispName(user(o.buyer===id?o.seller:o.buyer)))}-কে রেটিং দিন`,`${monTxt(o.qty)} ${c}`,`#/order/${o.id}`]); });
+  (S.inspections||[]).forEach(i=>{ if(i.status==='requested'&&i.seller===id) T.push(['🔍',`${esc(dispName(user(i.buyer)))} মাল দেখতে চান (${i.kind==='video'?'ভিডিও':'সরাসরি'})`,esc(i.pref),`#/inspection/${i.id}`]); });
   return T;
 }
 function myAlerts(){
@@ -6910,6 +6988,531 @@ document.addEventListener('change', e => {
   render();
 });
 /* =====================================================================
+   Reroute Agro — decision-support features
+   * Smart Selling Advisor panel (sell now / wait / other market / insufficient evidence)
+   * Ask in Bangla: typed or spoken question → understood fields → advice (never a transaction)
+   * Crop freshness & spoilage risk
+   * Truck pooling (admin dashboard + saving hint on the user's booking)
+   * Impact dashboard (#/impact)
+   * Dashboard action centre & money summary, negotiation timeline
+   ===================================================================== */
+
+ICONS.mic = '<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/>';
+ICONS.layers = '<path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/>';
+
+NAV_ADMIN.push(['#/admin/pool', '🚚', 'ট্রাক পুলিং'], ['#/impact', '📊', 'প্রভাব']);
+
+I18N_PHRASES.unshift(
+  ['আপনার ফসল, সঠিক বাজার, ভালো সিদ্ধান্ত।', 'Your Crop. Your Market. Your Better Decision.'],
+  ['বাজার তুলনা করুন, সরাসরি দরদাম করুন, আর কম খরচে পরিবহন ঠিক করুন: সব এক কৃষি প্ল্যাটফর্মে।', 'Compare markets, negotiate directly, and arrange smarter transportation — all in one agricultural platform.'],
+  ['কৃষক হিসেবে শুরু করুন', 'Start as Farmer'],
+  ['পাইকার হিসেবে শুরু করুন', 'Start as Buyer'],
+  ['প্ল্যাটফর্মের প্রভাব', 'Platform impact'],
+  ['অপারেশন টিমের অ্যাকাউন্ট শুধু Reroute তৈরি করে।', 'Operations accounts are created by Reroute only.'],
+  ['নতুন অ্যাকাউন্ট খোলা এখন বন্ধ: SMS সেবা এখনো চালু হয়নি। চালু হলে এখানে নিবন্ধন করা যাবে।', 'New sign-ups are closed: SMS service is not enabled yet. You can register here once it is.'],
+  ['প্রোটোটাইপ মোড: SMS সেবা এখনো চালু করা হয়নি। আপনার ডেমো ভেরিফিকেশন কোড:', 'Prototype Mode: SMS delivery is not enabled. Your demonstration verification code is'],
+  ['এই কোড শুধু এই নিবন্ধনের জন্য, সার্ভারে যাচাই হয়। এটি ফোন নম্বরের মালিকানা প্রমাণ করে না।', 'This code is only for this sign-up and is checked by the server. It does not prove ownership of the phone number.'],
+  ['প্রোটোটাইপ মোড', 'Prototype Mode'],
+  ['সিমুলেটেড পেমেন্ট:', 'Simulated payment:'],
+  ['এটি প্রোটোটাইপ, কোনো আসল টাকা লেনদেন বা ব্যাংক/বিকাশ/নগদ সংযোগ হয় না।', 'This is a prototype: no real money moves and no bank/bKash/Nagad connection is made.'],
+  ['কৃষক কত ভালো দাম পাচ্ছেন, পরিবহনে কত সাশ্রয়: ডাটাবেসের আসল হিসাব আর স্পষ্টভাবে চিহ্নিত অনুমান', 'How much better farmers sell and how much transport saves: database figures and clearly labelled estimates'],
+  ['ডেমো অ্যাকাউন্টের লেনদেন আলাদা দেখানো হয়েছে; আসল প্রভাব হিসেবে শুধু নিবন্ধিত অ্যাকাউন্টের সংখ্যা ধরুন। সব পেমেন্ট সিমুলেটেড, কোনো আসল টাকা লেনদেন হয়নি।', 'Demo-account activity is shown separately; count only registered accounts as real impact. All payments are simulated; no real money moved.'],
+  ['সাপ্তাহিক সম্পন্ন অর্ডার (গত ৮ সপ্তাহ)', 'Completed orders per week (last 8 weeks)'],
+  ['শেয়ার্ড ট্রাকে অংশগ্রহণ', 'Shared truck participation'],
+  ['পচন থেকে বাঁচানো সম্ভাব্য ফসল', 'Produce potentially saved from spoilage'],
+  ['কৃষকের বাড়তি আয়', 'Extra farmer net proceeds'],
+  ['পরিবহনে সাশ্রয়', 'Transport savings'],
+  ['বিক্রি হওয়া ফসল', 'Produce sold'],
+  ['লেনদেনের পরিমাণ', 'Transaction volume'],
+  ['সম্পন্ন অর্ডার', 'Completed orders'],
+  ['কীভাবে হিসাব', 'How it is calculated'],
+  ['একই রুট, একই দিন ও একই ধরনের ফসলের বুকিং এক ট্রাকে: খরচ ওজনের অনুপাতে ভাগ', 'Same route, same day, compatible crops on one truck: cost shared by weight'],
+  ['ট্রাকের অপেক্ষায় বুকিং', 'Bookings waiting for a truck'],
+  ['পুলিংয়ের সুযোগ', 'Pooling opportunities'],
+  ['শেয়ার্ড ট্রাকে গেছে', 'Travelled on a shared truck'],
+  ['ট্রাক ও ধারণক্ষমতা', 'Trucks and capacity'],
+  ['নরম ফসল (ক্রেটে, উপরে চাপ ছাড়া)', 'Delicate produce (crates, nothing stacked on top)'],
+  ['শক্ত ফসল (বস্তায়)', 'Robust produce (sacks)'],
+  ['একা গেলে', 'Standalone'],
+  ['ভাগাভাগিতে', 'Shared'],
+  ['প্রস্তাবিত ট্রাক', 'Suggested truck'],
+  ['একই পথে যাওয়া ট্রাকে যোগ হবে', 'Joins a truck already going this way'],
+  ['এই ট্রাকে দিন', 'Assign to this truck'],
+  ['নতুন করে দেখুন', 'Refresh'],
+  ['এখন পুলিংয়ের সুযোগ নেই', 'No pooling opportunities right now'],
+  ['শেয়ার্ড ট্রাকের সুযোগ:', 'Shared truck opportunity:'],
+  ['উত্তর দিতে হবে এমন অফার', 'Offers awaiting your reply'],
+  ['নজর দিতে হবে এমন লিস্টিং', 'Listings needing attention'],
+  ['নিশ্চিত অর্ডার', 'Confirmed orders'],
+  ['চলমান ডেলিভারি', 'Deliveries in progress'],
+  ['তাজা থাকার সময় কম (২ দিন বা কম)', 'Freshness running out (2 days or less)'],
+  ['AI বাজার সুযোগ', 'AI market opportunity'],
+  ['কোন বাজারে বেচলে হাতে বেশি থাকবে দেখুন', 'See which market leaves you the most money'],
+  ['পুরো হিসাব দেখুন', 'See full accounts'],
+  ['কিছু বিক্রির উৎপাদন খরচ জানা নেই, তাই লাভের হিসাব আংশিক। "মজুদ ও হিসাব"-এ খরচ লিখুন।', 'Production cost is unknown for some sales, so profit is partial. Add costs in "Stock & accounts".'],
+  ['পরিবহন ও হস্তান্তর', 'Transport & handover'],
+  ['পাল্টা দাম', 'Counter-offer'],
+  ['প্রত্যাখ্যাত', 'Rejected'],
+  ['মেয়াদ শেষ', 'Expired'],
+  ['যেমন: "আমার ২০ মণ টমেটো কোন বাজারে বিক্রি করলে বেশি লাভ হবে?"', 'e.g. "Where should I sell my 20 maunds of tomatoes for the most profit?"'],
+  ['মাইক্রোফোনে বলুন', 'Speak into the microphone'],
+  ['এই ব্রাউজারে কণ্ঠস্বর চেনার সুবিধা নেই, লিখে জিজ্ঞেস করুন।', 'Voice input is not available in this browser; please type your question.'],
+  ['প্রশ্নে যোগ করে আবার "বুঝে নিন" চাপুন।', 'Add it to the question and press "Understand" again.'],
+  ['কোন ফসল?', 'Which crop?'],
+  ['কত মণ বা কেজি?', 'How many maunds or kg?'],
+  ['বিক্রি করবেন না কিনবেন?', 'Selling or buying?'],
+  ['(আগের মতো)', '(as before)'],
+  ['কত দিন আগে তোলা', 'Harvested how many days ago'],
+  ['পথে কত ঘণ্টা', 'Hours on the road'],
+  ['কত দিন পরে পাঠাবেন', 'Send after how many days'],
+  ['রাখার অবস্থা', 'Storage'],
+  ['খোলা জায়গা', 'Open air'],
+  ['ছায়া / ঠান্ডা ঘর', 'Shade / cool room'],
+  ['স্থানীয় হাট', 'Local market'],
+  ['পচনের ঝুঁকি', 'Spoilage risk'],
+  ['পরামর্শ:', 'Advice:'],
+  ['প্রোটোটাইপ নিয়ম: ফসল তাজা থাকার দিন ও তাপমাত্রা অনুযায়ী আনুমানিক হিসাব। এটি যাচাই করা মেশিন লার্নিং মডেল নয়; আসল সংরক্ষণ অবস্থা, প্যাকিং ও মালের মান অনুযায়ী ঝুঁকি আলাদা হতে পারে।', 'Prototype rules: an estimate from typical shelf life and temperature. This is not a validated machine-learning model; real risk depends on storage, packing and produce quality.'],
+  ['ডেটার উৎস ও মডেল', 'Data source and model'],
+  ['উৎপাদন খরচ দিলে দেখাবে', 'Shown when production cost is given'],
+  ['কমিশন ও ১% ফি', 'Commission & 1% fee'],
+  ['পচন বাদে', 'after spoilage'],
+  ['বড় কোনো ঝুঁকি দেখা যাচ্ছে না।', 'No major risk found.'],
+  ['এই দামে লিস্টিং দিন', 'List at this price'],
+  ['তথ্য আনা যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।', 'Could not load data. Check your connection and try again.'],
+  ['আবার চেষ্টা', 'Retry'],
+  ['স্মার্ট বিক্রয় পরামর্শ', 'Smart Selling Advisor'],
+  ['এখনই বিক্রি করুন', 'Sell now'],
+  ['কিছুদিন অপেক্ষা করার কথা ভাবুন', 'Consider waiting'],
+  ['অন্য বাজারে বিক্রির কথা ভাবুন', 'Consider another market'],
+  ['যথেষ্ট তথ্য নেই', 'Insufficient evidence'],
+  ['প্রস্তাবিত বাজার', 'Recommended market'],
+  ['আনুমানিক বিক্রয়মূল্য', 'Estimated selling price'],
+  ['আনুমানিক বিক্রির টাকা', 'Estimated selling revenue'],
+  ['আনুমানিক পরিবহন খরচ', 'Estimated transport cost'],
+  ['অন্যান্য খরচ', 'Other costs'],
+  ['আনুমানিক হাতে থাকবে', 'Estimated net proceeds'],
+  ['আনুমানিক লাভ', 'Expected profit'],
+  ['বিকল্পের চেয়ে বেশি', 'Advantage over alternative'],
+  ['কেন এই বাজার?', 'Why this market?'],
+  ['ঝুঁকি', 'Risks'],
+  ['ডেটার উৎস', 'Data source'],
+  ['পূর্বাভাসের সময়সীমা', 'Forecast horizon'],
+  ['মডেল', 'Model'],
+  ['বাংলায় জিজ্ঞেস করুন', 'Ask in Bangla'],
+  ['বলুন বা লিখুন', 'Speak or type'],
+  ['বুঝে নিন', 'Understand'],
+  ['যা বুঝেছি', 'What I understood'],
+  ['পরামর্শ দেখুন', 'Show advice'],
+  ['শুনুন', 'Listen'],
+  ['শুনছি…', 'Listening…'],
+  ['ফসলের তাজা থাকা ও পচনের ঝুঁকি', 'Crop freshness & spoilage risk'],
+  ['ট্রাক পুলিং', 'Truck pooling'],
+  ['প্ল্যাটফর্মের প্রভাব', 'Platform impact'],
+  ['আজকের কাজের কেন্দ্র', "Today's action center"],
+  ['টাকার লেনদেন', 'Money in motion'],
+  ['বিক্রির টাকা আসার অপেক্ষায়', 'Sale money on its way'],
+  ['পেমেন্ট দিতে বাকি', 'Payments due'],
+  ['লেনদেনের ধাপ', 'Deal timeline']
+);
+
+/* short single words go last, so longer phrases that contain them are matched first */
+I18N_PHRASES.push(
+  ['সম্ভাব্য', 'Likely'],
+  ['নিবন্ধিত', 'registered'],
+  ['আনুমানিক', 'Estimated'],
+  ['সিমুলেটেড', 'simulated'],
+  ['সাশ্রয়', 'Savings'],
+  ['ভরা', 'Load'],
+  ['ওজন (কেজি)', 'Weight (kg)'],
+  ['ভাগ (%)', 'Share (%)'],
+  ['ধারণক্ষমতা', 'capacity'],
+  ['সব সময়', 'All time'],
+  ['প্রভাব', 'Impact']
+);
+
+/* ---------- small cached GET for these pages (re-renders while the same page is open) ---------- */
+const FX = {cache: {}, busy: {}};
+function fxGet(path, ttl = 120000){
+  const c = FX.cache[path], here = location.hash;
+  if (c && !c.error && Date.now() - c.at < ttl) return c.d;
+  if (!FX.busy[path]) {
+    FX.busy[path] = 1;
+    fetch('/api' + path, {headers: TOKEN ? {'X-Token': TOKEN} : {}})
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(d => { FX.cache[path] = {d, at: Date.now()}; })
+      .catch(() => { FX.cache[path] = {error: true, at: Date.now()}; })
+      .finally(() => { delete FX.busy[path]; if (location.hash === here) render(); });
+  }
+  return c && !c.error ? c.d : null;
+}
+const fxFailed = path => !!(FX.cache[path] && FX.cache[path].error);
+const fxDrop = prefix => Object.keys(FX.cache).filter(k => k.startsWith(prefix)).forEach(k => delete FX.cache[k]);
+const riskPill = (lvl, bnTxt) => `<span class="pill ${lvl === 'high' ? 'p-red' : lvl === 'medium' ? 'p-gold' : 'p-green'}">পচনের ঝুঁকি: <span data-i18n-skip>${isEn() ? {low: 'Low', medium: 'Medium', high: 'High'}[lvl] : bnTxt}</span></span>`;
+const fxErr = t => `<div class="note" role="alert">${ic('alert')} ${t || 'তথ্য আনা যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।'} <button class="linkbtn" data-fx="retry">আবার চেষ্টা</button></div>`;
+
+/* =====================================================================
+   Smart Selling Advisor
+   ===================================================================== */
+const SS_TONE = {sell_now: 'green', other_market: 'blue', wait: 'gold', insufficient_evidence: 'grey'};
+function ssQuery(){
+  return `/ai/advisor/smart-sell?src=${ADV.place}&crop=${ADV.crop}&qty=${ADV.mon * MON}${ADV.days ? `&days_left=${ADV.days}` : ''}${ADV.cost !== '' ? `&cost=${ADV.cost}` : ''}`;
+}
+function ssSpeech(r){
+  const m = r.money;
+  return `${r.decision_bn}। ${r.market_name} বাজারে ${r.send_bn} পাঠালে আনুমানিক দাম কেজিপ্রতি ${tk(m.price, 1)}, `
+    + `হাতে থাকবে প্রায় ${tk(m.net_proceeds)}` + (m.profit != null ? `, লাভ প্রায় ${tk(m.profit)}` : '') + '। এটি সিমুলেটেড তথ্যের উপর অনুমান, নিশ্চিত নয়।';
+}
+function ssPanel(){
+  const r = advGet(ssQuery());
+  if (!r) return `<div class="panel ss-panel">${advLoading('স্মার্ট পরামর্শ তৈরি হচ্ছে...')}</div>`;
+  const m = r.money, tone = SS_TONE[r.decision], alt = r.alternative, pv = r.provenance;
+  const fig = (label, val, sub = '', strong = false) => `<div class="ss-fig${strong ? ' strong' : ''}"><span class="muted xs">${label}</span><b>${val}</b>${sub ? `<span class="muted xs">${sub}</span>` : ''}</div>`;
+  return `<section class="panel ss-panel ss-${tone}" aria-labelledby="ss-h">
+    <div class="ss-head"><h2 id="ss-h">${ic('sparkles')} স্মার্ট বিক্রয় পরামর্শ</h2><span class="pill ss-pill">${r.decision_bn}</span></div>
+    <p class="ss-lead">${r.decision === 'insufficient_evidence'
+      ? `পূর্বাভাসের ভিত্তি দুর্বল (${esc(r.evidence_gaps.join(', '))})। আজকের স্থানীয় দর অনুযায়ী হিসাব নিচে।`
+      : `প্রস্তাবিত বাজার: <b>${esc(r.market_name)}</b> · ${esc(r.send_bn)} পাঠান`}</p>
+    <div class="ss-grid">
+      ${fig('আনুমানিক বিক্রয়মূল্য', `${tk(m.price, 1)}/কেজি`, m.price_lo !== m.price_hi ? `সম্ভাব্য ${tk(m.price_lo, 1)}–${tk(m.price_hi, 1)}` : 'আজকের দর')}
+      ${fig('আনুমানিক বিক্রির টাকা', tk(m.revenue), `পচন বাদে (${nf(m.spoil_pct, 1)}%)`)}
+      ${fig('আনুমানিক পরিবহন খরচ', tk(m.transport))}
+      ${fig('অন্যান্য খরচ', tk(m.other_costs), 'কমিশন ও ১% ফি')}
+      ${fig('আনুমানিক হাতে থাকবে', tk(m.net_proceeds), `সম্ভাব্য ${tk(m.net_lo)}–${tk(m.net_hi)}`, true)}
+      ${m.profit != null ? fig('আনুমানিক লাভ', `${m.profit < 0 ? '−' : ''}${tk(Math.abs(m.profit))}`, `উৎপাদন খরচ ${tk(m.production_cost)} বাদে`, true)
+        : fig('আনুমানিক লাভ', '—', 'উৎপাদন খরচ দিলে দেখাবে')}
+      ${r.advantage > 0 ? fig('বিকল্পের চেয়ে বেশি', tk(r.advantage), `${esc(alt.market_name)} (${ADV_SEND[alt.send_in_days].replace(' পাঠান', '')})-এর তুলনায়${r.advantage_certain ? '' : ' · নিশ্চিত নয়'}`) : ''}
+    </div>
+    <div class="ss-cols">
+      <div><h3>কেন এই বাজার?</h3><ul class="ss-list">${r.why.map(w => `<li>${esc(w)}</li>`).join('')}</ul></div>
+      <div><h3>ঝুঁকি</h3><p style="margin:6px 0">${riskPill(r.spoilage.level, r.spoilage.level_bn)}</p>
+        ${r.risks.length ? `<ul class="ss-list">${r.risks.map(w => `<li>${esc(w)}</li>`).join('')}</ul>` : '<p class="muted sm">বড় কোনো ঝুঁকি দেখা যাচ্ছে না।</p>'}</div>
+    </div>
+    <div class="row wrap-it" style="gap:8px;margin-top:12px">
+      ${'speechSynthesis' in window ? `<button class="btn btn-line btn-sm" data-fx="speak">${ic('volume')} শুনুন</button>` : ''}
+      ${me() && me().role !== 'admin' ? `<button class="btn btn-green btn-sm" data-adv="list" data-v="${r.money.price}">এই দামে লিস্টিং দিন</button>` : ''}
+    </div>
+    <details class="ss-src"><summary>${ic('info')} ডেটার উৎস ও মডেল</summary>
+      <ul class="ss-list xs">
+        <li>ডেটার উৎস: ${esc(pv.data_bn)} · তারিখ ${esc(pv.data_date)} <span class="demo-tag">সিমুলেটেড</span></li>
+        <li>পূর্বাভাসের সময়সীমা: ১–৩ দিন · মডেল: ${esc(pv.model_bn)}</li>
+        <li>${esc(pv.backtest_note)} ${Object.entries(pv.backtest || {}).map(([h, v]) => `${bd(h)} দিন: ভুল ${nf(v.mape_model, 1)}% (সাধারণ অনুমানে ${nf(v.mape_naive, 1)}%)`).join(' · ')}</li>
+        <li>${esc(pv.interval_note)}</li>
+        <li>${esc(r.terms.net_proceeds)}। ${esc(r.terms.profit)}।</li>
+      </ul></details>
+  </section>`;
+}
+
+/* replace the old "main advice" box with the decision-aware panel, and add the assistant and risk card */
+const __advFarmer = advFarmer;
+advFarmer = function(){
+  const html = __advFarmer();
+  if (!ADV.crop || html.indexOf('sk-wrap') >= 0 && html.indexOf('মূল পরামর্শ') < 0) return vaPanel() + html;
+  return vaPanel() + html.replace(/<div class="panel" style="border:2px solid var\(--(red|green)\);margin-bottom:14px">[\s\S]*?<\/div>/, ssPanel()) + spPanel();
+};
+
+/* =====================================================================
+   Ask in Bangla (typed or spoken). Shows what was understood; advice only after the user confirms.
+   ===================================================================== */
+const VA = {text: '', parsed: null, listening: false, err: '', busy: false};
+const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+function vaPanel(){
+  const p = VA.parsed, miss = p ? p.missing : [];
+  const ask = {crop: 'কোন ফসল?', qty: 'কত মণ বা কেজি?', intent: 'বিক্রি করবেন না কিনবেন?'};
+  return `<section class="panel va-panel" aria-labelledby="va-h">
+    <h3 id="va-h">${ic('mic')} বাংলায় জিজ্ঞেস করুন</h3>
+    <p class="muted sm">যেমন: "আমার ২০ মণ টমেটো কোন বাজারে বিক্রি করলে বেশি লাভ হবে?"</p>
+    <div class="va-row">
+      <label class="sr-only" for="va-in">বলুন বা লিখুন</label>
+      <input id="va-in" maxlength="300" placeholder="বলুন বা লিখুন" value="${esc(VA.text)}">
+      ${SpeechRec ? `<button class="btn btn-line" data-fx="va-mic" aria-pressed="${VA.listening}" aria-label="মাইক্রোফোনে বলুন">${ic('mic')} ${VA.listening ? 'শুনছি…' : 'বলুন'}</button>` : ''}
+      <button class="btn btn-green" data-fx="va-parse" ${VA.busy ? 'disabled' : ''}>বুঝে নিন</button>
+    </div>
+    ${SpeechRec ? '' : '<p class="muted xs" style="margin-top:6px">এই ব্রাউজারে কণ্ঠস্বর চেনার সুবিধা নেই, লিখে জিজ্ঞেস করুন।</p>'}
+    ${VA.err ? `<p class="form-error" role="alert">${esc(VA.err)}</p>` : ''}
+    ${p ? `<div class="va-out" role="status"><b>যা বুঝেছি:</b>
+      <span class="pill ${p.crop ? 'p-green' : 'p-grey'}">ফসল: ${p.crop ? esc(p.crop_bn) : '?'}</span>
+      <span class="pill ${p.qty_kg ? 'p-green' : 'p-grey'}">পরিমাণ: ${p.qty_kg ? monTxt(p.qty_kg) : '?'}</span>
+      <span class="pill ${p.place ? 'p-green' : 'p-grey'}">জেলা: ${p.place ? esc(p.place_bn) : esc(PLACES[ADV.place].n) + ' (আগের মতো)'}</span>
+      <span class="pill ${p.intent ? 'p-green' : 'p-grey'}">কাজ: ${p.intent === 'buy' ? 'কেনা' : p.intent === 'sell' ? 'বিক্রি' : '?'}</span>
+      ${miss.length ? `<p class="warn sm" style="margin-top:8px">${miss.map(k => ask[k]).join(' ')} প্রশ্নে যোগ করে আবার "বুঝে নিন" চাপুন।</p>`
+        : p.intent === 'buy' ? `<p class="sm" style="margin-top:8px">কেনার পরামর্শ দেখতে "পাইকার হিসেবে দেখুন" বাছুন বা পাইকার হিসেবে লগ ইন করুন।</p>`
+        : `<button class="btn btn-green btn-sm" style="margin-top:8px" data-fx="va-go">পরামর্শ দেখুন</button>`}
+    </div>` : ''}
+  </section>`;
+}
+let VA_REC = null;
+function vaListen(){
+  if (VA.listening && VA_REC) { VA_REC.stop(); return; }
+  try {
+    VA_REC = new SpeechRec();
+    VA_REC.lang = 'bn-BD';
+    VA_REC.interimResults = false;
+    VA_REC.maxAlternatives = 1;
+    VA_REC.onresult = e => { VA.text = e.results[0][0].transcript; VA.parsed = null; VA.err = ''; };
+    VA_REC.onerror = e => {
+      VA.err = e.error === 'not-allowed' || e.error === 'service-not-allowed' ? 'মাইক্রোফোনের অনুমতি দেওয়া হয়নি। ব্রাউজারে অনুমতি দিন বা লিখে জিজ্ঞেস করুন।'
+        : e.error === 'no-speech' ? 'কোনো কথা শোনা যায়নি। আবার বলুন বা লিখুন।' : 'কণ্ঠস্বর চেনা যায়নি। লিখে জিজ্ঞেস করুন।';
+    };
+    VA_REC.onend = () => { VA.listening = false; render(); };
+    VA.listening = true; VA.err = '';
+    VA_REC.start();
+    render();
+  } catch (e) { VA.listening = false; VA.err = 'কণ্ঠস্বর চেনা চালু করা যায়নি। লিখে জিজ্ঞেস করুন।'; render(); }
+}
+async function vaParse(){
+  const inp = $('#va-in');
+  VA.text = (inp ? inp.value : VA.text).trim();
+  if (!VA.text) { VA.err = 'প্রশ্নটি লিখুন বা বলুন'; render(); return; }
+  VA.busy = true; VA.err = ''; render();
+  try { VA.parsed = await api('/ai/advisor/parse', 'POST', {text: VA.text}); }
+  catch (e) { VA.err = e.message || 'বোঝা যায়নি'; }
+  VA.busy = false; render();
+}
+function vaGo(){
+  const p = VA.parsed;
+  if (!p || p.missing.length) return;
+  ADV.crop = p.crop; ADV.days = ''; ADV.costTouched = false; advPrefillCost();
+  ADV.mon = Math.min(2500, Math.max(1, Math.round(p.qty_kg / MON)));
+  if (p.place) ADV.place = p.place;
+  render();
+  setTimeout(() => { const el = $('.ss-panel'); if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'}); }, 50);
+}
+
+/* =====================================================================
+   Crop freshness & spoilage risk (prototype rule set, labelled)
+   ===================================================================== */
+const SP = {harvest: 0, hours: 8, wait: 0, storage: 'ambient'};
+function spPanel(){
+  const r = advGet(`/ai/advisor/spoilage?crop=${ADV.crop}&place=${ADV.place}&harvest_days_ago=${SP.harvest}&travel_hours=${SP.hours}&wait_days=${SP.wait}&storage=${SP.storage}`);
+  const sel = (k, opts) => `<select data-spf="${k}">${opts.map(([v, t]) => `<option value="${v}" ${String(SP[k]) === String(v) ? 'selected' : ''}>${t}</option>`).join('')}</select>`;
+  return `<section class="panel" aria-labelledby="sp-h"><h3 id="sp-h">${ic('leaf')} ফসলের তাজা থাকা ও পচনের ঝুঁকি <span class="muted sm">(${CROPS[ADV.crop].n})</span></h3>
+    <div class="filters" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-top:8px">
+      <label><span>কত দিন আগে তোলা</span>${sel('harvest', [0, 1, 2, 3, 4, 5, 7, 10].map(d => [d, d ? `${bd(d)} দিন` : 'আজ']))}</label>
+      <label><span>পথে কত ঘণ্টা</span>${sel('hours', [0, 3, 6, 8, 12, 18, 24].map(h => [h, h ? `${bd(h)} ঘণ্টা` : 'স্থানীয় হাট']))}</label>
+      <label><span>কত দিন পরে পাঠাবেন</span>${sel('wait', [0, 1, 2, 3].map(d => [d, d ? `${bd(d)} দিন পরে` : 'আজ']))}</label>
+      <label><span>রাখার অবস্থা</span>${sel('storage', [['ambient', 'খোলা জায়গা'], ['cool', 'ছায়া / ঠান্ডা ঘর']])}</label></div>
+    ${!r ? advLoading('ঝুঁকি হিসাব হচ্ছে...') : `<div class="risk-box risk-${r.level}">${riskPill(r.level, r.level_bn)}
+      <ul class="ss-list">${r.reasons.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      <p class="sm"><b>পরামর্শ:</b> ${esc(r.action)}</p></div>
+      <p class="muted xs" style="margin-top:6px">${esc(r.limitation)}</p>`}
+  </section>`;
+}
+document.addEventListener('change', e => {
+  const k = e.target.dataset.spf;
+  if (!k) return;
+  SP[k] = k === 'storage' ? e.target.value : +e.target.value;
+  render();
+});
+
+/* =====================================================================
+   Truck pooling — admin dashboard
+   ===================================================================== */
+V.adminPool = () => {
+  const d = fxGet('/admin/pool', 30000);
+  const head = `<div class="phead"><div><h1>${ic('layers')} ট্রাক পুলিং</h1><p class="muted">একই রুট, একই দিন ও একই ধরনের ফসলের বুকিং এক ট্রাকে: খরচ ওজনের অনুপাতে ভাগ</p></div>
+    <button class="btn btn-line btn-sm" data-fx="pool-refresh">${ic('refresh')} নতুন করে দেখুন</button></div>`;
+  if (!d) return head + (fxFailed('/admin/pool') ? fxErr() : advLoading());
+  const pt = d.participation;
+  return head + `<div class="grid3" style="margin-bottom:16px">
+      <div class="kpi"><span class="muted sm">ট্রাকের অপেক্ষায় বুকিং</span><strong>${nf(d.waiting)}টি</strong></div>
+      <div class="kpi"><span class="muted sm">পুলিংয়ের সুযোগ</span><strong>${nf(d.groups.length)}টি</strong></div>
+      <div class="kpi"><span class="muted sm">শেয়ার্ড ট্রাকে গেছে</span><strong>${pt.pct == null ? '—' : nf(pt.pct, 1) + '%'}</strong><span class="muted xs">${nf(pt.shared)} / ${nf(pt.delivered)} সম্পন্ন বুকিং</span></div></div>
+    <h2 class="sec-title">পুলিংয়ের সুযোগ</h2>
+    ${d.groups.length ? d.groups.map(g => `<div class="panel pool-card">
+      <div class="row wrap-it" style="justify-content:space-between;gap:8px"><div><b>${esc(g.route)}</b> · ${esc(g.day)} · <span class="muted sm">${esc(g.handling_bn)}</span></div>
+        <span class="pill p-green">সাশ্রয় ${tk(g.savings_total)}</span></div>
+      <p class="muted sm" style="margin-top:4px">${esc(g.vehicle_name)} · মোট ${nf(g.total_kg)} কেজি / ধারণক্ষমতা ${nf(g.capacity)} কেজি · দূরত্ব প্রায় ${nf(g.km)} কিমি (আনুমানিক) · পুরো ট্রিপ ${tk(g.trip_cost)}</p>
+      <div class="cap-bar" role="img" aria-label="ট্রাকের ${nf(Math.round(g.total_kg / g.capacity * 100))}% ভরা"><span style="width:${Math.min(100, g.total_kg / g.capacity * 100)}%"></span></div>
+      <div class="scroll"><table class="tbl" style="margin-top:8px"><tr><th>বুকিং</th><th>ফসল</th><th class="num">ওজন (কেজি)</th><th class="num">ভাগ (%)</th><th class="num">একা গেলে</th><th class="num">ভাগাভাগিতে</th><th class="num">সাশ্রয়</th></tr>
+        ${g.members.map(x => `<tr><td><a href="#/booking/${x.booking}">${esc(x.booking)}</a></td><td>${CROPS[x.crop].n}</td><td class="num">${nf(x.qty)} কেজি</td><td class="num">${nf(x.share_pct, 1)}%</td>
+          <td class="num">${tk(x.standalone_cost)}</td><td class="num">${tk(x.shared_cost)}</td><td class="num b">${tk(x.savings)}</td></tr>`).join('')}
+      </table></div>
+      ${g.truck ? `<div class="row wrap-it" style="gap:8px;margin-top:10px"><span class="sm">${g.truck.joins_trip ? 'একই পথে যাওয়া ট্রাকে যোগ হবে' : 'প্রস্তাবিত ট্রাক'}: <b>${esc(g.truck.company)}</b> (${esc(g.truck.number)}), খালি ${nf(g.truck.free)} কেজি</span>
+        <button class="btn btn-green btn-sm" data-fx="pool-assign" data-b="${g.bookings.join(',')}" data-t="${g.truck.id}">এই ট্রাকে দিন</button></div>`
+        : '<p class="warn sm" style="margin-top:8px">এই দলের জন্য যথেষ্ট খালি ট্রাক নেই।</p>'}
+    </div>`).join('') : emptyState('truck', 'এখন পুলিংয়ের সুযোগ নেই', 'একই রুট ও দিনের একাধিক বুকিং এলে এখানে দেখাবে।', '', true)}
+    <h2 class="sec-title">ট্রাক ও ধারণক্ষমতা</h2>
+    <div class="panel scroll"><table class="tbl"><tr><th>ট্রাক</th><th>ধরন</th><th>জেলা</th><th>অবস্থা</th><th class="num">বুক করা</th><th class="num">খালি</th><th style="min-width:120px">ভরা</th></tr>
+      ${d.trucks.map(t => `<tr><td><b>${esc(t.company)}</b><div class="muted xs">${esc(t.number)}</div></td><td>${esc(t.vehicle_name)}</td><td>${PLACES[t.place] ? PLACES[t.place].n : esc(t.place)}</td>
+        <td>${{available: 'খালি', booked: 'বুক করা', on_trip: 'পথে', maintenance: 'মেরামতে'}[t.status] || esc(t.status)}</td><td class="num">${nf(t.reserved)} কেজি</td><td class="num">${nf(t.free)} কেজি</td>
+        <td><div class="cap-bar sm"><span style="width:${Math.min(100, t.reserved / t.capacity * 100)}%"></span></div></td></tr>`).join('')}
+    </table></div>
+    <p class="muted xs" style="margin-top:8px">${esc(d.method)}</p>`;
+};
+
+/* saving hint on the user's own booking page (no other user's details) */
+const __vBooking = V.booking;
+V.booking = id => {
+  const html = __vBooking(id), b = (S.bookings || []).find(x => x.id === id);
+  if (!b || !me() || b.uid !== me().id || b.status !== 'requested') return html;
+  const mine = fxGet('/pool/mine', 60000), r = mine && mine.find(x => x.booking === id);
+  if (!r || !r.compatible) return html;
+  return html + `<div class="panel note-panel">${ic('layers')} <b>শেয়ার্ড ট্রাকের সুযোগ:</b> একই রুট ও দিনে আরও ${nf(r.compatible)}টি বুকিং আছে।
+    একসাথে গেলে ট্রিপ খরচে আপনার ভাগ আনুমানিক ${tk(r.shared_cost)}, একা পুরো ট্রাকে ${tk(r.standalone_cost)} — সাশ্রয় প্রায় ${tk(r.savings)}।
+    <p class="muted xs" style="margin-top:6px">${esc(r.method)} অপারেশন টিম ট্রাক ঠিক করার সময় এটি বিবেচনা করে।</p></div>`;
+};
+
+/* =====================================================================
+   Impact dashboard (public)
+   ===================================================================== */
+let IMP_DAYS = 0;
+function impCard(key, title, icon, m, fmt){
+  const v = m.total == null ? '—' : fmt(m.total);
+  const split = m.demo != null && m.total ? `<span class="muted xs">${m.registered ? `নিবন্ধিত ${fmt(m.registered)}` : 'নিবন্ধিত ০'} · ডেমো ${fmt(m.demo)}</span>` : '';
+  return `<div class="kpi imp-kpi"><span class="kpi-ic">${ic(icon)}</span><span class="muted sm">${title}${m.estimate ? ' <span class="pill p-gold">আনুমানিক</span>' : ''}${m.simulated ? ' <span class="demo-tag">সিমুলেটেড</span>' : ''}</span>
+    <strong>${v}</strong>${split}<details><summary class="xs">কীভাবে হিসাব</summary><p class="xs muted" data-i18n-skip>${esc(isEn() && m.def_en ? m.def_en : m.def)}</p></details></div>`;
+}
+V.impact = () => {
+  const path = `/impact?days=${IMP_DAYS}`, d = fxGet(path, 60000);
+  const head = `<div class="phead"><div><h1>${ic('chart')} প্ল্যাটফর্মের প্রভাব</h1><p class="muted">কৃষক কত ভালো দাম পাচ্ছেন, পরিবহনে কত সাশ্রয়: ডাটাবেসের আসল হিসাব আর স্পষ্টভাবে চিহ্নিত অনুমান</p></div></div>
+    <div class="chips" role="group" aria-label="সময়সীমা">${[[0, 'সব সময়'], [7, '৭ দিন'], [30, '৩০ দিন'], [90, '৯০ দিন']].map(([v, t]) => `<button class="chip ${IMP_DAYS === v ? 'on' : ''}" data-fx="imp-days" data-v="${v}">${t}</button>`).join('')}</div>`;
+  if (!d) return head + (fxFailed(path) ? fxErr() : advLoading());
+  const M = d.metrics, mon = v => `${nf(v, 1)} মণ`, cnt = v => nf(v), pct = M.shared_transport;
+  const maxO = Math.max(1, ...d.trend.map(w => w.orders));
+  const bars = d.trend.map((w, i) => {
+    const h = Math.round(w.orders / maxO * 100), x = i * 40 + 8;
+    return `<g><rect x="${x}" y="${110 - h}" width="26" height="${h}" rx="4" class="bar"><title>${nf(w.orders)}টি অর্ডার, ${tk(w.volume_tk)}</title></rect>
+      <text x="${x + 13}" y="${104 - h}" text-anchor="middle" class="bar-t">${w.orders ? nf(w.orders) : ''}</text></g>`;
+  }).join('');
+  return head + `${d.demo_mode ? `<div class="note" style="margin:12px 0"><span data-i18n-skip>${esc(isEn() && d.note_en ? d.note_en : d.note)}</span></div>` : `<p class="muted sm" style="margin:12px 0"><span data-i18n-skip>${esc(isEn() && d.note_en ? d.note_en : d.note)}</span></p>`}
+    <div class="grid4 imp-grid">
+      ${impCard('farmers', 'কৃষক', 'users', M.farmers, cnt)}
+      ${impCard('buyers', 'পাইকার', 'users', M.buyers, cnt)}
+      ${impCard('orders', 'সম্পন্ন অর্ডার', 'checkc', M.orders_completed, cnt)}
+      ${impCard('volume', 'লেনদেনের পরিমাণ', 'wallet', M.volume_tk, v => tk(v))}
+      ${impCard('mon', 'বিক্রি হওয়া ফসল', 'package', M.volume_mon, mon)}
+      ${impCard('tsave', 'পরিবহনে সাশ্রয়', 'truck', M.transport_savings_tk, v => tk(v))}
+      ${impCard('gain', 'কৃষকের বাড়তি আয়', 'sparkles', M.net_proceeds_gain_tk, v => tk(v))}
+      ${impCard('loss', 'পচন থেকে বাঁচানো সম্ভাব্য ফসল', 'leaf', M.loss_reduction_mon, mon)}
+    </div>
+    <div class="grid2" style="margin-top:16px">
+      <div class="panel"><h3>সাপ্তাহিক সম্পন্ন অর্ডার (গত ৮ সপ্তাহ)</h3>
+        ${d.trend.some(w => w.orders) ? `<svg class="fx-chart" viewBox="0 0 330 120" role="img" aria-label="গত ৮ সপ্তাহে সাপ্তাহিক সম্পন্ন অর্ডারের সংখ্যা">${bars}<line x1="0" y1="110.5" x2="330" y2="110.5" class="axis"/></svg>
+          <p class="muted xs">প্রতিটি বার এক সপ্তাহ, বাঁ থেকে পুরনো থেকে নতুন। মোট ${tk(d.trend.reduce((a, w) => a + w.volume_tk, 0))}।</p>`
+          : emptyState('chart', 'এই সময়ে সম্পন্ন অর্ডার নেই', '', '', true)}</div>
+      <div class="panel"><h3>শেয়ার্ড ট্রাকে অংশগ্রহণ</h3>
+        <strong class="big-num">${pct.pct == null ? '—' : nf(pct.pct, 1) + '%'}</strong>
+        <p class="muted sm">${nf(pct.shared)}টি / ${nf(pct.delivered)}টি সম্পন্ন ট্রাক বুকিং অন্য বুকিংয়ের সাথে একই ট্রাকে গেছে।</p>
+        <details><summary class="xs">কীভাবে হিসাব</summary><p class="xs muted" data-i18n-skip>${esc(isEn() && pct.def_en ? pct.def_en : pct.def)}</p></details></div>
+    </div>`;
+};
+
+/* =====================================================================
+   Dashboard: action centre and money summary
+   ===================================================================== */
+function actionCentre(){
+  const u = me(), id = u.id;
+  const offers = (S.offers || []).filter(o => (o.status === 'pending' && o.waiting === 'seller' && o.seller === id) || (o.status === 'countered' && o.waiting === 'buyer' && o.buyer === id)).length;
+  const attention = myAlerts().length;
+  const confirmed = (S.orders || []).filter(o => o.status === 'confirmed').length;
+  const deliveries = (S.bookings || []).filter(b => ['pickup_scheduled', 'in_transit'].includes(b.status)).length;
+  const fresh = (S.listings || []).filter(l => l.uid === id && l.status === 'active' && l.available > 0 && l.days_left <= 2).length;
+  const items = [
+    [offers, 'উত্তর দিতে হবে এমন অফার', '#/deals', 'inbox'],
+    [attention, 'নজর দিতে হবে এমন লিস্টিং', '#/listings', 'alert'],
+    [confirmed, 'নিশ্চিত অর্ডার', '#/deals', 'checkc'],
+    [deliveries, 'চলমান ডেলিভারি', '#/transport', 'truck'],
+    [fresh, 'তাজা থাকার সময় কম (২ দিন বা কম)', '#/listings', 'leaf'],
+  ].filter(x => x[0] > 0);
+  const ai = u.role === 'farmer' ? `<a class="ac-item ac-ai" href="#/advisor">${ic('sparkles')}<span><b>AI বাজার সুযোগ</b><span class="muted xs">কোন বাজারে বেচলে হাতে বেশি থাকবে দেখুন</span></span></a>` : '';
+  if (!items.length && !ai) return '';
+  return `<section class="ac" aria-labelledby="ac-h"><h2 class="sec-title" id="ac-h">আজকের কাজের কেন্দ্র</h2><div class="ac-grid">
+    ${items.map(([n, t, h, i]) => `<a class="ac-item" href="${h}">${ic(i)}<span><b>${nf(n)}</b> <span class="sm">${t}</span></span></a>`).join('')}${ai}</div></section>`;
+}
+function moneySummary(){
+  const u = me(), P = S.pnl || {}, id = u.id;
+  const pendingIn = (S.orders || []).filter(o => o.seller === id && ['confirmed', 'handed_over'].includes(o.status)).reduce((a, o) => a + (o.payout || 0), 0);
+  const pendingOut = (S.orders || []).filter(o => o.buyer === id && o.status === 'awaiting_payment').reduce((a, o) => a + (o.buyer_total || 0), 0);
+  const tx = (S.wallet_tx || []).slice(0, 5);
+  // sales, expenses and profit are already in the "এ পর্যন্ত লাভ-ক্ষতি" box; this adds money in motion
+  return `<section class="panel" aria-labelledby="ms-h"><h3 id="ms-h">${ic('wallet')} টাকার লেনদেন</h3>
+    <div class="ms-grid">
+      <div><span class="muted xs">বিক্রির টাকা আসার অপেক্ষায়</span><b>${tk(pendingIn)}</b></div>
+      <div><span class="muted xs">পেমেন্ট দিতে বাকি</span><b>${tk(pendingOut)}</b></div></div>
+    ${P.revenue && !P.exact ? '<p class="muted xs" style="margin-top:6px">কিছু বিক্রির উৎপাদন খরচ জানা নেই, তাই লাভের হিসাব আংশিক। "মজুদ ও হিসাব"-এ খরচ লিখুন।</p>' : ''}
+    ${tx.length ? `<ul class="ms-tx">${tx.map(t => `<li><span>${esc(t.note || t.kind)}</span><b class="${t.amount < 0 ? 'neg' : 'pos'}">${t.amount < 0 ? '−' : '+'}${tk(Math.abs(t.amount))}</b></li>`).join('')}</ul>` : ''}
+    <a class="linkbtn sm" href="#/books">পুরো হিসাব দেখুন</a></section>`;
+}
+const __vDash = V.dash;
+V.dash = () => {
+  const html = __vDash();
+  return html.replace('<div class="dash-grid"><div>', `${actionCentre()}<div class="dash-grid"><div>`)
+             .replace(/(<div class="dash-grid"><div>[\s\S]*?<\/div><div>)/, `$1${moneySummary()}`);
+};
+
+/* =====================================================================
+   Negotiation timeline on the offer page (only stages the app supports; the order page has its own steps)
+   ===================================================================== */
+function dealTimeline(o, order){
+  const ev = (S.offer_events || []).filter(e => e.offer === o.id);
+  const insp = (S.inspections || []).filter(i => i.listing === o.listing && i.buyer === o.buyer).sort((a, b) => b.created - a.created)[0];
+  const ended = ['rejected', 'cancelled', 'expired'].includes(o.status) ? o.status : order && order.status === 'cancelled' ? 'cancelled' : null;
+  const steps = [];
+  if (insp) steps.push(['পরিদর্শন', insp.status === 'completed' ? 'done' : 'skip']);
+  steps.push(['অফার', 'done']);
+  if (ev.some(e => e.action === 'counter')) steps.push(['পাল্টা দাম', 'done']);
+  steps.push(['রাজি', o.status === 'accepted' ? 'done' : 'todo']);
+  steps.push(['পেমেন্ট', order && order.paid_at ? 'done' : 'todo']);
+  steps.push([order && order.transport === 'reroute' ? 'পরিবহন ও হস্তান্তর' : 'হস্তান্তর', order && order.handover_at ? 'done' : 'todo']);
+  steps.push(['সম্পন্ন', order && order.status === 'completed' ? 'done' : 'todo']);
+  const cur = steps.findIndex(s => s[1] === 'todo');
+  return `<ol class="tl" aria-label="লেনদেনের ধাপ">${steps.filter(s => s[1] !== 'skip').map(([t, st], i, arr) => {
+    const isCur = !ended && arr.findIndex(s => s[1] === 'todo') === i;
+    return `<li class="${st === 'done' ? 'done' : isCur ? 'cur' : ''}" ${isCur ? 'aria-current="step"' : ''}><span class="dot">${st === 'done' ? ic('check') : bd(i + 1)}</span><span>${t}</span></li>`;
+  }).join('')}${ended ? `<li class="end"><span class="dot">${ic('x')}</span><span>${{rejected: 'প্রত্যাখ্যাত', cancelled: 'বাতিল', expired: 'মেয়াদ শেষ'}[ended]}</span></li>` : ''}</ol>`;
+}
+const __vOffer = V.offer;
+V.offer = id => {
+  const html = __vOffer(id), o = (S.offers || []).find(x => x.id === id);
+  if (!o) return html;
+  const order = (S.orders || []).find(x => x.offer === o.id);
+  return html.replace('</p>', `</p>${dealTimeline(o, order)}`);
+};
+
+/* =====================================================================
+   Routes and clicks
+   ===================================================================== */
+const __fxRender = render;
+render = function(){
+  const p = parts(), u = me();
+  if (p[0] === 'impact' || (p[0] === 'admin' && p[1] === 'pool' && u && u.role === 'admin')) {
+    $('#view').innerHTML = p[0] === 'impact' ? V.impact() : V.adminPool();
+    renderChrome();
+    applyLanguage($('#view'));
+    return;
+  }
+  __fxRender();
+};
+
+document.addEventListener('click', async e => {
+  const el = e.target.closest('[data-fx]');
+  if (!el) return;
+  e.preventDefault();
+  const k = el.dataset.fx;
+  if (k === 'retry') { FX.cache = {}; Object.keys(ADV.cache).forEach(x => { if (ADV.cache[x].error) delete ADV.cache[x]; }); render(); }
+  if (k === 'pool-refresh') { fxDrop('/admin/pool'); render(); }
+  if (k === 'imp-days') { IMP_DAYS = +el.dataset.v; render(); }
+  if (k === 'va-mic') vaListen();
+  if (k === 'va-parse') vaParse();
+  if (k === 'va-go') vaGo();
+  if (k === 'speak') { const r = advGet(ssQuery()); if (r) say(ssSpeech(r)); }
+  if (k === 'pool-assign') {
+    if (el.dataset.busy) return;
+    if (!await confirmBox({title: 'এই বুকিংগুলো এক ট্রাকে দেবেন?', body: 'সব বুকিং একসাথে নিশ্চিত হবে, কোনো একটিতে জায়গা না হলে কোনোটিই হবে না।', ok: 'হ্যাঁ, দিন'})) return;
+    el.dataset.busy = '1';
+    try {
+      await api('/admin/pool/assign', 'POST', {bookings: el.dataset.b.split(','), truck: el.dataset.t});
+      toast('বুকিংগুলো শেয়ার্ড ট্রাকে দেওয়া হয়েছে');
+      fxDrop('/admin/pool');
+      await refresh();
+    } catch (err) { /* api() already showed the reason */ }
+    delete el.dataset.busy;
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.id === 'va-in') { e.preventDefault(); vaParse(); }
+});
+/* =====================================================================
    Router
    ===================================================================== */
 function parts(){ return (location.hash||'#/').split('?')[0].replace(/^#\/?/,'').split('/'); }
@@ -7402,6 +8005,8 @@ const REASONS = {
 /* ---------- sign-up OTP (demo: the code is shown on screen, no SMS gateway yet) ---------- */
 let OTP=null, OTP_TIMER=null;
 const onlyDigits=v=>enDigits(String(v||'')).replace(/\D/g,'');
+/* Bangladeshi mobile number in 01XXXXXXXXX form (accepts +880 / 880 / 00880 prefixes), same rule as the server */
+const bdPhone=v=>{ let d=onlyDigits(v); if(d.startsWith('00880')) d=d.slice(4); if(d.startsWith('880')&&d.length===13) d=d.slice(2); return d; };
 
 function otpLeft(){
   const s=Math.max(0,Math.round(((OTP&&OTP.expires)||0)-Date.now())/1000|0);
@@ -7414,10 +8019,10 @@ function drawOtp(value=''){
     <h2>OTP যাচাই</h2>
     <p class="muted sm">অ্যাকাউন্ট খুলতে <b data-i18n-skip>${esc(OTP.phone)}</b> নম্বরের কোডটি দিন</p>
     <div class="otp-demo">
-      <div class="row" style="gap:8px">${ic('info')}<b>ডেমো যাচাই</b></div>
-      <p>এটি প্রোটোটাইপ, SMS গেটওয়ে এখনো চালু হয়নি। আপনার যাচাই কোড:</p>
+      <div class="row" style="gap:8px">${ic('info')}<b>প্রোটোটাইপ মোড</b></div>
+      <p>প্রোটোটাইপ মোড: SMS সেবা এখনো চালু করা হয়নি। আপনার ডেমো ভেরিফিকেশন কোড:</p>
       <div class="otp-code" data-i18n-skip>${esc(OTP.demo_otp)}</div>
-      <p class="xs muted">উদাহরণ কোড · <span id="otp-left">${otpLeft()}</span></p>
+      <p class="xs muted">এই কোড শুধু এই নিবন্ধনের জন্য, সার্ভারে যাচাই হয়। এটি ফোন নম্বরের মালিকানা প্রমাণ করে না। · <span id="otp-left">${otpLeft()}</span></p>
     </div>
     <label class="field"><span>৫ সংখ্যার কোড দিন</span>
       <input id="otp-in" class="otp-input" inputmode="numeric" maxlength="5" autocomplete="one-time-code" placeholder="_ _ _ _ _" value="${esc(value)}" ${OTP.err?'aria-invalid="true"':''}></label>
@@ -7544,6 +8149,8 @@ const A = {
   logout:async()=>{
     closeSheet();
 
+    // end the session on the server too, so the token cannot be reused
+    try{ await api('/logout','POST'); }catch(e){}
     setToken(null);
 
     await load();
@@ -7597,7 +8204,7 @@ const A = {
     }),
 
   'login-phone':async()=>{
-    const phone=onlyDigits(LG.phone);
+    const phone=bdPhone(LG.phone);
 
     if(!/^01\d{9}$/.test(phone)||!LG.password){
       LG.err='মোবাইল নম্বর আর পাসওয়ার্ড দিন';
@@ -7634,7 +8241,7 @@ const A = {
   },
 
   register:async()=>{
-    const phone=onlyDigits(RG.phone), E={};
+    const phone=bdPhone(RG.phone), E={};
 
     if(RG.name.trim().length<2) E.name='পুরো নাম দিন';
     if(!/^01\d{9}$/.test(phone)) E.phone='০১ দিয়ে শুরু ১১ সংখ্যার মোবাইল নম্বর দিন';
@@ -7674,7 +8281,7 @@ const A = {
       return;
     }
 
-    OTP={...r, phone, body:b, expires:Date.now()+r.expires_in*1000, err:''};
+    OTP={...r, phone, expires:Date.now()+r.expires_in*1000, err:''};
     drawOtp();
   },
 
@@ -7707,7 +8314,9 @@ const A = {
   },
 
   'otp-resend':async()=>{
-    const r=await api('/register','POST',OTP.body);
+    let r;
+    try{ r=await api('/register/resend','POST',{reg_id:OTP.reg_id}); }
+    catch(e){ OTP.err=e.message||'নতুন কোড পাঠানো যায়নি'; drawOtp(); return; }
     OTP={...OTP, ...r, expires:Date.now()+r.expires_in*1000, err:''};
     drawOtp();
     toast('নতুন কোড পাঠানো হয়েছে','info');
@@ -10357,6 +10966,11 @@ setInterval(
 
   render();
 })();
+
+/* installable app: the service worker caches only public static files and an offline page (static/sw.js) */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
 </script>
 </body>
 </html>

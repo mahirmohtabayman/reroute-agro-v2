@@ -40,7 +40,7 @@ const MONTHS_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','
 const MONTHS = MONTHS_BN;
 const dateBn = t => { const d=new Date(t), m=isEn()?MONTHS_EN:MONTHS_BN; return `${bd(d.getDate())} ${m[d.getMonth()]}`; };
 function ago(t){ const m=Math.round((Date.now()-t)/6e4); if(m<60) return isEn()?`${nf(Math.max(1,m))} min ago`:`${nf(Math.max(1,m))} মিনিট আগে`; const h=Math.round(m/60); if(h<24) return isEn()?`${nf(h)} hr ago`:`${nf(h)} ঘণ্টা আগে`; const d=Math.round(h/24); return d<30?(isEn()?`${nf(d)} days ago`:`${nf(d)} দিন আগে`):(isEn()?`${nf(Math.round(d/30))} months ago`:`${nf(Math.round(d/30))} মাস আগে`); }
-const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pill = ([t,c]) => `<span class="pill ${c}">${t}</span>`;
 
 /* ---------- icons: inline SVG line icons (24px grid). ic() also accepts the emoji
@@ -429,6 +429,7 @@ function drawPay(){
   if(P.step==='method'){
     modal(`<div class="body"><h2>${ic('card')} পেমেন্ট</h2><p class="muted" style="margin-top:4px">${P.title}</p>
       <div class="pay-total"><span>মোট</span><b>${tk(P.amount)}</b></div>
+      <p class="warn sm" style="margin-top:10px"><b>সিমুলেটেড পেমেন্ট:</b> এটি প্রোটোটাইপ, কোনো আসল টাকা লেনদেন বা ব্যাংক/বিকাশ/নগদ সংযোগ হয় না।</p>
       <div class="choice">${[['bkash','বিকাশ','মোবাইল নম্বর ও পিন'],['nagad','নগদ','মোবাইল নম্বর ও পিন'],['card','ডেবিট/ক্রেডিট কার্ড','ভিসা, মাস্টারকার্ড'],['wallet',`Reroute ওয়ালেট`,`ব্যালান্স ${tk(w)}`]].map(([k,n,d])=>
         `<button class="opt" data-act="pay-method" data-v="${k}" ${k==='wallet'&&w<P.amount?'disabled':''}><strong>${n}</strong><span class="muted">${k==='wallet'&&w<P.amount?'ব্যালান্স যথেষ্ট নয়':d}</span></button>`).join('')}</div>
       <p class="note" style="margin-top:14px">টাকা Reroute-এ জমা থাকে, মাল বুঝে পেলে তবেই বিক্রেতা পান। পেমেন্ট সার্ভারে যাচাই হওয়ার পরই অবস্থা বদলায়।</p></div>`);
@@ -553,10 +554,19 @@ function todoCount(){
   tNegTodo;
 }
 
+/* demo-only footer items: the label on demo deployments, the reset button for an admin outside production */
+const demoMode=()=>!!(S.config&&S.config.demo_mode);
+function renderDemoFooter(u){
+  const label=$('#foot-demo'), reset=$('#foot-reset');
+  if(label) label.hidden=!demoMode();
+  if(reset) reset.hidden=!(demoMode()&&S.config.app_env!=='production'&&u&&u.role==='admin');
+}
+
 function renderChrome(){
   const u=me(), r=routeBase();
 
   document.body.classList.toggle('authed',!!u);
+  renderDemoFooter(u);
 
   if(!u){
     $('#hrow').innerHTML =

@@ -2,15 +2,15 @@
 function myTodos(){
   const id=me().id, T=[];
   (S.offers||[]).forEach(o=>{ const c=CROPS[o.crop].n;
-    if(o.status==='pending'&&o.waiting==='seller'&&o.seller===id) T.push(['📩',`${dispName(user(o.buyer))} ${monTxt(o.qty)} ${c} কিনতে চান, ${tk(o.price,1)}/কেজি`,'রাজি, পাল্টা দাম বা না বলুন',`#/offer/${o.id}`]);
-    if(o.status==='countered'&&o.waiting==='buyer'&&o.buyer===id) T.push(['↔️',`${dispName(user(o.seller))} পাল্টা দাম দিয়েছেন: ${tk(o.price,1)}/কেজি`,'রাজি হলে পেমেন্ট করুন',`#/offer/${o.id}`]); });
+    if(o.status==='pending'&&o.waiting==='seller'&&o.seller===id) T.push(['📩',`${esc(dispName(user(o.buyer)))} ${monTxt(o.qty)} ${c} কিনতে চান, ${tk(o.price,1)}/কেজি`,'রাজি, পাল্টা দাম বা না বলুন',`#/offer/${o.id}`]);
+    if(o.status==='countered'&&o.waiting==='buyer'&&o.buyer===id) T.push(['↔️',`${esc(dispName(user(o.seller)))} পাল্টা দাম দিয়েছেন: ${tk(o.price,1)}/কেজি`,'রাজি হলে পেমেন্ট করুন',`#/offer/${o.id}`]); });
   (S.orders||[]).forEach(o=>{ const c=CROPS[o.crop].n, b=(S.bookings||[]).find(x=>x.id===o.booking);
     if(o.status==='awaiting_payment'&&o.buyer===id) T.push(['💳',`${monTxt(o.qty)} ${c}: ${tk(o.buyer_total)} পেমেন্ট করুন`,'পেমেন্ট হলে অর্ডার নিশ্চিত হবে',`#/order/${o.id}`]);
     if(o.status==='confirmed'&&o.seller===id&&o.transport==='self') T.push(['📦',`${monTxt(o.qty)} ${c} পাইকারকে বুঝিয়ে দিন`,'দিয়ে "হস্তান্তর করেছি" চাপুন',`#/order/${o.id}`]);
-    if(o.status==='confirmed'&&o.seller===id&&b&&b.status==='pickup_scheduled') T.push(['🚚',`ট্রাক আসছে: ${b.pickup_time||''}`,`${monTxt(o.qty)} ${c} তৈরি রাখুন, তুলে দিয়ে নিশ্চিত করুন`,`#/order/${o.id}`]);
+    if(o.status==='confirmed'&&o.seller===id&&b&&b.status==='pickup_scheduled') T.push(['🚚',`ট্রাক আসছে: ${esc(b.pickup_time||'')}`,`${monTxt(o.qty)} ${c} তৈরি রাখুন, তুলে দিয়ে নিশ্চিত করুন`,`#/order/${o.id}`]);
     if(o.status==='handed_over'&&o.buyer===id) T.push(['✅',`${monTxt(o.qty)} ${c} পৌঁছালে বুঝে নিন`,'"মাল বুঝে পেয়েছি" চাপলে বিক্রেতা টাকা পাবেন',`#/order/${o.id}`]);
-    if(o.status==='completed'&&!(S.rated||[]).includes(o.id)&&o.completed_at>Date.now()-14*DAY) T.push(['⭐',`${dispName(user(o.buyer===id?o.seller:o.buyer))}-কে রেটিং দিন`,`${monTxt(o.qty)} ${c}`,`#/order/${o.id}`]); });
-  (S.inspections||[]).forEach(i=>{ if(i.status==='requested'&&i.seller===id) T.push(['🔍',`${dispName(user(i.buyer))} মাল দেখতে চান (${i.kind==='video'?'ভিডিও':'সরাসরি'})`,esc(i.pref),`#/inspection/${i.id}`]); });
+    if(o.status==='completed'&&!(S.rated||[]).includes(o.id)&&o.completed_at>Date.now()-14*DAY) T.push(['⭐',`${esc(dispName(user(o.buyer===id?o.seller:o.buyer)))}-কে রেটিং দিন`,`${monTxt(o.qty)} ${c}`,`#/order/${o.id}`]); });
+  (S.inspections||[]).forEach(i=>{ if(i.status==='requested'&&i.seller===id) T.push(['🔍',`${esc(dispName(user(i.buyer)))} মাল দেখতে চান (${i.kind==='video'?'ভিডিও':'সরাসরি'})`,esc(i.pref),`#/inspection/${i.id}`]); });
   return T;
 }
 function myAlerts(){
