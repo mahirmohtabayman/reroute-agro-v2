@@ -47,7 +47,7 @@ V.login = () => {
     <div class="choice c3">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪'],['admin','অপারেশন','🛠️']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div>
     ${loginRole!=='admin'?`<div class="panel" style="margin-top:16px">
       <label class="field${LG.err?' err':''}" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" data-lg="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(LG.phone)}" ${LG.err?'aria-invalid="true" aria-describedby="lg-err"':''}></label>
-      <label class="field${LG.err?' err':''}"><span>পাসওয়ার্ড</span>${pwInput('lg-password','password','LG','current-password','আপনার পাসওয়ার্ড')}</label>
+      <label class="field${LG.err?' err':''}"><span class="label-row">পাসওয়ার্ড<button type="button" class="linkbtn sm" data-ui="forgot">পাসওয়ার্ড ভুলে গেছেন?</button></span>${pwInput('lg-password','password','LG','current-password','আপনার পাসওয়ার্ড')}</label>
       ${LG.err?`<p class="form-error" id="lg-err" role="alert">${esc(LG.err)}</p>`:''}
       <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="login-phone">ঢুকুন</button>
       <p class="muted sm" style="margin-top:12px;text-align:center">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p>

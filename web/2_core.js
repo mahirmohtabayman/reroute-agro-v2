@@ -264,7 +264,8 @@ function say(text){
 }
 
 function avatar(u,lg){
-  return `<span class="av ${lg?'lg':''}">${u.has_photo?`<img src="/api/users/${u.id}/photo?v=${u.has_photo?1:0}" alt="">`:ic(u.role==='paikar'?'🏪':'🧑‍🌾')}</span>`;
+  const local=S.me&&u.id===S.me.id&&isDemoUser(u)?demoPhoto(u.id):null;
+  return `<span class="av ${lg?'lg':''}">${local?`<img src="${local}" alt="">`:u.has_photo?`<img src="/api/users/${u.id}/photo?v=${u.photo_v||(u.has_photo?1:0)}" alt="">`:ic(u.role==='paikar'?'🏪':'🧑‍🌾')}</span>`;
 }
 
 function stars(u){
@@ -580,6 +581,8 @@ function renderChrome(){
         todo=todoCount();
 
   $('#hrow').innerHTML =
+    `<button class="iconbtn menu-btn" type="button" data-ui="side-toggle" aria-controls="tnav" aria-expanded="${sideExpanded()}" aria-label="মেনু খুলুন বা বন্ধ করুন" title="মেনু">${ic('menu')}</button>`
+    +
     LOGO
     +
     `<div class="hright">
@@ -606,10 +609,10 @@ function renderChrome(){
   const nav = u.role==='admin'?NAV_ADMIN:NAV_TRADER;
 
   $('#tnav').innerHTML =
-    `<div class="wrap">${
+    `<div class="drawer-head"><b>মেনু</b><button type="button" class="iconbtn" data-ui="side-toggle" aria-label="মেনু বন্ধ করুন">${ic('x')}</button></div><div class="wrap">${
       nav.map(([h,i,t])=>
-        `<a href="${h}" class="${r===h?'on':''}">
-          ${ic(i)} ${t}
+        `<a href="${h}" class="${r===h?'on':''}" title="${t}">
+          ${ic(i)} <span class="nav-label">${t}</span>
           ${h==='#/deals'&&todo?`<span class="cnt">${nf(todo)}</span>`:''}
         </a>`
       ).join('')

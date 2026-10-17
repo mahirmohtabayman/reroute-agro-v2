@@ -736,6 +736,13 @@ a.kpi.kpi-feature:hover{color:#F1F6F0; border-color:transparent;}
 @media (max-width:560px){.pic .sample-more{display:none;} .lcard .seller-line .push-right{margin-left:0;}}
 
 /* ---------- sign-up, login & OTP ---------- */
+.label-row{display:flex!important; align-items:baseline; justify-content:space-between; gap:10px;}
+.linkbtn.sm{font-size:.84rem; font-weight:600;}
+.photo-edit{align-items:flex-start; gap:16px;}
+.photo-actions{flex:1; min-width:0;}
+.btn-danger-text{color:var(--red);}
+.btn-danger-text:hover{background:var(--red-soft); color:var(--red);}
+
 .form-sec{display:flex; align-items:center; gap:8px; font-size:.95rem; margin:22px 0 2px; padding-top:16px; border-top:1px solid var(--line); color:var(--ink);}
 .form-sec:first-child{margin-top:0; padding-top:0; border-top:0;}
 .form-sec .i{color:var(--green); width:18px; height:18px;}
@@ -790,22 +797,49 @@ a.kpi.kpi-feature:hover{color:#F1F6F0; border-color:transparent;}
   .iconbtn.ring{animation:ring .9s ease-in-out;}
   .track .st.now i{animation:here 2.2s ease-out infinite;}
 }
-.theme-anim,.theme-anim *{transition:background-color .3s ease,color .3s ease,border-color .3s ease,fill .3s ease!important;}
+.theme-anim,.theme-anim *{transition:background-color .34s var(--ease) .04s,color .34s var(--ease) .04s,border-color .34s var(--ease) .04s,fill .34s var(--ease) .04s,box-shadow .34s var(--ease) .04s!important;}
 
-/* ---------- signed-in desktop layout: left sidebar navigation ---------- */
+/* ---------- signed-in navigation: collapsible sidebar (desktop) / drawer (tablet & mobile) ---------- */
+.menu-btn{display:none;}
+body.authed .menu-btn{display:grid;}
+.drawer-head{display:none;}
+.tnav .nav-label{white-space:nowrap;}
 @media (min-width:1024px){
   body.authed{--side:236px;}
-  body.authed header.top .hrow{max-width:none; padding-left:24px; padding-right:24px;}
-  body.authed .tnav{position:fixed; z-index:25; top:calc(65px + env(safe-area-inset-top,0px)); bottom:0; left:0; width:var(--side); border-bottom:0; border-right:1px solid var(--line); overflow-y:auto; padding:18px 12px 24px;}
+  body.authed.side-compact{--side:72px;}
+  body.authed header.top .hrow{max-width:none; padding-left:16px; padding-right:24px;}
+  body.authed .tnav{position:fixed; z-index:25; top:calc(65px + env(safe-area-inset-top,0px)); bottom:0; left:0; width:var(--side); border-bottom:0; border-right:1px solid var(--line); background:var(--surface); overflow-x:hidden; overflow-y:auto; padding:18px 12px 24px; transition:width var(--dur-3) var(--ease);}
   body.authed .tnav .wrap{flex-direction:column; gap:2px; padding:0; max-width:none; overflow:visible;}
-  body.authed .tnav a{border-bottom:0; margin:0; border-radius:10px; padding:10px 12px; font-size:.95rem; position:relative;}
-  body.authed .tnav a .i{width:18px; height:18px;}
-  body.authed .tnav a:hover{background:var(--surface2);}
-  body.authed .tnav a.on{background:var(--green-soft); color:var(--ink);}
+  body.authed .tnav a{border-bottom:0; margin:0; border-radius:10px; padding:10px 12px; font-size:.95rem; position:relative; color:var(--ink2); transition:background-color var(--dur-2) var(--ease),color var(--dur-2) var(--ease),padding var(--dur-3) var(--ease);}
+  body.authed .tnav a .i{width:18px; height:18px; color:var(--muted); transition:color var(--dur-2) var(--ease);}
+  body.authed .tnav a:hover{background:var(--surface2); color:var(--ink);}
+  body.authed .tnav a:hover .i{color:var(--ink2);}
+  body.authed .tnav a.on{background:var(--surface2); color:var(--ink); font-weight:600;}
+  body.authed .tnav a.on .i{color:var(--green);}
   body.authed .tnav a.on::before{content:""; position:absolute; left:-12px; top:8px; bottom:8px; width:3px; border-radius:0 3px 3px 0; background:var(--green);}
   body.authed .tnav a .cnt{margin-left:auto;}
-  body.authed main,body.authed footer{margin-left:var(--side);}
+  body.authed main,body.authed footer{margin-left:var(--side); transition:margin-left var(--dur-3) var(--ease);}
   body.authed main .wrap,body.authed footer .wrap{max-width:1180px; padding-left:32px; padding-right:32px;}
+  /* compact: icons only, labels kept for screen readers and shown as tooltips */
+  body.authed.side-compact .tnav{padding-left:10px; padding-right:10px;}
+  body.authed.side-compact .tnav a{justify-content:center; padding:11px 0;}
+  body.authed.side-compact .tnav .nav-label{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);}
+  body.authed.side-compact .tnav a .cnt{position:absolute; top:3px; right:6px; margin:0; min-width:17px; height:17px; font-size:.62rem;}
+  body.authed.side-compact .tnav a.on::before{left:-10px;}
+}
+@media (max-width:1023px){
+  body.authed .tnav{display:block; position:fixed; z-index:57; top:0; bottom:0; left:0; width:min(300px,86vw); border:0; border-right:1px solid var(--line); background:var(--surface); box-shadow:var(--shadow-lg); padding:12px 12px calc(20px + env(safe-area-inset-bottom,0px)); overflow-y:auto; transform:translateX(-104%); visibility:hidden; transition:transform var(--dur-3) var(--ease),visibility 0s linear var(--dur-3);}
+  body.authed.side-open .tnav{transform:none; visibility:visible; transition:transform var(--dur-3) var(--ease),visibility 0s;}
+  body.authed .drawer-head{display:flex; align-items:center; justify-content:space-between; padding:4px 4px 12px 8px; margin-bottom:6px; border-bottom:1px solid var(--line);}
+  body.authed .tnav .wrap{flex-direction:column; gap:2px; padding:0; overflow:visible;}
+  body.authed .tnav a{border-bottom:0; margin:0; border-radius:10px; padding:12px; font-size:.98rem; color:var(--ink2);}
+  body.authed .tnav a .i{width:19px; height:19px; color:var(--muted);}
+  body.authed .tnav a.on{background:var(--surface2); color:var(--ink); font-weight:600;}
+  body.authed .tnav a.on .i{color:var(--green);}
+  body.authed .tnav a .cnt{margin-left:auto;}
+  body.side-open{overflow:hidden;}
+  body.authed::before{content:""; position:fixed; inset:0; z-index:56; background:var(--overlay); opacity:0; visibility:hidden; transition:opacity var(--dur-3) var(--ease),visibility 0s linear var(--dur-3);}
+  body.authed.side-open::before{opacity:1; visibility:visible; transition:opacity var(--dur-3) var(--ease),visibility 0s;}
 }
 
 /* ---------- responsive ---------- */
@@ -891,7 +925,7 @@ a.kpi.kpi-feature:hover{color:#F1F6F0; border-color:transparent;}
   .choice.c4{grid-template-columns:repeat(2,1fr);}
 }
 @media (prefers-reduced-motion:reduce){
-  .sheet,.toast,.btn,.opt,.chip,.lcard,.lcard .pic img,.todo,a.kpi,.theme-anim,.theme-anim *{transition:none!important;}
+  .sheet,.toast,.btn,.opt,.chip,.lcard,.lcard .pic img,.todo,a.kpi,.theme-anim,.theme-anim *,.tnav,.tnav a,body.authed::before,body.authed main,body.authed footer,.npanel{transition:none!important;}
   .sk::after,.btn[data-busy]::after,.opt[data-busy]::after{animation:appear .01s .3s forwards;}
 }
 </style>
@@ -975,6 +1009,34 @@ function enDigits(v){ return String(v).replace(/[০-৯]/g,d=>String(BN_DIGITS.
 
 /* Long phrases first. These keep the English UI natural instead of word-by-word. */
 const I18N_PHRASES = [
+  ['পাসওয়ার্ড ভুলে গেছেন?','Forgot password?'],
+  ['অ্যাকাউন্টের মোবাইল নম্বর দিন। Reroute অপারেশন টিম ফোন করে আপনার পরিচয় যাচাই করবে, তারপর একটি অস্থায়ী পাসওয়ার্ড দেবে।','Enter your account mobile number. The Reroute operations team will call to verify your identity, then give you a temporary password.'],
+  ['অনুরোধ পাওয়া গেছে। এই নম্বরে অ্যাকাউন্ট থাকলে Reroute অপারেশন টিম ফোন করে আপনার পরিচয় যাচাই করবে, তারপর একটি অস্থায়ী পাসওয়ার্ড দেবে।','Request received. If this number has an account, the Reroute operations team will call to verify your identity and then give you a temporary password.'],
+  ['SMS দিয়ে স্বয়ংক্রিয় রিসেট এখনো চালু হয়নি। অস্থায়ী পাসওয়ার্ড দিয়ে লগ ইন করে অ্যাকাউন্ট পাতা থেকে নতুন পাসওয়ার্ড দিন।','Automatic reset by SMS is not available yet. Log in with the temporary password, then set a new one on your Account page.'],
+  ['অনুরোধ পাঠান','Send request'],
+  ['অনেকবার চেষ্টা করা হয়েছে। এক ঘণ্টা পরে আবার চেষ্টা করুন।','Too many attempts. Please try again in an hour.'],
+  ['পাসওয়ার্ড বদলান','Change password'],
+  ['বর্তমান পাসওয়ার্ড','Current password'],
+  ['নতুন পাসওয়ার্ড আবার দিন','Confirm new password'],
+  ['নতুন পাসওয়ার্ড','New password'],
+  ['বর্তমান পাসওয়ার্ড ঠিক নেই','Current password is incorrect'],
+  ['বর্তমান পাসওয়ার্ড দিন','Enter your current password'],
+  ['নতুন পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে','New password must be at least 6 characters'],
+  ['পাসওয়ার্ড বদলানো হয়েছে','Password changed'],
+  ['ছবি বদলান','Change photo'],
+  ['ছবি দিন','Add photo'],
+  ['বাছাই বাতিল','Clear selection'],
+  ['ছবি সরান','Remove photo'],
+  ['ছবি মুছুন','Delete photo'],
+  ['প্রোফাইল ছবি মুছবেন?','Delete profile photo?'],
+  ['প্রোফাইল ছবি মুছে ফেলা হয়েছে','Profile photo deleted'],
+  ['নতুন ছবি বাছা হয়েছে, এখনো সংরক্ষণ হয়নি। নিচের "সংরক্ষণ করুন" চাপুন।','New photo selected but not saved yet. Press "Save" below.'],
+  ['ডেমো অ্যাকাউন্ট সবাই ব্যবহার করে, তাই ছবি সার্ভারে সংরক্ষণ হয় না। শুধু আপনার এই ব্রাউজার ট্যাবে দেখাবে।','Demo accounts are shared, so the photo is not saved on the server. It only shows in this browser tab.'],
+  ['শুধু JPG, PNG, WebP বা GIF ছবি দেওয়া যাবে','Only JPG, PNG, WebP or GIF images are allowed'],
+  ['একটি লিস্টিংয়ে ৩টির বেশি ছবি দেওয়া যায় না','A listing can have at most 3 photos'],
+  ['অস্থায়ী পাসওয়ার্ড','Temporary password'],
+  ['মেনু খুলুন বা বন্ধ করুন','Open or close menu'],
+  ['মেনু বন্ধ করুন','Close menu'],
   ['লগ ইন হয়নি, আবার চেষ্টা করুন','Login failed, please try again'],
   ['অ্যাকাউন্ট খোলা যায়নি, আবার চেষ্টা করুন','Could not create the account, please try again'],
   ['সার্ভারের সাথে যোগাযোগ হচ্ছে না','Cannot reach the server'],
@@ -1995,7 +2057,8 @@ function say(text){
 }
 
 function avatar(u,lg){
-  return `<span class="av ${lg?'lg':''}">${u.has_photo?`<img src="/api/users/${u.id}/photo?v=${u.has_photo?1:0}" alt="">`:ic(u.role==='paikar'?'🏪':'🧑‍🌾')}</span>`;
+  const local=S.me&&u.id===S.me.id&&isDemoUser(u)?demoPhoto(u.id):null;
+  return `<span class="av ${lg?'lg':''}">${local?`<img src="${local}" alt="">`:u.has_photo?`<img src="/api/users/${u.id}/photo?v=${u.photo_v||(u.has_photo?1:0)}" alt="">`:ic(u.role==='paikar'?'🏪':'🧑‍🌾')}</span>`;
 }
 
 function stars(u){
@@ -2311,6 +2374,8 @@ function renderChrome(){
         todo=todoCount();
 
   $('#hrow').innerHTML =
+    `<button class="iconbtn menu-btn" type="button" data-ui="side-toggle" aria-controls="tnav" aria-expanded="${sideExpanded()}" aria-label="মেনু খুলুন বা বন্ধ করুন" title="মেনু">${ic('menu')}</button>`
+    +
     LOGO
     +
     `<div class="hright">
@@ -2337,10 +2402,10 @@ function renderChrome(){
   const nav = u.role==='admin'?NAV_ADMIN:NAV_TRADER;
 
   $('#tnav').innerHTML =
-    `<div class="wrap">${
+    `<div class="drawer-head"><b>মেনু</b><button type="button" class="iconbtn" data-ui="side-toggle" aria-label="মেনু বন্ধ করুন">${ic('x')}</button></div><div class="wrap">${
       nav.map(([h,i,t])=>
-        `<a href="${h}" class="${r===h?'on':''}">
-          ${ic(i)} ${t}
+        `<a href="${h}" class="${r===h?'on':''}" title="${t}">
+          ${ic(i)} <span class="nav-label">${t}</span>
           ${h==='#/deals'&&todo?`<span class="cnt">${nf(todo)}</span>`:''}
         </a>`
       ).join('')
@@ -2456,6 +2521,183 @@ function banners(){
     </div>`
   ).join('');
 }
+
+/* =====================================================================
+   UI helpers: image validation, demo-account photo, password recovery &
+   change, collapsible sidebar. Clicks on [data-ui] are handled here so the
+   main action table (A) stays as it was.
+   ===================================================================== */
+
+/* ---------- images ---------- */
+const IMG_TYPES = ['image/jpeg','image/png','image/webp','image/gif'];
+const IMG_MAX_MB = 10;
+function imageError(f){
+  if(!f) return 'ছবি পাওয়া যায়নি';
+  if(!IMG_TYPES.includes(f.type)) return 'শুধু JPG, PNG, WebP বা GIF ছবি দেওয়া যাবে';
+  if(f.size>IMG_MAX_MB*1024*1024) return `ছবি ${bd(IMG_MAX_MB)} MB-এর বেশি বড়, ছোট ছবি দিন`;
+  return '';
+}
+
+/* Demo accounts are shared by every visitor, so their photo is kept only in this browser tab (sessionStorage). */
+const isDemoUser = u => !!u && !String(u.id).startsWith('U');
+const DEMO_PHOTO_KEY = id => 'reroute-demo-photo:'+id;
+function demoPhoto(id){ try{ return sessionStorage.getItem(DEMO_PHOTO_KEY(id)); }catch(e){ return null; } }
+function setDemoPhoto(id, data){
+  try{ data?sessionStorage.setItem(DEMO_PHOTO_KEY(id),data):sessionStorage.removeItem(DEMO_PHOTO_KEY(id)); return true; }
+  catch(e){ return false; }
+}
+
+/* ---------- account: photo controls & password change ---------- */
+function photoControls(u){
+  const demo=isDemoUser(u), local=demo&&demoPhoto(u.id), has=AC.photo||local||(!demo&&u.has_photo);
+  return `<div class="photo-actions">
+    <div class="row wrap-it" style="gap:8px">
+      <label class="btn btn-line btn-sm">${ic('edit')} ${has?'ছবি বদলান':'ছবি দিন'}<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-act-change="ac-photo" hidden></label>
+      ${AC.photo?`<button type="button" class="btn btn-soft btn-sm" data-ui="ac-photo-clear">${ic('x')} বাছাই বাতিল</button>`
+        :local?`<button type="button" class="btn btn-soft btn-sm" data-ui="ac-photo-remove-local">${ic('x')} ছবি সরান</button>`
+        :(!demo&&u.has_photo)?`<button type="button" class="btn btn-soft btn-sm btn-danger-text" data-ui="ac-photo-remove">${ic('x')} ছবি মুছুন</button>`:''}
+    </div>
+    <p class="muted xs" style="margin-top:6px">${AC.photo?'নতুন ছবি বাছা হয়েছে, এখনো সংরক্ষণ হয়নি। নিচের "সংরক্ষণ করুন" চাপুন।':`JPG, PNG, WebP বা GIF · ${bd(IMG_MAX_MB)} MB পর্যন্ত`}</p>
+    ${demo?`<p class="note xs" style="margin-top:8px">ডেমো অ্যাকাউন্ট সবাই ব্যবহার করে, তাই ছবি সার্ভারে সংরক্ষণ হয় না। শুধু আপনার এই ব্রাউজার ট্যাবে দেখাবে।</p>`:''}
+  </div>`;
+}
+
+let PWC={err:'',ok:false};
+function pwPanel(){
+  const u=me();
+  if(!u||isDemoUser(u)) return '';
+  return `<div class="panel" style="margin-top:14px">
+    <h3>${ic('lock')} পাসওয়ার্ড বদলান</h3>
+    <label class="field"><span>বর্তমান পাসওয়ার্ড</span><span class="pw-wrap"><input id="pwc-cur" type="password" autocomplete="current-password"><button type="button" class="pw-eye" data-act="pw-toggle" data-for="pwc-cur" aria-label="পাসওয়ার্ড দেখুন">${ic('eye')}</button></span></label>
+    <div class="grid2 tight">
+      <label class="field"><span>নতুন পাসওয়ার্ড</span><span class="pw-wrap"><input id="pwc-new" type="password" autocomplete="new-password" placeholder="অন্তত ৬ অক্ষর"><button type="button" class="pw-eye" data-act="pw-toggle" data-for="pwc-new" aria-label="পাসওয়ার্ড দেখুন">${ic('eye')}</button></span></label>
+      <label class="field"><span>নতুন পাসওয়ার্ড আবার দিন</span><span class="pw-wrap"><input id="pwc-confirm" type="password" autocomplete="new-password"><button type="button" class="pw-eye" data-act="pw-toggle" data-for="pwc-confirm" aria-label="পাসওয়ার্ড দেখুন">${ic('eye')}</button></span></label>
+    </div>
+    ${PWC.err?`<p class="form-error" role="alert">${esc(PWC.err)}</p>`:''}
+    ${PWC.ok?`<p class="good sm" role="status" style="margin-top:14px">পাসওয়ার্ড বদলানো হয়েছে</p>`:''}
+    <button type="button" class="btn btn-green" style="margin-top:14px" data-ui="pw-change">পাসওয়ার্ড বদলান</button>
+  </div>`;
+}
+
+/* ---------- forgot password (operator-assisted: no SMS gateway yet) ---------- */
+function drawForgot(state={}){
+  modal(`<div class="body">
+    <h2>${ic('lock')} পাসওয়ার্ড ভুলে গেছেন?</h2>
+    ${state.done
+      ?`<p class="good" role="status" style="margin-top:14px">${esc(state.done)}</p>
+        <p class="muted sm" style="margin-top:12px">SMS দিয়ে স্বয়ংক্রিয় রিসেট এখনো চালু হয়নি। অস্থায়ী পাসওয়ার্ড দিয়ে লগ ইন করে অ্যাকাউন্ট পাতা থেকে নতুন পাসওয়ার্ড দিন।</p>
+        <button type="button" class="btn btn-green btn-wide" style="margin-top:16px" data-act="close">ঠিক আছে</button>`
+      :`<p class="muted sm" style="margin-top:8px">অ্যাকাউন্টের মোবাইল নম্বর দিন। Reroute অপারেশন টিম ফোন করে আপনার পরিচয় যাচাই করবে, তারপর একটি অস্থায়ী পাসওয়ার্ড দেবে।</p>
+        <label class="field${state.err?' err':''}"><span>মোবাইল নম্বর</span><input id="fp-phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(state.phone||LG.phone||'')}" ${state.err?'aria-invalid="true" aria-describedby="fp-err"':''}></label>
+        ${state.err?`<p class="form-error" id="fp-err" role="alert">${esc(state.err)}</p>`:''}
+        <button type="button" class="btn btn-green btn-wide" style="margin-top:16px" data-ui="forgot-send">অনুরোধ পাঠান</button>`}
+  </div>`);
+  applyLanguage($('#modal'));
+  const f=$('#fp-phone'); if(f) f.focus();
+}
+
+/* ---------- collapsible sidebar / drawer ---------- */
+const SIDE_KEY='reroute-side-compact';
+const sideIsDrawer=()=>window.matchMedia('(max-width:1023px)').matches;
+/* aria-expanded of the menu button: drawer open on small screens, not compact on desktop */
+const sideExpanded=()=>String(sideIsDrawer()?document.body.classList.contains('side-open'):!document.body.classList.contains('side-compact'));
+function syncSideBtn(){ const b=document.querySelector('[data-ui="side-toggle"]'); if(b) b.setAttribute('aria-expanded',sideExpanded()); }
+function setDrawer(open){
+  document.body.classList.toggle('side-open',open);
+  const b=document.querySelector('[data-ui="side-toggle"]');
+  if(b) b.setAttribute('aria-expanded',String(open));
+  if(open){ const a=document.querySelector('#tnav a'); if(a) a.focus(); }
+}
+function toggleSide(){
+  if(sideIsDrawer()){ setDrawer(!document.body.classList.contains('side-open')); return; }
+  const compact=!document.body.classList.contains('side-compact');
+  document.body.classList.toggle('side-compact',compact);
+  try{ localStorage.setItem(SIDE_KEY,compact?'1':'0'); }catch(e){}
+  const b=document.querySelector('[data-ui="side-toggle"]');
+  if(b) b.setAttribute('aria-expanded',String(!compact));
+}
+try{ if(localStorage.getItem(SIDE_KEY)==='1') document.body.classList.add('side-compact'); }catch(e){}
+window.matchMedia('(max-width:1023px)').addEventListener('change',()=>{ document.body.classList.remove('side-open'); syncSideBtn(); });
+window.addEventListener('hashchange',()=>{ if(document.body.classList.contains('side-open')) setDrawer(false); });
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&document.body.classList.contains('side-open')){
+    setDrawer(false);
+    const b=document.querySelector('[data-ui="side-toggle"]'); if(b) b.focus();
+  }
+});
+/* the drawer's backdrop is body::before, so any click outside the drawer closes it */
+document.addEventListener('click',e=>{
+  if(document.body.classList.contains('side-open')&&!e.target.closest('#tnav')&&!e.target.closest('[data-ui="side-toggle"]')) setDrawer(false);
+});
+
+/* ---------- [data-ui] actions ---------- */
+const UI = {
+  'side-toggle':()=>toggleSide(),
+
+  'ac-photo-clear':()=>{ AC.photo=null; render(); },
+
+  'ac-photo-remove-local':()=>{ setDemoPhoto(me().id,null); render(); toast('ছবি সরানো হয়েছে (শুধু এই ব্রাউজারে)','info'); },
+
+  'ac-photo-remove':async()=>{
+    if(!await confirmBox({title:'প্রোফাইল ছবি মুছবেন?',body:'সংরক্ষিত ছবিটি মুছে যাবে। পরে আবার নতুন ছবি দেওয়া যাবে।',ok:'হ্যাঁ, মুছুন',danger:true})) return;
+    await api('/me','POST',{remove_photo:true});
+    await refresh();
+    toast('প্রোফাইল ছবি মুছে ফেলা হয়েছে');
+  },
+
+  'pw-change':async()=>{
+    const cur=$('#pwc-cur').value, nw=$('#pwc-new').value, cf=$('#pwc-confirm').value;
+    PWC={err:'',ok:false};
+    if(!cur) PWC.err='বর্তমান পাসওয়ার্ড দিন';
+    else if(nw.length<6) PWC.err='নতুন পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে';
+    else if(nw!==cf) PWC.err='দুটো পাসওয়ার্ড মিলছে না';
+    if(PWC.err){ render(); return; }
+    try{ await api('/me/password','POST',{current_password:cur,new_password:nw,confirm_password:cf}); }
+    catch(e){ PWC.err=e.message||'পাসওয়ার্ড বদলানো যায়নি'; render(); return; }
+    PWC={err:'',ok:true};
+    render();
+    toast('পাসওয়ার্ড বদলানো হয়েছে');
+  },
+
+  forgot:()=>drawForgot(),
+
+  'forgot-send':async()=>{
+    const phone=onlyDigits($('#fp-phone').value);
+    if(!/^01\d{9}$/.test(phone)){ drawForgot({phone,err:'০১ দিয়ে শুরু ১১ সংখ্যার মোবাইল নম্বর দিন'}); return; }
+    let r;
+    try{ r=await api('/password/forgot','POST',{phone}); }
+    catch(e){ drawForgot({phone,err:e.message||'অনুরোধ পাঠানো যায়নি, আবার চেষ্টা করুন'}); return; }
+    drawForgot({done:r.message});
+  },
+
+  'au-reset':async d=>{
+    if(!await confirmBox({title:'অস্থায়ী পাসওয়ার্ড দেবেন?',
+      body:'আগে ব্যবহারকারীকে তাঁর নিবন্ধিত নম্বরে ফোন করে পরিচয় নিশ্চিত করুন। নতুন পাসওয়ার্ড শুধু একবার এখানে দেখাবে; পুরনো পাসওয়ার্ড আর কাজ করবে না।',
+      ok:'পাসওয়ার্ড তৈরি করুন',danger:true})) return;
+    const r=await api(`/admin/users/${d.id}/reset-password`,'POST');
+    modal(`<div class="body"><h2>${ic('lock')} অস্থায়ী পাসওয়ার্ড</h2>
+      <p class="muted sm" style="margin-top:8px">ফোনে ব্যবহারকারীকে জানান। এই পাসওয়ার্ড আর কোথাও দেখানো বা সংরক্ষণ হবে না।</p>
+      <div class="otp-code" data-i18n-skip style="margin:16px 0;letter-spacing:.15em">${esc(r.temp_password)}</div>
+      <p class="warn sm">লগ ইনের পর ব্যবহারকারী অ্যাকাউন্ট পাতা থেকে নিজের নতুন পাসওয়ার্ড দেবেন।</p>
+      <button type="button" class="btn btn-green btn-wide" style="margin-top:16px" data-act="close">হয়ে গেছে</button></div>`);
+    applyLanguage($('#modal'));
+  }
+};
+
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-ui]');
+  if(!el) return;
+  const fn=UI[el.dataset.ui];
+  if(!fn) return;
+  e.preventDefault();
+  if(el.dataset.busy) return;
+  el.dataset.busy='1';
+  Promise.resolve(fn(el.dataset,el)).catch(()=>{}).finally(()=>{ delete el.dataset.busy; });
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&e.target.id==='fp-phone'){ e.preventDefault(); const b=document.querySelector('[data-ui="forgot-send"]'); if(b) b.click(); }
+});
 const V = {};
 
 /* ---------- minimal home (before login) ---------- */
@@ -2505,7 +2747,7 @@ V.login = () => {
     <div class="choice c3">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪'],['admin','অপারেশন','🛠️']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div>
     ${loginRole!=='admin'?`<div class="panel" style="margin-top:16px">
       <label class="field${LG.err?' err':''}" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" data-lg="phone" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" value="${esc(LG.phone)}" ${LG.err?'aria-invalid="true" aria-describedby="lg-err"':''}></label>
-      <label class="field${LG.err?' err':''}"><span>পাসওয়ার্ড</span>${pwInput('lg-password','password','LG','current-password','আপনার পাসওয়ার্ড')}</label>
+      <label class="field${LG.err?' err':''}"><span class="label-row">পাসওয়ার্ড<button type="button" class="linkbtn sm" data-ui="forgot">পাসওয়ার্ড ভুলে গেছেন?</button></span>${pwInput('lg-password','password','LG','current-password','আপনার পাসওয়ার্ড')}</label>
       ${LG.err?`<p class="form-error" id="lg-err" role="alert">${esc(LG.err)}</p>`:''}
       <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="login-phone">ঢুকুন</button>
       <p class="muted sm" style="margin-top:12px;text-align:center">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p>
@@ -5691,7 +5933,7 @@ V.account = () => {
 
 
       <div
-        class="row"
+        class="row photo-edit"
         style="margin-top:10px">
 
         ${
@@ -5707,17 +5949,7 @@ V.account = () => {
         }
 
 
-        <label class="btn btn-line btn-sm">
-
-          ছবি বদলান
-
-          <input
-            type="file"
-            accept="image/*"
-            data-act-change="ac-photo"
-            hidden>
-
-        </label>
+        ${photoControls(u)}
 
       </div>
 
@@ -5905,7 +6137,7 @@ V.account = () => {
         style="align-items:start">
 
 
-        ${profilePanel}
+        ${profilePanel}${pwPanel()}
 
 
         <div
@@ -6095,7 +6327,7 @@ V.account = () => {
         margin:0 auto
       ">
 
-      ${profilePanel}
+      ${profilePanel}${pwPanel()}
 
     </div>
   `;
@@ -6152,9 +6384,9 @@ V.adminTrucks = () => {
     <label class="field"><span>ঘাঁটি</span><select data-tk="place">${Object.entries(PLACES).map(([k,p])=>`<option value="${k}" ${TK.place===k?'selected':''}>${p.n}</option>`).join('')}</select></label></div>
     <button class="btn btn-green" style="margin-top:12px" data-act="at-add">ট্রাক যোগ করুন</button></div>`;
 };
-V.adminUsers = () => `<div class="phead"><h1>${ic('👥')} ব্যবহারকারী</h1></div><div class="panel scroll"><table class="tbl"><tr><th>নাম</th><th>ধরন</th><th>এলাকা</th><th>মোবাইল</th><th class="num">পয়েন্ট</th><th class="num">ওয়ালেট</th><th>যাচাই</th></tr>
+V.adminUsers = () => `<div class="phead"><h1>${ic('👥')} ব্যবহারকারী</h1></div><div class="panel scroll"><table class="tbl"><tr><th>নাম</th><th>ধরন</th><th>এলাকা</th><th>মোবাইল</th><th class="num">পয়েন্ট</th><th class="num">ওয়ালেট</th><th>যাচাই</th><th>পাসওয়ার্ড</th></tr>
   ${S.admin.users.map(u=>`<tr><td><a href="#/u/${u.id}">${esc(dispName(u))}</a>${u.role==='paikar'?`<div class="muted xs">${esc(u.name)}</div>`:''}</td><td>${roleBn(u.role)}${u.plus_until>Date.now()?' ⭐':''}</td><td>${esc(u.area||'')}, ${PLACES[u.place].n}</td><td>${bd(u.phone)}</td>
-    <td class="num">${nf(u.pts)}</td><td class="num">${tk(u.wallet)}</td><td>${u.verified?'<span class="ver">যাচাইকৃত</span>':`<button class="btn btn-blue btn-sm" data-act="au-verify" data-id="${u.id}">যাচাই করুন</button>`}</td></tr>`).join('')}</table></div>`;
+    <td class="num">${nf(u.pts)}</td><td class="num">${tk(u.wallet)}</td><td>${u.verified?'<span class="ver">যাচাইকৃত</span>':`<button class="btn btn-blue btn-sm" data-act="au-verify" data-id="${u.id}">যাচাই করুন</button>`}</td><td>${u.id.startsWith('U')?`<button class="btn btn-line btn-sm" data-ui="au-reset" data-id="${u.id}">রিসেট</button>`:'<span class="muted xs">ডেমো</span>'}</td></tr>`).join('')}</table></div>`;
 V.adminOrders = () => `<div class="phead"><h1>${ic('📦')} লেনদেন</h1></div><div class="panel scroll"><table class="tbl"><tr><th>তারিখ</th><th>ফসল</th><th>বিক্রেতা → ক্রেতা</th><th class="num">পরিমাণ</th><th class="num">দাম</th><th class="num">মোট</th><th class="num">ফি</th><th>পরিবহন</th><th>অবস্থা</th></tr>
   ${S.admin.orders.map(o=>`<tr><td>${dateBn(o.created)}</td><td>${CROPS[o.crop].n}</td><td>${esc(dispName(user(o.seller)))} → ${esc(dispName(user(o.buyer)))}</td><td class="num">${monTxt(o.qty)}</td><td class="num">${tk(o.price,1)}</td><td class="num">${tk(o.goods)}</td><td class="num">${tk(o.fee-o.fee_disc)}</td>
     <td>${o.transport==='reroute'?'Reroute':'নিজে'}</td><td>${pill(ORDER_ST[o.status])}${o.reason?`<div class="muted xs">${esc(o.reason)}</div>`:''}</td></tr>`).join('')}</table></div>`;
@@ -9125,7 +9357,9 @@ const A = {
       b.biz=AC.biz;
     }
 
-    if(AC.photo){
+    // demo accounts are shared: keep their photo in this browser tab only (see setDemoPhoto)
+    const demoPic=AC.photo&&isDemoUser(me())?AC.photo:null;
+    if(AC.photo&&!demoPic){
       b.photo=AC.photo;
     }
 
@@ -9135,6 +9369,9 @@ const A = {
       b
     );
 
+    // only after the server accepted the rest of the profile
+    const demoSaved=demoPic&&setDemoPhoto(me().id,demoPic);
+
     AC=null;
 
     await refresh();
@@ -9142,6 +9379,13 @@ const A = {
     toast(
       'প্রোফাইল সংরক্ষণ হয়েছে'
     );
+
+    if(demoPic&&!demoSaved){
+      toast('এই ব্রাউজারে ছবি রাখা গেল না (জায়গা কম)','error');
+    }
+    else if(demoPic){
+      toast('প্রোফাইল সংরক্ষণ হয়েছে। ছবিটি শুধু এই ব্রাউজার ট্যাবে রাখা হয়েছে (ডেমো অ্যাকাউন্ট)','info');
+    }
   },
 
   'plus-buy':async()=>{
@@ -9929,12 +10173,17 @@ document.addEventListener(
     }
 
     if(a==='nl-photo'){
+      const picked=[...t.files], bad=picked.map(imageError).find(Boolean);
+      if(bad) toast(bad,'error');
+      if(picked.length>3-NL.photos.length) toast('একটি লিস্টিংয়ে ৩টির বেশি ছবি দেওয়া যায় না','warning');
       const files=
-        [...t.files]
+        picked
+          .filter(f=>!imageError(f))
           .slice(
             0,
             3-NL.photos.length
           );
+      t.value='';
 
       for(
         const f
@@ -9960,6 +10209,8 @@ document.addEventListener(
       &&
       t.files[0]
     ){
+      const bad=imageError(t.files[0]);
+      if(bad){ toast(bad,'error'); t.value=''; return; }
       try{
         AC.photo=
           await shrinkImage(

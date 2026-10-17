@@ -2446,7 +2446,9 @@ const A = {
       b.biz=AC.biz;
     }
 
-    if(AC.photo){
+    // demo accounts are shared: keep their photo in this browser tab only (see setDemoPhoto)
+    const demoPic=AC.photo&&isDemoUser(me())?AC.photo:null;
+    if(AC.photo&&!demoPic){
       b.photo=AC.photo;
     }
 
@@ -2456,6 +2458,9 @@ const A = {
       b
     );
 
+    // only after the server accepted the rest of the profile
+    const demoSaved=demoPic&&setDemoPhoto(me().id,demoPic);
+
     AC=null;
 
     await refresh();
@@ -2463,6 +2468,13 @@ const A = {
     toast(
       'প্রোফাইল সংরক্ষণ হয়েছে'
     );
+
+    if(demoPic&&!demoSaved){
+      toast('এই ব্রাউজারে ছবি রাখা গেল না (জায়গা কম)','error');
+    }
+    else if(demoPic){
+      toast('প্রোফাইল সংরক্ষণ হয়েছে। ছবিটি শুধু এই ব্রাউজার ট্যাবে রাখা হয়েছে (ডেমো অ্যাকাউন্ট)','info');
+    }
   },
 
   'plus-buy':async()=>{
@@ -3250,12 +3262,17 @@ document.addEventListener(
     }
 
     if(a==='nl-photo'){
+      const picked=[...t.files], bad=picked.map(imageError).find(Boolean);
+      if(bad) toast(bad,'error');
+      if(picked.length>3-NL.photos.length) toast('একটি লিস্টিংয়ে ৩টির বেশি ছবি দেওয়া যায় না','warning');
       const files=
-        [...t.files]
+        picked
+          .filter(f=>!imageError(f))
           .slice(
             0,
             3-NL.photos.length
           );
+      t.value='';
 
       for(
         const f
@@ -3281,6 +3298,8 @@ document.addEventListener(
       &&
       t.files[0]
     ){
+      const bad=imageError(t.files[0]);
+      if(bad){ toast(bad,'error'); t.value=''; return; }
       try{
         AC.photo=
           await shrinkImage(

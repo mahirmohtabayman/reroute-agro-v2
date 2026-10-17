@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Response
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -102,7 +102,7 @@ def need_admin(u=Depends(need_user)):
 
 
 # ---------------------------------------------------------------- shaping data
-PUBLIC_USER = "id, role, name, biz, place, area, market, verified, joined, (photo IS NOT NULL) AS has_photo"
+PUBLIC_USER = "id, role, name, biz, place, area, market, verified, joined, (photo IS NOT NULL) AS has_photo, COALESCE(LENGTH(photo), 0) AS photo_v"
 
 
 def public_users():
@@ -129,6 +129,7 @@ def shape_listing(l):
 def private_me(u):
     me = {k: v for k, v in u.items() if k not in ("photo", "pw_hash")}
     me["has_photo"] = u["photo"] is not None
+    me["photo_v"] = len(u["photo"] or "")   # changes with each new photo, so browsers don't show a cached old one
     me["plus_active"] = S.is_plus(u)
     me["bulk"] = S.is_bulk(u["id"])
     return me
@@ -317,6 +318,12 @@ class ProfileIn(BaseModel):
     market: Optional[str] = Field(None, max_length=60)
     biz: Optional[str] = Field(None, max_length=80)
     photo: Optional[str] = None
+    remove_photo: Optional[bool] = None
+
+
+def is_demo(u):
+    """Seeded demo accounts have short ids (f1, p2, a1…); self-registered accounts start with "U"."""
+    return not u["id"].startswith("U")
 
 
 def check_image(data):
@@ -328,8 +335,14 @@ def check_image(data):
 @app.post("/api/me")
 def edit_me(body: ProfileIn, u=Depends(need_user)):
     fields = {k: v for k, v in body.model_dump().items() if v is not None}
+    remove = fields.pop("remove_photo", False)
+    if ("photo" in fields or remove) and is_demo(u):
+        # demo accounts are shared by every visitor, so their photo is never changed on the server
+        raise HTTPException(403, "ডেমো অ্যাকাউন্টের ছবি সার্ভারে বদলানো যায় না")
     if "photo" in fields:
         check_image(fields["photo"])
+    elif remove:
+        fields["photo"] = None
     if fields:
         db.update("users", u["id"], **fields)
     return {"ok": True}
@@ -737,6 +750,63 @@ def admin_verify(uid: str, u=Depends(need_admin)):
     db.update("users", uid, verified=1)
     S.points(uid, 50, "verified", uid, "প্রোফাইল যাচাই")
     S.notify(uid, "✔️ আপনার প্রোফাইল যাচাই হয়েছে। +৫০ পয়েন্ট, আর অগ্রাধিকার ট্রাক বুকিং পাবেন।", "info", "#/account")
+    return {"ok": True}
+
+
+# ---------------------------------------------------------------- password recovery & change
+class ForgotIn(BaseModel):
+    phone: str = Field(max_length=20)
+
+
+GENERIC_FORGOT = ("অনুরোধ পাওয়া গেছে। এই নম্বরে অ্যাকাউন্ট থাকলে Reroute অপারেশন টিম ফোন করে আপনার পরিচয় যাচাই করবে, "
+                  "তারপর একটি অস্থায়ী পাসওয়ার্ড দেবে।")
+
+
+@app.post("/api/password/forgot")
+def password_forgot(body: ForgotIn, request: Request):
+    """No SMS gateway yet, so recovery is operator-assisted. The answer is identical whether or not the number exists."""
+    ip = (request.headers.get("x-forwarded-for") or (request.client.host if request.client else "")).split(",")[0].strip()
+    phone = "".join(ch for ch in body.phone if ch.isdigit())
+    if not auth.allow(f"forgot-ip:{ip}", 10, 3600) or not auth.allow(f"forgot-phone:{phone}", 3, 3600):
+        raise HTTPException(429, "অনেকবার চেষ্টা করা হয়েছে। এক ঘণ্টা পরে আবার চেষ্টা করুন।")
+    u = db.one("SELECT id, role, name, biz FROM users WHERE phone=?", (phone,)) if len(phone) == 11 else None
+    if u and u["id"].startswith("U"):
+        who = u["biz"] if u["role"] == "paikar" and u["biz"] else u["name"]
+        for a in db.q("SELECT id FROM users WHERE role='admin'"):
+            S.notify(a["id"], f"পাসওয়ার্ড রিসেটের অনুরোধ: {who}। ফোন করে পরিচয় যাচাই করে ব্যবহারকারী তালিকা থেকে অস্থায়ী পাসওয়ার্ড দিন।",
+                     "info", "#/admin/users")
+    return {"ok": True, "message": GENERIC_FORGOT}
+
+
+@app.post("/api/admin/users/{uid}/reset-password")
+def admin_reset_password(uid: str, u=Depends(need_admin)):
+    """Admin sets a one-time temporary password after verifying the user by phone. Shown to the admin once only."""
+    t = S.user(uid)
+    if not t or not uid.startswith("U"):
+        raise HTTPException(400, "শুধু নিবন্ধিত অ্যাকাউন্টের পাসওয়ার্ড রিসেট করা যায়")
+    pw = auth.temp_password()
+    db.update("users", uid, pw_hash=auth.hash_password(pw))
+    S.notify(uid, "আপনার পাসওয়ার্ড অপারেশন টিম রিসেট করেছে। লগ ইন করে অ্যাকাউন্ট পাতা থেকে নতুন পাসওয়ার্ড দিন।", "info", "#/account")
+    return {"temp_password": pw}
+
+
+class PasswordIn(BaseModel):
+    current_password: str = Field(min_length=1, max_length=64)
+    new_password: str = Field(min_length=6, max_length=64)
+    confirm_password: str = Field(min_length=6, max_length=64)
+
+
+@app.post("/api/me/password")
+def change_password(body: PasswordIn, u=Depends(need_user)):
+    if is_demo(u):
+        raise HTTPException(403, "ডেমো অ্যাকাউন্টের পাসওয়ার্ড বদলানো যায় না")
+    if not auth.allow(f"pwchange:{u['id']}", 10, 3600):
+        raise HTTPException(429, "অনেকবার চেষ্টা করা হয়েছে। পরে আবার চেষ্টা করুন।")
+    if not auth.check_password(body.current_password, u.get("pw_hash")):
+        raise HTTPException(400, "বর্তমান পাসওয়ার্ড ঠিক নেই")
+    if body.new_password != body.confirm_password:
+        raise HTTPException(400, "দুটো পাসওয়ার্ড মিলছে না")
+    db.update("users", u["id"], pw_hash=auth.hash_password(body.new_password))
     return {"ok": True}
 
 

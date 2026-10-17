@@ -2551,7 +2551,7 @@ V.account = () => {
 
 
       <div
-        class="row"
+        class="row photo-edit"
         style="margin-top:10px">
 
         ${
@@ -2567,17 +2567,7 @@ V.account = () => {
         }
 
 
-        <label class="btn btn-line btn-sm">
-
-          ছবি বদলান
-
-          <input
-            type="file"
-            accept="image/*"
-            data-act-change="ac-photo"
-            hidden>
-
-        </label>
+        ${photoControls(u)}
 
       </div>
 
@@ -2765,7 +2755,7 @@ V.account = () => {
         style="align-items:start">
 
 
-        ${profilePanel}
+        ${profilePanel}${pwPanel()}
 
 
         <div
@@ -2955,7 +2945,7 @@ V.account = () => {
         margin:0 auto
       ">
 
-      ${profilePanel}
+      ${profilePanel}${pwPanel()}
 
     </div>
   `;

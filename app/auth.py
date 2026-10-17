@@ -16,6 +16,7 @@ OTP_TTL = 5 * 60                  # seconds a code stays valid
 OTP_MAX_TRIES = 5
 
 _pending = {}                     # reg_id -> {"otp", "expires", "tries", "data"}
+_hits = {}                        # rate-limit key -> [timestamps]
 _lock = threading.Lock()
 
 
@@ -65,3 +66,22 @@ def check_otp(reg_id: str, otp: str):
             return None, f"কোড মেলেনি। আর {OTP_MAX_TRIES - p['tries']} বার চেষ্টা করা যাবে।"
         del _pending[reg_id]
         return p["data"], None
+
+
+def allow(key: str, limit: int, window: int) -> bool:
+    """Simple in-memory rate limit: at most `limit` calls per `window` seconds for `key`."""
+    now = time.time()
+    with _lock:
+        hits = [t for t in _hits.get(key, []) if t > now - window]
+        if len(hits) >= limit:
+            _hits[key] = hits
+            return False
+        hits.append(now)
+        _hits[key] = hits
+        return True
+
+
+def temp_password() -> str:
+    """One-time password an admin gives the user by phone after verifying them (never logged or stored in plain text)."""
+    alphabet = "abcdefghjkmnpqrstuvwxyz23456789"
+    return "".join(secrets.choice(alphabet) for _ in range(8))
