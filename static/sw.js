@@ -2,8 +2,8 @@
    Caches ONLY public static files (fonts, crop photos, icons, background images) and an offline page.
    API calls (/api/…) — sessions, orders, payments, wallet — always go to the network and are never stored.
    No offline transactions: when there is no connection the app shows the offline page. */
-const VERSION = 'reroute-static-v1';
-const PRECACHE = ['/offline.html', '/static/icons/icon-192.png', '/static/fonts/Kalpurush.woff2'];
+const VERSION = 'reroute-static-v2';
+const PRECACHE = ['/offline.html', '/static/icons/icon-192.png?v=2', '/static/fonts/Kalpurush.woff2'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(PRECACHE)).then(() => self.skipWaiting()));

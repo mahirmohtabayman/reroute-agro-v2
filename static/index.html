@@ -7,8 +7,12 @@
 <meta name="description" content="কৃষক ও পাইকারের সরাসরি পাইকারি বাজার: দরদাম, নিরাপদ পেমেন্ট, নিজস্ব ট্রাক, মজুদ ও লাভ-ক্ষতির হিসাব">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#173D32">
-<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'><path d='M6 15v14M28 15v14' stroke='%238A5A2B' stroke-width='2' stroke-linecap='round'/><path d='M7 6h3.33L7.67 13H3z' fill='%23D93D27'/><path d='M10.33 6h3.34L12.33 13H7.67z' fill='%23F6C453'/><path d='M13.67 6H17v7h-4.67z' fill='%23D93D27'/><path d='M17 6h3.33l1.34 7H17z' fill='%23F6C453'/><path d='M20.33 6h3.34l2.66 7H17z' fill='%23D93D27'/><path d='M23.67 6H27l4 7h-4.67z' fill='%23F6C453'/><path d='M3 13a2.33 2.33 0 0 0 4.67 0z' fill='%23D93D27'/><path d='M7.67 13a2.33 2.33 0 0 0 4.66 0z' fill='%23F6C453'/><path d='M12.33 13a2.33 2.33 0 0 0 4.67 0z' fill='%23D93D27'/><path d='M17 13a2.33 2.33 0 0 0 4.67 0z' fill='%23F6C453'/><path d='M21.67 13a2.33 2.33 0 0 0 4.66 0z' fill='%23D93D27'/><path d='M26.33 13a2.33 2.33 0 0 0 4.67 0z' fill='%23F6C453'/><circle cx='10' cy='21.5' r='2.4' fill='%23F29A2E'/><circle cx='15' cy='21.5' r='2.4' fill='%231E8A4C'/><circle cx='20' cy='21.5' r='2.4' fill='%23F6C453'/><circle cx='25' cy='21.5' r='2.4' fill='%23D93D27'/><rect x='4' y='24' width='26' height='3' rx='1.2' fill='%238A5A2B'/><rect x='7' y='27' width='20' height='4' rx='1' fill='%23B07A3E'/></svg>">
+<!-- favicon: the Reroute Agro leaf logo (same artwork as the header logo); ?v=2 replaces cached old icons -->
+<link rel="icon" href="/favicon.ico?v=2" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="/static/icons/logo.svg?v=2">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32.png?v=2">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16.png?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="/static/fonts/Kalpurush.woff2" as="font" type="font/woff2" crossorigin>
@@ -17,6 +21,9 @@
 try{
   var t=localStorage.getItem('reroute-theme');
   if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;
+  /* signed in: keep the sidebar's space from the first paint so the page does not jump when the account loads */
+  if(localStorage.getItem('reroute-token'))document.documentElement.classList.add('pre-auth');
+  if(localStorage.getItem('reroute-side-compact')==='1')document.documentElement.classList.add('pre-compact');
 }catch(e){}
 </script>
 
@@ -62,6 +69,16 @@ try{
 
   --hero-bg:#173D32;
   --overlay:rgba(16,26,22,.55);
+
+  /* signed-in sidebar and wallet card */
+  --side-bg:#EEF5EB;
+  --side-hover:#E2EEDF;
+  --side-active:#D5E8D6;
+  --wallet-a:#173D32;
+  --wallet-b:#22644B;
+  --wallet-ink:#FFFFFF;
+  --wallet-sub:#CFE3D6;
+  --wallet-accent:#D5EF91;
 
   --r-sm:8px;
   --r:12px;
@@ -119,6 +136,14 @@ try{
     --blue-soft:#18283D;
     --hero-bg:#0E2A21;
     --overlay:rgba(4,10,7,.66);
+    --side-bg:#172B22;
+    --side-hover:#1E3629;
+    --side-active:#244633;
+    --wallet-a:#1E4434;
+    --wallet-b:#153127;
+    --wallet-ink:#F1F6F0;
+    --wallet-sub:#B9D3C2;
+    --wallet-accent:#C6EA83;
     --shadow:0 1px 2px rgba(0,0,0,.35);
     --shadow-md:0 2px 4px rgba(0,0,0,.25),0 14px 30px -14px rgba(0,0,0,.7);
     --shadow-lg:0 28px 56px -18px rgba(0,0,0,.8);
@@ -154,6 +179,14 @@ try{
   --blue-soft:#18283D;
   --hero-bg:#0E2A21;
   --overlay:rgba(4,10,7,.66);
+  --side-bg:#172B22;
+  --side-hover:#1E3629;
+  --side-active:#244633;
+  --wallet-a:#1E4434;
+  --wallet-b:#153127;
+  --wallet-ink:#F1F6F0;
+  --wallet-sub:#B9D3C2;
+  --wallet-accent:#C6EA83;
   --shadow:0 1px 2px rgba(0,0,0,.35);
   --shadow-md:0 2px 4px rgba(0,0,0,.25),0 14px 30px -14px rgba(0,0,0,.7);
   --shadow-lg:0 28px 56px -18px rgba(0,0,0,.8);
@@ -244,7 +277,7 @@ a:hover{color:var(--green-hover);}
 .btn-line:hover{border-color:var(--green); color:var(--green);}
 .btn-sm{padding:6px 12px; min-height:34px; font-size:.86rem; border-radius:8px;}
 .btn-sm .i{width:16px; height:16px;}
-.btn-wide{width:100%; padding:12px 16px; min-height:48px; font-size:1rem;}
+.btn-wide{width:100%; padding:12px 16px; min-height:48px; font-size:1rem; white-space:normal; text-align:center; line-height:1.3;}
 .btn[disabled]{opacity:.45; cursor:not-allowed;}
 :root[data-theme="dark"] .btn-red,:root[data-theme="dark"] .btn-blue{color:#0B120E;}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn-red,:root:not([data-theme="light"]) .btn-blue{color:#0B120E;}}
@@ -345,7 +378,7 @@ header.top{position:sticky; top:env(safe-area-inset-top,0px); z-index:30; backgr
 .sheet a>span .i{width:18px; height:18px;}
 
 /* ---------- page scaffolding ---------- */
-main{padding:28px 0 72px; min-height:72vh;}
+main{padding:28px 0 72px; min-height:100vh;}   /* footer starts below the fold, so content arriving after load never pushes it on screen (CLS) */
 .phead{display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:20px;}
 .phead h1{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
 .phead h1 .i{width:26px; height:26px; color:var(--green); stroke-width:1.8;}
@@ -495,8 +528,9 @@ a.kpi:hover{color:var(--ink); border-color:var(--line2);}
 .kpi .kpi-ic.gold{background:var(--gold-soft); color:var(--gold);}
 .kpi .kpi-ic.blue{background:var(--blue-soft); color:var(--blue);}
 .kpi.hl{border-color:var(--red); box-shadow:0 0 0 1px var(--red);}
-.kpi.link{display:flex; align-items:center; gap:14px;}
-.kpi.link strong{font-size:.98rem; font-weight:600;}
+.kpi.link{display:flex; align-items:center; gap:14px; min-width:0;}
+.kpi.link strong{font-size:.98rem; font-weight:600; overflow-wrap:anywhere;}
+.kpi.link>div:not(.ic-tile){min-width:0; flex:1;}
 .kpi.link .go{margin-left:auto; color:var(--muted);}
 .todo{display:flex; gap:14px; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); padding:12px 16px; margin-bottom:10px; text-decoration:none; color:var(--ink); position:relative; overflow:hidden;}
 .todo::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--harvest);}
@@ -580,20 +614,23 @@ footer .wrap{display:flex; justify-content:space-between; gap:12px; flex-wrap:wr
 .rewards-grid{gap:18px;}
 .points-card{position:relative; overflow:hidden; border-color:color-mix(in srgb,var(--harvest) 45%,var(--line)); background:linear-gradient(160deg,color-mix(in srgb,var(--gold-soft) 85%,var(--surface)),var(--surface) 70%);}
 .rewards-eyebrow{display:inline-flex; align-items:center; gap:7px; font-weight:600; color:var(--gold);}
-.points-value{font-family:var(--font-head); font-size:clamp(2.3rem,5vw,3.2rem); font-weight:700; line-height:1.05; color:var(--ink); margin-top:8px; letter-spacing:-.02em;}
+.points-value{font-family:var(--font-head); font-size:clamp(2rem,4.2vw,2.7rem); font-weight:700; line-height:1.05; color:var(--ink); margin-top:8px; letter-spacing:-.02em;}
 .rewards-badges{margin-top:12px; gap:8px;}
 .rewards-rules{margin:10px 0 0; padding-left:20px; display:grid; gap:6px;}
-.wallet-hero{position:relative; overflow:hidden; isolation:isolate; padding:24px; border-color:color-mix(in srgb,var(--green) 30%,var(--line)); background:linear-gradient(160deg,color-mix(in srgb,var(--green-soft) 90%,var(--surface)),var(--surface) 70%);}
-.wallet-hero::before{content:""; position:absolute; inset:0 0 auto 0; height:3px; background:var(--green); z-index:2;}
+.wallet-hero{position:relative; overflow:hidden; isolation:isolate; padding:26px 26px 22px; border:1px solid color-mix(in srgb,var(--wallet-accent) 22%,transparent); color:var(--wallet-ink); background:linear-gradient(145deg,var(--wallet-a) 0%,var(--wallet-b) 100%); box-shadow:0 18px 40px -22px color-mix(in srgb,var(--wallet-a) 85%,transparent),var(--shadow);}
+.wallet-hero::before{content:""; position:absolute; inset:0 0 auto 0; height:3px; background:linear-gradient(90deg,var(--wallet-accent),var(--harvest)); z-index:2;}
 .wallet-hero-top{position:relative; z-index:2; display:flex; align-items:flex-start; justify-content:space-between; gap:16px;}
-.wallet-eyebrow{display:block; font-weight:600; color:var(--muted); font-size:.9rem;}
-.wallet-value{font-family:var(--font-head); font-size:clamp(2.4rem,5.5vw,3.4rem); font-weight:700; line-height:1.05; color:var(--ink); margin-top:7px; letter-spacing:-.025em;}
-.wallet-icon{width:52px; height:52px; border-radius:14px; display:grid; place-items:center; font-size:1.5rem; background:var(--surface); color:var(--green); border:1px solid var(--line);}
-.wallet-icon .i{width:24px; height:24px;}
-.wallet-divider{position:relative; z-index:2; height:1px; background:var(--line); margin:18px 0 14px;}
-.wallet-usable{position:relative; z-index:2; display:flex; align-items:center; gap:8px; font-size:.9rem; font-weight:600; color:var(--green);}
-.wallet-check{width:22px; height:22px; border-radius:50%; display:grid; place-items:center; background:var(--green); color:var(--on-green); font-size:.75rem;}
-.wallet-glow{display:none;}
+.wallet-hero-top>div:first-child{min-width:0;}
+.wallet-eyebrow{display:block; font-weight:600; color:var(--wallet-sub); font-size:.95rem; letter-spacing:.01em;}
+.wallet-value{font-family:var(--font-head); font-size:clamp(2.6rem,6vw,3.8rem); font-weight:700; line-height:1.05; color:var(--wallet-ink); margin-top:8px; letter-spacing:-.025em; font-variant-numeric:tabular-nums; overflow-wrap:anywhere;}
+.wallet-icon{flex:none; width:54px; height:54px; border-radius:16px; display:grid; place-items:center; font-size:1.5rem; background:color-mix(in srgb,var(--wallet-ink) 10%,transparent); color:var(--wallet-accent); border:1px solid color-mix(in srgb,var(--wallet-ink) 18%,transparent);}
+.wallet-icon .i{width:26px; height:26px;}
+.wallet-divider{position:relative; z-index:2; height:1px; background:color-mix(in srgb,var(--wallet-ink) 16%,transparent); margin:20px 0 14px;}
+.wallet-usable{position:relative; z-index:2; display:flex; align-items:center; gap:8px; font-size:.92rem; font-weight:600; color:var(--wallet-accent);}
+.wallet-check{width:22px; height:22px; border-radius:50%; display:grid; place-items:center; background:var(--wallet-accent); color:var(--wallet-a); font-size:.75rem;}
+.wallet-glow{position:absolute; z-index:1; width:260px; height:260px; right:-90px; top:-110px; border-radius:50%; background:radial-gradient(circle,color-mix(in srgb,var(--wallet-accent) 22%,transparent),transparent 68%); pointer-events:none;}
+/* phones: the balance card comes first, the rest keeps its order */
+@media (max-width:900px){ .rewards-grid>div{display:contents;} .rewards-grid .wallet-hero{order:-1;} }
 
 /* ---------- interaction ---------- */
 .btn,.opt,.chip,.tabs button,.iconbtn,.x{transition:transform .12s ease,background-color .15s ease,border-color .15s ease,color .15s ease,box-shadow .15s ease;}
@@ -678,6 +715,7 @@ footer .wrap{display:flex; justify-content:space-between; gap:12px; flex-wrap:wr
 /* ---------- dashboard ---------- */
 .dash-head h1{font-size:1.7rem;}
 .dash-grid{display:grid; grid-template-columns:1.45fr 1fr; gap:24px; align-items:start;}
+.dash-grid>*{min-width:0;}
 .dash-grid .sec-title{margin-top:0;}
 .pnl-rows>div{display:flex; justify-content:space-between; align-items:baseline; padding:9px 0; border-bottom:1px solid var(--line);}
 .pnl-rows b{font-size:1.15rem; font-weight:700; font-variant-numeric:tabular-nums;}
@@ -801,28 +839,73 @@ a.kpi.kpi-feature:hover{color:#F1F6F0; border-color:transparent;}
   .iconbtn.ring{animation:ring .9s ease-in-out;}
   .track .st.now i{animation:here 2.2s ease-out infinite;}
 }
-.theme-anim,.theme-anim *{transition:background-color .34s var(--ease) .04s,color .34s var(--ease) .04s,border-color .34s var(--ease) .04s,fill .34s var(--ease) .04s,box-shadow .34s var(--ease) .04s!important;}
+/* Theme switch: the colour tokens are registered as animatable colours, so one transition on the root
+   element moves every surface, text, border, gradient and freshly rendered element together. Only while
+   the user switches (class theme-anim), never during navigation; off with reduced motion. */
+@property --bg{syntax:'<color>'; inherits:true; initial-value:#F7F8F2;}
+@property --surface{syntax:'<color>'; inherits:true; initial-value:#FFFFFF;}
+@property --surface2{syntax:'<color>'; inherits:true; initial-value:#EEF2EA;}
+@property --surface3{syntax:'<color>'; inherits:true; initial-value:#E3E9DF;}
+@property --ink{syntax:'<color>'; inherits:true; initial-value:#1C2922;}
+@property --ink2{syntax:'<color>'; inherits:true; initial-value:#33443A;}
+@property --muted{syntax:'<color>'; inherits:true; initial-value:#5E6C63;}
+@property --line{syntax:'<color>'; inherits:true; initial-value:#E1E7DF;}
+@property --line2{syntax:'<color>'; inherits:true; initial-value:#CDD6CB;}
+@property --brand{syntax:'<color>'; inherits:true; initial-value:#173D32;}
+@property --brand-hover{syntax:'<color>'; inherits:true; initial-value:#1F5141;}
+@property --on-brand{syntax:'<color>'; inherits:true; initial-value:#FFFFFF;}
+@property --green{syntax:'<color>'; inherits:true; initial-value:#1E7550;}
+@property --green-hover{syntax:'<color>'; inherits:true; initial-value:#173D32;}
+@property --green-soft{syntax:'<color>'; inherits:true; initial-value:#E3F1E7;}
+@property --on-green{syntax:'<color>'; inherits:true; initial-value:#FFFFFF;}
+@property --lime{syntax:'<color>'; inherits:true; initial-value:#D5EF91;}
+@property --lime-soft{syntax:'<color>'; inherits:true; initial-value:#F1F8DC;}
+@property --on-lime{syntax:'<color>'; inherits:true; initial-value:#173D32;}
+@property --red{syntax:'<color>'; inherits:true; initial-value:#C0393B;}
+@property --red-soft{syntax:'<color>'; inherits:true; initial-value:#FBE7E6;}
+@property --gold{syntax:'<color>'; inherits:true; initial-value:#8A5A00;}
+@property --gold-soft{syntax:'<color>'; inherits:true; initial-value:#FCF1D7;}
+@property --harvest{syntax:'<color>'; inherits:true; initial-value:#C98A12;}
+@property --blue{syntax:'<color>'; inherits:true; initial-value:#2867B2;}
+@property --blue-soft{syntax:'<color>'; inherits:true; initial-value:#E6EEF8;}
+@property --hero-bg{syntax:'<color>'; inherits:true; initial-value:#173D32;}
+@property --overlay{syntax:'<color>'; inherits:true; initial-value:rgba(16,26,22,.55);}
+@property --side-bg{syntax:'<color>'; inherits:true; initial-value:#EEF5EB;}
+@property --side-hover{syntax:'<color>'; inherits:true; initial-value:#E2EEDF;}
+@property --side-active{syntax:'<color>'; inherits:true; initial-value:#D5E8D6;}
+@property --wallet-a{syntax:'<color>'; inherits:true; initial-value:#173D32;}
+@property --wallet-b{syntax:'<color>'; inherits:true; initial-value:#22644B;}
+@property --wallet-ink{syntax:'<color>'; inherits:true; initial-value:#FFFFFF;}
+@property --wallet-sub{syntax:'<color>'; inherits:true; initial-value:#CFE3D6;}
+@property --wallet-accent{syntax:'<color>'; inherits:true; initial-value:#D5EF91;}
+:root.theme-anim{transition-property:--bg,--surface,--surface2,--surface3,--ink,--ink2,--muted,--line,--line2,--brand,--brand-hover,--on-brand,--green,--green-hover,--green-soft,--on-green,--lime,--lime-soft,--on-lime,--red,--red-soft,--gold,--gold-soft,--harvest,--blue,--blue-soft,--hero-bg,--overlay,--side-bg,--side-hover,--side-active,--wallet-a,--wallet-b,--wallet-ink,--wallet-sub,--wallet-accent;transition-duration:300ms;transition-timing-function:cubic-bezier(.4,0,.2,1);}
 
 /* ---------- signed-in navigation: collapsible sidebar (desktop) / drawer (tablet & mobile) ---------- */
 .menu-btn{display:none;}
 body.authed .menu-btn{display:grid;}
 .drawer-head{display:none;}
+body.authed .tnav a:focus-visible{outline:2px solid var(--green); outline-offset:-2px;}
 .tnav .nav-label{white-space:nowrap;}
 @media (min-width:1024px){
   body.authed{--side:236px;}
   body.authed.side-compact{--side:72px;}
   body.authed header.top .hrow{max-width:none; padding-left:16px; padding-right:24px;}
-  body.authed .tnav{position:fixed; z-index:25; top:calc(65px + env(safe-area-inset-top,0px)); bottom:0; left:0; width:var(--side); border-bottom:0; border-right:1px solid var(--line); background:var(--surface); overflow-x:hidden; overflow-y:auto; padding:18px 12px 24px; transition:width var(--dur-3) var(--ease);}
+  body.authed .tnav{position:fixed; z-index:25; top:calc(65px + env(safe-area-inset-top,0px)); bottom:0; left:0; width:var(--side); border-bottom:0; border-right:1px solid color-mix(in srgb,var(--green) 12%,var(--line)); background:var(--side-bg); overflow-x:hidden; overflow-y:auto; padding:18px 12px 24px;}
   body.authed .tnav .wrap{flex-direction:column; gap:2px; padding:0; max-width:none; overflow:visible;}
   body.authed .tnav a{border-bottom:0; margin:0; border-radius:10px; padding:10px 12px; font-size:.95rem; position:relative; color:var(--ink2); transition:background-color var(--dur-2) var(--ease),color var(--dur-2) var(--ease),padding var(--dur-3) var(--ease);}
   body.authed .tnav a .i{width:18px; height:18px; color:var(--muted); transition:color var(--dur-2) var(--ease);}
-  body.authed .tnav a:hover{background:var(--surface2); color:var(--ink);}
+  body.authed .tnav a:hover{background:var(--side-hover); color:var(--ink);}
   body.authed .tnav a:hover .i{color:var(--ink2);}
-  body.authed .tnav a.on{background:var(--surface2); color:var(--ink); font-weight:600;}
+  body.authed .tnav a.on{background:var(--side-active); color:var(--ink); font-weight:600;}
   body.authed .tnav a.on .i{color:var(--green);}
   body.authed .tnav a.on::before{content:""; position:absolute; left:-12px; top:8px; bottom:8px; width:3px; border-radius:0 3px 3px 0; background:var(--green);}
   body.authed .tnav a .cnt{margin-left:auto;}
-  body.authed main,body.authed footer{margin-left:var(--side); transition:margin-left var(--dur-3) var(--ease);}
+  body.authed main,body.authed footer{margin-left:var(--side);}
+  html.pre-auth body:not(.authed) main,html.pre-auth body:not(.authed) footer{margin-left:236px;}
+  html.pre-auth.pre-compact body:not(.authed) main,html.pre-auth.pre-compact body:not(.authed) footer{margin-left:72px;}
+  /* the sidebar width animates only when the user collapses or expands it, never while a page loads (no layout shift) */
+  body.authed.side-anim .tnav{transition:width var(--dur-3) var(--ease);}
+  body.authed.side-anim main,body.authed.side-anim footer{transition:margin-left var(--dur-3) var(--ease);}
   body.authed main .wrap,body.authed footer .wrap{max-width:1180px; padding-left:32px; padding-right:32px;}
   /* compact: icons only, labels kept for screen readers and shown as tooltips */
   body.authed.side-compact .tnav{padding-left:10px; padding-right:10px;}
@@ -832,13 +915,14 @@ body.authed .menu-btn{display:grid;}
   body.authed.side-compact .tnav a.on::before{left:-10px;}
 }
 @media (max-width:1023px){
-  body.authed .tnav{display:block; position:fixed; z-index:57; top:0; bottom:0; left:0; width:min(300px,86vw); border:0; border-right:1px solid var(--line); background:var(--surface); box-shadow:var(--shadow-lg); padding:12px 12px calc(20px + env(safe-area-inset-bottom,0px)); overflow-y:auto; transform:translateX(-104%); visibility:hidden; transition:transform var(--dur-3) var(--ease),visibility 0s linear var(--dur-3);}
+  body.authed .tnav{display:block; position:fixed; z-index:57; top:0; bottom:0; left:0; width:min(300px,86vw); border:0; border-right:1px solid color-mix(in srgb,var(--green) 12%,var(--line)); background:var(--side-bg); box-shadow:var(--shadow-lg); padding:12px 12px calc(20px + env(safe-area-inset-bottom,0px)); overflow-y:auto; transform:translateX(-104%); visibility:hidden; transition:transform var(--dur-3) var(--ease),visibility 0s linear var(--dur-3);}
   body.authed.side-open .tnav{transform:none; visibility:visible; transition:transform var(--dur-3) var(--ease),visibility 0s;}
   body.authed .drawer-head{display:flex; align-items:center; justify-content:space-between; padding:4px 4px 12px 8px; margin-bottom:6px; border-bottom:1px solid var(--line);}
   body.authed .tnav .wrap{flex-direction:column; gap:2px; padding:0; overflow:visible;}
   body.authed .tnav a{border-bottom:0; margin:0; border-radius:10px; padding:12px; font-size:.98rem; color:var(--ink2);}
   body.authed .tnav a .i{width:19px; height:19px; color:var(--muted);}
-  body.authed .tnav a.on{background:var(--surface2); color:var(--ink); font-weight:600;}
+  body.authed .tnav a:hover{background:var(--side-hover); color:var(--ink);}
+  body.authed .tnav a.on{background:var(--side-active); color:var(--ink); font-weight:600;}
   body.authed .tnav a.on .i{color:var(--green);}
   body.authed .tnav a .cnt{margin-left:auto;}
   body.side-open{overflow:hidden;}
@@ -929,7 +1013,7 @@ body.authed .menu-btn{display:grid;}
   .choice.c4{grid-template-columns:repeat(2,1fr);}
 }
 @media (prefers-reduced-motion:reduce){
-  .sheet,.toast,.btn,.opt,.chip,.lcard,.lcard .pic img,.todo,a.kpi,.theme-anim,.theme-anim *,.tnav,.tnav a,body.authed::before,body.authed main,body.authed footer,.npanel{transition:none!important;}
+  .sheet,.toast,.btn,.opt,.chip,.lcard,.lcard .pic img,.todo,a.kpi,:root.theme-anim,.tnav,.tnav a,body.authed::before,body.authed main,body.authed footer,.npanel{transition:none!important;}
   .sk::after,.btn[data-busy]::after,.opt[data-busy]::after{animation:appear .01s .3s forwards;}
 }
 
@@ -979,7 +1063,8 @@ body.authed .menu-btn{display:grid;}
 .ms-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:10px; margin-top:8px;}
 .ms-grid>div{display:flex; flex-direction:column; gap:2px; min-width:0;} .ms-grid b{font-variant-numeric:tabular-nums;}
 .ms-tx{list-style:none; margin:12px 0 8px; padding:0; display:grid; gap:6px; font-size:.9rem;}
-.ms-tx li{display:flex; justify-content:space-between; gap:10px; border-bottom:1px dashed var(--line); padding-bottom:4px;}
+.ms-tx li{display:flex; justify-content:space-between; gap:10px; border-bottom:1px dashed var(--line); padding-bottom:4px; min-width:0;}
+.ms-tx li b{flex:none; white-space:nowrap;}
 .ms-tx li span{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .ms-tx .pos{color:var(--green);} .ms-tx .neg{color:var(--red);}
 .tl{list-style:none; display:flex; flex-wrap:wrap; gap:6px 0; padding:0; margin:12px 0 16px;}
@@ -1325,7 +1410,7 @@ const I18N_PHRASES = [
   ['আবার চেষ্টা','Try again'],
   ['পরে করব','Do it later'],
   ['পেমেন্ট করুন','Pay now'],
-  ['ব্যালান্স যথেষ্ট নয়','Insufficient balance'],
+  ['ব্যালেন্স যথেষ্ট নয়','Insufficient balance'],
   ['কার্ড নম্বর (১৬ সংখ্যা)','Card number (16 digits)'],
   ['ডেবিট/ক্রেডিট কার্ড','Debit/Credit Card'],
   ['মোবাইল নম্বর ও পিন','Mobile number and PIN'],
@@ -1343,12 +1428,12 @@ const I18N_PHRASES = [
   ['সম্পূর্ণ লেনদেন','Completed transactions'],
   ['মোট পরিমাণ','Total quantity'],
   ['চালু লিস্টিং','Active listings'],
-  ['AI পরামর্শ','AI Advice'],
+  ['এআই পরামর্শ','AI Advice'],
   ['কোথায় বেচবেন','Where to sell'],
   ['কোথায় কিনবেন','Where to buy'],
   ['বাজারের অবস্থা','Market overview'],
   ['মূল পরামর্শ','Key Recommendation'],
-  ['AI হিসাব করছে...','AI is calculating...'],
+  ['এআই হিসাব করছে...','AI is calculating...'],
   ['সবচেয়ে লাভ','Best return'],
   ['লাভ বেশি','Higher return'],
   ['স্থানীয় হাট','Local market'],
@@ -1420,7 +1505,7 @@ const I18N_PHRASES = [
   ['হালনাগাদ হয়েছে','Updated successfully'],
   ['অনুরোধ পাঠানো হয়েছে','Request sent'],
   ['Reroute Agro · Social Catalyst | ডেমো সংস্করণ','Reroute Agro · Social Catalyst | Demo version'],
-  ['AI দামের মডেল','AI Price Model'],
+  ['এআই দামের মডেল','AI Price Model'],
   ['দামের চার্ট','Price chart'],
   ['প্রশিক্ষণ','Training'],
   ['অদেখা সময়ে পরীক্ষা','Out-of-sample test'],
@@ -1480,7 +1565,7 @@ const I18N_WORDS = {
   'কেজি':'kg','মণ':'maund','কিমি':'km','টাকা':'BDT','মোট':'Total','প্রতি':'per','সর্বনিম্ন':'Minimum','সর্বোচ্চ':'Maximum','আনুমানিক':'Estimated','প্রায়':'about',
   'বিক্রি':'Sell','কেনা':'Buy','কিনুন':'Buy','কিনবেন':'buy','কিনতে':'buy','বেচবেন':'sell','পাঠান':'Send','পাঠালে':'if sent','পাঠাবেন':'send',
   'তোলা':'pickup','তোলার':'pickup','পৌঁছেছে':'Delivered','পৌঁছে':'delivered','পথে':'In transit','হস্তান্তর':'Handover','ফেরত':'Refund','জমা':'secured',
-  'পেমেন্ট':'Payment','নগদ':'Nagad','বিকাশ':'bKash','কার্ড':'Card','ব্যালান্স':'Balance','পিন':'PIN','নম্বর':'Number','মোবাইল':'Mobile','নাম':'Name',
+  'পেমেন্ট':'Payment','নগদ':'Nagad','বিকাশ':'bKash','কার্ড':'Card','ব্যালেন্স':'Balance','পিন':'PIN','নম্বর':'Number','মোবাইল':'Mobile','নাম':'Name',
   'জেলা':'District','এলাকা':'Area','উপজেলা':'Upazila','ছবি':'Photo','মান':'Quality','গ্রেড':'Grade','রিভিউ':'Reviews','রেটিং':'Rating','যাচাই':'Verify','যাচাইকৃত':'Verified',
   'জাতীয়':'National','পরিচয়পত্র':'ID','লাইসেন্স':'License','চালক':'Driver','গাড়ি':'Vehicle','সব':'All','সবাই':'Everyone','কোনো':'Any','কিছু':'Some','আরও':'More','অন্য':'Other','শুধু':'Only',
   'এই':'This','এখানে':'Here','থেকে':'from','পর্যন্ত':'until','দেখুন':'View','ফিরুন':'Back','ঢুকুন':'Enter','বের':'Logout','সংরক্ষণ':'Save','প্রকাশ':'Publish',
@@ -1513,7 +1598,7 @@ const I18N_UI_FIXES = [
   ['আসসালামু আলাইকুম,','Welcome,'],
   ['চলমান অর্ডার','Active orders'],
   ['এ পর্যন্ত লাভ-ক্ষতি','Profit & loss to date'],
-  ['মোট বিক্রি','Total sales'],
+  ['মোট বিক্রয়','Total sales'],
   ['মোট খরচ','Total costs'],
   ['আনুমানিক লাভ','Estimated profit'],
   ['কোথায় বেচলে/কিনলে লাভ','Find the most profitable market'],
@@ -1555,7 +1640,7 @@ const I18N_UI_FIXES = [
   ['প্রোফাইল যাচাই হলে +৫০','Earn +50 points when your profile is verified.'],
   ['রাজি হওয়ার পর অর্ডার বাতিল করলে −১০','Lose 10 points if you cancel an order after accepting it.'],
   ['ভুয়া লেনদেন ঠেকাতে: পয়েন্ট আসে শুধু পেমেন্ট হওয়া ও মাল পৌঁছানো অর্ডারে, অন্তত ৳৫,০০০-এর বিক্রিতে, আর একই ক্রেতা-বিক্রেতা জোড়া সপ্তাহে ৩ বারের বেশি নয়।','To prevent misuse, points are awarded only for paid and delivered orders, sales of at least ৳5,000, and no more than three qualifying transactions per week between the same buyer and seller.'],
-  ['ওয়ালেট ব্যালান্স','Wallet balance'],
+  ['ওয়ালেট ব্যালেন্স','Wallet balance'],
   ['পেমেন্টে ব্যবহার করা যায়','Available for payments'],
   ['ওয়ালেটের লেনদেন','Wallet transactions'],
   ['পয়েন্টের ইতিহাস','Points history'],
@@ -1597,7 +1682,7 @@ const I18N_UI_FIXES = [
   ['মালের উৎপাদন/কেনা খরচ দেওয়া নেই, তাই লাভ সম্পূর্ণ নয়।','Some production or purchase costs are missing, so the profit figure is incomplete.'],
   ['পেমেন্ট করতে হবে','Payment required'],
   ['পেমেন্ট করুন','Pay now'],
-  ['ব্যালান্স যথেষ্ট নয়','Insufficient wallet balance'],
+  ['ব্যালেন্স যথেষ্ট নয়','Insufficient wallet balance'],
   ['ক্রেতার পেমেন্টের অপেক্ষা।','Waiting for buyer payment.'],
   ['মাল পৌঁছালে ক্রেতা নিশ্চিত করবেন, তখন টাকা আপনার ওয়ালেটে যাবে।','The buyer will confirm delivery, then the payment will be released to your wallet.'],
   ['আপনার টাকা Reroute-এ জমা আছে।','Your payment is being held securely by Reroute.'],
@@ -1647,12 +1732,70 @@ function romanizeBn(s){
     .trim();
 }
 
+/* filled by web/1b_i18n_catalog.js; empty until it has loaded */
+var I18N_CAT = null;
+
+function i18nCatalog(s, depth=0){
+  if (!I18N_CAT || depth > 3) return null;
+  const lead = s.match(/^\s*/)[0], trail = s.match(/\s*$/)[0], core = I18N_CAT.norm(s);
+  if (!core) return null;
+  const one = i18nCatalogOne(core, depth);
+  if (one !== null) return lead + one + trail;
+  /* several sentences in one text node: translate each sentence that the catalogue knows */
+  const parts = core.split(/(।\s*|\s·\s|;\s|\.\s)/);
+  if (parts.length < 3) return null;
+  let hits = 0;
+  const out = parts.map((p, i) => {
+    if (i % 2) return /^।/.test(p) ? '. ' : p;
+    if (!/[\u0980-\u09ff]/.test(p)) return enDigits(p);
+    const t = i18nCatalogOne(p.trim(), depth);
+    if (t === null) return translateBnText(p);   /* a name or place stays as written */
+    hits++; return t;
+  });
+  return hits ? lead + out.join('').replace(/\.\. /g, '. ').replace(/\.\s*$/, '.').trim() + trail : null;
+}
+
+/* one sentence: exact text, then "{}" patterns; leading/trailing separators (·, :, ।) are kept aside */
+function i18nCatalogOne(core, depth){
+  const full = I18N_CAT.exact.get(core);
+  if (full !== undefined) return full;
+  const m0 = core.match(/^([·•|:,।–—-]\s*)?(.*?)(\s*[·•|:,।]+)?$/);
+  const pre = (m0[1] || '').replace(/।\s*/, '. '), body = m0[2], post = (m0[3] || '').replace(/।/g, '.');
+  for (const [b, keepPost] of [[body, true], [body + '।', false]]) {
+    const ex = I18N_CAT.exact.get(b);
+    if (ex !== undefined) return pre + (keepPost ? ex.replace(/[.:]$/, '') + post : ex);
+  }
+  return i18nCatalogPat(core, '', '', depth) ?? i18nCatalogPat(body, pre, post, depth)
+    ?? i18nCatalogPat(body + '।', pre, '', depth);
+}
+
+function i18nCatalogPat(body, pre, post, depth){
+  for (const p of I18N_CAT.pats) {
+    if (p.key && !body.includes(p.key)) continue;
+    const m = body.match(p.re);
+    if (!m) continue;
+    const vals = m.slice(1).map(v => {
+      if (!/[\u0980-\u09ff]/.test(v.replace(/৳/g, ''))) return enDigits(v);
+      const c = i18nCatalog(v, depth + 1);
+      return c !== null ? c : translateBnText(v);
+    });
+    return pre + p.en.replace(/\{(\d+)\}/g, (x, i) => vals[+i] !== undefined ? vals[+i] : '') + post;
+  }
+  return null;
+}
+
 function translateBnText(input){
   if (input == null) return input;
 
   let s = String(input);
+  /* surrounding spaces separate this text from the next element; keep them */
+  const edgeL = s.match(/^\s*/)[0] ? ' ' : '', edgeR = /\S\s+$/.test(s) ? ' ' : '';
 
   if (!/[\u0980-\u09ff]/.test(s)) return enDigits(s);
+
+  /* 1. whole-sentence catalogue (web/1b_i18n_catalog.js) */
+  const hit = i18nCatalog(s);
+  if (hit !== null) return hit;
 
   for (const [bn,en] of I18N_UI_FIXES) {
     if (s.includes(bn)) s = s.split(bn).join(en);
@@ -1715,7 +1858,11 @@ function translateBnText(input){
     'days'
   );
 
-  return s;
+
+  /* all or nothing: a text that cannot be fully translated (a name, a place, a user's note, or a
+     sentence missing from the catalogue) keeps its original language instead of mixing the two */
+  if (/[\u0980-\u09f2\u09f4-\u09ff]/.test(s)) return String(input);
+  return edgeL + s + edgeR;
 }
 
 function langBtn(){
@@ -1756,6 +1903,7 @@ function syncDocumentLanguage(){
 }
 
 const I18N_TEXT_ORIG = new WeakMap();
+const I18N_TEXT_LAST = new WeakMap();
 const I18N_ATTR_ORIG = new WeakMap();
 const I18N_ATTRS = [
   'aria-label',
@@ -1798,7 +1946,8 @@ function translateTextNode(node){
     return;
   }
 
-  if (!I18N_TEXT_ORIG.has(node)) {
+  /* the app may change a text in place (timers, counters): a value we did not write is the new original */
+  if (!I18N_TEXT_ORIG.has(node) || (node.nodeValue !== I18N_TEXT_ORIG.get(node) && node.nodeValue !== I18N_TEXT_LAST.get(node))) {
     I18N_TEXT_ORIG.set(node,node.nodeValue);
   }
 
@@ -1807,6 +1956,7 @@ function translateTextNode(node){
     ? translateBnText(original)
     : original;
 
+  I18N_TEXT_LAST.set(node,next);
   if (node.nodeValue !== next) {
     node.nodeValue = next;
   }
@@ -1831,14 +1981,16 @@ function translateElementAttrs(el){
   for (const attr of I18N_ATTRS) {
     if (!el.hasAttribute(attr)) continue;
 
-    if (!(attr in saved)) {
-      saved[attr] = el.getAttribute(attr);
+    const cur = el.getAttribute(attr);
+    if (!(attr in saved) || (cur !== saved[attr] && cur !== saved['~' + attr])) {
+      saved[attr] = cur;
     }
 
     const next = isEn()
       ? translateBnText(saved[attr])
       : saved[attr];
 
+    saved['~' + attr] = next;
     if (el.getAttribute(attr) !== next) {
       el.setAttribute(attr,next);
     }
@@ -1909,6 +2061,10 @@ function startI18nObserver(){
         translateTextNode(mutation.target);
       }
 
+      if (mutation.type === 'attributes') {
+        translateElementAttrs(mutation.target);
+      }
+
       for (const node of mutation.addedNodes) {
         applyLanguage(node);
       }
@@ -1920,7 +2076,9 @@ function startI18nObserver(){
     {
       subtree:true,
       childList:true,
-      characterData:true
+      characterData:true,
+      attributes:true,
+      attributeFilter:I18N_ATTRS
     }
   );
 
@@ -1929,6 +2087,1373 @@ function startI18nObserver(){
 
 syncDocumentLanguage();
 startI18nObserver();
+/* =====================================================================
+   English catalogue: whole sentences for every Bangla interface string
+   (frontend text, server messages and notifications), found by scanning
+   web/*.js and app/*.py. Checked before the phrase and word fallbacks, so
+   English mode never shows half-translated text for these. "{}" marks a
+   value (number, name, crop) that is passed through and translated on its
+   own; "{1}" picks a value by position when English needs another order.
+   ===================================================================== */
+var I18N_CATALOG = [
+  ["ড্যাশবোর্ড", "Dashboard"],
+  ["আমার লিস্টিং", "My Listings"],
+  ["অফার ও অর্ডার", "Offers & Orders"],
+  ["পরিবহন", "Transportation"],
+  ["মজুদ ও হিসাব", "Stock & Accounts"],
+  ["স্মার্ট হিসাব", "Smart Hisab"],
+  ["এআই পরামর্শ", "AI Advisor"],
+  ["পয়েন্ট ও ওয়ালেট", "Points & Wallet"],
+  ["অ্যাকাউন্ট", "Account"],
+  ["দাম ও পরামর্শ", "Prices & Advice"],
+  ["ট্রাক বহর", "Truck Fleet"],
+  ["ট্রাক বুকিং", "Truck Bookings"],
+  ["ব্যবহারকারী", "Users"],
+  ["সারাংশ", "Overview"],
+  ["হোম", "Home"],
+  ["ওয়ালেট ব্যালেন্স", "Wallet Balance"],
+  ["উপলব্ধ ব্যালেন্স", "Available Balance"],
+  ["মোট বিক্রয়", "Total Sales"],
+  ["মোট খরচ", "Total Expenses"],
+  ["নিট লাভ", "Net Profit"],
+  ["বকেয়া টাকা", "Amount Due"],
+  ["পেমেন্ট রসিদ", "Payment Receipt"],
+  ["বিল ডাউনলোড করুন", "Download Invoice"],
+  ["বাজার সুপারিশ", "Market Recommendation"],
+  ["পেমেন্টে ব্যবহার করা যায়", "Can be used for payments"],
+  ["আমার পয়েন্ট", "My Points"],
+  ["ওয়ালেটের লেনদেন", "Wallet Transactions"],
+  ["পয়েন্টের ইতিহাস", "Points History"],
+  ["পয়েন্ট দিয়ে নিন", "Redeem Points"],
+  ["পয়েন্ট কীভাবে আসে", "How You Earn Points"],
+  ["কাঁচা মরিচ", "Green chili"],
+  ["পাল্টা দাম এসেছে", "Counter-offer received"],
+  ["গৃহীত", "Accepted"],
+  ["পথে আছে", "In transit"],
+  ["পৌঁছে গেছে", "Delivered"],
+  ["সময় প্রস্তাব", "Time proposed"],
+  ["পরিদর্শন নির্ধারিত", "Inspection scheduled"],
+  ["ক্রেতা দেখেছেন", "Viewed by buyer"],
+  ["পরিদর্শন সম্পন্ন", "Inspection completed"],
+  ["বিতর্কিত", "Disputed"],
+  ["{} মণ ({} কেজি)", "{} maund ({} kg)"],
+  ["{} মিনিট আগে", "{} min ago"],
+  ["{} ঘণ্টা আগে", "{} h ago"],
+  ["{} দিন আগে", "{} days ago"],
+  ["{} মাস আগে", "{} months ago"],
+  ["লাইট মোড", "Light mode"],
+  ["ডার্ক মোড", "Dark mode"],
+  ["লোড হচ্ছে...", "Loading..."],
+  ["সার্ভার সাড়া দিচ্ছে না (ইন্টারনেট ধীর?), একটু পরে আবার চেষ্টা করুন", "The server is not responding (slow internet?). Please try again shortly."],
+  ["অজানা", "Unknown"],
+  ["এই কাজ করলে আপনার {} পয়েন্ট কাটা যাবে।", "This will deduct {} points from your account."],
+  ["নিজে লিখুন...", "Write your own..."],
+  ["কারণ (না দিলেও চলবে)", "Reason (optional)"],
+  ["ফিরে যান", "Go back"],
+  ["কারণ ছাড়া {}", "{} without a reason"],
+  ["ভিসা, মাস্টারকার্ড", "Visa, Mastercard"],
+  ["সিমুলেটেড পেমেন্ট", "Simulated payment"],
+  ["টাকা Reroute-এ জমা থাকে, মাল বুঝে পেলে তবেই বিক্রেতা পান। পেমেন্ট সার্ভারে যাচাই হওয়ার পরই অবস্থা বদলায়।", "The money is held by Reroute and released to the seller only after the buyer confirms receipt. The status changes only after the server verifies the payment."],
+  ["{} (ডেমো গেটওয়ে)", "{} (demo gateway)"],
+  ["মার্চেন্ট: Reroute Agro", "Merchant: Reroute Agro"],
+  ["ডেমো: পিন", "Demo: PIN"],
+  ["দিলে সফল হবে, অন্য পিন দিলে ব্যর্থ পেমেন্ট দেখাবে।", "succeeds; any other PIN shows a failed payment."],
+  ["পেছনে", "Back"],
+  ["{} পরিশোধ হয়েছে। লেনদেন নম্বর {}", "{} paid. Transaction ID {}"],
+  ["ছবি পাওয়া যায়নি", "Photo not found"],
+  ["ছবি {} MB-এর বেশি বড়, ছোট ছবি দিন", "The photo is larger than {} MB. Please choose a smaller photo."],
+  ["নতুন ছবি বাছা হয়েছে, এখনো সংরক্ষণ হয়নি। নিচের \"সংরক্ষণ করুন\" চাপুন।", "New photo selected but not saved yet. Press \"Save\" below."],
+  ["JPG, PNG, WebP বা GIF · {} MB পর্যন্ত", "JPG, PNG, WebP or GIF · up to {} MB"],
+  ["ছবি সরানো হয়েছে (শুধু এই ব্রাউজারে)", "Photo removed (in this browser only)"],
+  ["সংরক্ষিত ছবিটি মুছে যাবে। পরে আবার নতুন ছবি দেওয়া যাবে।", "The saved photo will be deleted. You can add a new photo later."],
+  ["হ্যাঁ, মুছুন", "Yes, delete"],
+  ["পাসওয়ার্ড বদলানো যায়নি", "Could not change the password"],
+  ["অনুরোধ পাঠানো যায়নি, আবার চেষ্টা করুন", "Could not send the request. Please try again."],
+  ["অস্থায়ী পাসওয়ার্ড দেবেন?", "Issue a temporary password?"],
+  ["আগে ব্যবহারকারীকে তাঁর নিবন্ধিত নম্বরে ফোন করে পরিচয় নিশ্চিত করুন। নতুন পাসওয়ার্ড শুধু একবার এখানে দেখাবে; পুরনো পাসওয়ার্ড আর কাজ করবে না।", "First call the user on their registered number to confirm their identity. The new password is shown here only once; the old password will stop working."],
+  ["পাসওয়ার্ড তৈরি করুন", "Generate password"],
+  ["ফোনে ব্যবহারকারীকে জানান। এই পাসওয়ার্ড আর কোথাও দেখানো বা সংরক্ষণ হবে না।", "Tell the user over the phone. This password is not shown or stored anywhere else."],
+  ["লগ ইনের পর ব্যবহারকারী অ্যাকাউন্ট পাতা থেকে নিজের নতুন পাসওয়ার্ড দেবেন।", "After logging in, the user sets a new password on the Account page."],
+  ["হয়ে গেছে", "Done"],
+  ["কৃষক, রাজশাহী: নতুন অফার ও পরিদর্শনের অনুরোধ আছে", "Farmer, Rajshahi: new offer and inspection request"],
+  ["কৃষক, নাটোর", "Farmer, Natore"],
+  ["কৃষক, রাজশাহী: জরুরি বিক্রি চলছে", "Farmer, Rajshahi: urgent sale running"],
+  ["পাইকার, ঢাকা: পাল্টা দামের উত্তর দিতে হবে", "Wholesaler, Dhaka: needs to answer a counter-offer"],
+  ["পাইকার, ঢাকা: প্লাস সদস্য", "Wholesaler, Dhaka: Plus member"],
+  ["পাইকার, বগুড়া: মাল পথে আছে", "Wholesaler, Bogura: goods in transit"],
+  ["ডেমো অ্যাকাউন্টগুলোর পাসওয়ার্ড", "Password for the demo accounts"],
+  ["যেমন: রহিম উদ্দিন", "e.g. Rahim Uddin"],
+  ["যেমন: পবা", "e.g. Paba"],
+  ["যেমন: নওহাটা বাজার", "e.g. Nowhata Bazar"],
+  ["শুধু কৃষক ও পাইকারদের জন্য পাইকারি প্ল্যাটফর্ম। সর্বনিম্ন অর্ডার {}।", "A wholesale platform for farmers and wholesalers only. Minimum order {}."],
+  ["নতুন আগে", "Newest first"],
+  ["কম দাম আগে", "Lowest price first"],
+  ["বেশি তাজা আগে", "Freshest first"],
+  ["কাছের আগে", "Nearest first"],
+  ["বেশি পরিমাণ আগে", "Largest quantity first"],
+  ["সব ফসল", "All crops"],
+  ["ফসল, বিক্রেতা, এলাকা...", "Crop, seller, area..."],
+  ["কৃষক ও পাইকারদের তোলা সব মাল। শুধু পাইকারি: সর্বনিম্ন অর্ডার {}", "All produce listed by farmers and wholesalers. Wholesale only: minimum order {}"],
+  ["সব জেলা", "All districts"],
+  ["সর্বোচ্চ দাম (৳/কেজি)", "Maximum price (৳/kg)"],
+  ["বিক্রি শেষ-ও দেখাও", "Show sold-out listings too"],
+  ["{}টি লিস্টিং", "{} listings"],
+  ["বাজারে নিজে ট্রাক ভাড়া করলে", "Hiring a truck yourself at the market"],
+  ["{} → {}, {} কিমি, {} ধরে", "{} → {}, {} km, for {}"],
+  ["সাশ্রয় {}, পৌঁছাতে প্রায় {} ঘণ্টা। ভাড়া চাইলে বিক্রেতার সাথে অর্ধেক অর্ধেক ভাগ করা যায়।", "You save {}; delivery takes about {} hours. The fare can be split half and half with the seller."],
+  ["বন্ধ রাখা", "Paused"],
+  ["{} জরুরি বিক্রি: নষ্ট হওয়ার আগে {}% কম দামে", "{} Urgent sale: {}% off before it spoils"],
+  ["অর্ডারে আটকে আছে", "Reserved in orders"],
+  ["অফার / অর্ডার দিন", "Make an offer / order"],
+  ["তোলা হয়েছে", "Harvested"],
+  ["তাজা থাকবে", "Stays fresh"],
+  ["জায়গা", "Location"],
+  ["Reroute ট্রাক বা নিজের ট্রাক", "Reroute truck or your own truck"],
+  ["{}-এ আজকের বাজার দর আনুমানিক {}/কেজি", "Today's estimated market price in {}: {}/kg"],
+  ["মালিক", "Owner"],
+  ["{}টি", "{}"],
+  ["বাতিল করেছেন", "Cancelled"],
+  ["Reroute-এ", "On Reroute"],
+  ["মসুর ডাল", "Lentils"],
+  ["ভোজ্য তেল", "Edible oil"],
+  ["বাড়বে", "will rise"],
+  ["কমবে", "will fall"],
+  ["{} এআই দামের মডেল", "{} AI price model"],
+  ["আসল ডেটায় প্রশিক্ষিত ও যাচাই করা: Food Commodity Price (OHLC) Dataset of Bangladesh", "Trained and validated on real data: Food Commodity Price (OHLC) Dataset of Bangladesh"],
+  ["{}টি বাজার", "{} markets"],
+  ["{}টি পূর্বাভাস", "{} forecasts"],
+  ["সাধারণ অনুমানে {}%", "{}% with a naive estimate"],
+  ["{}-এ {}", "{} in {}"],
+  ["পরের মাসে {}/কেজি (এখন {}, {} {}%)", "Next month {}/kg (now {}, {} {}%)"],
+  ["কালো: আসল দাম · সবুজ ডটেড: মডেলের পূর্বাভাস (যাচাই) · লাল: পরের মাস", "Black: actual price · Green dotted: model forecast (validation) · Red: next month"],
+  ["এই ডেটাসেটে সবজি নেই। তাই অ্যাপের সবজির বাজারদর এখন ডেমো অনুমান। পাইলটে কৃষি বিপণন অধিদপ্তরের সবজির দৈনিক দামে এই একই মডেল চলবে।", "This dataset has no vegetables, so the app's vegetable prices are demo estimates for now. In a pilot, the same model will run on daily vegetable prices from the Department of Agricultural Marketing."],
+  ["{} {#} {} কিনতে চান, {}/কেজি", "{} wants to buy {} of {} at {}/kg"],
+  ["{} পাল্টা দাম দিয়েছেন: {}/কেজি", "{} sent a counter-offer: {}/kg"],
+  ["{}-এর লিস্টিংয়ে আর মাত্র {} বাকি", "Only {} left in the {} listing"],
+  ["আসসালামু আলাইকুম", "Welcome"],
+  ["{}টি অফার", "{} offers"],
+  ["{}/কেজি · সর্বনিম্ন {} · গ্রেড {} · {}", "{}/kg · minimum {} · grade {} · {}"],
+  ["{} নতুন লিস্টিং", "{} New listing"],
+  ["নতুন লিস্টিং", "New listing"],
+  ["(মজুদে আছে {} মণ)", "({} maund in stock)"],
+  ["কত দিন আগে তোলা মাল", "How many days ago was it harvested"],
+  ["কবে তোলা হয়েছে", "Harvest date"],
+  ["দিন আগে", "days ago"],
+  ["লাভ-ক্ষতির হিসাবের জন্য", "For your profit and loss"],
+  ["উৎপাদন খরচ (৳/কেজি, ঐচ্ছিক)", "Production cost (৳/kg, optional)"],
+  ["যেমন: লাল-পাকা, মাঝারি সাইজ, ক্রেটে রাখা", "e.g. ripe red, medium size, kept in crates"],
+  ["কত মণ বিক্রি করবেন?{}", "How many maunds will you sell?{}"],
+  ["দাম (৳ প্রতি কেজি)", "Price (৳ per kg)"],
+  ["সর্বনিম্ন অর্ডার (মণ, অন্তত ৫)", "Minimum order (maund, at least 5)"],
+  ["মানের বিবরণ (রং, সাইজ, কীভাবে রাখা)", "Quality details (colour, size, storage)"],
+  ["মালের আসল ছবি (৩টি পর্যন্ত)", "Real photos of the produce (up to 3)"],
+  ["{} লিস্টিং প্রকাশ করুন", "{} Publish listing"],
+  ["আপনার দাম একটু বেশি, বিক্রি দেরি হতে পারে।", "Your price is a little high; the sale may take longer."],
+  ["আপনার দাম বাজারের চেয়ে কম।", "Your price is below the market."],
+  ["আপনার দাম বাজারের কাছাকাছি।", "Your price is close to the market."],
+  ["মোট মালের দাম", "Total value of goods"],
+  ["প্ল্যাটফর্ম ফি (১%, বিক্রি হলে কাটা হবে)", "Platform fee (1%, deducted on sale)"],
+  ["অর্ডার অনুযায়ী (ক্রেতার সাথে ভাগ করা যায়)", "Per order (can be shared with the buyer)"],
+  ["অর্ডার অনুযায়ী", "Per order"],
+  ["সব বিক্রি হলে আনুমানিক হাতে পাবেন", "Estimated net if everything sells"],
+  ["{}-এ আজ {}ের বাজার দর আনুমানিক {}/কেজি", "Today's estimated market price of {1} in {0}: {2}/kg"],
+  ["ডেমো অনুমান", "Demo estimate"],
+  ["আমি পুরো", "I pay all"],
+  ["অর্ধেক অর্ধেক", "Half and half"],
+  ["বিক্রেতা পুরো", "Seller pays all"],
+  ["ট্রাক ভাড়া কে দেবেন?", "Who pays the truck fare?"],
+  ["যেমন: গ্রেড A হলে নিয়মিত নেব", "e.g. I will buy regularly if it is grade A"],
+  ["{} {} কিনতে অফার", "{} Offer to buy {}"],
+  ["কত মণ? ({} থেকে {})", "How many maunds? ({} to {})"],
+  ["দাম ৳/কেজি (তালিকায় {})", "Price ৳/kg (listed at {})"],
+  ["তালিকার দামে দিলে বিক্রেতা দ্রুত রাজি হন। কম দাম দিলে তিনি রাজি, পাল্টা দাম বা না বলতে পারেন।", "Sellers accept faster at the listed price. If you offer less, they can accept, counter or decline."],
+  ["বাজারের চেয়ে কম ভাড়া, ট্রাক আমরা পাঠাব", "Lower fare than the market; we send the truck"],
+  ["{} নিজে ট্রাক আনব", "{} I will bring my own truck"],
+  ["ভাড়া ও ব্যবস্থা আপনার", "You arrange and pay for transport"],
+  ["বিক্রেতাকে বার্তা (ঐচ্ছিক)", "Message to the seller (optional)"],
+  ["অফার পাঠান", "Send offer"],
+  ["বিক্রেতা রাজি হলে তবেই পেমেন্ট করতে হবে।", "You pay only after the seller accepts."],
+  ["ট্রাক ভাড়া মোট {}, আপনার ভাগ", "Truck fare {} in total, your share"],
+  ["নিজে আনবেন", "Own transport"],
+  ["পরিবহন ছাড়", "Transport discount"],
+  ["আপনি পরিশোধ করবেন", "You pay"],
+  ["{}{}, {} কিমি। বাজারে ট্রাক ভাড়া করলে {} লাগত, সাশ্রয় {}।", "{}{}, {} km. Hiring a truck at the market would cost {}; you save {}."],
+  ["আজ বিকেল ৪টা", "Today 4 pm"],
+  ["যেমন: সাইজ, রং, কতটা নরম", "e.g. size, colour, firmness"],
+  ["{} কেনার আগে মাল দেখুন", "{} See the produce before buying"],
+  ["{}, {}। বিক্রেতা রাজি হলে সময় জানাবেন।", "{}, {}. The seller will confirm a time if they agree."],
+  ["কীভাবে দেখবেন?", "How do you want to see it?"],
+  ["{} ভিডিও কল", "{} Video call"],
+  ["মোবাইলে মাল দেখাবেন", "The seller shows the produce on a phone"],
+  ["{} সরাসরি গিয়ে", "{} Visit in person"],
+  ["খেত বা গুদামে গিয়ে", "At the field or warehouse"],
+  ["কখন সুবিধা?", "When suits you?"],
+  ["কী দেখতে চান (ঐচ্ছিক)", "What do you want to check (optional)"],
+  ["আপনার উত্তর দরকার", "Your reply is needed"],
+  ["(তালিকায় {})", "(listed at {})"],
+  ["আপনার কাজ আছে", "Action needed"],
+  ["চলছে", "In progress"],
+  ["আমার মালে এসেছে", "Received on my produce"],
+  ["আমি দিয়েছি", "Sent by me"],
+  ["বাজারে পছন্দের মালে অফার দিন। আপনার মালে কেউ অফার দিলেও এখানে দেখাবে।", "Make offers on produce you like in the market. Offers on your own produce also appear here."],
+  ["বাজারে যান", "Go to the market"],
+  ["এখনো কোনো অর্ডার হয়নি", "No orders yet"],
+  ["অফারে বিক্রেতা রাজি হলে অর্ডার তৈরি হয়, তারপর পেমেন্ট আর ট্রাকের খবর এখানে থাকবে।", "An order is created when the seller accepts an offer; payment and truck updates then appear here."],
+  ["কেনার আগে মাল দেখতে চাইলে লিস্টিংয়ের পাতা থেকে ভিডিও কল বা সরাসরি দেখার অনুরোধ করুন।", "To see produce before buying, request a video call or an in-person visit from the listing page."],
+  ["ধাপ", "Steps"],
+  ["অফার → বিক্রেতা রাজি → পেমেন্ট (অর্ডার নিশ্চিত) → মাল হস্তান্তর → সম্পূর্ণ", "Offer → seller accepts → payment (order confirmed) → handover → completed"],
+  ["। টাকা Reroute-এ জমা থাকে, মাল বুঝে পেলে বিক্রেতা পান।", ". The money is held by Reroute and released to the seller after delivery is confirmed."],
+  ["অফার দিয়েছেন", "Offer sent"],
+  ["পাল্টা দাম দিয়েছেন", "Counter-offer sent"],
+  ["রাজি হয়েছেন", "Accepted"],
+  ["অফার তুলে নিয়েছেন", "Offer withdrawn"],
+  ["{} পাল্টা দাম দিন", "{} Counter-offer"],
+  ["ক্রেতা তালিকার পুরো দামেই কিনতে চান, তাই এখানে পাল্টা দাম দেওয়ার দরকার নেই।", "The buyer is offering the full listed price, so no counter-offer is needed."],
+  ["অর্ডার দেখুন ›", "View order ›"],
+  ["{} ঘণ্টার মধ্যে, নইলে মেয়াদ শেষ", "within {} hours, otherwise it expires"],
+  ["আপনার উত্তর দরকার{}", "Your reply is needed{}"],
+  ["প্রস্তাবিত দাম", "Proposed price"],
+  ["Reroute ট্রাক, ভাড়া", "Reroute truck, fare"],
+  ["ক্রেতা দেবেন", "paid by the buyer"],
+  ["বিক্রেতা দেবেন", "paid by the seller"],
+  ["ক্রেতা নিজে আনবেন", "Buyer arranges transport"],
+  ["রাজি হলে আপনি পাবেন (আনুমানিক)", "If you accept, you receive (estimated)"],
+  ["রাজি হলে আপনি দেবেন", "If accepted, you pay"],
+  ["প্ল্যাটফর্ম ফি ১%", "Platform fee 1%"],
+  ["ফি ছাড়", "Fee discount"],
+  ["ট্রাক ভাড়া, আপনার ভাগ", "Truck fare, your share"],
+  ["আপনার হাতে আসবে", "You will receive"],
+  ["মোট পেমেন্ট", "Total payment"],
+  ["। হাটে বেচলে {}।", ". Selling at the local market: {}."],
+  ["সিস্টেম", "System"],
+  ["লিস্টিং দেখুন ›", "View listing ›"],
+  ["তালিকার দাম", "Listed price"],
+  ["পুরো প্রোফাইল ও রিভিউ", "Full profile and reviews"],
+  ["ক্রেতার ভাগ", "Buyer's share"],
+  ["বিক্রেতার ভাগ", "Seller's share"],
+  ["{} পরিবহন চুক্তি", "{} Transport agreement"],
+  ["নতুন প্রস্তাব এসেছে", "New proposal received"],
+  ["ক্রেতার ভাগ {} ({}%), বিক্রেতার ভাগ {} ({}%)", "Buyer's share {} ({}%), seller's share {} ({}%)"],
+  ["{} গ্রহণ করুন", "{} Accept"],
+  ["পাল্টা দিন", "Counter"],
+  ["প্রস্তাব পাঠানো হয়েছে: ক্রেতার ভাগ {} ({}%), বিক্রেতার ভাগ {} ({}%)। অপরজনের উত্তরের অপেক্ষা।", "Proposal sent: buyer's share {} ({}%), seller's share {} ({}%). Waiting for the other party."],
+  ["নতুন প্রস্তাব দিন", "Make a new proposal"],
+  ["পরিবহন খরচের প্রস্তাব দিন", "Propose a transport cost split"],
+  ["অপেক্ষমান", "Pending"],
+  ["পুরনো", "Old"],
+  ["প্রস্তাব: ক্রেতা {}% (৳{}), বিক্রেতা {}% (৳{})", "Proposal: buyer {}% (৳{}), seller {}% (৳{})"],
+  ["{} পরিবহন খরচ চুক্তি", "{} Transport cost agreement"],
+  ["পরিবহন খরচের চুক্তি নিশ্চিত করুন, তারপর পেমেন্ট করুন।", "Confirm the transport cost agreement, then pay."],
+  ["ক্রেতার পেমেন্টের অপেক্ষা। {} ঘণ্টার মধ্যে না দিলে অর্ডার নিজে থেকে বাতিল হবে।", "Waiting for the buyer's payment. The order is cancelled automatically if not paid within {} hours."],
+  ["{} Reroute ট্রাক ঠিক হলে চালকের নাম, নম্বর আর আসার সময় জানানো হবে। মাল তৈরি রাখুন।", "{} Once the Reroute truck is assigned, you will get the driver's name, number and arrival time. Keep the goods ready."],
+  ["ট্রাক মাল নিয়ে রওনা দিলে জানানো হবে।", "You will be notified when the truck leaves with the goods."],
+  ["নিজের ট্রাকে মাল নিয়ে আসুন।", "Collect the goods with your own truck."],
+  ["চাপলে বিক্রেতা টাকা পাবেন। মাল না পেলে বা সমস্যা থাকলে চাপবেন না।", "Pressing this releases the money to the seller. Do not press it if you have not received the goods or there is a problem."],
+  ["। টাকা ওয়ালেটে ফেরত দেওয়া হয়েছে।", ". The money has been refunded to the wallet."],
+  ["{} {} বাতিল করেছেন{}{}", "{} {} cancelled{}{}"],
+  ["অর্ডার বাতিল করুন", "Cancel order"],
+  ["মাল তোলা: {}", "Pickup: {}"],
+  ["বুকিংয়ের বিস্তারিত ›", "Booking details ›"],
+  ["ক্রেতা নিজের ট্রাকে মাল নেবেন।", "The buyer will collect with their own truck."],
+  ["পেমেন্টের পর ফোন নম্বর দেখা যাবে", "The phone number is shown after payment"],
+  ["তালিকার দাম ছিল", "Listed price was"],
+  ["ওয়ালেটে জমা হয়েছে", "Credited to wallet"],
+  ["পরিশোধ করেছেন", "Paid"],
+  ["পরিশোধ করতে হবে", "To be paid"],
+  ["মোট ট্রাক ভাড়া {} (Reroute সেবা চার্জসহ)। চুক্তি: ক্রেতা {}%, বিক্রেতা {}%।", "Total truck fare {} (including the Reroute service charge). Agreement: buyer {}%, seller {}%."],
+  ["মালের খরচ (উৎপাদন/কেনা)", "Cost of goods (production/purchase)"],
+  ["ট্রাক ভাড়া", "Truck fare"],
+  ["প্ল্যাটফর্ম ফি", "Platform fee"],
+  ["মোট কেনা খরচ", "Total purchase cost"],
+  ["প্রতি কেজি খরচ", "Cost per kg"],
+  ["আপনার বাজারে আজকের দর আনুমানিক {}/কেজি", "Today's estimated price in your market: {}/kg"],
+  ["। এই দামে বেচলে আনুমানিক লাভ {}।", ". Selling at this price gives an estimated profit of {}."],
+  ["{} এই অর্ডারের লাভ-ক্ষতি", "{} Profit and loss for this order"],
+  ["অর্ডারের ধাপ", "Order progress"],
+  ["{} টাকার হিসাব", "{} Payment breakdown"],
+  ["সময় নিশ্চিত", "Time confirmed"],
+  ["প্রস্তাবিত সময়", "Proposed time"],
+  ["নিশ্চিত সময়", "Confirmed time"],
+  ["আগামীকাল বিকেল ৪টায়", "Tomorrow at 4 pm"],
+  ["কাল সকাল ১০টায়", "Tomorrow at 10 am"],
+  ["যেমন: ২৫ জানুয়ারি বেলা ১১টায়", "e.g. 25 January at 11 am"],
+  ["যেমন: মূল রাস্তার পাশে আসবেন", "e.g. come to the main road"],
+  ["পরিদর্শনের তারিখ ও সময় প্রস্তাব করুন", "Propose an inspection date and time"],
+  ["অতিরিক্ত নোট (ঐচ্ছিক)", "Additional note (optional)"],
+  ["{} সময় প্রস্তাব করুন", "{} Propose a time"],
+  ["রাজি নই", "Decline"],
+  ["ক্রেতা বলছেন মাল দেখেছেন। আপনি কি নিশ্চিত করবেন?", "The buyer says they have seen the produce. Do you confirm?"],
+  ["{} হ্যাঁ, পরিদর্শন হয়েছে", "{} Yes, the inspection took place"],
+  ["{} না, আসেননি", "{} No, they did not come"],
+  ["বিক্রেতা পরিদর্শনের সময় প্রস্তাব করেছেন", "The seller has proposed an inspection time"],
+  ["{} এই সময়ে আসব — নিশ্চিত করুন", "{} I will come at this time — confirm"],
+  ["পরিদর্শনের সময়", "Inspection time"],
+  ["{} আমি মাল দেখেছি", "{} I have seen the produce"],
+  ["মাল পরিদর্শন করার পর এই বাটন চাপুন। বিক্রেতা নিশ্চিত করলে পরিদর্শন সম্পন্ন হবে।", "Press this button after inspecting the produce. The inspection is complete once the seller confirms."],
+  ["{} পরিদর্শন সম্পন্ন — এখন অফার দিন", "{} Inspection complete — make an offer now"],
+  ["অনুরোধ বাতিল করুন", "Cancel request"],
+  ["ভিডিও কলে", "By video call"],
+  ["যা দেখতে চান", "What you want to check"],
+  ["নোট", "Note"],
+  ["কোনো মন্তব্য নেই", "No comments"],
+  ["{} বিক্রেতা নিশ্চিত করেননি: {}", "{} The seller did not confirm: {}"],
+  ["{} {} মাল দেখা", "{} {} produce inspection"],
+  ["ক্রেতার পছন্দের সময়", "Buyer's preferred time"],
+  ["শেয়ার্ড (অন্যের মালের সাথে)", "Shared (with other loads)"],
+  ["পুরো ট্রাক", "Full truck"],
+  ["{} কিমি, পৌঁছাতে প্রায় {} ঘণ্টা", "{} km, about {} hours to deliver"],
+  ["Reroute সেবা চার্জ ৮%{}", "Reroute service charge 8%{}"],
+  ["মোট দিতে হবে", "Total payable"],
+  ["Reroute-এ সাশ্রয়", "You save with Reroute"],
+  ["/{}টি খালি", "/{} available"],
+  ["ট্রাক বুক করুন ও পেমেন্ট", "Book truck and pay"],
+  ["বুক করতে লগ ইন করুন", "Log in to book"],
+  ["অর্ডারের", "Order"],
+  ["এখনো কোনো বুকিং নেই", "No bookings yet"],
+  ["পাশের ফর্মে ভাড়া দেখে ট্রাক বুক করুন। অফারে Reroute ট্রাক বাছলেও বুকিং এখানে আসবে।", "Check the fare in the form and book a truck. Trucks chosen in an offer also appear here."],
+  ["লগ ইন করলে এখানে আপনার বুকিং দেখাবে", "Log in to see your bookings here"],
+  ["গ্রাম/বাজার", "Village/market"],
+  ["আড়ত/বাজার", "Trading house/market"],
+  ["{} Reroute ট্রাক সার্ভিস", "{} Reroute truck service"],
+  ["আমাদের নিজস্ব ট্রাক। কৃষক ও পাইকার দুজনেই বুক করতে পারেন, অর্ডারের সাথে বা আলাদা।", "Our own trucks. Farmers and wholesalers can both book, with an order or separately."],
+  ["কী কী পাবেন", "What you get"],
+  ["ছাউনিওয়ালা ট্রাক, প্লাস্টিক ক্রেট", "Covered trucks, plastic crates"],
+  ["লোডিংয়ে সাহায্য", "Help with loading"],
+  ["চালকের নাম-নম্বর আগেই জানবেন", "Driver's name and number in advance"],
+  ["প্রতিটি ধাপে নোটিফিকেশন", "Notifications at every step"],
+  ["যাচাইকৃত কৃষক ও প্লাস সদস্যরা আগে ট্রাক পান", "Verified farmers and Plus members get trucks first"],
+  ["ভাড়া কীভাবে ঠিক হয়", "How the fare is calculated"],
+  ["দূরত্ব, মালের ওজন আর গাড়ির ধরন দেখে। কম মাল হলে একই রুটের অন্যদের মালের সাথে", "By distance, weight and vehicle type. Small loads travel with other loads on the same route"],
+  ["শেয়ার্ড ট্রাকে", "in a shared truck"],
+  ["যায়, তাই শুধু নিজের ভাগ দেন। পুরো ট্রাক হলেও ফেরার পথে মাল থাকায় ভাড়া কম। ভাড়ার উপর", ", so you pay only your share. Full trucks are cheaper too because they carry return loads. On top of the fare there is an"],
+  ["৮% সেবা চার্জ", "8% service charge"],
+  ["এর বাইরে কিছু নেই।", "and nothing else."],
+  ["এলাকা ও বহর", "Coverage and fleet"],
+  ["রাজশাহী বিভাগ {} ঢাকা", "Rajshahi Division {} Dhaka"],
+  ["ভাড়া দেখুন ও বুক করুন", "Check fare and book"],
+  ["কোথা থেকে (জেলা)", "From (district)"],
+  ["মাল তোলার ঠিকানা", "Pickup address"],
+  ["কোথায় যাবে (জেলা)", "To (district)"],
+  ["পৌঁছানোর ঠিকানা", "Delivery address"],
+  ["কবে", "When"],
+  ["মাল কেনাবেচার সময় অফারেই Reroute ট্রাক বাছলে আলাদা বুক করতে হয় না।", "If you choose a Reroute truck in your offer, you do not need to book separately."],
+  ["আমার বুকিং", "My bookings"],
+  ["অর্ডারের সাথে যুক্ত", "Linked to an order"],
+  ["বুকিং বাতিল", "Cancel booking"],
+  ["ভাগ", "Share"],
+  ["অর্ডারের শর্ত অনুযায়ী", "As agreed in the order"],
+  ["বাজারে নিজে ভাড়া করলে", "Hiring at the market yourself"],
+  ["ডেলিভারির পর হিসাব চূড়ান্ত: ট্রাক ভাড়া {}", "Final after delivery: truck fare {}"],
+  ["তোলা হবে", "Pickup"],
+  ["পৌঁছাবে", "Delivery"],
+  ["দূরত্ব / সময়", "Distance / time"],
+  ["{} কিমি, প্রায় {} ঘণ্টা", "{} km, about {} hours"],
+  ["{} ভাড়ার হিসাব", "{} Fare breakdown"],
+  ["হালনাগাদ", "Updates"],
+  ["বাজারের বাইরে", "Off-market"],
+  ["দেওয়া নেই", "Not provided"],
+  ["এখনো কিছু নেই", "Nothing yet"],
+  ["তালিকার বাইরের মাল বাজারে দিন", "List unlisted stock on the market"],
+  ["+ মজুদ যোগ", "+ Add stock"],
+  ["বাজারের বাইরে বিক্রি লিখুন", "Record an off-market sale"],
+  ["অর্ডার সম্পূর্ণ হলে মজুদ নিজে থেকে বদলায়। \"অর্ডারে আটকে\" মানে বিক্রিতে রাজি হয়েছেন কিন্তু এখনো হস্তান্তর হয়নি।", "Stock updates automatically when an order is completed. \"Reserved in orders\" means you agreed to sell but have not handed over yet."],
+  ["হাতে আছে", "In hand"],
+  ["বাজারে তালিকায়", "Listed on the market"],
+  ["তালিকার বাইরে", "Not listed"],
+  ["এ পর্যন্ত কেনা", "Bought to date"],
+  ["পথে আসছে", "Incoming"],
+  ["গড় খরচ/কেজি", "Average cost/kg"],
+  ["বাইরে বিক্রি", "Off-market sale"],
+  ["৭ দিন", "7 days"],
+  ["৩০ দিন", "30 days"],
+  ["এই ফিল্টারে কিছু নেই", "Nothing matches this filter"],
+  ["নাম লিখুন", "Enter a name"],
+  ["চূড়ান্ত দাম", "Final price"],
+  ["মজুদের জন্য কেনা", "Bought for stock"],
+  ["ক্যাশব্যাক পেয়েছেন", "Cashback received"],
+  ["মোট বিক্রয় (Reroute + বাইরে)", "Total sales (Reroute + off-market)"],
+  ["বিক্রি করা মালের কেনা খরচ", "Purchase cost of goods sold"],
+  ["বিক্রি করা মালের উৎপাদন খরচ", "Production cost of goods sold"],
+  ["আনুমানিক লাভ / ক্ষতি", "Estimated profit / loss"],
+  ["{} মালের খরচ জানা নেই, তাই এটা পুরো লাভ নয়।", "{} The cost of some goods is unknown, so this is not the full profit."],
+  ["খরচ লিখুন", "Add costs"],
+  ["কেনা মাল যতক্ষণ বিক্রি হয়নি, ততক্ষণ সেটা মজুদ (খরচ নয়)। বিক্রি হলে তার কেনা খরচ হিসাবে আসে।", "Purchased goods are stock (not a cost) until sold. Their purchase cost is counted when they sell."],
+  ["অসম্পূর্ণ", "Incomplete"],
+  ["এখনো বিক্রি নেই", "No sales yet"],
+  ["হিসাব কীভাবে হলো", "How this is calculated"],
+  ["পরিবহন+ফি", "Transport + fee"],
+  ["{} লাভ-ক্ষতি ক্যালকুলেটর", "{} Profit and loss calculator"],
+  ["একটি বিক্রির আগে হিসাব করে দেখুন", "Work out a sale before you make it"],
+  ["মজুদ যোগ", "Add stock"],
+  ["নতুন এন্ট্রি", "New entry"],
+  ["আগের এন্ট্রি", "Previous entries"],
+  ["কেনাবেচার ইতিহাস", "Trade history"],
+  ["লাভ-ক্ষতি", "Profit and loss"],
+  ["খরচ ও এন্ট্রি", "Costs and entries"],
+  ["কত টাকা খরচ", "Amount spent"],
+  ["মোট কত টাকায় বিক্রি", "Total sale amount"],
+  ["মোট কেনা/উৎপাদন খরচ (ঐচ্ছিক)", "Total purchase/production cost (optional)"],
+  ["যেমন: সার, শ্রমিক, ভাড়া", "e.g. fertiliser, labour, rent"],
+  ["যেমন: স্থানীয় হাটে", "e.g. at the local market"],
+  ["ট্রাক ভাড়া (Reroute)", "Truck fare (Reroute)"],
+  ["অন্যান্য", "Other"],
+  ["খরচ বাদে হাতে থাকবে (মালের খরচ ছাড়া)", "Net after costs (excluding cost of goods)"],
+  ["মালের খরচ দিলে আসল লাভ দেখাবে।", "Enter the cost of goods to see the real profit."],
+  ["জানা না থাকলে ফাঁকা", "Leave blank if unknown"],
+  ["বিক্রির দাম ৳/কেজি", "Selling price ৳/kg"],
+  ["{} খরচ ৳/কেজি", "{} cost ৳/kg"],
+  ["কোথায় পাঠাবেন", "Destination"],
+  ["ট্রাক ভাড়া আপনার", "You pay the truck fare"],
+  ["অন্যান্য খরচ ৳", "Other costs ৳"],
+  ["কিনে কোথায় বেচলে", "Where to buy and sell"],
+  ["আপনার উৎপাদন খরচ ৳/কেজি", "Your production cost ৳/kg"],
+  ["জানা থাকলে", "if known"],
+  ["সহজ হিসাব: কোথায় {} বেশি টাকা থাকবে", "Quick calculation: where you keep more money from {}"],
+  ["গড় দাম {}/কেজি (আসল)", "Average price {}/kg (actual)"],
+  ["১. আজকের বাজার দর", "1. Today's market price"],
+  ["প্রতি কেজি", "Per kg"],
+  ["প্রতি মণ", "Per maund"],
+  ["Reroute-এ এখন {}টি {}ের লিস্টিং {}।", "Reroute now has {} {} listings {}."],
+  ["{}-এ বেচলে হাতে থাকবে {} টাকা, নিজের এলাকার চেয়ে {} টাকা বেশি।", "Selling in {} leaves you ৳{}, ৳{} more than in your own area."],
+  ["মালের উৎপাদন খরচ", "Production cost of the goods"],
+  ["ট্রাক ভাড়া {} পর্যন্ত (Reroute)", "Truck fare to {} (Reroute)"],
+  ["উৎপাদন খরচ দিলে আসল লাভ দেখাবে।", "Enter the production cost to see the real profit."],
+  ["২. আপনার খরচ ({})", "2. Your costs ({})"],
+  ["৩. বিক্রি করলে কত থাকবে", "3. What you keep if you sell"],
+  ["৪. কোথায় বিক্রি করলে বেশি লাভ", "4. Where you earn more"],
+  ["{} {}-এর পাইকারকে বেচলে নিজের এলাকার চেয়ে প্রায় {} বেশি থাকবে।", "{} Selling to a wholesaler in {} leaves you about {} more than in your own area."],
+  ["সেখানকার ক্রেতা খুঁজুন", "Find buyers there"],
+  ["লিস্টিং দিন", "Create a listing"],
+  ["{} বেশি দিন রাখা যায় না, তাই দূরের বাজারে পাঠালে পথে নষ্ট হওয়ার কথাও ভাবুন।", "{} does not keep long, so consider spoilage on the way when sending it to a distant market."],
+  ["{}-এর কাছ থেকে কিনে আপনার বাজারে বেচলে আনুমানিক {} টাকা লাভ।", "Buying from {} and selling in your market gives an estimated profit of ৳{}."],
+  ["এখন এই ফসলের লিস্টিং নেই।", "There are no listings for this crop right now."],
+  ["{}-এ বেচার দাম (ডেমো)", "Selling price in {} (demo)"],
+  ["৮% লাভ রাখতে সর্বোচ্চ কেনা দাম", "Maximum purchase price for an 8% margin"],
+  ["এখন এই ফসলের লিস্টিং নেই", "No listings for this crop right now"],
+  ["২. আপনার খরচ ও বিক্রি", "2. Your costs and sales"],
+  ["সর্বোচ্চ কেনা দাম = বেচার দাম ÷ ১.০৮ − ট্রাক ভাড়ার আপনার অর্ধেক (প্রতি কেজি)। এর বেশি দামে কিনলে লাভ ৮%-এর কম।", "Maximum purchase price = selling price ÷ 1.08 − your half of the truck fare (per kg). Buying above it leaves less than an 8% margin."],
+  ["৩–৪. কার কাছ থেকে কিনে বেচলে বেশি লাভ ({})", "3–4. Whom to buy from for the best margin ({})"],
+  ["ট্রাক (অর্ধেক)/কেজি", "Truck (half)/kg"],
+  ["আপনার খরচ/কেজি", "Your cost/kg"],
+  ["লাভ = (আপনার বাজারদর − কেনা দাম − ট্রাক ভাড়ার অর্ধেক) × পরিমাণ। Reroute ফি বিক্রেতা দেন।", "Profit = (your market price − purchase price − half the truck fare) × quantity. The seller pays the Reroute fee."],
+  ["প্রোফাইল যাচাই", "Profile verification"],
+  ["{} পরিবহন ছাড় {}", "{} Transport discount {}"],
+  ["{} ফি ছাড় {}", "{} Fee discount {}"],
+  ["আপনার পয়েন্ট, সুবিধা ও ওয়ালেট এক জায়গায় পরিচালনা করুন।", "Manage your points, benefits and wallet in one place."],
+  ["ভুয়া লেনদেন ঠেকাতে: পয়েন্ট আসে শুধু পেমেন্ট হওয়া ও মাল পৌঁছানো অর্ডারে, অন্তত ৳৫,০০০-এর বিক্রিতে, আর একই ক্রেতা-বিক্রেতা জোড়া সপ্তাহে ৩ বারের বেশি নয়।", "To prevent fake trades, points are earned only on paid and delivered orders worth at least ৳5,000, and no more than 3 times a week for the same buyer–seller pair."],
+  ["যাচাইয়ের জন্য {} জমা দিতে হয়, Reroute অপারেশন টিম যাচাই করে। যাচাই হলে +৫০ পয়েন্ট, অগ্রাধিকার ট্রাক আর ক্যাশব্যাক।", "To get verified, submit {}; the Reroute operations team checks it. Verified accounts get +50 points, priority trucks and cashback."],
+  ["মেয়াদ {} পর্যন্ত", "Valid until {}"],
+  ["দাম {}, মেয়াদ {} দিন। পেমেন্ট সফল হলেই চালু হয়।", "Price {}, valid for {} days. Activated as soon as the payment succeeds."],
+  ["প্ল্যাটফর্ম ফি (বিক্রির ১%)", "Platform fee (1% of sales)"],
+  ["ট্রাক সেবা চার্জ (৮%)", "Truck service charge (8%)"],
+  ["ট্রাক মালিকের কমিশন (৭%)", "Truck owner commission (7%)"],
+  ["প্লাস সাবস্ক্রিপশন", "Plus subscriptions"],
+  ["মোট আয়", "Total revenue"],
+  ["কৃষকদের ক্যাশব্যাক (খরচ)", "Farmer cashback (cost)"],
+  ["নিট", "Net"],
+  ["{} প্ল্যাটফর্মের সারাংশ", "{} Platform summary"],
+  ["{} ট্রাক বুকিং দেখুন", "{} View truck bookings"],
+  ["কৃষক / পাইকার", "Farmers / wholesalers"],
+  ["যাচাইকৃত {}, প্লাস {}", "Verified {}, Plus {}"],
+  ["খোলা অফার {}টি", "{} open offers"],
+  ["সম্পূর্ণ অর্ডার", "Completed orders"],
+  ["বাতিল {}টি", "{} cancelled"],
+  ["মোট কেনাবেচা", "Total trade value"],
+  ["{} Reroute-এর আয়", "{} Reroute revenue"],
+  ["এক লেনদেনে একটাই প্ল্যাটফর্ম ফি (বিক্রেতার কাছ থেকে)। ট্রাকে সেবা চার্জ আর কমিশন আলাদা সেবার আয়। এখন এসক্রোতে জমা: {}", "One platform fee per trade (from the seller). The truck service charge and commission are revenue from a separate service. Currently held in escrow: {}"],
+  ["অর্ডার ও বুকিং", "Orders and bookings"],
+  ["সাম্প্রতিক পেমেন্ট", "Recent payments"],
+  ["কে", "Who"],
+  ["কীসের", "For"],
+  ["পদ্ধতি", "Method"],
+  ["ট্রাক দিন ও নিশ্চিত করুন", "Assign truck and confirm"],
+  ["মাল তোলার সময় ঠিক করুন", "Schedule pickup"],
+  ["{} মাল উঠেছে, পথে রওনা", "{} Loaded and on the way"],
+  ["আসল ভাড়া ৳", "Actual fare ৳"],
+  ["{} পৌঁছে গেছে", "{} Delivered"],
+  ["অর্ডারের সাথে", "With an order"],
+  ["ট্রাক মালিক পাবেন {}", "Truck owner receives {}"],
+  ["{} {} · {}{} · {} কিমি · {} → {} · {} · বুক করেছেন {}", "{} {} · {}{} · {} km · {} → {} · {} · booked by {}"],
+  ["ভাড়া {} + সেবা {} = {} · কমিশন {}{}{}{}", "Fare {} + service {} = {} · commission {}{}{}{}"],
+  ["এখন কোনো ট্রাক পথে বা অপেক্ষায় নেই", "No trucks are on the road or waiting right now"],
+  ["নতুন বুকিংয়ের পেমেন্ট হলে এখানে চলে আসবে।", "New bookings appear here once paid."],
+  ["{} ট্রাক বুকিং ব্যবস্থাপনা", "{} Truck booking management"],
+  ["পেমেন্ট হওয়া বুকিং এখানে আসে। অগ্রাধিকার আগে। প্রতিটি ধাপে কৃষক ও পাইকার নোটিফিকেশন পান।", "Paid bookings appear here, priority first. Farmers and wholesalers are notified at every step."],
+  ["আগের ও পেমেন্ট বাকি ({})", "Past and awaiting payment ({})"],
+  ["ভিত্তি {} + কিমিতে {}", "Base {} + {} per km"],
+  ["বুক করা", "Booked"],
+  ["মেরামতে পাঠান", "Send for maintenance"],
+  ["চালু করুন", "Activate"],
+  ["কোম্পানি/নাম", "Company/name"],
+  ["চালকের নাম", "Driver's name"],
+  ["চালকের মোবাইল", "Driver's mobile"],
+  ["গাড়ির নম্বর", "Vehicle number"],
+  ["সার্ভিস এলাকা", "Service area"],
+  ["এখন পথে", "On the road now"],
+  ["নতুন ট্রাক যোগ করুন", "Add a new truck"],
+  ["গাড়ির ধরন", "Vehicle type"],
+  ["ট্রাক যোগ করুন", "Add truck"],
+  ["যাচাই করুন", "Verify"],
+  ["রিসেট", "Reset"],
+  ["বিক্রেতা → ক্রেতা", "Seller → buyer"],
+  ["আজই পাঠান", "Send today"],
+  ["৩ দিন পরে পাঠান", "Send in 3 days"],
+  ["{} {} প্রথমবার কয়েক সেকেন্ড লাগতে পারে।", "{} {} The first run can take a few seconds."],
+  ["কৃষক হিসেবে দেখুন", "View as farmer"],
+  ["পাইকার হিসেবে দেখুন", "View as wholesaler"],
+  ["আপনার বাজার (যেখানে বেচবেন)", "Your market (where you sell)"],
+  ["লাভ-লোকসান দেখতে দিন", "Enter to see profit or loss"],
+  ["উৎপাদন খরচ ৳/কেজি", "Production cost ৳/kg"],
+  ["মাল বেশি", "High supply"],
+  ["Reroute-এ এখন {}টি লিস্টিং, গড় দাম {}/কেজি (আসল)।", "Reroute now has {} listings, average price {}/kg (actual)."],
+  ["Reroute-এ এখন এই ফসলের লিস্টিং নেই।", "Reroute has no listings for this crop right now."],
+  ["১. আজকের বাজারদর ও ৩ দিনের পূর্বাভাস", "1. Today's market prices and 3-day forecast"],
+  ["৩ দিন পরে", "In 3 days"],
+  ["দিক", "Trend"],
+  ["দাম ৳/কেজি। {}", "Prices in ৳/kg. {}"],
+  ["{} পূর্বাভাস নিশ্চিত নয়। ৩ দিন পরের দাম সাধারণত পূর্বাভাসের ±{}% এর মধ্যে থাকে। এখনকার বাজারদর", "{} Forecasts are not certain. The price in 3 days is usually within ±{}% of the forecast. Current market prices"],
+  ["আসল পাইলটে সরকারি দৈনিক দর বসবে।", "A real pilot will use official daily prices."],
+  ["{} এই খরচে কোনো বাজারেই লাভ হচ্ছে না। সবচেয়ে কম লোকসান", "{} At this cost no market is profitable. The smallest loss is in"],
+  ["-এ ({})।", "({})."],
+  ["মাল তাজা থাকলে কিছুদিন অপেক্ষা করুন, অথবা Reroute-এ অন্তত {}/কেজি দাম চান।", "If the produce stays fresh, wait a few days, or ask at least {}/kg on Reroute."],
+  ["স্থানীয় হাটের চেয়ে {} বেশি", "{} more than the local market"],
+  ["বাজারে পাঠান — হাতে থাকবে আনুমানিক", "market — estimated net"],
+  ["Reroute-এ পাইকারকে বেচলে", "When selling to a wholesaler on Reroute"],
+  ["দাম চাওয়া যুক্তিযুক্ত।", "is a reasonable asking price."],
+  ["আগামী ৩ দিনে {}-এ দাম প্রায় {} বাড়তে পারে, তাড়াহুড়ো করে কম দামে বেচবেন না।", "Prices in {} may rise by about {} over the next 3 days; do not rush to sell cheap."],
+  ["আগামী ৩ দিনে {}-এ দাম প্রায় {} কমতে পারে, দেরি না করে বেচা ভালো।", "Prices in {} may fall by about {} over the next 3 days; it is better to sell soon."],
+  ["আগামী ৩ দিনে {}-এ দাম প্রায় একই থাকতে পারে।", "Prices in {} are likely to stay about the same over the next 3 days."],
+  ["পাইকার {}-এ বেচে ৮% লাভ রাখতে সর্বোচ্চ প্রায় {}/কেজি দিতে পারেন (ট্রাক ভাড়া অর্ধেক ধরে)।", "A wholesaler selling in {} can pay at most about {}/kg and keep an 8% margin (with half the truck fare)."],
+  ["আপনার উৎপাদন খরচ ও ১% ফি উঠাতে অন্তত {}/কেজি লাগবে।", "You need at least {}/kg to cover your production cost and the 1% fee."],
+  ["উৎপাদন খরচ দিলে কত দামের নিচে লোকসান হবে তা-ও দেখাবে।", "Enter your production cost to see the price below which you would make a loss."],
+  ["২. প্রস্তাবিত বিক্রয়মূল্য", "2. Suggested selling price"],
+  ["চাইতে পারেন", "You can ask"],
+  ["এর কমে না বেচাই ভালো", "Better not to sell below"],
+  ["পাইকার সর্বোচ্চ দিতে পারেন", "Most a wholesaler can pay"],
+  ["স্থানীয় হাটে আজ {}/কেজি, খরচ বাদে হাতে থাকে প্রায় {}/কেজি।", "Local market today: {}/kg; after costs you keep about {}/kg."],
+  ["৩. কোথায় বিক্রি করলে বেশি লাভ", "3. Where you earn more"],
+  ["হাতে থাকবে = বিক্রি − পচন − বাজার কমিশন ও ১% ফি − ট্রাক ভাড়া।", "Net = sales − spoilage − market commission and 1% fee − truck fare."],
+  ["সম্ভাব্য বিক্রি", "Expected sales"],
+  ["পচন ও ওজন কমা ({}%)", "Spoilage and weight loss ({}%)"],
+  ["বাজার কমিশন ও Reroute ফি", "Market commission and Reroute fee"],
+  ["আনুমানিক লোকসান", "Estimated loss"],
+  ["লাভ {} থেকে {}", "Profit {} to {}"],
+  ["হাতে {} থেকে {}", "Net {} to {}"],
+  ["উৎপাদন খরচ দেওয়া নেই, তাই আসল লাভ-লোকসান বলা যাচ্ছে না। ওপরে খরচ দিন।", "No production cost entered, so the real profit or loss cannot be shown. Enter your cost above."],
+  ["৪. সম্ভাব্য লাভ বা লোকসান", "4. Possible profit or loss"],
+  ["দাম ওঠানামা ধরলে {} হতে পারে। আজই স্থানীয় হাটে বেচলে হাতে থাকবে {}{}।", "Allowing for price changes, it could be {}. Selling at the local market today leaves you {}{}."],
+  ["{}-এ বেচলে আরও বেশি, প্রায় {}", "Selling in {} leaves more: about {}"],
+  ["লিস্টিং দেখুন ও অফার দিন", "View listings and make an offer"],
+  ["({}) থেকে {}/কেজিতে কিনুন।", "({}) at {}/kg."],
+  ["{}-এ বেচলে আনুমানিক {} {}{}।", "Selling in {}: estimated {} {}{}."],
+  ["এই মুহূর্তে {} কেনার মতো উৎস পাওয়া যায়নি।", "No source to buy {} from right now."],
+  ["চাওয়া দাম যুক্তিযুক্ত, এই দামে কিনলে লাভ থাকার সম্ভাবনা আছে।", "The asking price is reasonable; buying at this price is likely to leave a profit."],
+  ["চাওয়া দাম একটু বেশি, দরদাম করে কমানোর চেষ্টা করুন।", "The asking price is a little high; try to negotiate it down."],
+  ["২. প্রস্তাবিত ক্রয়মূল্য", "2. Suggested purchase price"],
+  ["৮% লাভ রাখতে সর্বোচ্চ", "Maximum for an 8% margin"],
+  ["এর বেশি দিলে লোকসান", "Loss above"],
+  ["সেরা উৎসের চাওয়া দাম", "Best source's asking price"],
+  ["হিসাব: কাল {}-এর সম্ভাব্য দর − পচন − বাজার কমিশন − ট্রাক ভাড়ার আপনার ভাগ।", "Calculation: tomorrow's expected price in {} − spoilage − market commission − your share of the truck fare."],
+  ["গ্রেড {} · {} · {} আছে", "Grade {} · {} · {} available"],
+  ["জেলার বাজার", "District market"],
+  ["বেশি মাল", "High supply"],
+  ["কেনার পর কোথায় বেচলে বেশি নেট লাভ", "Where to sell after buying for the best net profit"],
+  ["সম্ভাব্য দর", "Expected price"],
+  ["পচন", "Spoilage"],
+  ["নেট লাভ", "Net profit"],
+  ["{} শিগগির দাম কমতে পারে: {}। জরুরি না হলে কিছুদিন অপেক্ষা করুন।", "{} Prices may fall soon: {}. Wait a few days if it is not urgent."],
+  ["৩. কোথা থেকে কিনবেন, কোথায় বেচবেন", "3. Where to buy and where to sell"],
+  ["কোথায় কম দামে ভালো {}", "Where to find good {} at a low price"],
+  ["লিস্টিংয়ে ট্রাক ভাড়া অর্ধেক ধরা (Reroute-এর স্বাভাবিক ভাগ); জেলার বাজার থেকে কিনলে পুরো ভাড়া আপনার।", "Listings assume half the truck fare (the usual Reroute split); buying from a district market means you pay the full fare."],
+  ["কেনা দাম", "Purchase price"],
+  ["সম্ভাব্য বিক্রি ({}/কেজি)", "Expected sales ({}/kg)"],
+  ["বাজার কমিশন ({}%)", "Market commission ({}%)"],
+  ["আনুমানিক নেট লাভ", "Estimated net profit"],
+  ["({} {}, {}-এ বেচলে)", "({} {}, selling in {})"],
+  ["দাম ওঠানামা ধরলে ফল {} থেকে {} হতে পারে। প্ল্যাটফর্ম ফি বিক্রেতা দেন, তাই এখানে ধরা হয়নি।", "Allowing for price changes, the result could be {} to {}. The seller pays the platform fee, so it is not included here."],
+  ["বাজারদর · ৩ দিনের পূর্বাভাস · কত দামে কিনবেন · কোথা থেকে কিনে কোথায় বেচবেন · লাভ-লোকসান", "Market prices · 3-day forecast · what to pay · where to buy and sell · profit and loss"],
+  ["বাজারদর · ৩ দিনের পূর্বাভাস · কত দামে বেচবেন · কোথায় বেচবেন · লাভ-লোকসান", "Market prices · 3-day forecast · what to ask · where to sell · profit and loss"],
+  ["অফার বা অর্ডার দেওয়ার সময়ও এআই নিজে থেকে ওই লেনদেনের লাভ-ক্ষতি দেখে নেয়, লোকসানের ঝুঁকি থাকলে জানায়।", "When you make an offer or order, AI also checks that trade's profit and warns you about a risk of loss."],
+  ["নির্ভরযোগ্য লাভ-ক্ষতির হিসাবের জন্য উৎপাদন/কেনা খরচ দরকার। এখন হাতে থাকবে আনুমানিক", "A reliable profit figure needs your production or purchase cost. Estimated net for now:"],
+  ["আনুমানিক লাভ {}, তবে দাম কমলে লোকসানের ঝুঁকি আছে", "Estimated profit {}, but there is a risk of loss if prices fall"],
+  ["আনুমানিক লাভজনক: প্রায় {} লাভ", "Likely profitable: about {} profit"],
+  ["আনুমানিক লাভজনক: খরচ বাদে প্রায় {} লাভ", "Likely profitable: about {} profit after costs"],
+  ["এই দামে কিনলে", "Buying at this price"],
+  ["এই দামে বিক্রি করলে", "Selling at this price"],
+  ["এই দামে সব বিক্রি হলে", "If everything sells at this price"],
+  ["আপনার ভাগ", "Your share"],
+  ["(নিজের ট্রাক, আনুমানিক)", "(own truck, estimated)"],
+  ["ট্রাক ভাড়া{}", "Truck fare{}"],
+  ["{}-এ সম্ভাব্য বিক্রি ({}/কেজি)", "Expected sales in {} ({}/kg)"],
+  ["আনুমানিক ফল", "Estimated result"],
+  ["কেনার দাম {}/কেজি, লাভের সীমা {}/কেজির বেশি", "Purchase price {}/kg is above the break-even {}/kg"],
+  ["ট্রাক ভাড়া বিক্রির তুলনায় বেশি", "The truck fare is high relative to the sale"],
+  ["পথে পচনের ঝুঁকি বেশি", "High risk of spoilage on the way"],
+  ["{}/কেজি বা কম দামে কিনলে লোকসান হবে না (৮% লাভ রাখতে {}/কেজি)।", "Buying at {}/kg or less avoids a loss ({}/kg keeps an 8% margin)."],
+  ["{}-এ বেচলে ফল আনুমানিক {}।", "Selling in {}: estimated result {}."],
+  ["অন্য সরবরাহকারীর অফার দেখুন — এআই পরামর্শ পাতায় কম দামের উৎস আছে।", "Look at other suppliers — the AI Advisor page lists cheaper sources."],
+  ["অর্ডার অনুযায়ী (এখানে ধরা হয়নি)", "Per order (not included here)"],
+  ["উৎপাদন/কেনা খরচ", "Production/purchase cost"],
+  ["দাম আপনার খরচের ({}/কেজি) চেয়ে কম", "The price is below your cost ({}/kg)"],
+  ["ট্রাক ভাড়ার ভাগ {} আপনার", "Your share of the truck fare is {}"],
+  ["ফি ও খরচ বাদ দিলে কিছু থাকে না", "Nothing is left after fees and costs"],
+  ["অন্তত {}/কেজি দাম চাইলে লোকসান হবে না।", "Asking at least {}/kg avoids a loss."],
+  ["আজ স্থানীয় হাটে বেচলে খরচ বাদে আনুমানিক {} থাকত।", "Selling at the local market today would leave about {} after costs."],
+  ["ট্রাক ভাড়ার ভাগ কমানোর জন্য পরিবহন খরচের পাল্টা প্রস্তাব দিতে পারেন।", "You can counter the transport cost split to reduce your share of the truck fare."],
+  ["এআই পূর্বাভাস (সিমুলেটেড ডেমো ডেটা) থেকে", "From the AI forecast (simulated demo data)"],
+  ["আপনার দেওয়া দাম ও খরচ থেকে", "From the prices and costs you entered"],
+  ["{} লোকসানের ঝুঁকি", "{} Risk of loss"],
+  ["লোকসান হতে পারে।", "This may make a loss."],
+  ["হিসাবটি আনুমানিক; বিক্রির দাম {}। সিদ্ধান্ত আপনার।", "This is an estimate; selling price {}. The decision is yours."],
+  ["ঝুঁকি বুঝে এগিয়ে যান", "Continue anyway"],
+  ["ডাউনলোড হয়নি, আবার চেষ্টা করুন", "Export failed. Please try again."],
+  ["ডাউনলোড শুরু হয়েছে", "Download started"],
+  ["শুধু সম্পন্ন লেনদেন। নাম, ফোন বা ব্যক্তিগত তথ্য ডাউনলোড ফাইলে থাকে না।", "Completed trades only. Names, phone numbers and personal details are never exported."],
+  ["{} শুধু আসল লেনদেন", "{} Real trades only"],
+  ["{} হালনাগাদ", "{} Refresh"],
+  ["ডেটা আসছে...", "Loading data..."],
+  ["এখনো কোনো সম্পন্ন লেনদেন নেই", "No completed trades yet"],
+  ["আসল ডেটা: {} থেকে {} ({} দিন)", "Real data: {} to {} ({} days)"],
+  ["আসল ডেটা এখনো নেই; ডেমো অ্যাকাউন্টের লেনদেন আলাদা চিহ্নিত।", "No real data yet; demo account trades are labelled separately."],
+  ["প্রস্তুত", "Ready"],
+  ["যথেষ্ট আসল ডেটা আছে।", "There is enough real data."],
+  ["এখনো নয়", "Not yet"],
+  ["জোর করে নতুন প্রশিক্ষণ চালানো হবে না।", "Retraining will not be forced."],
+  ["সিমুলেটেড ডেটা", "Simulated data"],
+  ["বাজার বাছাই পরীক্ষা: {}টি ক্ষেত্রে এআই-এর পরামর্শ মানলে স্থানীয় হাটের চেয়ে গড়ে মণপ্রতি {} বেশি; {}% ক্ষেত্রে স্থানীয়ের চেয়ে খারাপ নয়।", "Market choice test: across {} cases, following the AI advice earned {} more per maund on average than the local market; it was no worse than local in {}% of cases."],
+  ["সম্পন্ন লেনদেন", "Completed trades"],
+  ["আসল (প্ল্যাটফর্ম)", "Real (platform)"],
+  ["নিয়ম", "Rules"],
+  ["ডেটা যাচাই ও পরিষ্কার → পুরনো সময়ের ডেটায় প্রশিক্ষণ → পরের সময়ের (না-দেখা) ডেটায় পরীক্ষা → ভুলের মাপ (MAPE) → নতুন মডেল পুরনোটার চেয়ে ভালো হলেই বদলানো হবে।", "Validate and clean the data → train on older data → test on later (unseen) data → measure the error (MAPE) → replace the model only if the new one is better."],
+  ["চালানোর কমান্ড", "Command to run"],
+  ["মডেল মূল্যায়ন", "Model evaluation"],
+  ["পরীক্ষার সময়: {} · প্রশিক্ষণের সারি: {} · আজকের পূর্বাভাস: {}", "Test period: {} · training rows: {} · today's forecast: {}"],
+  ["কত দিন আগে", "Days ahead"],
+  ["মডেলের ভুল (MAPE)", "Model error (MAPE)"],
+  ["\"দাম একই থাকবে\" ধরলে ভুল", "Error of \"price stays the same\""],
+  ["ওঠা-নামা ঠিক বলেছে", "Direction correct"],
+  ["সাম্প্রতিক সম্পন্ন লেনদেন", "Recent completed trades"],
+  ["রুট", "Route"],
+  ["বাজারদর, পূর্বাভাস ও লাভ-ক্ষতি", "Market prices, forecasts and profit"],
+  ["{}। {} বাজারে {} পাঠালে আনুমানিক দাম কেজিপ্রতি {}", "{}. Sending {1} to {0} market: estimated price {2} per kg"],
+  ["হাতে থাকবে প্রায় {}", "net about {}"],
+  ["লাভ প্রায় {}", "profit about {}"],
+  ["। এটি সিমুলেটেড তথ্যের উপর অনুমান, নিশ্চিত নয়।", ". This is an estimate based on simulated data, not a guarantee."],
+  ["স্মার্ট পরামর্শ তৈরি হচ্ছে...", "Preparing smart advice..."],
+  ["পূর্বাভাসের ভিত্তি দুর্বল ({})। আজকের স্থানীয় দর অনুযায়ী হিসাব নিচে।", "The forecast is weak ({}). Below is the calculation at today's local price."],
+  ["আজকের দর", "Today's price"],
+  ["উৎপাদন খরচ {} বাদে", "after production cost of {}"],
+  ["নিশ্চিত নয়", "Not certain"],
+  ["{} ({})-এর তুলনায়{}", "compared with {} ({}){}"],
+  ["{} দিন: ভুল {}% (সাধারণ অনুমানে {}%)", "{}-day forecast: error {}% (naive estimate {}%)"],
+  ["ডেটার উৎস: {} · তারিখ {}", "Data source: {} · date {}"],
+  ["পূর্বাভাসের সময়সীমা: ১–৩ দিন · মডেল: {}", "Forecast horizon: 1–3 days · model: {}"],
+  ["বলুন", "Speak"],
+  ["কেনার পরামর্শ দেখতে \"পাইকার হিসেবে দেখুন\" বাছুন বা পাইকার হিসেবে লগ ইন করুন।", "To see buying advice, choose \"View as wholesaler\" or log in as a wholesaler."],
+  ["মাইক্রোফোনের অনুমতি দেওয়া হয়নি। ব্রাউজারে অনুমতি দিন বা লিখে জিজ্ঞেস করুন।", "Microphone permission was not given. Allow it in the browser or type your question."],
+  ["কোনো কথা শোনা যায়নি। আবার বলুন বা লিখুন।", "No speech was heard. Speak again or type."],
+  ["কণ্ঠস্বর চেনা যায়নি। লিখে জিজ্ঞেস করুন।", "Speech was not recognised. Please type your question."],
+  ["কণ্ঠস্বর চেনা চালু করা যায়নি। লিখে জিজ্ঞেস করুন।", "Speech recognition could not start. Please type your question."],
+  ["প্রশ্নটি লিখুন বা বলুন", "Type or say your question"],
+  ["বোঝা যায়নি", "Not understood"],
+  ["{} দিন পরে", "In {} days"],
+  ["ঝুঁকি হিসাব হচ্ছে...", "Calculating risk..."],
+  ["{} ফসলের তাজা থাকা ও পচনের ঝুঁকি", "{} Freshness and spoilage risk"],
+  ["({}), খালি {} কেজি", "({}), {} kg free"],
+  ["এই দলের জন্য যথেষ্ট খালি ট্রাক নেই।", "There are not enough free trucks for this group."],
+  ["ট্রাকের % ভরা", "Truck % full"],
+  ["{} · মোট {} কেজি / ধারণক্ষমতা {} কেজি · দূরত্ব প্রায় {} কিমি (আনুমানিক) · পুরো ট্রিপ {}", "{} · total {} kg / capacity {} kg · distance about {} km (estimated) · full trip {}"],
+  ["এখন পুলিংয়ের সুযোগ নেই", "No pooling opportunities right now"],
+  ["একই রুট ও দিনের একাধিক বুকিং এলে এখানে দেখাবে।", "They appear here when several bookings share a route and day."],
+  ["{} / {} সম্পন্ন বুকিং", "{} / {} completed bookings"],
+  ["শেয়ার্ড ট্রাকের সুযোগ", "Shared truck opportunity"],
+  ["একই রুট ও দিনে আরও {}টি বুকিং আছে। একসাথে গেলে ট্রিপ খরচে আপনার ভাগ আনুমানিক {}, একা পুরো ট্রাকে {} — সাশ্রয় প্রায় {}।", "There are {} more bookings on the same route and day. Travelling together, your share of the trip cost is about {}, versus {} for a whole truck alone — a saving of about {}."],
+  ["{} অপারেশন টিম ট্রাক ঠিক করার সময় এটি বিবেচনা করে।", "{} The operations team considers this when assigning trucks."],
+  ["নিবন্ধিত ০", "Registered 0"],
+  ["৯০ দিন", "90 days"],
+  ["সময়সীমা", "Period"],
+  ["{}টি অর্ডার, {}", "{} orders, {}"],
+  ["গত ৮ সপ্তাহে সাপ্তাহিক সম্পন্ন অর্ডারের সংখ্যা", "Completed orders per week over the last 8 weeks"],
+  ["প্রতিটি বার এক সপ্তাহ, বাঁ থেকে পুরনো থেকে নতুন। মোট {}।", "Each bar is one week, oldest on the left. Total {}."],
+  ["এই সময়ে সম্পন্ন অর্ডার নেই", "No completed orders in this period"],
+  ["{}টি / {}টি সম্পন্ন ট্রাক বুকিং অন্য বুকিংয়ের সাথে একই ট্রাকে গেছে।", "{} of {} completed truck bookings shared a truck with another booking."],
+  ["বিক্রির টাকা আসার অপেক্ষায়", "Awaiting sale proceeds"],
+  ["সম্পন্ন", "Completed"],
+  ["এই বুকিংগুলো এক ট্রাকে দেবেন?", "Put these bookings on one truck?"],
+  ["সব বুকিং একসাথে নিশ্চিত হবে, কোনো একটিতে জায়গা না হলে কোনোটিই হবে না।", "All bookings are confirmed together; if one does not fit, none are assigned."],
+  ["হ্যাঁ, দিন", "Yes, assign"],
+  ["বুকিংগুলো শেয়ার্ড ট্রাকে দেওয়া হয়েছে", "Bookings assigned to a shared truck"],
+  ["প্ল্যাটফর্ম {} · নিজে লেখা {}", "Platform {} · user-reported {}"],
+  ["রসিদ PDF ডাউনলোড", "Receipt  Download PDF"],
+  ["অর্ডার দেখুন", "View order"],
+  ["বাছুন", "Choose"],
+  ["সংযুক্ত রসিদ দেখুন", "View attached receipt"],
+  ["এই হিসাব বাতিল করুন", "Void this record"],
+  ["টাকা (৳)", "Amount (৳)"],
+  ["পাওনা", "Receivable"],
+  ["দেনা", "Payable"],
+  ["শেষ তারিখ", "Due date"],
+  ["সিমুলেটেড বাজারদর", "Simulated market price"],
+  ["আমার এই মাসে কত টাকার বিক্রি হয়েছে?", "How much did I sell this month?"],
+  ["আমার কত টাকা পাওনা আছে?", "How much am I owed?"],
+  ["আমার শেষ তিনটা বিল দেখাও", "Show my last three bills"],
+  ["আজ আলুর বাজারদর কত?", "What is the potato price today?"],
+  ["আপনার হিসাব বা বাজার নিয়ে জিজ্ঞেস করুন, যেমন", "Ask about your accounts or the market, for example"],
+  ["ভাবছি...", "Thinking..."],
+  ["আবার লগ ইন করুন।", "Please log in again."],
+  ["সার্ভারের সাথে যোগাযোগ হচ্ছে না। ইন্টারনেট দেখে আবার চেষ্টা করুন।", "Cannot reach the server. Check your internet connection and try again."],
+  ["উত্তর পাওয়া যায়নি", "No answer received"],
+  ["কোনো কথা শোনা যায়নি, আবার বলুন বা লিখুন।", "No speech was heard. Speak again or type."],
+  ["কণ্ঠস্বর চেনা যায়নি, লিখে জিজ্ঞেস করুন।", "Speech was not recognised. Please type your question."],
+  ["শেয়ারের সুবিধা নেই; ইনভয়েস নম্বর কপি হয়েছে, PDF ডাউনলোড করে পাঠান", "Sharing is not available; the invoice number was copied. Download the PDF to send it."],
+  ["এই ব্রাউজারে শেয়ার করা যায় না, PDF ডাউনলোড করে পাঠান", "This browser cannot share files. Download the PDF to send it."],
+  ["সংরক্ষণ হয়নি", "Not saved"],
+  ["বাকি আছে {}। আংশিক টাকাও লেখা যায়।", "{} outstanding. Partial amounts are fine."],
+  ["ফাইল ৫০০ কেবির মধ্যে দিন (ছবি হলে ছোট করে তুলুন)", "Files must be under 500 KB (take a smaller photo)."],
+  ["দাম কম", "Price too low"],
+  ["এত পরিমাণ দিতে পারব না", "Cannot supply this quantity"],
+  ["অন্য জায়গায় বিক্রি করেছি", "Sold elsewhere"],
+  ["দাম বেশি", "Price too high"],
+  ["আর লাগবে না", "No longer needed"],
+  ["অন্য জায়গা থেকে কিনেছি", "Bought elsewhere"],
+  ["মাল শেষ হয়ে গেছে", "Out of stock"],
+  ["এখন পাঠাতে পারব না", "Cannot deliver now"],
+  ["ক্রেতা যোগাযোগ করেননি", "The buyer did not get in touch"],
+  ["সময়মতো পাওয়া যাবে না", "Will not arrive in time"],
+  ["{}:{} মিনিটে মেয়াদ শেষ", "Expires in {}:{}"],
+  ["কোডের মেয়াদ শেষ, আবার পাঠান", "The code has expired. Send a new one."],
+  ["প্রোটোটাইপ মোড: SMS সেবা এখনো চালু করা হয়নি। আপনার ডেমো ভেরিফিকেশন কোড", "Prototype mode: SMS is not enabled yet. Your demo verification code"],
+  ["ডেমো নতুন করে শুরু করবেন?", "Restart the demo?"],
+  ["হ্যাঁ, শুরু করুন", "Yes, restart"],
+  ["ডেমো নতুন করে শুরু হয়েছে", "The demo has been restarted"],
+  ["লগ ইন হয়নি, আবার চেষ্টা করুন", "Login failed. Please try again."],
+  ["অ্যাকাউন্ট খোলা যায়নি, আবার চেষ্টা করুন", "Could not create the account. Please try again."],
+  ["কোড মেলেনি", "The code does not match"],
+  ["নতুন কোড পাঠানো যায়নি", "Could not send a new code"],
+  ["একটি কারণ দিন, বা \"কারণ ছাড়া\" চাপুন", "Give a reason, or press \"without a reason\""],
+  ["পরিমাণ অন্তত ৫ মণ, সর্বনিম্ন অর্ডার ৫ মণ বা বেশি, আর দাম দিন", "Enter a quantity of at least 5 maunds, a minimum order of 5 maunds or more, and a price"],
+  ["মোট মূল্য", "Total value"],
+  ["প্রকাশ করুন", "Publish"],
+  ["দাম {}% কমে {}/কেজি হবে, আর সব পাইকারের কাছে সাথে সাথে খবর যাবে। পরে দাম আবার বদলাতে পারবেন।", "The price drops by {}% to {}/kg and all wholesalers are notified at once. You can change the price again later."],
+  ["{}, এখন {}/কেজি", "{}, now {}/kg"],
+  ["নতুন দাম (৳/কেজি)", "New price (৳/kg)"],
+  ["দাম দিন", "Enter a price"],
+  ["দাম বদলানো হয়েছে", "Price updated"],
+  ["কত মণ যোগ করবেন? (কমাতে মাইনাস দিন, যেমন −১০)", "How many maunds to add? (use a minus to reduce, e.g. −10)"],
+  ["সংখ্যা দিন", "Enter a number"],
+  ["সাময়িক বন্ধ করবেন?", "Pause this listing?"],
+  ["বন্ধ থাকলে কেউ নতুন অফার দিতে পারবেন না। পরে আবার চালু করা যাবে।", "While paused, nobody can make new offers. You can reactivate it later."],
+  ["আবার চালু করবেন?", "Reactivate?"],
+  ["লিস্টিং পুরো বন্ধ করবেন?", "Close this listing?"],
+  ["বাকি মাল আপনার মজুদে \"তালিকার বাইরে\" থাকবে। চলমান অর্ডার থাকলে বন্ধ করা যায় না।", "Remaining goods stay in your stock as \"Not listed\". A listing with active orders cannot be closed."],
+  ["পরিমাণ {} থেকে {} এর মধ্যে দিন", "Enter a quantity between {} and {}"],
+  ["দাম তালিকার দাম {} বা কম দিন", "Enter a price at or below the listed price {}"],
+  ["যেকোনো সময়", "Any time"],
+  ["রাজি হয়ে সময় জানাবেন?", "Accept and propose a time?"],
+  ["পরিদর্শনে রাজি নন?", "Decline the inspection?"],
+  ["মাল দেখা হয়েছে?", "Has the produce been inspected?"],
+  ["অনুরোধ বাতিল করবেন?", "Cancel the request?"],
+  ["এই দামে বিক্রি করবেন?", "Sell at this price?"],
+  ["{} {}, {}/কেজি, {}-কে", "{} {}, {}/kg, to {}"],
+  ["আপনি পাবেন", "You receive"],
+  ["রাজি হলে মাল সংরক্ষিত হবে। ক্রেতা পেমেন্ট করলে অর্ডার নিশ্চিত, টাকা Reroute-এ জমা থাকবে, মাল বুঝে দিলে পাবেন।", "If you accept, the goods are reserved. Once the buyer pays, the order is confirmed and the money is held by Reroute until you hand over the goods."],
+  ["হ্যাঁ, রাজি", "Yes, accept"],
+  ["রাজি হয়েছেন, ক্রেতার পেমেন্টের অপেক্ষা", "Accepted; waiting for the buyer's payment"],
+  ["পাল্টা দামে কিনবেন?", "Buy at the counter price?"],
+  ["রাজি হলে এখনই অনলাইনে পেমেন্ট করতে হবে।", "If you accept, you need to pay online now."],
+  ["হ্যাঁ, পেমেন্টে যান", "Yes, go to payment"],
+  ["অফারে না বলবেন?", "Decline this offer?"],
+  ["পাল্টা দামে না বলবেন?", "Decline the counter-offer?"],
+  ["{} {}, {}/কেজি। অন্যজনকে জানানো হবে।", "{} {}, {}/kg. The other party will be notified."],
+  ["কারণসহ না বলুন", "Decline with reason"],
+  ["না বলুন", "Decline"],
+  ["না বলা হয়েছে", "Declined"],
+  ["অফার তুলে নেবেন?", "Withdraw the offer?"],
+  ["বিক্রেতাকে জানানো হবে। পয়েন্ট কাটবে না।", "The seller will be notified. No points are deducted."],
+  ["কারণসহ তুলে নিন", "Withdraw with reason"],
+  ["তুলে নিন", "Withdraw"],
+  ["ক্রেতা দিয়েছেন {}/কেজি, আপনার তালিকার দাম {}", "The buyer offered {}/kg; your listed price is {}"],
+  ["আপনার দাম (৳/কেজি)", "Your price (৳/kg)"],
+  ["ক্রেতা রাজি হলে পেমেন্ট করবেন, না হলে প্রত্যাখ্যান করবেন।", "The buyer will pay if they accept, or decline."],
+  ["পাল্টা দাম পাঠান", "Send counter-offer"],
+  ["দাম {}-এর বেশি এবং {} বা কম দিন", "Enter a price above {} and at most {}"],
+  ["{} {}, {}-এর কাছ থেকে", "{} {}, from {}"],
+  ["ট্রাকে মাল তুলে দিয়েছেন?", "Have you loaded the goods onto the truck?"],
+  ["পাইকারকে মাল বুঝিয়ে দিয়েছেন?", "Have you handed the goods to the wholesaler?"],
+  ["{} {}। ক্রেতা মাল বুঝে নিলে টাকা আপনার ওয়ালেটে যাবে।", "{} {}. The money goes to your wallet once the buyer confirms receipt."],
+  ["হ্যাঁ, দিয়েছি", "Yes, handed over"],
+  ["হস্তান্তর নিশ্চিত হয়েছে", "Handover confirmed"],
+  ["মাল বুঝে পেয়েছেন?", "Have you received the goods?"],
+  ["{} {}। নিশ্চিত করলে বিক্রেতা {} পাবেন, আর এটা ফেরানো যাবে না।", "{} {}. Confirming releases {} to the seller, and this cannot be undone."],
+  ["হ্যাঁ, বুঝে পেয়েছি", "Yes, received"],
+  ["অর্ডার সম্পূর্ণ", "Order completed"],
+  ["অর্ডার বাতিল করবেন?", "Cancel the order?"],
+  ["ক্রেতার {} তাঁর ওয়ালেটে ফেরত যাবে।", "The buyer's {} will be refunded to their wallet."],
+  ["Reroute ট্রাকের বুকিংও বাতিল হবে।", "The Reroute truck booking will also be cancelled."],
+  ["{} {}। অন্যজনকে কারণসহ জানানো হবে।{}{}", "{} {}. The other party will be told the reason.{}{}"],
+  ["কারণসহ বাতিল", "Cancel with reason"],
+  ["অর্ডার বাতিল হয়েছে, {} পয়েন্ট কাটা গেছে", "Order cancelled; {} points deducted"],
+  ["রেটিং দেওয়া হয়েছে", "Rating submitted"],
+  ["ঠিকানা দিন", "Enter the address"],
+  ["অন্তত ৩ মণ দিন", "Enter at least 3 maunds"],
+  ["ট্রাক বুক করবেন?", "Book the truck?"],
+  ["সেবা চার্জ", "Service charge"],
+  ["পেমেন্ট হলে বুকিং অনুরোধ অপারেশন টিমের কাছে যাবে, ট্রাক ঠিক হলে জানানো হবে।", "After payment, the booking goes to the operations team and you are notified when a truck is assigned."],
+  ["পেমেন্টে যান", "Go to payment"],
+  ["বুকিং বাতিল করবেন?", "Cancel the booking?"],
+  ["{} আপনার ওয়ালেটে ফেরত যাবে।", "{} will be refunded to your wallet."],
+  ["এখনো পেমেন্ট হয়নি।", "Not paid yet."],
+  ["বাতিল করুন", "Cancel"],
+  ["বুকিং বাতিল হয়েছে", "Booking cancelled"],
+  ["টাকার পরিমাণ দিন", "Enter the amount"],
+  ["কত মণ দিন", "Enter the number of maunds"],
+  ["বিক্রির টাকা দিন", "Enter the sale amount"],
+  ["{} নেবেন?", "Redeem {}?"],
+  ["Reroute ট্রাকের ভাড়ায়", "on the Reroute truck fare"],
+  ["বিক্রির ফি-তে", "on the sale fee"],
+  ["{} পয়েন্ট খরচ হবে, {} ছাড় জমা হবে যা পরের {} নিজে থেকে কাটা যাবে।", "This uses {} points; a {} discount is saved and applied automatically {}."],
+  ["হ্যাঁ, নিন", "Yes, redeem"],
+  ["ছাড় জমা হয়েছে", "Discount saved"],
+  ["এই ব্রাউজারে ছবি রাখা গেল না (জায়গা কম)", "Could not keep the photo in this browser (not enough space)"],
+  ["প্রোফাইল সংরক্ষণ হয়েছে। ছবিটি শুধু এই ব্রাউজার ট্যাবে রাখা হয়েছে (ডেমো অ্যাকাউন্ট)", "Profile saved. The photo is kept only in this browser tab (demo account)"],
+  ["Reroute প্লাস নেবেন?", "Get Reroute Plus?"],
+  ["বিকাশ, নগদ, কার্ড বা ওয়ালেট", "bKash, Nagad, card or wallet"],
+  ["পেমেন্ট সফলভাবে যাচাই হলেই প্লাস চালু হবে। ব্যর্থ হলে চালু হবে না, টাকাও কাটবে না।", "Plus is activated only after the payment is verified. If it fails, nothing is activated and no money is taken."],
+  ["Reroute প্লাস, {} দিন", "Reroute Plus, {} days"],
+  ["প্লাস বন্ধ করবেন?", "Cancel Plus?"],
+  ["আপনার প্লাস {} পর্যন্ত চালু থাকবে, তারপর আর নবায়ন হবে না। বাকি দিনের টাকা ফেরত হয় না। চাইলে মেয়াদের মধ্যে আবার চালু করতে পারবেন।", "Your Plus stays active until {} and will not renew after that. Unused days are not refunded. You can turn renewal back on before it expires."],
+  ["হ্যাঁ, বন্ধ করুন", "Yes, cancel"],
+  ["প্লাস বন্ধ করা হয়েছে, মেয়াদ পর্যন্ত চালু থাকবে", "Plus cancelled; it stays active until it expires"],
+  ["প্লাস নবায়ন আবার চালু করবেন?", "Turn Plus renewal back on?"],
+  ["এখন কোনো টাকা লাগবে না, মেয়াদ শেষে নবায়নের সময় পেমেন্ট চাওয়া হবে।", "No payment now; you will be asked to pay at renewal."],
+  ["প্লাস চালু থাকবে", "Plus will stay active"],
+  ["বুকিং \"{}\" করবেন?", "Set the booking to \"{}\"?"],
+  ["{} → {}, {}। কৃষক ও পাইকারকে নোটিফিকেশন যাবে।", "{} → {}, {}. The farmer and wholesaler will be notified."],
+  ["চালক, ১১ সংখ্যার মোবাইল আর গাড়ির নম্বর দিন", "Enter the driver, an 11-digit mobile number and the vehicle number"],
+  ["ট্রাক যোগ হয়েছে", "Truck added"],
+  ["ট্রাক মেরামতে পাঠাবেন?", "Send the truck for maintenance?"],
+  ["ট্রাক আবার চালু করবেন?", "Put the truck back into service?"],
+  ["প্রোফাইল যাচাই করবেন?", "Verify this profile?"],
+  ["কাগজপত্র (NID / ট্রেড লাইসেন্স) দেখে নিশ্চিত হলে যাচাই করুন। ব্যবহারকারী +৫০ পয়েন্ট পাবেন।", "Verify only after checking the documents (NID / trade licence). The user receives +50 points."],
+  ["সময় নিশ্চিত করা হবে", "The time will be confirmed"],
+  ["পরিদর্শনের তারিখ ও সময় দিন", "Enter the inspection date and time"],
+  ["সময় প্রস্তাব পাঠানো হয়েছে", "Time proposal sent"],
+  ["পরিদর্শনের সময় নিশ্চিত করবেন?", "Confirm the inspection time?"],
+  ["প্রস্তাবিত সময়: {}। নিশ্চিত করলে কৃষককে জানানো হবে।", "Proposed time: {}. The farmer will be notified when you confirm."],
+  ["হ্যাঁ, নিশ্চিত করুন", "Yes, confirm"],
+  ["পরিদর্শনের সময় নিশ্চিত হয়েছে", "Inspection time confirmed"],
+  ["মাল দেখার কথা নিশ্চিত করবেন?", "Confirm that you inspected the produce?"],
+  ["আপনি কি সত্যিই কৃষকের খামারে গিয়ে মাল দেখেছেন? কৃষক এটি নিশ্চিত করবেন।", "Did you really visit the farm and inspect the produce? The farmer will confirm this."],
+  ["হ্যাঁ, দেখেছি", "Yes, I inspected it"],
+  ["পরিদর্শন রিপোর্ট পাঠানো হয়েছে", "Inspection report sent"],
+  ["পরিদর্শন নিশ্চিত করবেন?", "Confirm the inspection?"],
+  ["ক্রেতা সত্যিই এসে মাল দেখেছেন? নিশ্চিত করলে পরিদর্শন সম্পন্ন হবে এবং ক্রেতা অফার দিতে পারবেন।", "Did the buyer really come and inspect the produce? Confirming completes the inspection and lets the buyer make an offer."],
+  ["হ্যাঁ, পরিদর্শন হয়েছে", "Yes, the inspection took place"],
+  ["পরিদর্শন সম্পন্ন নিশ্চিত হয়েছে", "Inspection confirmed as complete"],
+  ["পরিদর্শন অস্বীকার করবেন?", "Dispute the inspection?"],
+  ["ক্রেতা আসেননি বলে মনে করলে \"অস্বীকার করুন\" চাপুন।", "If the buyer did not come, press \"Dispute\"."],
+  ["ক্রেতা আসেননি", "The buyer did not come"],
+  ["সময় পরিবর্তন হয়েছে", "The time changed"],
+  ["অন্য কারণ", "Other reason"],
+  ["কারণসহ অস্বীকার করুন", "Dispute with reason"],
+  ["অস্বীকার করুন", "Dispute"],
+  ["পরিদর্শন অস্বীকার করা হয়েছে", "Inspection disputed"],
+  ["পরিদর্শনে রাজি নয়?", "Decline the inspection?"],
+  ["ক্রেতাকে কারণ জানানো হবে।", "The buyer will be told the reason."],
+  ["এখন সুবিধা নেই", "Not convenient now"],
+  ["পরিদর্শনে রাজি হওয়া হয়নি", "Inspection declined"],
+  ["পরিদর্শনের অনুরোধ বাতিল করবেন?", "Cancel the inspection request?"],
+  ["কৃষককে জানানো হবে।", "The farmer will be notified."],
+  ["পরিদর্শনের অনুরোধ বাতিল হয়েছে", "Inspection request cancelled"],
+  ["কারণ বা মন্তব্য", "Reason or comment"],
+  ["{} পরিবহন খরচের প্রস্তাব", "{} Transport cost proposal"],
+  ["ক্রেতা ও বিক্রেতার শতাংশের যোগফল ১০০ হতে হবে।", "The buyer's and seller's percentages must add up to 100."],
+  ["ক্রেতার ভাগ (%)", "Buyer's share (%)"],
+  ["বিক্রেতার ভাগ (%)", "Seller's share (%)"],
+  ["নোট (ঐচ্ছিক)", "Note (optional)"],
+  ["প্রস্তাব পাঠান", "Send proposal"],
+  ["ক্রেতা ও বিক্রেতার শতাংশের যোগফল ১০০ হতে হবে", "The buyer's and seller's percentages must add up to 100"],
+  ["শতাংশ ০ থেকে ১০০-এর মধ্যে হতে হবে", "Percentages must be between 0 and 100"],
+  ["পরিবহন খরচের প্রস্তাব পাঠানো হয়েছে", "Transport cost proposal sent"],
+  ["পরিবহন খরচের প্রস্তাব গ্রহণ করবেন?", "Accept the transport cost proposal?"],
+  ["ক্রেতার ভাগ: {} ({}%), বিক্রেতার ভাগ: {} ({}%)। চুক্তি নিশ্চিত হবে।", "Buyer's share: {} ({}%), seller's share: {} ({}%). The agreement will be confirmed."],
+  ["প্রস্তাব গ্রহণ করবেন?", "Accept the proposal?"],
+  ["গ্রহণ করুন", "Accept"],
+  ["পরিবহন চুক্তি নিশ্চিত হয়েছে", "Transport agreement confirmed"],
+  ["পরিবহন প্রস্তাব প্রত্যাখ্যান করবেন?", "Reject the transport proposal?"],
+  ["অন্যপক্ষকে জানানো হবে। নতুন প্রস্তাব দেওয়ার সুযোগ থাকবে।", "The other party will be notified. A new proposal can still be made."],
+  ["ভাগ ঠিক নেই", "The split is not fair"],
+  ["অন্য প্রস্তাব দিন", "Make another proposal"],
+  ["প্রত্যাখ্যান করুন", "Reject"],
+  ["পরিবহন প্রস্তাব প্রত্যাখ্যান করা হয়েছে", "Transport proposal rejected"],
+  ["তারা", "stars"],
+  ["ছবি পড়া যায়নি", "Could not read the photo"],
+  ["আবার চেষ্টা করুন", "Try again"],
+  ["মাঝারি", "Medium"],
+  ["রওনা দেওয়ার সময় আর প্রায় {} দিন তাজা থাকবে ({} সাধারণত {} দিন ভালো থাকে)", "About {} days of freshness left at dispatch ({} usually keeps {} days)"],
+  ["মোট আনুমানিক ক্ষতি {}%, পৌঁছানোর পর তাজা থাকবে প্রায় {} দিন", "Estimated total loss {}%; about {} days of freshness left on arrival"],
+  ["সিমুলেটেড ডেমো বাজারদর, আসল সরকারি দৈনিক দর নয়", "Simulated demo market prices, not official daily prices"],
+  ["সময়ক্রম অনুযায়ী ব্যাক-টেস্ট ({}), সিমুলেটেড ডেটায়: বাস্তব নির্ভুলতা নয়।", "Time-ordered back-test ({}) on simulated data: not real-world accuracy."],
+  ["দামের সীমা ব্যাক-টেস্টের ভুলের বিস্তার থেকে নেওয়া (প্রায় ৮০% ক্ষেত্রে এর মধ্যে থাকে)।", "The price range comes from the back-test error spread (about 80% of cases fall within it)."],
+  ["পথে প্রায় {} ঘণ্টা, তাপমাত্রা প্রায় {}°সে", "About {} hours on the road at about {}°C"],
+  ["{} দিন অপেক্ষায় ওজন ও মান কমে প্রায় {}%", "Waiting {} days loses about {}% of weight and quality"],
+  ["স্বাভাবিকভাবে পাঠানো যায়।", "Can be sent normally."],
+  ["দেরি না করে পাঠান, ছায়ায় ও বাতাস চলাচলের জায়গায় রাখুন, কাছের বাজারও বিবেচনা করুন।", "Send without delay, keep it in the shade with good airflow, and consider a nearer market."],
+  ["আজই কাছের বাজারে বেচুন বা জরুরি বিক্রি দিন; দূরের বাজারে পাঠানো বা অপেক্ষা করা ঝুঁকিপূর্ণ।", "Sell at a nearby market today or post an urgent sale; sending far or waiting is risky."],
+  ["দামের পূর্বাভাস মডেল লোড হয়নি", "The price forecast model is not loaded"],
+  ["বাজারদরের তথ্য {} দিনের পুরনো", "Market price data is {} days old"],
+  ["লাভের পার্থক্য পূর্বাভাসের অনিশ্চয়তার মধ্যে পড়ে, তাই নিশ্চিত নয়", "The profit difference is within the forecast uncertainty, so it is not certain"],
+  ["এই উৎপাদন খরচে কোনো বাজারেই লাভ হচ্ছে না", "At this production cost, no market is profitable"],
+  ["{} বাজারে আজ সতর্কবার্তা আছে", "There is a warning for the {} market today"],
+  ["উৎপাদন খরচ দেওয়া হয়নি, তাই লাভ নয়, শুধু 'হাতে থাকবে' (নিট আয়) দেখানো হচ্ছে", "No production cost given, so only net proceeds are shown, not profit"],
+  ["বিক্রির টাকা (পচন বাদে যা পৌঁছায় তার দাম)", "Sales revenue (value of what arrives after spoilage)"],
+  ["বাজার কমিশন + Reroute ১% ফি", "Market commission + Reroute 1% fee"],
+  ["হাতে থাকবে = বিক্রির টাকা − অন্যান্য খরচ − পরিবহন", "Net proceeds = revenue − other costs − transport"],
+  ["লাভ = হাতে থাকবে − উৎপাদন খরচ (খরচ জানা থাকলে)", "Profit = net proceeds − production cost (when known)"],
+  ["পূর্বাভাসের ভিত্তি দুর্বল, তাই অন্য বাজার বা অপেক্ষার পরামর্শ দেওয়া হচ্ছে না; আজকের স্থানীয় দর দেখানো হলো।", "The forecast evidence is weak, so no other market or waiting is recommended; today's local price is shown."],
+  ["{}-এ {}দাম {}/কেজি, {} ({})-এ {}/কেজি: কেজিতে {} {}।", "{} {}price {}/kg; {} ({}): {}/kg — {} {} per kg."],
+  ["বাড়তি বিক্রি প্রায় {}, বাড়তি পরিবহন খরচ {} আর কমিশন-ফি {}: সব বাদ দিয়েও হাতে প্রায় {} বেশি থাকে।", "Extra sales of about {}, extra transport cost {} and commission/fees {}: after all of that you still keep about {} more."],
+  ["{} মণের হিসাব: বিক্রির টাকা {} − অন্যান্য খরচ {} − পরিবহন {} = হাতে থাকবে {}", "For {} maunds: revenue {} − other costs {} − transport {} = net {}"],
+  ["গ্রেডিয়েন্ট বুস্টিং রিগ্রেশন (HistGradientBoosting), দামের দৈনিক পরিবর্তন পূর্বাভাস", "Gradient boosting regression (HistGradientBoosting) forecasting daily price changes"],
+  ["মডেল লোড হয়নি", "Model not loaded"],
+  ["{} পাঠালে পূর্বাভাসের সবচেয়ে খারাপ অনুমানেও হাতে থাকে {}, যা আজ পাঠানোর সেরা হিসাবের ({}) চেয়ে বেশি।", "Sending {} leaves {} even in the worst forecast case, more than the best option for sending today ({})."],
+  ["অপেক্ষার সময় পচন ও ওজন কমা ধরা হয়েছে: প্রায় {}%।", "Spoilage and weight loss while waiting are included: about {}%."],
+  ["উৎপাদন খরচ {} বাদে লাভ {}।", "Profit after a production cost of {}: {}."],
+  ["{}-এ পাঠালে বাড়তি দাম পরিবহন ({}) ও পচনের খরচ পুরোপুরি পোষায় না: হাতে থাকে {}, এখানে {}।", "Sending to {}: the higher price does not fully cover transport ({}) and spoilage: net {} versus {} here."],
+  ["অপেক্ষা করলে দাম বাড়তে পারে (আনুমানিক {}), কিন্তু পূর্বাভাসের খারাপ দিকে {} হতে পারে, তাই ঝুঁকি নেওয়ার মতো প্রমাণ নেই।", "Waiting might raise the price (estimated {}), but in the worse forecast case it could be {}, so there is not enough evidence to take the risk."],
+  ["বিক্রির দিনের পূর্বাভাসিত", "forecast for the sale day"],
+  ["অজানা হিসাব", "Unknown account"],
+  ["শুধু লেনদেনের দাম দিয়ে বাজারভিত্তিক ৩ দিনের পূর্বাভাস হয় না — প্রতিদিনের বাজারদরও সংগ্রহ করতে হবে", "Trade prices alone cannot drive a 3-day market forecast — daily market prices must also be collected"],
+  ["আপনার সেশন শেষ হয়েছে, আবার লগ ইন করুন", "Your session has ended. Please log in again."],
+  ["এই কাজ কৃষক বা পাইকারের জন্য", "This action is for farmers and wholesalers"],
+  ["শুধু Reroute অপারেশন টিম", "Reroute operations team only"],
+  ["এআই প্রস্তুত হচ্ছে, কয়েক সেকেন্ড পরে আবার চেষ্টা করুন", "AI is getting ready. Please try again in a few seconds."],
+  ["জেলা ও ফসল ঠিক নেই", "Invalid district or crop"],
+  ["পরিমাণ ১ মণ থেকে ২,৫০০ মণের মধ্যে দিন", "Enter a quantity between 1 and 2,500 maunds"],
+  ["উৎপাদন খরচ ঠিক নেই", "Invalid production cost"],
+  ["তাজা থাকার দিন ঠিক নেই", "Invalid freshness days"],
+  ["তথ্য ঠিক নেই", "Invalid details"],
+  ["ফসল ঠিক নেই", "Invalid crop"],
+  ["পরিবহন বাছাই ঠিক নেই", "Invalid transport choice"],
+  ["দাম ঠিক নেই", "Invalid price"],
+  ["ফরম্যাট ঠিক নেই", "Invalid format"],
+  ["এখনো কোনো আসল (ডেমো নয়) সম্পন্ন লেনদেন নেই", "No real (non-demo) completed trades yet"],
+  ["প্রতিটি ফসলে অন্তত {}টি আসল লেনদেন দরকার", "Each crop needs at least {} real trades"],
+  ["অন্তত {} দিনের ডেটা দরকার (এখন {} দিন)", "At least {} days of data are needed (now {} days)"],
+  ["লিস্টিং পাওয়া যায়নি", "Listing not found"],
+  ["পরিমাণ ও দাম দিন", "Enter the quantity and price"],
+  ["ফসল, পরিমাণ ও দাম দিন", "Enter the crop, quantity and price"],
+  ["খরচ ঠিক নেই", "Invalid cost"],
+  ["এই সপ্তাহে", "This week"],
+  ["এই মাসে", "This month"],
+  ["গত মাসে", "Last month"],
+  ["এই বছরে", "This year"],
+  ["এ পর্যন্ত", "To date"],
+  ["এই মাসে আমার লাভ কত?", "What is my profit this month?"],
+  ["আমার কয়টা অর্ডার পেন্ডিং?", "How many of my orders are pending?"],
+  ["আমার ২০ মণ টমেটো কোন বাজারে বিক্রি করলে ভালো হবে?", "Which market is best for my 20 maunds of tomatoes?"],
+  ["{} আপনার কোনো বিক্রি হিসাবে নেই।", "You have no sales recorded {}."],
+  ["{} আপনার মোট বিক্রয় {}: প্ল্যাটফর্মে {}, নিজে লেখা {}। এটা বিক্রির মোট দাম, হাতে পাওয়া টাকা নয়।", "Your total sales {}: {} ({} on the platform, {} user-reported). This is the total sale value, not cash received."],
+  ["{} আপনার আনুমানিক {} {} (বিক্রি {}, বিক্রি হওয়া মালের খরচ {}, অন্য খরচ {})।", "Your estimated {1} {0}: {2} (sales {3}, cost of goods sold {4}, other costs {5})."],
+  ["{} {} বিক্রি {}, লেখা খরচ {}। স্মার্ট হিসাবে উৎপাদন বা কেনার খরচ লিখলে লাভ দেখাতে পারব।", "{} Sales {1}: {2}, recorded costs {3}. Add production or purchase costs in Smart Hisab and I can show your profit."],
+  ["স্মার্ট হিসাব খুলুন", "Open Smart Hisab"],
+  ["এখন আপনার কোনো {} হিসাবে নেই।", "You have no {} recorded right now."],
+  ["আপনার মোট {} {}, {}টি হিসাবে।", "Your total {} is {}, across {} records."],
+  ["পাওনা-দেনা দেখুন", "View receivables and payables"],
+  ["আপনার এখনো কোনো ইনভয়েস তৈরি হয়নি।", "You have no invoices yet."],
+  ["আপনার শেষ {}টি ইনভয়েস", "Your last {} invoices"],
+  ["এখন আপনার কোনো চলমান অর্ডার বা উত্তরের অপেক্ষায় অফার নেই।", "You have no active orders or offers waiting for your reply."],
+  ["দুঃখিত, প্রশ্নটা বুঝতে পারিনি। এভাবে জিজ্ঞেস করতে পারেন", "Sorry, I did not understand the question. You can ask like this"],
+  ["আপনার চলমান অর্ডার {}টি", "You have {} active orders"],
+  ["পেমেন্টের অপেক্ষায়", "Awaiting payment"],
+  ["নিশ্চিত, মাল পাঠানো বাকি", "Confirmed, not yet dispatched"],
+  ["পথে / বুঝে নেওয়া বাকি", "In transit / awaiting receipt"],
+  ["{}: {}টি", "{}: {}"],
+  ["এআই এখনো প্রস্তুত হচ্ছে, কয়েক সেকেন্ড পরে আবার জিজ্ঞেস করুন।", "AI is still getting ready. Please ask again in a few seconds."],
+  ["আজ {}-এ {}-এর আনুমানিক দর কেজিপ্রতি {}। সবচেয়ে বেশি {}-এ {}। (সিমুলেটেড ডেমো বাজারদর, {})", "Today's estimated {1} price in {0} is {2} per kg. The highest is in {3} at {4}. (Simulated demo market price, {5})"],
+  ["আর {}টি অফারে আপনার উত্তর দরকার।", "and {} offers need your reply."],
+  ["কত মণ বা কেজি {}, সেটা বললে হিসাব করতে পারব। যেমন: \"২০ মণ {}\"", "Tell me how many maunds or kg of {} and I can work it out. For example: \"20 maund {}\""],
+  ["। এটি সিমুলেটেড বাজারদরের উপর অনুমান, নিশ্চিত নয়।", ". This is an estimate based on simulated market prices, not a guarantee."],
+  ["{}: {} বাজারে {} পাঠালে আনুমানিক দাম কেজিপ্রতি {}, খরচ বাদে হাতে থাকবে প্রায় {}", "{}: sending {2} to {1} market gives an estimated price of {3} per kg and about {4} net after costs"],
+  ["স্থানীয় বিকল্পের চেয়ে {} বেশি", "{} more than the local option"],
+  ["এই কোড আর ব্যবহার করা যাবে না। আবার অ্যাকাউন্ট খুলুন বোতাম চাপুন।", "This code can no longer be used. Press the Create account button again."],
+  ["কোডের মেয়াদ শেষ। \"আবার পাঠান\" চাপুন।", "The code has expired. Press \"Send again\"."],
+  ["অনেকবার ভুল কোড দেওয়া হয়েছে। \"আবার পাঠান\" চাপুন বা আবার শুরু করুন।", "Too many wrong codes. Press \"Send again\" or start over."],
+  ["এই কোড আর ব্যবহার করা যাবে না।", "This code can no longer be used."],
+  ["এই নিবন্ধন আর চালু নেই। আবার অ্যাকাউন্ট খুলুন বোতাম চাপুন।", "This registration is no longer active. Press the Create account button again."],
+  ["অনেকবার কোড চাওয়া হয়েছে। কিছুক্ষণ পরে আবার অ্যাকাউন্ট খুলুন।", "Too many code requests. Please create the account again a little later."],
+  ["কোড মেলেনি। আর {} বার চেষ্টা করা যাবে।", "The code does not match. {} attempts left."],
+  ["কোড মেলেনি। \"আবার পাঠান\" চাপুন।", "The code does not match. Press \"Send again\"."],
+  ["আসল প্ল্যাটফর্ম লেনদেন", "Real platform trades"],
+  ["নিজে লেখা রেকর্ড", "User-reported records"],
+  ["সিমুলেটেড মডেল ডেটা", "Simulated model data"],
+  ["বাইরের ডেটা", "External data"],
+  ["শুধু আসল (নিবন্ধিত অ্যাকাউন্টের), যাচাই করা ও সম্পন্ন লেনদেন ট্রেনিংয়ের যোগ্য। এগুলো Reroute-এর নিজের লেনদেন, সারা বাংলাদেশের বাজারের প্রতিনিধি নয়। মডেল নিজে থেকে আবার প্রশিক্ষণ হয় না।", "Only real (registered account), verified, completed trades are eligible for training. These are Reroute's own trades, not representative of all markets in Bangladesh. The model is never retrained automatically."],
+  ["বিক্রির টাকা পাওয়া গেছে", "Sale proceeds received"],
+  ["{} ঠিক নেই", "Invalid {}"],
+  ["রসিদ পাওয়া যায়নি", "Receipt not found"],
+  ["একই তারিখে একই অঙ্কের একই রেকর্ড আগে থেকেই লেখা আছে", "The same record with the same amount and date already exists"],
+  ["হিসাবের ধরন ঠিক নেই", "Invalid record type"],
+  ["টাকার অঙ্ক ঠিক নেই (সর্বোচ্চ ২ দশমিক ঘর)", "Invalid amount (at most 2 decimal places)"],
+  ["পরিমাণ ঠিক নেই", "Invalid quantity"],
+  ["সংযুক্ত ফাইল পাওয়া যায়নি", "Attached file not found"],
+  ["কোন ফসল ও কত কেজি কিনেছেন দিন", "Enter the crop and how many kg you bought"],
+  ["রেকর্ড পাওয়া যায়নি", "Record not found"],
+  ["এই রেকর্ড আগেই বাতিল করা হয়েছে", "This record has already been voided"],
+  ["বাতিলের কারণ লিখুন", "Enter a reason for voiding"],
+  ["পাওনা না দেনা, বাছুন", "Choose receivable or payable"],
+  ["টাকার অঙ্ক ঠিক নেই", "Invalid amount"],
+  ["কার কাছে পাওনা/দেনা, নাম লিখুন", "Enter the name of the other party"],
+  ["পাওনা/দেনা পাওয়া যায়নি", "Receivable/payable not found"],
+  ["টাকার অঙ্ক বাকি অঙ্কের ({}) বেশি বা শূন্য হতে পারবে না", "The amount cannot be zero or more than the outstanding amount ({})"],
+  ["টাকা লেনদেন হয়ে গেছে, তাই এটি বাতিল করা যাবে না", "Payments have been recorded, so this cannot be voided"],
+  ["ফাইল বড়, ৫০০ কেবির মধ্যে দিন", "The file is too large; keep it under 500 KB"],
+  ["{} ঠিক নেই (YYYY-MM-DD)", "Invalid {} (YYYY-MM-DD)"],
+  ["এই তারিখে একই অঙ্কের Reroute ট্রাক বুকিং আগে থেকেই হিসাবে আছে", "A Reroute truck booking with the same amount on this date is already counted"],
+  ["এই তারিখে একই অঙ্কের অর্ডারের ট্রাক ভাড়া আগে থেকেই হিসাবে আছে", "An order truck fare with the same amount on this date is already counted"],
+  ["এই তারিখে একই অঙ্কের প্ল্যাটফর্ম বিক্রি আগে থেকেই হিসাবে আছে", "A platform sale with the same amount on this date is already counted"],
+  ["কোন পাওনা/দেনার বিপরীতে টাকা, সেটি বাছুন (পাওনা ও দেনা অংশ থেকে)", "Choose which receivable or payable this payment is for (in the Receivables & payables section)"],
+  ["। তবুও লিখতে চাইলে নিশ্চিত করুন।", ". Confirm if you still want to record it."],
+  ["এই কেনা মালের কিছু অংশ বিক্রি বা লিস্টিং হয়ে গেছে, তাই বাতিল করা যাবে না", "Part of this purchase has already been sold or listed, so it cannot be voided"],
+  ["শুরুর তারিখ", "Start date"],
+  ["শেষের তারিখ", "End date"],
+  ["শুরুর তারিখ শেষের তারিখের পরে হতে পারে না", "The start date cannot be after the end date"],
+  ["শুধু ছবি (JPG/PNG/WebP) বা PDF দেওয়া যাবে", "Only images (JPG/PNG/WebP) or PDF files are allowed"],
+  ["শেষ তারিখ ঠিক নেই", "Invalid due date"],
+  ["Reroute এসক্রো ({})", "Reroute escrow ({})"],
+  ["মাল বুঝে দিলে ওয়ালেটে আসবে", "Paid to your wallet after delivery"],
+  ["{} বিক্রি, অর্ডার {}", "{} sale, order {}"],
+  ["{} কেনা, অর্ডার {}", "{} purchase, order {}"],
+  ["ফসল উল্লেখ নেই", "No crop specified"],
+  ["স্মার্ট হিসাব কৃষক ও পাইকারের জন্য", "Smart Hisab is for farmers and wholesalers"],
+  ["অবস্থা ঠিক নেই", "Invalid status"],
+  ["দাম ও পরিবহনের শর্ত চূড়ান্ত হলে ইনভয়েস তৈরি হবে", "The invoice is created once the price and transport terms are final"],
+  ["ফাইল পাওয়া যায়নি", "File not found"],
+  ["কৃষক অ্যাকাউন্টের সংখ্যা (ডাটাবেস)।", "Number of farmer accounts (database)."],
+  ["পাইকার অ্যাকাউন্টের সংখ্যা (ডাটাবেস)।", "Number of wholesaler accounts (database)."],
+  ["সম্পন্ন অর্ডার: ক্রেতা মাল বুঝে পেয়েছেন এবং বিক্রেতা টাকা পেয়েছেন (ডাটাবেস)।", "Completed orders: the buyer received the goods and the seller was paid (database)."],
+  ["সম্পন্ন অর্ডারের মালের মোট দাম (দাম × পরিমাণ), পরিবহন ও ফি ছাড়া (ডাটাবেস)। পেমেন্ট সিমুলেটেড।", "Total goods value of completed orders (price × quantity), excluding transport and fees (database). Payments are simulated."],
+  ["সম্পন্ন অর্ডারে বিক্রি হওয়া মোট পরিমাণ, মণে (ডাটাবেস)।", "Total quantity sold in completed orders, in maunds (database)."],
+  ["আনুমানিক: প্রতিটি সম্পন্ন Reroute ট্রাক বুকিংয়ের জন্য খোলা বাজারে পুরো ট্রাক ভাড়ার হিসাব (ট্রিপ খরচ × ১.১৫, দালাল ও খালি ফেরা ধরে) − Reroute-এ দেওয়া ভাড়া। দূরত্ব আনুমানিক।", "Estimated: for each completed Reroute truck booking, the open-market cost of a whole truck (trip cost × 1.15, allowing for brokers and empty returns) − the fare paid on Reroute. Distances are estimated."],
+  ["সম্পন্ন ট্রাক বুকিংয়ের মধ্যে কতগুলো অন্য বুকিংয়ের সাথে একই ট্রাক, রুট ও দিনে গেছে (ডাটাবেস)।", "How many completed truck bookings shared a truck, route and day with another booking (database)."],
+  ["সম্ভাব্য: পচনের ঝুঁকিতে 'জরুরি বিক্রি' দেওয়া লিস্টিং থেকে সময়মতো বিক্রি হওয়া পরিমাণ (ডাটাবেস)। এগুলো বিক্রি না হলে নষ্ট হতো কিনা তা মাপা হয়নি।", "Potential: quantity sold in time from listings marked \"urgent sale\" because of spoilage risk (database). Whether it would otherwise have spoiled is not measured."],
+  ["আনুমানিক ও সিমুলেটেড: এআই বাজার-বাছাইয়ের ব্যাক-টেস্টে স্থানীয় হাটের চেয়ে গড়ে কেজিতে ৳{} বেশি হাতে থেকেছে (সিমুলেটেড ডেটা) × কৃষকের বিক্রি করা কেজি। বাস্তবে মাপা লাভ নয়।", "Estimated and simulated: in the AI market-choice back-test, farmers kept ৳{} more per kg on average than at the local market (simulated data) × kg sold by farmers. Not a measured real gain."],
+  ["মডেলের ব্যাক-টেস্ট পাওয়া যায়নি।", "Model back-test not available."],
+  ["পিকআপ (১.৫ টন)", "Pickup (1.5 t)"],
+  ["মিনি ট্রাক (৩.৫ টন)", "Mini truck (3.5 t)"],
+  ["ট্রাক (৭ টন)", "Truck (7 t)"],
+  ["পরিবহন খরচে ৳১০০ ছাড়", "৳100 off transport"],
+  ["পরের বিক্রির প্ল্যাটফর্ম ফি-তে ৳১৫০ ছাড়", "৳150 off the platform fee on your next sale"],
+  ["অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।", "Too many attempts. Please try again later."],
+  ["কৃষক ও পাইকারের পাইকারি বাজার: পরিদর্শন, অফার-দরদাম, পরিবহন চুক্তি, অনলাইন পেমেন্ট, নিজস্ব ট্রাক", "Wholesale marketplace for farmers and wholesalers: inspection, offers and negotiation, transport agreements, online payment, own trucks"],
+  ["অজানা কাজ", "Unknown action"],
+  ["✔️ আপনার প্রোফাইল যাচাই হয়েছে। +৫০ পয়েন্ট, আর অগ্রাধিকার ট্রাক বুকিং পাবেন।", "✔️ Your profile has been verified. You get +50 points and priority truck bookings."],
+  ["আপনার পাসওয়ার্ড অপারেশন টিম রিসেট করেছে। লগ ইন করে অ্যাকাউন্ট পাতা থেকে নতুন পাসওয়ার্ড দিন।", "The operations team has reset your password. Log in and set a new password on the Account page."],
+  ["অনেকবার ভুল পাসওয়ার্ড দেওয়া হয়েছে। ১৫ মিনিট পরে আবার চেষ্টা করুন।", "Too many wrong passwords. Please try again in 15 minutes."],
+  ["জেলা ঠিক নেই", "Invalid district"],
+  ["নতুন অ্যাকাউন্ট খোলা এখন বন্ধ: SMS সেবা এখনো চালু হয়নি।", "New sign-ups are closed: SMS is not enabled yet."],
+  ["SMS সেবা এখনো চালু হয়নি।", "SMS is not enabled yet."],
+  ["ছবি ছোট করে দিন (৪০০ কেবি পর্যন্ত)", "Please use a smaller photo (up to 400 KB)"],
+  ["ডেমো অ্যাকাউন্টের ছবি সার্ভারে বদলানো যায় না", "Demo account photos cannot be changed on the server"],
+  ["ছবি নেই", "No photo"],
+  ["অ্যাকাউন্ট পাওয়া যায়নি", "Account not found"],
+  ["সর্বোচ্চ ৩টি ছবি", "Up to 3 photos"],
+  ["পরিবহন চুক্তির তথ্য পাওয়া যায়নি", "Transport agreement not found"],
+  ["এই ট্রাকে চলমান বুকিং আছে", "This truck has active bookings"],
+  ["আগেই যাচাই করা বা অ্যাকাউন্ট নেই", "Already verified, or the account does not exist"],
+  ["অনেকবার চেষ্টা করা হয়েছে। এক ঘণ্টা পরে আবার চেষ্টা করুন।", "Too many attempts. Please try again in an hour."],
+  ["শুধু নিবন্ধিত অ্যাকাউন্টের পাসওয়ার্ড রিসেট করা যায়", "Only registered accounts can have their password reset"],
+  ["ডেমো অ্যাকাউন্টের পাসওয়ার্ড বদলানো যায় না", "Demo account passwords cannot be changed"],
+  ["অনেকবার চেষ্টা করা হয়েছে। পরে আবার চেষ্টা করুন।", "Too many attempts. Please try again later."],
+  ["শেয়ার্ড ট্রাকে যুক্ত (পুলিং)", "Added to a shared truck (pooling)"],
+  ["সময়সীমা ঠিক নেই", "Invalid period"],
+  ["এই বাজার বা পণ্য পাওয়া যায়নি", "Market or product not found"],
+  ["এই সার্ভারে ডেমো নতুন করে শুরু করা যায় না", "The demo cannot be restarted on this server"],
+  ["অনুরোধটি অনেক বড় (ছবি ছোট করে দিন)", "The request is too large (use a smaller photo)"],
+  ["ডেমো লগ ইন এখন বন্ধ", "Demo login is currently off"],
+  ["ডেমো অ্যাকাউন্ট পাওয়া যায়নি", "Demo account not found"],
+  ["পাসওয়ার্ড রিসেটের অনুরোধ: {}। ফোন করে পরিচয় যাচাই করে ব্যবহারকারী তালিকা থেকে অস্থায়ী পাসওয়ার্ড দিন।", "Password reset request: {}. Call to verify the identity, then issue a temporary password from the user list."],
+  ["{}-এর আড়ত", "{}'s trading house"],
+  ["ভাগাভাগি: পুরো ট্রিপের খরচ ওজনের অনুপাতে ভাগ। দূরত্ব আনুমানিক (জেলা কেন্দ্রের সরলরেখা দূরত্ব × ১.৩৫), ম্যাপ বা রুটিং সেবা ব্যবহার হয়নি।", "Cost sharing: the whole trip cost is split by weight. Distances are estimated (straight-line distance between district centres × 1.35); no map or routing service is used."],
+  ["🔍 {} আপনার {} {} দেখতে চান। পছন্দের সময়: {}।", "🔍 {} wants to inspect your {} {}. Preferred time: {}."],
+  ["📅 {} পরিদর্শনের সময় প্রস্তাব করেছেন: {}। নিশ্চিত করুন।", "📅 {} proposed an inspection time: {}. Please confirm."],
+  ["✅ {} পরিদর্শনের সময় নিশ্চিত করেছেন: {}।", "✅ {} confirmed the inspection time: {}."],
+  ["🔍 {} বলছেন মাল দেখেছেন। আপনি কি এটি নিশ্চিত করবেন?", "🔍 {} says they have inspected the produce. Do you confirm?"],
+  ["{} পরিদর্শনের অনুরোধ বাতিল করেছেন।", "{} cancelled the inspection request."],
+  ["📩 {} {#} মণ {} কিনতে চান, {}৳{}/কেজি (আপনার দাম ৳{})।", "📩 {} wants to buy {} maunds of {} at {}৳{}/kg (your price ৳{})."],
+  ["আপনার ভাগ: ৳{} ({}%)", "Your share: ৳{} ({}%)"],
+  ["ক্রেতার ভাগ: ৳{} ({}%), আপনার ভাগ: ৳{} ({}%)", "Buyer's share: ৳{} ({}%), your share: ৳{} ({}%)"],
+  ["🔄 {} পরিবহন খরচের নতুন প্রস্তাব দিয়েছেন। মোট ভাড়া: ৳{}। {}।", "🔄 {} sent a new transport cost proposal. Total fare: ৳{}. {}."],
+  ["✅ পরিবহন চুক্তি নিশ্চিত হয়েছে। এখন ৳{} পেমেন্ট করুন।", "✅ Transport agreement confirmed. Please pay ৳{} now."],
+  ["🚚 {} মাল হস্তান্তর করেছেন ({} মণ {})। মাল পেলে \"মাল বুঝে পেয়েছি\" চাপুন।", "🚚 {} handed over the goods ({} maunds of {}). When you receive them, press \"Goods received\"."],
+  ["{} মণ {} বিক্রির টাকা", "Sale proceeds for {} maunds of {}"],
+  ["🎉 কেনা সম্পূর্ণ। {} মণ {} আপনার মজুদে যোগ হয়েছে।", "🎉 Purchase complete. {} maunds of {} added to your stock."],
+  ["রাজি হওয়ার পর অর্ডার বাতিল", "Order cancelled after acceptance"],
+  ["⭐ {} আপনাকে {} তারা দিয়েছেন।", "⭐ {} gave you {} stars."],
+  ["বুকিং তৈরি, পেমেন্ট বাকি", "Booking created, payment pending"],
+  ["গ্রাহক বাতিল করেছেন", "Cancelled by the customer"],
+  ["ওয়ালেটে যথেষ্ট টাকা নেই", "Not enough money in the wallet"],
+  ["সর্বনিম্ন অর্ডার অন্তত {} মণ হতে হবে (পাইকারি প্ল্যাটফর্ম)", "The minimum order must be at least {} maunds (wholesale platform)"],
+  ["মোট পরিমাণ সর্বনিম্ন অর্ডারের চেয়ে কম হতে পারবে না", "The total quantity cannot be less than the minimum order"],
+  ["শুধু চালু লিস্টিং জরুরি করা যায়", "Only active listings can be marked urgent"],
+  ["🚨 জরুরি বিক্রি: {} ({}) {} মণ {}, {}% কম দামে। নষ্ট হওয়ার আগে কিনুন।", "🚨 Urgent sale: {} ({}) {} maunds of {}, {}% off. Buy before it spoils."],
+  ["📦 আপনার {}-এর লিস্টিং পুরো বিক্রি/বুক হয়ে গেছে।", "📦 Your {} listing is fully sold or reserved."],
+  ["এই মাল পরিদর্শন করা যাবে না", "This produce cannot be inspected"],
+  ["এই লিস্টিং এখন চালু নেই", "This listing is not active right now"],
+  ["পরিদর্শন পাওয়া যায়নি", "Inspection not found"],
+  ["শুধু বিক্রেতা সময় প্রস্তাব করতে পারেন", "Only the seller can propose a time"],
+  ["এখন সময় প্রস্তাব করা যাবে না", "A time cannot be proposed now"],
+  ["শুধু ক্রেতা সময় নিশ্চিত করতে পারেন", "Only the buyer can confirm the time"],
+  ["বিক্রেতার প্রস্তাবিত সময় নিশ্চিত করুন", "Confirm the time proposed by the seller"],
+  ["শুধু ক্রেতা মাল দেখার রিপোর্ট করতে পারেন", "Only the buyer can report the inspection"],
+  ["পরিদর্শন সময়সূচি নিশ্চিত না হলে এটি করা যাবে না", "This needs a confirmed inspection time"],
+  ["শুধু বিক্রেতা পরিদর্শন নিশ্চিত করতে পারেন", "Only the seller can confirm the inspection"],
+  ["ক্রেতার রিপোর্টের পরেই নিশ্চিত করা যাবে", "This can be confirmed only after the buyer's report"],
+  ["✅ {} নিশ্চিত করেছেন — পরিদর্শন সম্পন্ন। এখন অফার দিতে পারেন।", "✅ {} confirmed — inspection complete. You can make an offer now."],
+  ["❌ {} পরিদর্শন নিশ্চিত করেননি। কারণ: {}", "❌ {} did not confirm the inspection. Reason: {}"],
+  ["এই পরিদর্শন আপনার নয়", "This inspection is not yours"],
+  ["এখন বাতিল করা যাবে না", "It cannot be cancelled now"],
+  ["❌ {} পরিদর্শনে রাজি হননি।", "❌ {} declined the inspection."],
+  ["এই পরিদর্শন বাতিল করা যাবে না", "This inspection cannot be cancelled"],
+  ["নিজের মালে অফার দেওয়া যায় না", "You cannot make an offer on your own produce"],
+  ["সর্বনিম্ন অর্ডার {} মণ", "Minimum order {} maunds"],
+  ["বিক্রির জন্য আছে মাত্র {} মণ", "Only {} maunds are available"],
+  ["দাম তালিকার দাম ৳{}/কেজি বা তার কম হতে হবে", "The price must be at or below the listed price of ৳{}/kg"],
+  ["পরিদর্শন সম্পন্ন হওয়ার আগে অফার দেওয়া যাবে না", "You cannot make an offer before the inspection is complete"],
+  ["এই অফার আপনার নয়", "This offer is not yours"],
+  ["এই অফার আর চালু নেই", "This offer is no longer active"],
+  ["এখন অন্যজনের উত্তরের অপেক্ষা", "Waiting for the other party's reply"],
+  ["↔️ {} পাল্টা দাম দিয়েছেন: ৳{}/কেজি ({} মণ {})। রাজি হলে পেমেন্ট করুন।", "↔️ {} sent a counter-offer: ৳{}/kg ({} maunds of {}). Pay if you accept."],
+  ["লিস্টিংয়ে এখন এত মাল নেই", "The listing no longer has this much produce"],
+  ["✅ {} রাজি: {} মণ {} ৳{}/কেজি। পরিবহন খরচ ভাগাভাগি নিশ্চিত করুন।", "✅ {} accepted: {} maunds of {} at ৳{}/kg. Confirm the transport cost split."],
+  ["✅ {} মণ {} বিক্রিতে রাজি হয়েছেন। পরিবহন খরচের প্রস্তাব আপনার কাছে পাঠানো হয়েছে।", "✅ You agreed to sell {} maunds of {}. A transport cost proposal has been sent to you."],
+  ["✅ {} রাজি: {} মণ {} ৳{}/কেজি। এখন {} পেমেন্ট করুন, {} ঘণ্টার মধ্যে।", "✅ {} accepted: {} maunds of {} at ৳{}/kg. Please pay {} within {} hours."],
+  ["✅ {} মণ {} বিক্রিতে রাজি হয়েছেন। {} পেমেন্ট করলেই অর্ডার নিশ্চিত হবে।", "✅ You agreed to sell {} maunds of {}. The order is confirmed as soon as {} pays."],
+  ["আপনার ভাগ: ০ টাকা", "Your share: ৳0"],
+  ["🚚 পরিবহন খরচের প্রস্তাব এসেছে। মোট ভাড়া: ৳{}। {}। রাজি হলে 'গ্রহণ করুন', না হলে 'পাল্টা প্রস্তাব দিন'।", "🚚 A transport cost proposal has arrived. Total fare: ৳{}. {}. Press 'Accept' to agree, or 'Counter' to propose another split."],
+  ["পরিবহন চুক্তি আগেই চূড়ান্ত হয়েছে", "The transport agreement is already final"],
+  ["এই পর্যায়ে পরিবহন প্রস্তাব করা যাবে না", "A transport proposal cannot be made at this stage"],
+  ["এই অর্ডার আপনার নয়", "This order is not yours"],
+  ["প্রস্তাব পাওয়া যায়নি", "Proposal not found"],
+  ["এই প্রস্তাব আর সক্রিয় নেই (পুরনো বা ইতিমধ্যে সাড়া দেওয়া হয়েছে)", "This proposal is no longer active (outdated or already answered)"],
+  ["এই প্রস্তাব আপনার কাছে পাঠানো হয়নি", "This proposal was not sent to you"],
+  ["✅ পরিবহন খরচের প্রস্তাব গৃহীত হয়েছে। ক্রেতার ভাগ: ৳{}, বিক্রেতার ভাগ: ৳{}। এখন পেমেন্ট করুন।", "✅ The transport cost proposal was accepted. Buyer's share: ৳{}, seller's share: ৳{}. Please pay now."],
+  ["পেমেন্ট পদ্ধতি ঠিক নেই", "Invalid payment method"],
+  ["পেমেন্ট পাওয়া যায়নি", "Payment not found"],
+  ["💰 {} {#} পেমেন্ট করেছেন, টাকা Reroute-এ জমা আছে। {}", "💰 {} paid {}; the money is held by Reroute. {}"],
+  ["✅ অর্ডার নিশ্চিত হয়েছে! পেমেন্ট সফল (TXN: {})।", "✅ Order confirmed! Payment successful (TXN: {})."],
+  ["এখন হস্তান্তর করা যাবে না", "Handover is not possible now"],
+  ["এখন অর্ডার সম্পূর্ণ করা যাবে না", "The order cannot be completed now"],
+  ["সফল বিক্রির ক্যাশব্যাক", "Cashback for a successful sale"],
+  ["Reroute ট্রাক ব্যবহার", "Used a Reroute truck"],
+  ["মাল হস্তান্তরের পর অর্ডার বাতিল করা যায় না", "An order cannot be cancelled after handover"],
+  ["বাতিল অর্ডারের টাকা ফেরত", "Refund for a cancelled order"],
+  ["অর্ডার সম্পূর্ণ হলে রেটিং দেওয়া যায়", "You can rate once the order is completed"],
+  ["আগেই রেটিং দিয়েছেন", "You have already rated"],
+  ["জায়গা আর অন্তত ১০০ কেজি দিন", "Enter the locations and at least 100 kg"],
+  ["এই ট্রাক একটি অর্ডারের সাথে যুক্ত। অর্ডার বাতিল করলে ট্রাকও বাতিল হবে।", "This truck is linked to an order. Cancelling the order also cancels the truck."],
+  ["ট্রাক রওনা দেওয়ার পর বাতিল করা যায় না", "It cannot be cancelled after the truck has left"],
+  ["বাতিল বুকিংয়ের টাকা ফেরত", "Refund for a cancelled booking"],
+  ["এই বুকিং এখন বদলানো যাবে না", "This booking cannot be changed now"],
+  ["পরের ধাপেই যাওয়া যাবে", "You can only move to the next step"],
+  ["আগে ট্রাক ঠিক করে বুকিং নিশ্চিত করুন", "Assign a truck and confirm the booking first"],
+  ["আগামীকাল সকাল ৮টা", "Tomorrow at 8 am"],
+  ["🚚 ট্রাক ঠিক হয়েছে: {}, চালক {} ({})।", "🚚 Truck assigned: {}, driver {} ({})."],
+  ["এই পুরস্কার নেই", "This reward does not exist"],
+  ["আরও {} পয়েন্ট দরকার", "{} more points needed"],
+  ["প্লাস চালু নেই", "Plus is not active"],
+  ["মেয়াদ শেষ, আবার কিনতে হবে", "Expired; it needs to be bought again"],
+  ["সময়মতো পেমেন্ট হয়নি", "Not paid in time"],
+  ["আপনার মজুদে বিক্রির মতো {} আছে {} মণ। এর বেশি তালিকায় দেওয়া যাবে না", "You have {1} maunds of {0} available to sell. You cannot list more than that"],
+  ["সর্বনিম্ন অর্ডার অন্তত {} মণ", "The minimum order must be at least {} maunds"],
+  ["বিক্রিযোগ্য পরিমাণের চেয়ে বেশি কমানো যাবে না", "You cannot reduce by more than the available quantity"],
+  ["বিক্রির মতো মাল নেই, আগে পরিমাণ বাড়ান", "Nothing is available to sell; increase the quantity first"],
+  ["চলমান অর্ডার আছে, তাই এখন বন্ধ করা যাবে না", "There are active orders, so it cannot be closed now"],
+  ["⚠️ {}-এর লিস্টিংয়ে আর মাত্র {} মণ বাকি।", "⚠️ Only {1} maunds left in your {0} listing."],
+  ["বিক্রেতা অফার বাতিল নয়, প্রত্যাখ্যান করতে পারেন", "Sellers can decline an offer, not cancel it"],
+  ["{} তাঁর অফার তুলে নিয়েছেন ({} মণ {}).", "{} withdrew their offer ({} maunds of {})."],
+  ["❌ {} {#} মণ {}-এর {} গ্রহণ করেননি।", "❌ {} did not accept the {3} for {1} maunds of {2}."],
+  ["পাল্টা দাম বিক্রেতা দেন", "Only the seller can send a counter-offer"],
+  ["পাল্টা দাম ক্রেতার দামের (৳{}) বেশি এবং তালিকার দামের (৳{}) মধ্যে হতে হবে", "The counter price must be above the buyer's price (৳{}) and no more than the listed price (৳{})"],
+  ["এই অর্ডারের পেমেন্ট এখন করা যাবে না", "This order cannot be paid now"],
+  ["এই অর্ডারের পেমেন্ট আগেই হয়ে গেছে বা অর্ডারটি আর চালু নেই। টাকা কাটা হয়নি।", "This order is already paid or no longer active. No money was taken."],
+  ["ওয়ালেটে যথেষ্ট টাকা নেই (আছে {})", "Not enough money in the wallet (balance {})"],
+  ["অর্ডারের অবস্থা বদলে গেছে, আবার চেষ্টা করুন", "The order status has changed. Please try again."],
+  ["অর্ডারের পেমেন্টের সাথে বুকিং হয়েছে", "Booked together with the order payment"],
+  ["পেমেন্টের পর বুকিং অনুরোধ", "Booking requested after payment"],
+  ["Reroute ট্রাক এখনো আসেনি। ট্রাক পৌঁছালে মাল তুলে দিন।", "The Reroute truck has not arrived yet. Load the goods when it arrives."],
+  ["কৃষক মাল ট্রাকে তুলে দিয়েছেন", "The farmer has loaded the goods onto the truck"],
+  ["ক্রেতা মাল বুঝে পেয়েছেন", "The buyer has received the goods"],
+  ["🎉 বিক্রি সম্পূর্ণ! {} আপনার ওয়ালেটে জমা হয়েছে", "🎉 Sale complete! {} has been credited to your wallet"],
+  ["ছবি ও মানের তথ্যসহ লিস্টিং", "Listing with photos and quality details"],
+  ["❌ {} {#} মণ {}-এর অর্ডার বাতিল করেছেন।", "❌ {} cancelled the order for {} maunds of {}."],
+  ["আপনার টাকা ওয়ালেটে ফেরত দেওয়া হয়েছে।", "Your money has been refunded to your wallet."],
+  ["চালু ট্রাক বাছুন (একই রুটের বুকিং একই ট্রাকে যেতে পারে)", "Choose an active truck (bookings on the same route can share a truck)"],
+  ["এই বুকিংয়ে একাধিক ট্রাক লাগে, তাই অন্য বুকিং থাকা ট্রাকে দেওয়া যাবে না", "This booking needs more than one truck, so it cannot go on a truck that already has bookings"],
+  ["ট্রাকে জায়গা নেই: ধারণক্ষমতা {} কেজি, আগেই বুক {} কেজি, এই বুকিং {} কেজি", "Not enough space on the truck: capacity {} kg, already booked {} kg, this booking {} kg"],
+  ["ফসল আর পরিমাণ দিন", "Enter the crop and quantity"],
+  ["বাজারের বাইরে বিক্রির মতো মজুদ আছে {} মণ", "Stock available for off-market sale: {} maunds"],
+  ["⌛ {} মণ {}-এর অফারের মেয়াদ শেষ।", "⌛ The offer for {} maunds of {} has expired."],
+  ["⌛ পেমেন্ট না হওয়ায় {} মণ {}-এর অর্ডার বাতিল।", "⌛ The order for {} maunds of {} was cancelled because it was not paid."],
+  ["সরাসরি এসে", "in person"],
+  ["বিক্রেতা বলছেন ক্রেতা আসেননি", "The seller says the buyer did not come"],
+  ["কম দামে", "at a lower price"],
+  ["নতুন প্রস্তাব দিন।", "Make a new proposal."],
+  ["পরিবহন খরচের চুক্তি নিশ্চিত হওয়ার আগে পেমেন্ট করা যাবে না", "You cannot pay before the transport cost agreement is confirmed"],
+  ["এই বুকিংয়ের পেমেন্ট এখন করা যাবে না", "This booking cannot be paid now"],
+  ["অজানা পেমেন্ট", "Unknown payment"],
+  ["এই বুকিংয়ের পেমেন্ট আগেই হয়ে গেছে। টাকা কাটা হয়নি।", "This booking is already paid. No money was taken."],
+  ["সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন", "Enter a valid 11-digit mobile number"],
+  ["অর্ডারের পেমেন্ট", "Order payment"],
+  ["পরিবহন বুকিং", "Transport booking"],
+  ["⭐ Reroute প্লাস চালু হয়েছে, {} দিনের জন্য।", "⭐ Reroute Plus is active for {} days."],
+  ["(৳{} ক্যাশব্যাকসহ)", "(including ৳{} cashback)"],
+  ["🥀 আপনার {} {#} দিনের মধ্যে নষ্ট হতে শুরু করবে। দাম একটু কমিয়ে \"জরুরি বিক্রি\" দিন।", "🥀 Your {} will start to spoil within {} days. Lower the price a little and post an \"urgent sale\"."],
+  ["মজুদে আর মাত্র {} মণ আছে", "Only {} maunds left in stock"],
+  ["❌ {} পরিবহন খরচের প্রস্তাব গ্রহণ করেননি।", "❌ {} did not accept the transport cost proposal."],
+  ["প্লাস পাইকারদের জন্য", "Plus is for wholesalers"],
+  ["পিন ভুল। পেমেন্ট হয়নি, আপনার টাকা কাটা হয়নি।", "Wrong PIN. The payment failed and no money was taken."],
+  ["কার্ড যাচাই হয়নি। পেমেন্ট হয়নি।", "The card could not be verified. The payment failed."],
+  ["Reroute ট্রাক আসবে, মাল তৈরি রাখুন।", "A Reroute truck is coming; keep the goods ready."],
+  ["পাইকার নিজে মাল নিতে আসবেন।", "The wholesaler will collect the goods."],
+  ["পরিবহনে বাধা চলছে: ঢাকা ও বগুড়ায় মাল কম পৌঁছাচ্ছে", "Transport disruption: less produce is reaching Dhaka and Bogura"],
+  ["এখানে এখন অনেক মাল উঠছে, দাম চাপে", "Heavy supply here right now; prices are under pressure"],
+  ["পরিবহনে বাধা, এখানে মাল কম পৌঁছাচ্ছে", "Transport disruption; less produce is arriving here"],
+  ["উৎসবের সময়, চাহিদা বেশি", "Festival season; demand is high"],
+  ["{} বাজারে আজ {} আমদানি স্বাভাবিকের চেয়ে {}% বেশি: দাম চাপে, এখানে না পাঠানোই ভালো", "{} market: {} arrivals today are {}% above normal; prices are under pressure, so better not to send there"],
+  ["{} বাজারে আগামী ৩ দিনে দাম প্রায় {}% কমতে পারে", "{} market: prices may fall by about {}% over the next 3 days"],
+  ["আজ আমদানি স্বাভাবিকের চেয়ে {}% বেশি", "Arrivals today are {}% above normal"],
+  ["বিক্রির দিন দাম {}% {} পারে", "Price may {1} {0}% on the sale day"],
+  ["আজ আমদানি স্বাভাবিকের চেয়ে {}% কম, দাম শক্ত", "Arrivals today are {}% below normal; prices are firm"],
+  ["স্থানীয় ভ্যান", "Local van"],
+  ["প্রোফাইল ছবি মুছবেন?", "Delete profile photo?"],
+  ["প্রোফাইল ছবি মুছে ফেলা হয়েছে", "Profile photo deleted"],
+  ["{} পর্যন্ত Reroute ট্রাকে আনুমানিক {} ({}), বাজারে ট্রাক ভাড়া {}", "{} — Reroute truck estimate {} ({}), market truck fare {}"],
+  ["চালু লিস্টিং ({})", "Active listings ({})"],
+  ["{#} {}: {} পেমেন্ট করুন", "{0} {1}: pay {2}"],
+  ["{#} {} পাইকারকে বুঝিয়ে দিন", "Hand over {0} {1} to the wholesaler"],
+  ["{#} {} তৈরি রাখুন, তুলে দিয়ে নিশ্চিত করুন", "Keep {0} {1} ready, load it and confirm"],
+  ["{#} {} পৌঁছালে বুঝে নিন", "Confirm receipt of {0} {1} when it arrives"],
+  ["{}-কে রেটিং দিন", "Rate {}"],
+  ["{} মাল দেখতে চান ({})", "{} wants to inspect the produce ({})"],
+  ["যাচাইকৃত কৃষক {} বা বেশির সফল বিক্রিতে {} ক্যাশব্যাক পান, সপ্তাহে ৩ বার পর্যন্ত। নিজে থেকেই ওয়ালেটে আসে।", "Verified farmers get {1} cashback on successful sales of {0} or more, up to 3 times a week. It is added to the wallet automatically."],
+  ["প্লাস নিন ({})", "Get Plus ({})"],
+  ["Reroute অপারেশন টিম", "Reroute Operations Team"],
+  ["লাভ-ক্ষতি হিসাব হচ্ছে...", "Calculating profit and loss..."],
+  ["নতুন করে প্রশিক্ষণ", "Retraining"],
+  ["সম্ভাব্য {}–{}", "Likely {}–{}"],
+  ["পচন বাদে ({}%)", "after spoilage ({}%)"],
+  ["{}টি মেয়াদ পেরিয়েছে", "{} overdue"],
+  ["কেনা মাল {} মজুদে গেছে; বিক্রির সময় খরচ হিসেবে ধরা হয়, তাই দুবার গোনা হয় না।", "Purchased goods worth {} went to stock; they count as a cost when sold, so they are never counted twice."],
+  ["খরচ জানা নেই: {}।", "Cost unknown: {}."],
+  ["{} {} \"আয়-ব্যয়\" থেকে উৎপাদন বা কেনার খরচ লিখুন।", "{} {} Add production or purchase costs under \"Income & Expenses\"."],
+  ["\"আয়-ব্যয়\" থেকে উৎপাদন বা কেনার খরচ লিখুন।", "Add production or purchase costs under \"Income & Expenses\"."],
+  ["মালের খরচ {} · অন্য {}", "Cost of goods {} · other {}"],
+  ["দেনা: {}{}", "Payable: {}{}"],
+  ["দেনা: {}", "Payable: {}"],
+  ["{}বার টাকা লেনদেন", "{} payment(s) recorded"],
+  ["যেমন: 400", "e.g. 400"],
+  ["যেমন: 2500", "e.g. 2500"],
+  ["পাইকার হিসেবে লগ ইন করুন", "Log in as a wholesaler"],
+  ["🕗 মাল তোলার সময়: {}।", "🕗 Pickup time: {}."],
+  ["🛣️ মাল ট্রাকে উঠেছে, পথে আছে।", "🛣️ The goods are loaded and on the way."],
+  ["পচনের ঝুঁকি {}: {}", "Spoilage risk {}: {}"],
+  ["Reroute Agro | কৃষক ও পাইকারের পাইকারি বাজার", "Reroute Agro | Wholesale Marketplace for Farmers & Wholesalers"],
+  ["ডেমো {#}", "Demo {}"],
+  ["নিবন্ধিত {#}", "Registered {}"],
+  ["ভিডিও কলে মাল দেখা", "Inspection by video call"],
+  ["সরাসরি এসে মাল দেখা", "In-person inspection"],
+  ["আজই", "today"],
+  ["গন্তব্যে পৌঁছেছে", "Arrived at the destination"],
+  ["আগের লেনদেনের পয়েন্ট (ডেমো)", "Points from earlier trades (demo)"],
+  ["আগের লেনদেনের পয়েন্ট (ডেমো) {}", "Points from earlier trades (demo) {}"],
+  ["চালক {}", "Driver {}"],
+  ["ছবি ও মানের তথ্যসহ লিস্টিং প্রথম বিক্রিতে +১০", "+10 for the first sale of a listing with photos and quality details"],
+  ["বিক্রি সম্পূর্ণ হলে প্রতি মণে ১ পয়েন্ট, কিনলে প্রতি ২ মণে ১", "1 point per maund when a sale is completed; 1 per 2 maunds when buying"],
+  ["রাজি হওয়ার পর অর্ডার বাতিল করলে −১০", "−10 for cancelling an order after accepting it"],
+  ["প্রোফাইল যাচাই হলে +৫০", "+50 when your profile is verified"],
+  ["Reroute ট্রাকে মাল পৌঁছালে +১০", "+10 when goods are delivered by a Reroute truck"],
+  ["৩০ দিনে ৫টি বা বেশি কেনা সম্পূর্ণ হলে ট্রাকের সেবা চার্জে ২০% ছাড়।", "20% off the truck service charge after 5 or more completed purchases in 30 days."],
+  ["যাচাইকৃত কৃষক ও প্লাস সদস্যের বুকিং আগে ট্রাক পায়।", "Bookings from verified farmers and Plus members get trucks first."],
+  ["আপনি পাচ্ছেন", "You have this"],
+  ["আপনি পাচ্ছেন না", "You do not have this yet"],
+  ["পরিবহন ({})", "Transport ({})"],
+  ["{} (শেয়ার্ড)", "{} (shared)"],
+  ["রাজশাহী বিভাগ", "Rajshahi Division"],
+  ["রাজশাহী বিভাগ, ঢাকা", "Rajshahi Division, Dhaka"],
+  ["ঘাঁটি", "Base location"],
+  ["ডেমো সংস্করণ", "Demo version"],
+  ["ডেমো অ্যাকাউন্ট, এক চাপে ঢুকুন", "Demo accounts, one-click login"],
+  ["ডেমো অ্যাকাউন্ট সবাই ব্যবহার করে, তাই ছবি সার্ভারে সংরক্ষণ হয় না। শুধু আপনার এই ব্রাউজার ট্যাবে দেখাবে।", "Demo accounts are shared by everyone, so photos are not saved on the server. They appear only in this browser tab."],
+  ["ট্রাক: {}", "Truck: {}"],
+  ["তোলা: {}", "Pickup: {}"],
+  ["ক্রেতা: {}", "Buyer: {}"],
+  ["বিক্রেতা: {}", "Seller: {}"],
+  ["{}/কেজি (তালিকায় {})", "{}/kg (listed at {})"],
+  ["{}/কেজি", "{}/kg"],
+  ["অফার দিয়েছেন: {}", "Offered: {}"],
+  ["1 মাস আগে", "1 month ago"],
+  ["১ মাস আগে", "1 month ago"],
+  ["1 দিন আগে", "1 day ago"],
+  ["১ দিন আগে", "1 day ago"],
+  ["1 ঘণ্টা আগে", "1 h ago"],
+  ["১ ঘণ্টা আগে", "1 h ago"],
+  ["1 দিন পরে", "In 1 day"],
+  ["১ দিন পরে", "In 1 day"],
+  ["{} ({} মণ {}, {} → {})", "{} ({} maunds of {}, {} → {})"],
+  ["অফার পাওয়া যায়নি", "Offer not found"],
+  ["অর্ডার পাওয়া যায়নি", "Order not found"],
+  ["ইনভয়েস পাওয়া যায়নি", "Invoice not found"],
+  ["এই নম্বরে আগেই অ্যাকাউন্ট আছে, লগ ইন করুন", "An account already exists for this number. Please log in."],
+  ["দুটো পাসওয়ার্ড মিলছে না", "The two passwords do not match"],
+  ["বুকিং পাওয়া যায়নি", "Booking not found"],
+  ["শুধু JPG, PNG, WebP বা GIF ছবি দেওয়া যাবে", "Only JPG, PNG, WebP or GIF images are allowed"],
+  ["০১ দিয়ে শুরু ১১ সংখ্যার মোবাইল নম্বর দিন", "Enter an 11-digit mobile number starting with 01"],
+  ["অ্যাকাউন্ট খুলতে এই নম্বরের কোডটি দিন:", "To create your account, enter the code for this number:"],
+  ["সেরা উৎস:", "Best source:"],
+  ["({}), {}/কেজি দরে কিনুন।", "({}) — buy at {}/kg."],
+  ["{}-এ বেচলে আনুমানিক লাভ:", "Estimated profit if you sell in {}:"],
+  ["{}-এ বেচলে আনুমানিক লোকসান:", "Estimated loss if you sell in {}:"],
+  ["{}-এ বেচলে আরও বেশি:", "More if you sell in {}:"],
+  ["আজ পাঠান", "send today"],
+  ["প্রস্তাবিত বাজার:", "Recommended market:"],
+  ["আনুমানিক বিক্রির টাকা", "Estimated sales revenue"],
+  ["আনুমানিক পরিবহন খরচ", "Estimated transport cost"],
+  ["অন্যান্য খরচ", "Other costs"],
+  ["আনুমানিক হাতে থাকবে", "Estimated net proceeds"],
+  ["বিকল্পের চেয়ে বেশি", "Advantage over the alternative"]
+];
+
+(function buildCatalog(){
+  const norm = s => s.replace(/\s+/g, ' ').trim();
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const exact = new Map(), pats = [];
+  const NUM = String.raw`([−+-]?৳?[০-৯0-9][০-৯0-9.,]*(?:\s*(?:মণ|কেজি|টন|কিমি|ঘণ্টা|দিন|মিনিট|%|maunds?|kg|km|t|hours?|days?|min))?(?:\s*\([^)]*\))?)`;
+  const add = (bn, en) => {
+    bn = norm(bn);
+    if (!/\{#?\}/.test(bn)) { if (!exact.has(bn)) exact.set(bn, en); return; }
+    let i = 0;
+    const out = en.replace(/\{(\d*)\}/g, (m, d) => '{' + (d === '' ? i++ : d) + '}');
+    /* {} = any value; {#} = a number with an optional unit, so it can sit next to a name */
+    const toks = bn.split(/(\{#?\})/), lits = toks.filter((t, k) => k % 2 === 0);
+    const key = lits.reduce((a, b) => b.length > a.length ? b : a, '');
+    /* two values with nothing between them: the first takes the text, the second is often empty */
+    const re = toks.map((t, k) => k % 2 === 0 ? esc(t) : t === '{#}' ? NUM
+      : toks[k + 1] === '' && toks[k + 2] ? '(.+)' : toks[k - 1] === '' && k > 1 ? '(.*?)' : '(.+?)').join('');
+    pats.push({re: new RegExp('^' + re + '$'), key: key.trim(), en: out});
+  };
+  for (const [bn, en] of I18N_CATALOG) {
+    add(bn, en);
+    /* an icon or element at either end is not part of the text node: also match without it */
+    if (/^\{\} /.test(bn) && /^\{\} /.test(en) && !/\{\d\}/.test(en)) add(bn.slice(3), en.slice(3));
+    if (/\{\}$/.test(bn) && /\{\}$/.test(en) && !/\{\d\}/.test(en)) add(bn.slice(0, -2), en.slice(0, -2));
+  }
+  pats.sort((a, b) => b.key.length - a.key.length);
+  I18N_CAT = {exact, pats, norm};
+})();
+
+/* re-translate what is already on screen now that the catalogue is loaded */
+if (typeof isEn === 'function' && isEn() && document.body) applyLanguage(document.body);
 /* =====================================================================
    Reroute Agro — web app. All data comes from the FastAPI server.
    ===================================================================== */
@@ -2376,8 +3901,8 @@ function drawPay(){
     modal(`<div class="body"><h2>${ic('card')} পেমেন্ট</h2><p class="muted" style="margin-top:4px">${P.title}</p>
       <div class="pay-total"><span>মোট</span><b>${tk(P.amount)}</b></div>
       <p class="warn sm" style="margin-top:10px"><b>সিমুলেটেড পেমেন্ট:</b> এটি প্রোটোটাইপ, কোনো আসল টাকা লেনদেন বা ব্যাংক/বিকাশ/নগদ সংযোগ হয় না।</p>
-      <div class="choice">${[['bkash','বিকাশ','মোবাইল নম্বর ও পিন'],['nagad','নগদ','মোবাইল নম্বর ও পিন'],['card','ডেবিট/ক্রেডিট কার্ড','ভিসা, মাস্টারকার্ড'],['wallet',`Reroute ওয়ালেট`,`ব্যালান্স ${tk(w)}`]].map(([k,n,d])=>
-        `<button class="opt" data-act="pay-method" data-v="${k}" ${k==='wallet'&&w<P.amount?'disabled':''}><strong>${n}</strong><span class="muted">${k==='wallet'&&w<P.amount?'ব্যালান্স যথেষ্ট নয়':d}</span></button>`).join('')}</div>
+      <div class="choice">${[['bkash','বিকাশ','মোবাইল নম্বর ও পিন'],['nagad','নগদ','মোবাইল নম্বর ও পিন'],['card','ডেবিট/ক্রেডিট কার্ড','ভিসা, মাস্টারকার্ড'],['wallet',`Reroute ওয়ালেট`,`ব্যালেন্স ${tk(w)}`]].map(([k,n,d])=>
+        `<button class="opt" data-act="pay-method" data-v="${k}" ${k==='wallet'&&w<P.amount?'disabled':''}><strong>${n}</strong><span class="muted">${k==='wallet'&&w<P.amount?'ব্যালেন্স যথেষ্ট নয়':d}</span></button>`).join('')}</div>
       <p class="note" style="margin-top:14px">টাকা Reroute-এ জমা থাকে, মাল বুঝে পেলে তবেই বিক্রেতা পান। পেমেন্ট সার্ভারে যাচাই হওয়ার পরই অবস্থা বদলায়।</p></div>`);
   }
   else if(P.step==='gateway'){
@@ -2512,6 +4037,7 @@ function renderChrome(){
   const u=me(), r=routeBase();
 
   document.body.classList.toggle('authed',!!u);
+  if(u||lastJSON) document.documentElement.classList.remove('pre-auth');   /* the account has loaded (or there is none) */
   renderDemoFooter(u);
 
   if(!u){
@@ -2774,7 +4300,9 @@ function setDrawer(open){
 function toggleSide(){
   if(sideIsDrawer()){ setDrawer(!document.body.classList.contains('side-open')); return; }
   const compact=!document.body.classList.contains('side-compact');
+  document.body.classList.add('side-anim');
   document.body.classList.toggle('side-compact',compact);
+  clearTimeout(toggleSide.t); toggleSide.t=setTimeout(()=>document.body.classList.remove('side-anim'),400);
   try{ localStorage.setItem(SIDE_KEY,compact?'1':'0'); }catch(e){}
   const b=document.querySelector('[data-ui="side-toggle"]');
   if(b) b.setAttribute('aria-expanded',String(!compact));
@@ -3087,7 +4615,7 @@ V.ai = () => {
   const bt=s.dates.map((d,i)=>s.backtest[d]!=null?`${x(i)},${y(s.backtest[d])}`:null).filter(Boolean);
   if(bt.length) g+=`<polyline fill="none" style="stroke:var(--green)" stroke-width="2.5" stroke-dasharray="6 5" points="${bt.join(' ')}"/>`;
   g+=`<circle cx="${x(all.length-1)}" cy="${y(s.forecast.price)}" r="6" style="fill:var(--red)"/></svg>`;
-  return `<div class="phead"><div><h1>${ic('sparkles')} AI দামের মডেল</h1><p class="muted">আসল ডেটায় প্রশিক্ষিত ও যাচাই করা: Food Commodity Price (OHLC) Dataset of Bangladesh</p></div></div>
+  return `<div class="phead"><div><h1>${ic('sparkles')} এআই দামের মডেল</h1><p class="muted">আসল ডেটায় প্রশিক্ষিত ও যাচাই করা: Food Commodity Price (OHLC) Dataset of Bangladesh</p></div></div>
     <div class="grid4"><div class="kpi"><span class="muted sm">প্রশিক্ষণ</span><strong>${nf(M.markets)}টি বাজার</strong><span class="muted sm">২০০৮–২০২২</span></div>
       <div class="kpi"><span class="muted sm">অদেখা সময়ে পরীক্ষা</span><strong>২০২৩–২০২৫</strong><span class="muted sm">${nf(M.test_rows)}টি পূর্বাভাস</span></div>
       <div class="kpi"><span class="muted sm">দাম বাড়বে না কমবে</span><strong>${nf(M.direction_accuracy_pct,1)}% সঠিক</strong></div>
@@ -3140,7 +4668,7 @@ V.dash = () => {
       :emptyState('sprout','এখন হাতে কোনো কাজ নেই','নতুন অফার, পেমেন্ট বা ট্রাকের খবর এলে এখানে দেখাবে।','',true)}
     </div><div>
     <h2 class="sec-title">এ পর্যন্ত লাভ-ক্ষতি</h2>
-    <div class="panel"><div class="pnl-rows"><div><span class="muted sm">মোট বিক্রি</span><b>${tk(P.revenue)}</b></div>
+    <div class="panel"><div class="pnl-rows"><div><span class="muted sm">মোট বিক্রয়</span><b>${tk(P.revenue)}</b></div>
       <div><span class="muted sm">মোট খরচ</span><b>${tk(P.expense)}</b></div>
       <div class="pnl-total"><span class="muted sm">${P.exact?'লাভ':'আনুমানিক লাভ'}</span><b style="color:var(--${P.profit>=0?'green':'red'})">${tk(P.profit+0)}</b></div></div>
       ${!P.exact?`<p class="warn sm" style="margin-top:10px">${monTxt(P.unknown_cost_qty)} মালের উৎপাদন/কেনা খরচ দেওয়া নেই, তাই লাভ সম্পূর্ণ নয়।</p>`:''}
@@ -4061,7 +5589,7 @@ V.books = () => {
 
       <div class="kpi">
         <span class="muted sm">
-          মোট বিক্রি
+          মোট বিক্রয়
         </span>
 
         <strong>
@@ -4126,7 +5654,7 @@ V.books = () => {
         ${
           bill([
             [
-              'মোট বিক্রি (Reroute + বাইরে)',
+              'মোট বিক্রয় (Reroute + বাইরে)',
               tk(P.revenue)
             ],
 
@@ -5873,7 +7401,7 @@ V.rewards = () => {
            WALLET COLUMN
            ============================== -->
 
-      <div>
+      <div class="rw-wallet">
 
 
         <div class="panel wallet-hero">
@@ -5885,7 +7413,7 @@ V.rewards = () => {
             <div>
 
               <span class="wallet-eyebrow">
-                ওয়ালেট ব্যালান্স
+                ওয়ালেট ব্যালেন্স
               </span>
 
               <div class="wallet-value">
@@ -5898,7 +7426,7 @@ V.rewards = () => {
             <div
               class="wallet-icon"
               aria-hidden="true">
-              ${ic('💳')}
+              ${ic('wallet')}
             </div>
 
 
@@ -6566,7 +8094,7 @@ V.adminOrders = () => `<div class="phead"><h1>${ic('📦')} লেনদেন</
   ${S.admin.orders.map(o=>`<tr><td>${dateBn(o.created)}</td><td>${CROPS[o.crop].n}</td><td>${esc(dispName(user(o.seller)))} → ${esc(dispName(user(o.buyer)))}</td><td class="num">${monTxt(o.qty)}</td><td class="num">${tk(o.price,1)}</td><td class="num">${tk(o.goods)}</td><td class="num">${tk(o.fee-o.fee_disc)}</td>
     <td>${o.transport==='reroute'?'Reroute':'নিজে'}</td><td>${pill(ORDER_ST[o.status])}${o.reason?`<div class="muted xs">${esc(o.reason)}</div>`:''}</td></tr>`).join('')}</table></div>`;
 /* =====================================================================
-   Reroute Agro — একটিমাত্র "AI পরামর্শ"
+   Reroute Agro — একটিমাত্র "এআই পরামর্শ"
    * কৃষক: আজকের দর ও ৩ দিনের পূর্বাভাস · প্রস্তাবিত বিক্রয়মূল্য · কোথায় বেচলে লাভ · সম্ভাব্য লাভ/লোকসান
    * পাইকার: আজকের দর ও ৩ দিনের পূর্বাভাস · প্রস্তাবিত ক্রয়মূল্য · কোথা থেকে কিনবেন/কোথায় বেচবেন · লাভ/লোকসান
    * Smart Trade Alert: অফার / রাজি / পাল্টা দাম / লিস্টিং পাঠানোর আগে ওই লেনদেনের লাভ-ক্ষতি
@@ -6576,13 +8104,13 @@ V.adminOrders = () => `<div class="phead"><h1>${ic('📦')} লেনদেন</
 
 /* ---------- menu: one AI option instead of two ---------- */
 (function advNav(){
-  const item = ['#/advisor', '🤖', 'AI পরামর্শ'];
+  const item = ['#/advisor', '🤖', 'এআই পরামর্শ'];
   const old = NAV_TRADER.findIndex(n => n[0] === '#/prices');
   const has = NAV_TRADER.findIndex(n => n[0] === '#/advisor');
   if (old >= 0 && has >= 0) NAV_TRADER.splice(old, 1);
   else if (old >= 0) NAV_TRADER.splice(old, 1, item);
   else if (has < 0) NAV_TRADER.push(item);
-  if (!NAV_ADMIN.some(n => n[0] === '#/admin/ai')) NAV_ADMIN.push(['#/admin/ai', '🤖', 'AI ডেটা']);
+  if (!NAV_ADMIN.some(n => n[0] === '#/admin/ai')) NAV_ADMIN.push(['#/admin/ai', '🤖', 'এআই ডেটা']);
 })();
 
 /* ---------- English for the new texts (longer phrases first) ---------- */
@@ -6601,10 +8129,10 @@ I18N_PHRASES.unshift(
   ['সিমুলেটেড ডেমো ডেটা', 'simulated demo data'],
   ['লাভ-ক্ষতি হিসাব হচ্ছে', 'Calculating profit and loss'],
   ['আনুমানিক লাভজনক', 'Likely profitable'],
-  ['লেনদেনের ডেটা ও AI মূল্যায়ন', 'Transaction data & AI evaluation'],
+  ['লেনদেনের ডেটা ও এআই মূল্যায়ন', 'Transaction data & AI evaluation'],
   ['মডেল মূল্যায়ন', 'Model evaluation'],
   ['নতুন করে প্রশিক্ষণ', 'Retraining'],
-  ['AI ডেটা', 'AI data']
+  ['এআই ডেটা', 'AI data']
 );
 
 /* ---------- state & data ---------- */
@@ -6663,8 +8191,8 @@ function advDefaults(){
   }
 }
 
-const advLoading = t => `<div class="sk-wrap" role="status" aria-busy="true" style="margin-top:6px"><span class="sr-only">${t || 'AI হিসাব করছে...'}</span><div class="sk sk-block" style="margin-top:0"></div><div class="sk sk-block"></div></div>
-  <p class="muted sm" style="text-align:center;margin-top:8px">${ic('🤖')} ${t || 'AI হিসাব করছে...'} প্রথমবার কয়েক সেকেন্ড লাগতে পারে।</p>`;
+const advLoading = t => `<div class="sk-wrap" role="status" aria-busy="true" style="margin-top:6px"><span class="sr-only">${t || 'এআই হিসাব করছে...'}</span><div class="sk sk-block" style="margin-top:0"></div><div class="sk sk-block"></div></div>
+  <p class="muted sm" style="text-align:center;margin-top:8px">${ic('🤖')} ${t || 'এআই হিসাব করছে...'} প্রথমবার কয়েক সেকেন্ড লাগতে পারে।</p>`;
 const advPct = v => `${v > 0 ? '+' : ''}${nf(v, 1)}%`;
 const advMoney = v => `<b style="color:var(--${v >= 0 ? 'green' : 'red'})">${v < 0 ? '−' : ''}${tk(Math.abs(v))}</b>`;
 const advArrow = v => v >= 2 ? `<span style="color:var(--green)">▲ ${advPct(v)}</span>`
@@ -6773,8 +8301,8 @@ function advBuyer(){
     const homeNet = top.calc.net, better = rs && !rs.is_home && rs.net > homeNet;
     html += `<div class="panel" style="border:2px solid var(--${homeNet >= 0 ? 'blue' : 'red'});margin-bottom:14px">
       <h2 style="color:var(--${homeNet >= 0 ? 'blue' : 'red'})">${ic('🤖')} মূল পরামর্শ</h2>
-      <p style="margin-top:8px;font-size:1.05rem"><b>${esc(nm)}</b> (${PLACES[top.place].n}) থেকে ${tk(top.price, 1)}/কেজিতে কিনুন।</p>
-      <p class="muted" style="margin-top:4px">${homeName}-এ বেচলে আনুমানিক ${homeNet >= 0 ? 'লাভ' : 'লোকসান'} ${advMoney(homeNet)}${better ? `; ${esc(rs.resale_name)}-এ বেচলে আরও বেশি, প্রায় ${advMoney(rs.net)}` : ''}।</p>
+      <p style="margin-top:8px;font-size:1.05rem">সেরা উৎস: <b>${esc(nm)}</b> (${PLACES[top.place].n}), ${tk(top.price, 1)}/কেজি দরে কিনুন।</p>
+      <p class="muted" style="margin-top:4px"><span>${homeName}-এ বেচলে আনুমানিক ${homeNet >= 0 ? 'লাভ' : 'লোকসান'}:</span> ${advMoney(homeNet)}${better ? ` · <span>${esc(rs.resale_name)}-এ বেচলে আরও বেশি:</span> ${advMoney(rs.net)}` : ''}</p>
       ${top.kind === 'listing' ? `<a class="btn btn-blue btn-sm" style="margin-top:10px" href="#/listing/${top.listing}">লিস্টিং দেখুন ও অফার দিন</a>` : ''}</div>`;
   } else {
     html += `<div class="panel"><p class="muted">এই মুহূর্তে ${c} কেনার মতো উৎস পাওয়া যায়নি।</p></div>`;
@@ -6830,10 +8358,10 @@ function advBuyer(){
 V.advisor = () => {
   advDefaults();
   const buyer = advRole() === 'buyer';
-  return `<div class="phead"><div><h1>${ic('🤖')} AI পরামর্শ</h1>
+  return `<div class="phead"><div><h1>${ic('🤖')} এআই পরামর্শ</h1>
       <p class="muted">${buyer ? 'বাজারদর · ৩ দিনের পূর্বাভাস · কত দামে কিনবেন · কোথা থেকে কিনে কোথায় বেচবেন · লাভ-লোকসান' : 'বাজারদর · ৩ দিনের পূর্বাভাস · কত দামে বেচবেন · কোথায় বেচবেন · লাভ-লোকসান'}</p></div></div>
     ${buyer ? advBuyer() : advFarmer()}
-    <p class="muted xs" style="margin-top:10px">অফার বা অর্ডার দেওয়ার সময়ও AI নিজে থেকে ওই লেনদেনের লাভ-ক্ষতি দেখে নেয়, লোকসানের ঝুঁকি থাকলে জানায়।</p>`;
+    <p class="muted xs" style="margin-top:10px">অফার বা অর্ডার দেওয়ার সময়ও এআই নিজে থেকে ওই লেনদেনের লাভ-ক্ষতি দেখে নেয়, লোকসানের ঝুঁকি থাকলে জানায়।</p>`;
 };
 
 /* =====================================================================
@@ -6912,7 +8440,7 @@ function taModal(p, r){
     if (r.spoil_pct >= 5) reasons.push('পথে পচনের ঝুঁকি বেশি');
     tips.push(`${tk(r.breakeven, 1)}/কেজি বা কম দামে কিনলে লোকসান হবে না (৮% লাভ রাখতে ${tk(r.target, 1)}/কেজি)।`);
     if (r.alt_market) tips.push(`${esc(r.alt_market.name)}-এ বেচলে ফল আনুমানিক ${tk(r.alt_market.net)}।`);
-    tips.push('অন্য সরবরাহকারীর অফার দেখুন — AI পরামর্শ পাতায় কম দামের উৎস আছে।');
+    tips.push('অন্য সরবরাহকারীর অফার দেখুন — এআই পরামর্শ পাতায় কম দামের উৎস আছে।');
   } else {
     rows = [['বিক্রি', `${tk(r.revenue)} (${monTxt(r.kg)} × ${tk(r.price, 1)})`],
       ['প্ল্যাটফর্ম ফি', '−' + tk(r.fee), 'minus'],
@@ -6931,7 +8459,7 @@ function taModal(p, r){
     <div style="margin-top:10px">${bill(rows)}</div>
     ${reasons.length ? `<p class="sm" style="margin-top:10px"><b>কারণ:</b> ${reasons.join('; ')}।</p>` : ''}
     <div class="note sm" style="margin-top:10px">${ic('💡')} ${tips.join('<br>')}</div>
-    <p class="muted xs" style="margin-top:8px">হিসাবটি আনুমানিক; বিক্রির দাম ${buy ? 'AI পূর্বাভাস (সিমুলেটেড ডেমো ডেটা) থেকে' : 'আপনার দেওয়া দাম ও খরচ থেকে'}। সিদ্ধান্ত আপনার।</p>
+    <p class="muted xs" style="margin-top:8px">হিসাবটি আনুমানিক; বিক্রির দাম ${buy ? 'এআই পূর্বাভাস (সিমুলেটেড ডেমো ডেটা) থেকে' : 'আপনার দেওয়া দাম ও খরচ থেকে'}। সিদ্ধান্ত আপনার।</p>
     <div class="row wrap-it" style="margin-top:14px">
       <button class="btn btn-soft grow" data-ta="cancel">বাতিল</button>
       ${p.edit ? '<button class="btn btn-blue grow" data-ta="edit">দাম বদলান</button>' : ''}
@@ -6971,7 +8499,7 @@ document.addEventListener('click', e => {
 async function advDownload(fmt, source){
   try {
     const r = await fetch(`/api/ai/advisor/admin/export?fmt=${fmt}&source=${source}`, {headers: TOKEN ? {'X-Token': TOKEN} : {}});
-    if (!r.ok) { toast('Export হয়নি, আবার চেষ্টা করুন','error'); return; }
+    if (!r.ok) { toast('ডাউনলোড হয়নি, আবার চেষ্টা করুন','error'); return; }
     const blob = await r.blob(), cd = r.headers.get('Content-Disposition') || '', m = cd.match(/filename="([^"]+)"/);
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -6981,14 +8509,14 @@ async function advDownload(fmt, source){
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
     toast('ডাউনলোড শুরু হয়েছে','info');
   } catch (e) {
-    toast('Export হয়নি, আবার চেষ্টা করুন','error');
+    toast('ডাউনলোড হয়নি, আবার চেষ্টা করুন','error');
   }
 }
 
 V.adminAI = () => {
   const ev = advGet('/ai/advisor/admin/evaluation', 30000), tx = advGet('/ai/advisor/admin/transactions?limit=15', 30000);
-  let html = `<div class="phead"><div><h1>${ic('🤖')} লেনদেনের ডেটা ও AI মূল্যায়ন</h1>
-      <p class="muted">শুধু সম্পন্ন লেনদেন। নাম, ফোন বা ব্যক্তিগত তথ্য export হয় না।</p></div>
+  let html = `<div class="phead"><div><h1>${ic('🤖')} লেনদেনের ডেটা ও এআই মূল্যায়ন</h1>
+      <p class="muted">শুধু সম্পন্ন লেনদেন। নাম, ফোন বা ব্যক্তিগত তথ্য ডাউনলোড ফাইলে থাকে না।</p></div>
     <div class="row wrap-it"><button class="btn btn-green btn-sm" data-adv="dl" data-v="xlsx" data-src="all">${ic('⬇️')} Excel</button>
       <button class="btn btn-line btn-sm" data-adv="dl" data-v="csv" data-src="all">${ic('⬇️')} CSV</button>
       <button class="btn btn-soft btn-sm" data-adv="dl" data-v="xlsx" data-src="platform">${ic('⬇️')} শুধু আসল লেনদেন</button>
@@ -7005,8 +8533,8 @@ V.adminAI = () => {
       ${D.by_crop.map(c => `<tr><td>${CROPS[c.crop].i} ${esc(c.name)}</td><td class="num">${nf(c.all)}</td><td class="num">${nf(c.platform)}</td><td class="num">${monTxt(c.kg)}</td><td class="num">${c.avg_price != null ? tk(c.avg_price, 1) : '—'}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">এখনো কোনো সম্পন্ন লেনদেন নেই</td></tr>'}
     </table></div>
     <p class="muted xs" style="margin-top:6px">${D.first ? `আসল ডেটা: ${esc(D.first)} থেকে ${esc(D.last)} (${nf(D.span_days)} দিন)` : 'আসল ডেটা এখনো নেই; ডেমো অ্যাকাউন্টের লেনদেন আলাদা চিহ্নিত।'}</p></div>
-    <div class="panel"><h3>নতুন করে প্রশিক্ষণ (Retraining)</h3>
-      <p style="margin-top:6px">${R.ready ? '<span class="pill p-green">প্রস্তুত</span> যথেষ্ট আসল ডেটা আছে।' : '<span class="pill p-gold">এখনো নয়</span> জোর করে Retraining করা হবে না।'}</p>
+    <div class="panel"><h3>নতুন করে প্রশিক্ষণ</h3>
+      <p style="margin-top:6px">${R.ready ? '<span class="pill p-green">প্রস্তুত</span> যথেষ্ট আসল ডেটা আছে।' : '<span class="pill p-gold">এখনো নয়</span> জোর করে নতুন প্রশিক্ষণ চালানো হবে না।'}</p>
       <ul class="sm" style="margin:8px 0 0;padding-left:18px">${R.reasons.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
       <p class="sm" style="margin-top:10px"><b>নিয়ম:</b> ডেটা যাচাই ও পরিষ্কার → পুরনো সময়ের ডেটায় প্রশিক্ষণ → পরের সময়ের (না-দেখা) ডেটায় পরীক্ষা → ভুলের মাপ (MAPE) → নতুন মডেল পুরনোটার চেয়ে ভালো হলেই বদলানো হবে।</p>
       <p class="muted xs" style="margin-top:6px">চালানোর কমান্ড: <code>${esc(R.command)}</code></p></div></div>
@@ -7016,7 +8544,7 @@ V.adminAI = () => {
       <tr><th>কত দিন আগে</th><th class="num">মডেলের ভুল (MAPE)</th><th class="num">"দাম একই থাকবে" ধরলে ভুল</th><th class="num">ওঠা-নামা ঠিক বলেছে</th></tr>
       ${Object.entries(M.horizons || {}).map(([h, v]) => `<tr><td>${nf(+h)} দিন</td><td class="num b">${nf(v.mape_model, 1)}%</td><td class="num">${nf(v.mape_naive, 1)}%</td><td class="num">${nf(v.direction_accuracy, 1)}%</td></tr>`).join('')}
     </table></div>
-    ${M.market_choice ? `<p class="sm" style="margin-top:8px">বাজার বাছাই পরীক্ষা: ${nf(M.market_choice.cases)}টি ক্ষেত্রে AI-র পরামর্শ মানলে স্থানীয় হাটের চেয়ে গড়ে মণপ্রতি ${tk(M.market_choice.avg_extra_tk_per_mon)} বেশি; ${nf(M.market_choice.not_worse_than_local, 1)}% ক্ষেত্রে স্থানীয়ের চেয়ে খারাপ নয়।</p>` : ''}</div>
+    ${M.market_choice ? `<p class="sm" style="margin-top:8px">বাজার বাছাই পরীক্ষা: ${nf(M.market_choice.cases)}টি ক্ষেত্রে এআই-এর পরামর্শ মানলে স্থানীয় হাটের চেয়ে গড়ে মণপ্রতি ${tk(M.market_choice.avg_extra_tk_per_mon)} বেশি; ${nf(M.market_choice.not_worse_than_local, 1)}% ক্ষেত্রে স্থানীয়ের চেয়ে খারাপ নয়।</p>` : ''}</div>
   <div class="panel"><h3>সাম্প্রতিক সম্পন্ন লেনদেন</h3><div class="scroll"><table class="tbl" style="margin-top:6px">
     <tr><th>তারিখ</th><th>ফসল</th><th class="num">পরিমাণ</th><th>রুট</th><th class="num">দাম/কেজি</th><th class="num">মোট</th><th class="num">ট্রাক</th><th>উৎস</th></tr>
     ${tx.rows.map(r => `<tr><td class="sm">${esc(r.completed_date)}</td><td>${CROPS[r.crop].i} ${esc(r.crop_bn)}</td><td class="num">${monTxt(r.qty_kg)}</td>
@@ -7034,7 +8562,7 @@ function advMigrateLinks(){
   document.querySelectorAll('#view a[href="#/prices"]').forEach(a => {
     a.setAttribute('href', '#/advisor');
     const s = a.querySelector('span'), st = a.querySelector('strong');
-    if (s) s.textContent = 'AI পরামর্শ';
+    if (s) s.textContent = 'এআই পরামর্শ';
     if (st) st.textContent = 'বাজারদর, পূর্বাভাস ও লাভ-ক্ষতি';
     applyLanguage(a);
   });
@@ -7143,7 +8671,7 @@ I18N_PHRASES.unshift(
   ['নিশ্চিত অর্ডার', 'Confirmed orders'],
   ['চলমান ডেলিভারি', 'Deliveries in progress'],
   ['তাজা থাকার সময় কম (২ দিন বা কম)', 'Freshness running out (2 days or less)'],
-  ['AI বাজার সুযোগ', 'AI market opportunity'],
+  ['এআই বাজার সুযোগ', 'AI market opportunity'],
   ['কোন বাজারে বেচলে হাতে বেশি থাকবে দেখুন', 'See which market leaves you the most money'],
   ['পুরো হিসাব দেখুন', 'See full accounts'],
   ['কিছু বিক্রির উৎপাদন খরচ জানা নেই, তাই লাভের হিসাব আংশিক। "মজুদ ও হিসাব"-এ খরচ লিখুন।', 'Production cost is unknown for some sales, so profit is partial. Add costs in "Stock & accounts".'],
@@ -7511,7 +9039,7 @@ function actionCentre(){
     [deliveries, 'চলমান ডেলিভারি', '#/transport', 'truck'],
     [fresh, 'তাজা থাকার সময় কম (২ দিন বা কম)', '#/listings', 'leaf'],
   ].filter(x => x[0] > 0);
-  const ai = u.role === 'farmer' ? `<a class="ac-item ac-ai" href="#/advisor">${ic('sparkles')}<span><b>AI বাজার সুযোগ</b><span class="muted xs">কোন বাজারে বেচলে হাতে বেশি থাকবে দেখুন</span></span></a>` : '';
+  const ai = u.role === 'farmer' ? `<a class="ac-item ac-ai" href="#/advisor">${ic('sparkles')}<span><b>এআই বাজার সুযোগ</b><span class="muted xs">কোন বাজারে বেচলে হাতে বেশি থাকবে দেখুন</span></span></a>` : '';
   if (!items.length && !ai) return '';
   return `<section class="ac" aria-labelledby="ac-h"><h2 class="sec-title" id="ac-h">আজকের কাজের কেন্দ্র</h2><div class="ac-grid">
     ${items.map(([n, t, h, i]) => `<a class="ac-item" href="${h}">${ic(i)}<span><b>${nf(n)}</b> <span class="sm">${t}</span></span></a>`).join('')}${ai}</div></section>`;
@@ -7631,7 +9159,7 @@ const HB_I18N = [
   ['বিক্রি, খরচ, বিল, রসিদ, পাওনা-দেনা আর লাভ-ক্ষতি এক জায়গায়', 'Sales, costs, bills, receipts, dues and profit/loss in one place'],
   ['এই সপ্তাহ', 'This week'], ['এই মাস', 'This month'], ['এই বছর', 'This year'], ['সব সময়', 'All time'], ['নিজের মতো', 'Custom'],
   ['শুরু ও শেষের তারিখ বাছুন।', 'Pick a start and an end date.'], ['হিসাব তৈরি হচ্ছে...', 'Preparing your accounts...'],
-  ['মোট বিক্রি', 'Total sales'], ['মোট খরচ', 'Total costs'], ['লাভ / ক্ষতি', 'Profit / loss'], ['পাওনা / দেনা (বাকি)', 'Receivable / payable (outstanding)'],
+  ['মোট বিক্রয়', 'Total sales'], ['মোট খরচ', 'Total costs'], ['লাভ / ক্ষতি', 'Profit / loss'], ['পাওনা / দেনা (বাকি)', 'Receivable / payable (outstanding)'],
   ['মালের খরচ', 'Cost of goods'], [' · অন্য ', ' · other '], ['টি মেয়াদ পেরিয়েছে', ' overdue'],
   ['নিজে লেখা (যাচাই করা নয়)', 'User-reported (not verified)'], ['সিমুলেটেড (ডেমো, আসল টাকা নয়)', 'Simulated (demo, not real money)'],
   ['নিজে লেখা', 'user-reported'], ['প্ল্যাটফর্ম লেনদেন', 'Platform transaction'],
@@ -7762,7 +9290,7 @@ function hbOverview(){
   if (!d) return hbPeriodPicker() + (fxFailed(path) ? fxErr() : advLoading('হিসাব তৈরি হচ্ছে...'));
   const p = d.pnl, empty = !p.revenue && !p.total_expenses && !d.recent_invoices.length && !d.counts.records;
   return hbPeriodPicker() + `<div class="grid4 hb-kpis">
-      <div class="kpi"><span class="muted sm">মোট বিক্রি</span><strong>${tk(p.revenue)}</strong><span class="muted xs">প্ল্যাটফর্ম ${tk(p.revenue_platform)} · নিজে লেখা ${tk(p.revenue_external)}</span></div>
+      <div class="kpi"><span class="muted sm">মোট বিক্রয়</span><strong>${tk(p.revenue)}</strong><span class="muted xs">প্ল্যাটফর্ম ${tk(p.revenue_platform)} · নিজে লেখা ${tk(p.revenue_external)}</span></div>
       <div class="kpi"><span class="muted sm">মোট খরচ</span><strong>${tk(p.total_expenses + p.cost_of_goods)}</strong><span class="muted xs">মালের খরচ ${tk(p.cost_of_goods)} · অন্য ${tk(p.total_expenses)}</span></div>
       <div class="kpi ${p.profit_complete ? (p.profit >= 0 ? 'kpi-good' : 'kpi-bad') : ''}"><span class="muted sm">লাভ / ক্ষতি</span>
         <strong>${p.profit_complete ? (p.profit < 0 ? '−' : '') + tk(Math.abs(p.profit)) : '—'}</strong>
@@ -7965,13 +9493,13 @@ function asDraw(){
   if (!AS.open) return;
   panel.innerHTML = `<header class="as-head"><b>${ic('mic')} বাংলা সহকারী</b>
       <button class="iconbtn" data-as="close" aria-label="সহকারী বন্ধ করুন">${ic('x')}</button></header>
-    <div class="as-msgs" aria-live="polite" data-i18n-skip>${AS.msgs.length ? AS.msgs.map(m => m.me
-      ? `<p class="as-me">${esc(m.text)}</p>`
+    <div class="as-msgs" aria-live="polite">${AS.msgs.length ? AS.msgs.map(m => m.me
+      ? `<p class="as-me" data-i18n-skip>${esc(m.text)}</p>`
       : `<div class="as-bot"><p>${esc(m.text)}</p>${m.items && m.items.length ? `<ul>${m.items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>` : ''}
           ${m.links && m.links.length ? `<p class="as-links">${m.links.map(l => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join(' · ')}</p>` : ''}
           ${m.simulated ? '<span class="demo-tag">সিমুলেটেড বাজারদর</span>' : ''}
           ${'speechSynthesis' in window ? `<button class="linkbtn xs" data-as="say" data-i="${AS.msgs.indexOf(m)}">${ic('volume')} শুনুন</button>` : ''}</div>`).join('')
-      : `<div class="as-bot"><p>আপনার হিসাব বা বাজার নিয়ে জিজ্ঞেস করুন, যেমন:</p><ul>${['আমার এই মাসে কত টাকার বিক্রি হয়েছে?', 'আমার কত টাকা পাওনা আছে?', 'আমার শেষ তিনটা বিল দেখাও', 'আজ আলুর বাজারদর কত?'].map(q => `<li><button class="linkbtn" data-as="ex">${q}</button></li>`).join('')}</ul></div>`}
+      : `<div class="as-bot"><p>আপনার হিসাব বা বাজার নিয়ে জিজ্ঞেস করুন, যেমন:</p><ul>${['আমার এই মাসে কত টাকার বিক্রি হয়েছে?', 'আমার কত টাকা পাওনা আছে?', 'আমার শেষ তিনটা বিল দেখাও', 'আজ আলুর বাজারদর কত?'].map(q => `<li><button class="linkbtn" data-as="ex" data-q="${esc(q)}">${q}</button></li>`).join('')}</ul></div>`}
       ${AS.busy ? `<p class="as-bot muted">${'ভাবছি...'}</p>` : ''}</div>
     <div class="as-input">
       <label class="sr-only" for="as-in">প্রশ্ন লিখুন বা বলুন</label>
@@ -8027,7 +9555,7 @@ document.addEventListener('click', async e => {
     const k = a.dataset.as;
     if (k === 'close') { AS.open = false; asDraw(); $('#as-fab').focus(); }
     if (k === 'send') asSend(($('#as-in') || {}).value);
-    if (k === 'ex') asSend(a.textContent);
+    if (k === 'ex') asSend(a.dataset.q || a.textContent);   /* always the Bangla question, also in English mode */
     if (k === 'mic') asMic();
     if (k === 'say') { const m = AS.msgs[+a.dataset.i]; if (m) say([m.text, ...(m.items || [])].join('। ')); }
     return;
@@ -8637,7 +10165,7 @@ function drawOtp(value=''){
   modal(`<div class="body otp-box">
     <div class="otp-ic">${ic('shield')}</div>
     <h2>OTP যাচাই</h2>
-    <p class="muted sm">অ্যাকাউন্ট খুলতে <b data-i18n-skip>${esc(OTP.phone)}</b> নম্বরের কোডটি দিন</p>
+    <p class="muted sm">অ্যাকাউন্ট খুলতে এই নম্বরের কোডটি দিন: <b data-i18n-skip>${esc(OTP.phone)}</b></p>
     <div class="otp-demo">
       <div class="row" style="gap:8px">${ic('info')}<b>প্রোটোটাইপ মোড</b></div>
       <p>প্রোটোটাইপ মোড: SMS সেবা এখনো চালু করা হয়নি। আপনার ডেমো ভেরিফিকেশন কোড:</p>
@@ -8997,11 +10525,12 @@ const A = {
       document.body
     );
 
-    setTimeout(
+    clearTimeout(window.__themeT);
+    window.__themeT=setTimeout(
       ()=>r.classList.remove(
         'theme-anim'
       ),
-      400
+      360
     );
   },
 
