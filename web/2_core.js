@@ -43,6 +43,87 @@ function ago(t){ const m=Math.round((Date.now()-t)/6e4); if(m<60) return isEn()?
 const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pill = ([t,c]) => `<span class="pill ${c}">${t}</span>`;
 
+/* ---------- icons: inline SVG line icons (24px grid). ic() also accepts the emoji
+   the data arrays use (nav, to-do lists), so those arrays stay unchanged. ---------- */
+const ICONS = {
+  home:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  cart:'<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>',
+  package:'<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  handshake:'<path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/>',
+  truck:'<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+  book:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+  sparkles:'<path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.13-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.13a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.13 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.13a.5.5 0 0 1-.96 0z"/><path d="M20 3v4M22 5h-4"/>',
+  star:'<path d="M12 2.5l2.95 6 6.55.95-4.75 4.62 1.12 6.53L12 17.5l-5.87 3.1 1.12-6.53L2.5 9.45l6.55-.95z"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/>',
+  users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  store:'<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2 2.7 2.7 0 0 1-2-1 2.7 2.7 0 0 1-4 0 2.7 2.7 0 0 1-4 0 2.7 2.7 0 0 1-4 0 2.7 2.7 0 0 1-2 1 2 2 0 0 1-2-2V7"/>',
+  farmer:'<path d="M7 9a5 5 0 0 1 10 0"/><path d="M4 9h16"/><path d="M8 9.5a4 4 0 0 0 8 0"/><path d="M5 21a7 7 0 0 1 14 0"/>',
+  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
+  chart:'<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+  box:'<rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/>',
+  plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',
+  search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  pin:'<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  verified:'<path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  back:'<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+  next:'<path d="m9 18 6-6-6-6"/>',
+  arrow:'<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+  shield:'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  lock:'<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  wallet:'<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>',
+  card:'<rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/>',
+  video:'<path d="m16 13 5.2 3.5a.5.5 0 0 0 .8-.4V7.9a.5.5 0 0 0-.8-.4L16 11"/><rect width="14" height="12" x="2" y="6" rx="2"/>',
+  walk:'<circle cx="13" cy="4" r="2"/><path d="m9 20 3-6 3 2v4"/><path d="M6 12l3-4 4 1 3 4"/>',
+  alert:'<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  checkc:'<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+  xc:'<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>',
+  inbox:'<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+  swap:'<path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/>',
+  sprout:'<path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/>',
+  zap:'<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+  up:'<path d="M22 7l-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/>',
+  down:'<path d="M22 17l-8.5-8.5-5 5L2 7"/><path d="M16 17h6v-6"/>',
+  receipt:'<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  edit:'<path d="M12 20h9"/><path d="M16.38 3.62a1 1 0 0 1 3 3L7.37 18.64a2 2 0 0 1-.85.5l-2.87.84a.5.5 0 0 1-.62-.62l.84-2.87a2 2 0 0 1 .5-.85z"/>',
+  globe:'<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>',
+  phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  tool:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  calendar:'<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  chat:'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
+  refresh:'<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  gift:'<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C9.5 3 12 8 12 8s2.5-5 4.5-5a2.5 2.5 0 0 1 0 5"/>',
+  scale:'<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
+  coins:'<circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/>',
+  flame:'<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+  leaf:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  award:'<circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/>',
+  calc:'<rect width="16" height="20" x="4" y="2" rx="2"/><path d="M8 6h8M16 14v4M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/>',
+  volume:'<path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.4 18.4a9 9 0 0 0 0-12.7"/>'
+};
+const EMOJI_ICON = {
+  '🏠':'home','🛒':'cart','🧺':'package','🤝':'handshake','🚚':'truck','🚛':'truck','🛻':'truck','📒':'book','💡':'sparkles','🤖':'sparkles',
+  '⭐':'star','👤':'user','📊':'chart','👥':'users','📦':'box','📩':'inbox','↔️':'swap','💳':'card','✅':'checkc','🔍':'search','📹':'video',
+  '🚶':'walk','🚨':'zap','🥀':'alert','⚠️':'alert','🔒':'lock','💰':'wallet','🔔':'bell','🚪':'logout','🛠️':'tool','✍️':'edit','🧾':'receipt',
+  '📈':'up','📉':'down','🌐':'globe','📍':'pin','⏳':'clock','🏪':'store','🧑‍🌾':'farmer','🎁':'gift','📅':'calendar','💬':'chat','⬇️':'download','🔄':'refresh',
+  '✓':'check','✔':'verified','📞':'phone','❌':'xc','🔊':'volume','🏆':'award','🧮':'calc','👉':'arrow','🛣️':'truck','➡️':'arrow',
+  '🔻':'down','↻':'refresh','🎉':'checkc','↔':'swap','✕':'x','←':'back'
+};
+function ic(name, cls=''){
+  const k=EMOJI_ICON[name]||name, p=ICONS[k];
+  return p?`<svg class="i ${cls}" viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`:name;
+}
+const SAMPLE_TXT = 'নমুনা ছবি';
+function cropPhoto(crop, alt){
+  return `<img src="/static/crops/${crop}.jpg" alt="${alt||''}" loading="lazy">`;
+}
+
 const ILL = {
   crate: '<ellipse class="e-sh" cx="36" cy="62" rx="25" ry="4"/><path class="e-fill" d="M13 31h46l-4 27H17z"/><path d="M13 31h46l-4 27H17z"/><path d="M16 40h40M17 49h38M26 31v27M36 31v27M46 31v27"/><path class="e-green" d="M37 31c0-9 6-15 15-15-1 9-6 14-15 15zM37 31c-1-6-5-10-11-11"/>',
   truck: '<ellipse class="e-sh" cx="36" cy="61" rx="29" ry="3.5"/><rect class="e-fill" x="8" y="22" width="35" height="27" rx="3"/><path d="M8 25a3 3 0 0 1 3-3h29a3 3 0 0 1 3 3v24H8zM43 31h10l8 9v9H43zM47 35h5l5 6H47z"/><circle class="e-hole" cx="20" cy="51" r="5.5"/><circle class="e-hole" cx="51" cy="51" r="5.5"/><path d="M1 30h4M2 37h4"/>',
@@ -159,7 +240,7 @@ function say(text){
 }
 
 function avatar(u,lg){
-  return `<span class="av ${lg?'lg':''}">${u.has_photo?`<img src="/api/users/${u.id}/photo?v=${u.has_photo?1:0}" alt="">`:(u.role==='paikar'?'🏪':'🧑‍🌾')}</span>`;
+  return `<span class="av ${lg?'lg':''}">${u.has_photo?`<img src="/api/users/${u.id}/photo?v=${u.has_photo?1:0}" alt="">`:ic(u.role==='paikar'?'🏪':'🧑‍🌾')}</span>`;
 }
 
 function stars(u){
@@ -169,7 +250,7 @@ function stars(u){
 }
 
 function verBadge(u){
-  return u.verified?`<span class="ver">✔ ${isEn()?'Verified':'যাচাইকৃত'}</span>`:'';
+  return u.verified?`<span class="ver">${ic('verified')} ${isEn()?'Verified':'যাচাইকৃত'}</span>`:'';
 }
 
 function ulink(u){
@@ -178,7 +259,7 @@ function ulink(u){
 
 function personRow(u, extra=''){
   return `<div class="row">${avatar(u)}<div class="grow"><div>${ulink(u)} ${verBadge(u)}</div>
-  <div class="muted sm">${roleBn(u.role)}, ${u.area?esc(u.area)+', ':''}${PLACES[u.place].n} · ${stars(u)}</div>${extra}</div></div>`;
+  <div class="muted sm">${roleBn(u.role)} · ${u.area?esc(u.area)+', ':''}${PLACES[u.place].n} · ${stars(u)}</div>${extra}</div></div>`;
 }
 
 function cropIco(c,sm){
@@ -271,7 +352,7 @@ const daysLeft = l => l.days_left;
 let MODAL_RESOLVE=null;
 
 function modal(html){
-  $('#modal').innerHTML=`<button class="x" data-act="close" aria-label="বন্ধ">✕</button>`+html;
+  $('#modal').innerHTML=`<button class="x" data-act="close" aria-label="বন্ধ">${ic('x')}</button>`+html;
   $('#overlay').classList.add('on');
 }
 
@@ -299,7 +380,7 @@ function drawConfirm(){
   const o=CONF;
 
   modal(`<div class="body"><h2>${o.title}</h2>${o.body?`<div style="margin-top:10px">${o.body}</div>`:''}
-    ${o.penalty?`<div class="danger" style="margin-top:12px">⚠️ এই কাজ করলে আপনার ${nf(o.penalty)} পয়েন্ট কাটা যাবে।</div>`:''}
+    ${o.penalty?`<div class="danger" style="margin-top:12px">এই কাজ করলে আপনার ${nf(o.penalty)} পয়েন্ট কাটা যাবে।</div>`:''}
     ${o.reason?`<div class="field"><span>কারণ (না দিলেও চলবে)</span>
       <div class="chips" style="flex-wrap:wrap">${(o.chips||[]).map(c=>`<button class="chip ${o.picked===c?'on':''}" data-act="conf-chip" data-v="${esc(c)}">${c}</button>`).join('')}</div>
       <textarea id="conf-reason" maxlength="200" placeholder="নিজে লিখুন...">${esc(o.picked&&!(o.chips||[]).includes(o.picked)?o.picked:'')}</textarea></div>`:''}
@@ -321,28 +402,28 @@ function drawPay(){
   const P=PAY, w=(S.me&&S.me.wallet)||0;
 
   if(P.step==='method'){
-    modal(`<div class="body"><h2>💳 পেমেন্ট</h2><p class="muted" style="margin-top:4px">${P.title}</p>
-      <div class="between" style="margin:14px 0;font-size:1.3rem"><span>মোট</span><b>${tk(P.amount)}</b></div>
+    modal(`<div class="body"><h2>${ic('card')} পেমেন্ট</h2><p class="muted" style="margin-top:4px">${P.title}</p>
+      <div class="pay-total"><span>মোট</span><b>${tk(P.amount)}</b></div>
       <div class="choice">${[['bkash','বিকাশ','মোবাইল নম্বর ও পিন'],['nagad','নগদ','মোবাইল নম্বর ও পিন'],['card','ডেবিট/ক্রেডিট কার্ড','ভিসা, মাস্টারকার্ড'],['wallet',`Reroute ওয়ালেট`,`ব্যালান্স ${tk(w)}`]].map(([k,n,d])=>
         `<button class="opt" data-act="pay-method" data-v="${k}" ${k==='wallet'&&w<P.amount?'disabled':''}><strong>${n}</strong><span class="muted">${k==='wallet'&&w<P.amount?'ব্যালান্স যথেষ্ট নয়':d}</span></button>`).join('')}</div>
-      <p class="note" style="margin-top:12px">🔒 টাকা Reroute-এ জমা থাকে, মাল বুঝে পেলে তবেই বিক্রেতা পান। পেমেন্ট সার্ভারে যাচাই হওয়ার পরই অবস্থা বদলায়।</p></div>`);
+      <p class="note" style="margin-top:14px">টাকা Reroute-এ জমা থাকে, মাল বুঝে পেলে তবেই বিক্রেতা পান। পেমেন্ট সার্ভারে যাচাই হওয়ার পরই অবস্থা বদলায়।</p></div>`);
   }
   else if(P.step==='gateway'){
     const card=P.method==='card';
 
     modal(`<div class="body"><div class="gateway ${P.method}"><div class="sm">${{bkash:'বিকাশ',nagad:'নগদ',card:'কার্ড পেমেন্ট'}[P.method]} (ডেমো গেটওয়ে)</div>
-      <div style="font-size:1.6rem;font-weight:700">${tk(P.amount)}</div><div class="sm">মার্চেন্ট: Reroute Agro</div></div>
+      <div style="font-size:1.7rem;font-weight:700;margin:2px 0">${tk(P.amount)}</div><div class="sm">মার্চেন্ট: Reroute Agro</div></div>
       <label class="field"><span>${card?'কার্ড নম্বর (১৬ সংখ্যা)':'আপনার '+({bkash:'বিকাশ',nagad:'নগদ'}[P.method])+' নম্বর'}</span><input id="pay-acc" inputmode="numeric" placeholder="${card?'4242 4242 4242 4242':'01XXXXXXXXX'}" value="${card?'':(S.me.phone||'')}"></label>
       <label class="field"><span>${card?'CVV / OTP':'পিন'}</span><input id="pay-pin" type="password" inputmode="numeric" placeholder="•••••"></label>
       <p class="warn sm" style="margin-top:10px">ডেমো: পিন <b>১২৩৪৫</b> দিলে সফল হবে, অন্য পিন দিলে ব্যর্থ পেমেন্ট দেখাবে।</p>
-      <div class="row" style="margin-top:14px"><button class="btn btn-soft grow" data-act="pay-back">পেছনে</button><button class="btn btn-green grow" data-act="pay-confirm">পেমেন্ট করুন</button></div></div>`);
+      <div class="row" style="margin-top:18px"><button class="btn btn-soft grow" data-act="pay-back">পেছনে</button><button class="btn btn-green grow" data-act="pay-confirm">পেমেন্ট করুন</button></div></div>`);
   }
   else if(P.step==='done'){
-    modal(`<div class="body" style="text-align:center"><div class="big-ic">✅</div><h2>পেমেন্ট সফল</h2><p class="muted" style="margin-top:6px">${tk(P.amount)} পরিশোধ হয়েছে। লেনদেন নম্বর ${esc(P.txn||'')}</p>
+    modal(`<div class="body" style="text-align:center"><div class="big-ic ok">${ic('check')}</div><h2 style="padding:0">পেমেন্ট সফল</h2><p class="muted" style="margin-top:6px">${tk(P.amount)} পরিশোধ হয়েছে। লেনদেন নম্বর ${esc(P.txn||'')}</p>
       <button class="btn btn-green btn-wide" style="margin-top:16px" data-act="pay-finish">ঠিক আছে</button></div>`);
   }
   else if(P.step==='failed'){
-    modal(`<div class="body" style="text-align:center"><div class="big-ic">❌</div><h2>পেমেন্ট হয়নি</h2><p class="danger" style="margin-top:10px">${esc(P.msg)}</p>
+    modal(`<div class="body" style="text-align:center"><div class="big-ic bad">${ic('x')}</div><h2 style="padding:0">পেমেন্ট হয়নি</h2><p class="danger" style="margin-top:10px">${esc(P.msg)}</p>
       <div class="row" style="margin-top:16px"><button class="btn btn-soft grow" data-act="close">পরে করব</button><button class="btn btn-green grow" data-act="pay-retry">আবার চেষ্টা</button></div></div>`);
   }
 }
@@ -379,7 +460,7 @@ function shrinkImage(file, max=900){
 
 /* ---------- chrome ---------- */
 
-const LOGO = `<a class="logo" href="#/"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect width="34" height="34" rx="9" fill="#1E8A4C"/><path d="M10 24V11h6.5c2.8 0 4.5 1.4 4.5 3.8 0 1.6-.8 2.8-2.1 3.4L22 24h-3.4l-2.7-5.2H13V24H10zm3-7.5h3.2c1.2 0 1.9-.6 1.9-1.6 0-1-.7-1.6-1.9-1.6H13v3.2z" fill="white"/><path d="M20 24l3.5-13h.5L20 24z" fill="white" opacity=".0"/><path d="M23 11h3l-5 13h-1.5z" fill="white"/><circle cx="27" cy="8" r="3" fill="#3DAA6A"/><path d="M27 5 Q29 3 31 5" fill="none" stroke="#3DAA6A" stroke-width="1.2" stroke-linecap="round"/></svg><span>Reroute <span class="full">Agro</span></span></a>`;
+const LOGO = `<a class="logo" href="#/" aria-label="Reroute Agro"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect width="34" height="34" rx="9" fill="#166A3B"/><path d="M9.5 24.5C9.5 15.5 15 10 25 9.5c-.5 10-6 15-15.5 15z" fill="#E3F1E7"/><path d="M9.5 24.5 19.5 14.5" stroke="#166A3B" stroke-width="1.8" stroke-linecap="round"/><circle cx="25.2" cy="24.6" r="2.6" fill="#D99A1E"/></svg><span>Reroute <span class="full">Agro</span></span></a>`;
 
 const NAV_TRADER = [
   ['#/home','🏠','ড্যাশবোর্ড'],
@@ -459,7 +540,7 @@ function renderChrome(){
       `<div class="hright">
         ${themeBtn()}
         ${langBtn()}
-        <a class="btn btn-soft btn-sm" href="#/market">বাজার</a>
+        <a class="btn btn-line btn-sm hide-m" href="#/market">${ic('cart')} বাজার</a>
         <a class="btn btn-green btn-sm" href="#/login">লগ ইন</a>
       </div>`;
 
@@ -489,11 +570,11 @@ function renderChrome(){
       ${langBtn()}
 
       <button class="iconbtn" data-act="bell" aria-label="নোটিফিকেশন">
-        🔔${unread?`<b>${nf(unread)}</b>`:''}
+        ${ic('bell')}${unread?`<b>${nf(unread)}</b>`:''}
       </button>
 
       <button class="btn btn-line btn-sm hide-m" data-act="logout">
-        বের হন
+        ${ic('logout')} বের হন
       </button>
 
     </div>`;
@@ -504,7 +585,7 @@ function renderChrome(){
     `<div class="wrap">${
       nav.map(([h,i,t])=>
         `<a href="${h}" class="${r===h?'on':''}">
-          ${i} ${t}
+          ${ic(i)} ${t}
           ${h==='#/deals'&&todo?`<span class="cnt">${nf(todo)}</span>`:''}
         </a>`
       ).join('')
@@ -515,32 +596,32 @@ function renderChrome(){
   $('#bnav').innerHTML =
     bn.map(([h,i,t])=>
       `<a href="${h}" class="${r===h?'on':''}">
-        <b>${i}</b>
+        <b>${ic(i)}</b>
         ${t}
         ${h==='#/deals'&&todo?`<span class="cnt">${nf(todo)}</span>`:''}
       </a>`
     ).join('')
     +
     `<button data-act="sheet">
-      <b>☰</b>
+      <b>${ic('menu')}</b>
       আরও
     </button>`;
 
   $('#sheet').innerHTML =
     `<div class="between" style="padding:0 6px 6px">
       <b>মেনু</b>
-      <button class="iconbtn" data-act="sheet" aria-label="মেনু বন্ধ">✕</button>
+      <button class="iconbtn" data-act="sheet" aria-label="মেনু বন্ধ">${ic('x')}</button>
     </div>`
     +
     nav.map(([h,i,t])=>
       `<a href="${h}" data-act="nav" data-to="${h}">
-        <span>${i}</span>
+        <span>${ic(i)}</span>
         ${t}
       </a>`
     ).join('')
     +
     `<a href="#/" data-act="logout">
-      <span>🚪</span>
+      <span>${ic('logout')}</span>
       বের হন
     </a>`;
 
@@ -554,7 +635,7 @@ function renderBell(){
   const list=(S.notifs||[]).slice(0,25);
 
   $('#npanel').innerHTML =
-    `<div class="between" style="padding:12px 14px">
+    `<div class="between" style="padding:12px 16px">
       <b>নোটিফিকেশন</b>
       <button class="btn btn-soft btn-sm" data-act="read-all">
         সব পড়া হয়েছে
@@ -615,7 +696,7 @@ function banners(){
         data-act="notif-x"
         data-id="${n.id}"
         aria-label="সরান">
-        ✕
+        ${ic('x')}
       </button>
     </div>`
   ).join('');

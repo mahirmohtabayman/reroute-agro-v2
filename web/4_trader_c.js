@@ -57,7 +57,7 @@ V.books = () => {
     <div class="panel">
       <div class="between">
 
-        <h2>📦 আমার কাছে কী মাল আছে</h2>
+        <h2>${ic('📦')} আমার কাছে কী মাল আছে</h2>
 
         <div class="row wrap-it">
 
@@ -739,7 +739,7 @@ V.books = () => {
       style="margin-top:14px">
 
       <h3>
-        🧮 লাভ-ক্ষতি ক্যালকুলেটর
+        ${ic('🧮')} লাভ-ক্ষতি ক্যালকুলেটর
       </h3>
 
       <p class="muted sm">
@@ -862,7 +862,7 @@ V.books = () => {
   return `
     <div class="phead">
       <h1>
-        📒 মজুদ ও হিসাব
+        ${ic('📒')} মজুদ ও হিসাব
       </h1>
     </div>
 
@@ -870,10 +870,10 @@ V.books = () => {
 
       ${
         [
-          ['stock','📦 মজুদ'],
-          ['history','🧾 কেনাবেচার ইতিহাস'],
-          ['pnl','📊 লাভ-ক্ষতি'],
-          ['entries','✍️ খরচ ও এন্ট্রি']
+          ['stock','মজুদ'],
+          ['history','কেনাবেচার ইতিহাস'],
+          ['pnl','লাভ-ক্ষতি'],
+          ['entries','খরচ ও এন্ট্রি']
         ]
         .map(([k,t])=>`
           <button
@@ -1332,7 +1332,7 @@ V.prices = () => {
       <div>
 
         <h1>
-          💡 দাম ও পরামর্শ
+          ${ic('💡')} দাম ও পরামর্শ
         </h1>
 
         <p class="muted">
@@ -1717,7 +1717,7 @@ V.prices = () => {
             data-act="say"
             data-v="${esc(speech)}"
             aria-label="শুনুন">
-            🔊
+            ${ic('🔊')}
           </button>
 
         </div>
@@ -1731,7 +1731,7 @@ V.prices = () => {
               <div class="r">
 
                 <span>
-                  ${i===0?'🏆 ':''}
+                  ${i===0?ic('🏆')+' ':''}
                   ${PLACES[r.m].n}
                 </span>
 
@@ -1768,7 +1768,7 @@ V.prices = () => {
           class="good"
           style="margin-top:10px">
 
-          👉 ${PLACES[best.m].n}-এর
+          ${ic('👉')} ${PLACES[best.m].n}-এর
           পাইকারকে বেচলে নিজের এলাকার চেয়ে
           প্রায়
           ${tk(best.net-home.net)}
@@ -1915,7 +1915,7 @@ V.prices = () => {
           data-act="say"
           data-v="${esc(speech)}"
           aria-label="শুনুন">
-          🔊
+          ${ic('🔊')}
         </button>
 
       </div>
@@ -1940,7 +1940,7 @@ V.prices = () => {
               <tr>
 
                 <td>
-                  ${i===0?'🏆 ':''}
+                  ${i===0?ic('🏆')+' ':''}
                   ${esc(dispName(x.s))},
                   ${PLACES[x.s.place].n}
                 </td>
@@ -2064,7 +2064,7 @@ V.rewards = () => {
       <div>
 
         <h1>
-          ⭐ পয়েন্ট ও ওয়ালেট
+          ${ic('⭐')} পয়েন্ট ও ওয়ালেট
         </h1>
 
         <p class="muted sm rewards-sub">
@@ -2092,7 +2092,7 @@ V.rewards = () => {
         <div class="panel points-card">
 
           <span class="rewards-eyebrow">
-            ⭐
+            ${ic('⭐')}
             <span>
               আমার পয়েন্ট
             </span>
@@ -2108,7 +2108,7 @@ V.rewards = () => {
               u.transport_credit
               ?`
               <span class="pill p-green">
-                🚚 পরিবহন ছাড়
+                ${ic('🚚')} পরিবহন ছাড়
                 ${tk(u.transport_credit)}
               </span>
               `
@@ -2119,7 +2119,7 @@ V.rewards = () => {
               u.fee_credit
               ?`
               <span class="pill p-blue">
-                🧾 ফি ছাড়
+                ${ic('🧾')} ফি ছাড়
                 ${tk(u.fee_credit)}
               </span>
               `
@@ -2151,7 +2151,7 @@ V.rewards = () => {
 
                   <div class="muted sm">
 
-                    ⭐ ${nf(c)} পয়েন্ট ·
+                    ${ic('⭐')} ${nf(c)} পয়েন্ট ·
 
                     ${
                       k==='transport'
@@ -2185,7 +2185,7 @@ V.rewards = () => {
             <div class="grow">
 
               <b>
-                🎁 ক্যাশব্যাক
+                ${ic('🎁')} ক্যাশব্যাক
               </b>
 
               <div class="muted sm">
@@ -2210,7 +2210,7 @@ V.rewards = () => {
             <div class="grow">
 
               <b>
-                🚚 অগ্রাধিকার ট্রাক
+                ${ic('🚚')} অগ্রাধিকার ট্রাক
               </b>
 
               <div class="muted sm">
@@ -2220,7 +2220,7 @@ V.rewards = () => {
 
                 ${
                   u.verified
-                  ?'✔ আপনি পাচ্ছেন'
+                  ?'আপনি পাচ্ছেন'
                   :'প্রোফাইল যাচাই হলে পাবেন'
                 }
 
@@ -2236,7 +2236,7 @@ V.rewards = () => {
             <div class="grow">
 
               <b>
-                📦 নিয়মিত ক্রেতা ছাড়
+                ${ic('📦')} নিয়মিত ক্রেতা ছাড়
               </b>
 
               <div class="muted sm">
@@ -2247,7 +2247,7 @@ V.rewards = () => {
 
                 ${
                   u.bulk
-                  ?'✔ আপনি পাচ্ছেন'
+                  ?'আপনি পাচ্ছেন'
                   :''
                 }
 
@@ -2341,7 +2341,7 @@ V.rewards = () => {
             <div
               class="wallet-icon"
               aria-hidden="true">
-              💳
+              ${ic('💳')}
             </div>
 
 
@@ -2354,7 +2354,7 @@ V.rewards = () => {
           <div class="wallet-usable">
 
             <span class="wallet-check">
-              ✓
+              ${ic('✓')}
             </span>
 
             <span>
@@ -2666,7 +2666,7 @@ V.account = () => {
             u.verified
             ?`
             <span class="ver">
-              ✔ যাচাইকৃত
+              ${ic('✔')} যাচাইকৃত
             </span>
             `
             :'যাচাই হয়নি'
@@ -2734,7 +2734,7 @@ V.account = () => {
       <div class="phead">
 
         <h1>
-          👤 অ্যাকাউন্ট
+          ${ic('👤')} অ্যাকাউন্ট
         </h1>
 
         <a
@@ -2764,7 +2764,7 @@ V.account = () => {
 
 
           <h3>
-            ⭐ প্লাস সাবস্ক্রিপশন ব্যবস্থাপনা
+            ${ic('⭐')} প্লাস সাবস্ক্রিপশন ব্যবস্থাপনা
           </h3>
 
 
@@ -2923,7 +2923,7 @@ V.account = () => {
     <div class="phead">
 
       <h1>
-        👤 অ্যাকাউন্ট
+        ${ic('👤')} অ্যাকাউন্ট
       </h1>
 
       <a

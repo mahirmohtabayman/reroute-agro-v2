@@ -946,7 +946,7 @@ const A = {
     );
 
     toast(
-      '✅ লিস্টিং প্রকাশ হয়েছে'
+      'লিস্টিং প্রকাশ হয়েছে'
     );
   },
 
@@ -964,7 +964,7 @@ const A = {
 
     if(
       !await confirmBox({
-        title:'🚨 জরুরি বিক্রি চালু করবেন?',
+        title:'জরুরি বিক্রি চালু করবেন?',
 
         body:
           `দাম ${nf(disc)}% কমে ${
@@ -990,7 +990,7 @@ const A = {
     await refresh();
 
     toast(
-      '🚨 জরুরি বিক্রি চালু, পাইকারদের জানানো হয়েছে'
+      'জরুরি বিক্রি চালু, পাইকারদের জানানো হয়েছে'
     );
   },
 
@@ -1270,7 +1270,7 @@ const A = {
     );
 
     toast(
-      '📩 অফার পাঠানো হয়েছে'
+      'অফার পাঠানো হয়েছে'
     );
   },
 
@@ -1317,7 +1317,7 @@ const A = {
     );
 
     toast(
-      '🔍 অনুরোধ পাঠানো হয়েছে'
+      'অনুরোধ পাঠানো হয়েছে'
     );
   },
 
@@ -1450,7 +1450,7 @@ const A = {
       );
 
       toast(
-        '✅ রাজি হয়েছেন, ক্রেতার পেমেন্টের অপেক্ষা'
+        'রাজি হয়েছেন, ক্রেতার পেমেন্টের অপেক্ষা'
       );
     }
     else{
@@ -1482,7 +1482,7 @@ const A = {
 
               e.credit
                 ? [
-                    '⭐ ছাড়',
+                    'ছাড়',
                     '−'+tk(e.credit),
                     'plus'
                   ]
@@ -1641,7 +1641,7 @@ const A = {
       `<div class="body">
 
         <h2>
-          ↔️ পাল্টা দাম দিন
+          ${ic('↔️')} পাল্টা দাম দিন
         </h2>
 
         <p class="muted">
@@ -1724,7 +1724,7 @@ const A = {
     await refresh();
 
     toast(
-      '↔️ পাল্টা দাম পাঠানো হয়েছে'
+      'পাল্টা দাম পাঠানো হয়েছে'
     );
   },
 
@@ -1842,7 +1842,7 @@ const A = {
     await refresh();
 
     toast(
-      '✅ পেমেন্ট সফল'
+      'পেমেন্ট সফল'
     );
 
     if(after){
@@ -1885,7 +1885,7 @@ const A = {
     await refresh();
 
     toast(
-      '📦 হস্তান্তর নিশ্চিত হয়েছে'
+      'হস্তান্তর নিশ্চিত হয়েছে'
     );
   },
 
@@ -1916,7 +1916,7 @@ const A = {
     await refresh();
 
     toast(
-      '🎉 অর্ডার সম্পূর্ণ'
+      'অর্ডার সম্পূর্ণ'
     );
 
     A['rate-open']({
@@ -2019,7 +2019,7 @@ const A = {
     await refresh();
 
     toast(
-      '⭐ রেটিং দেওয়া হয়েছে'
+      'রেটিং দেওয়া হয়েছে'
     );
   },
 
@@ -2074,7 +2074,7 @@ const A = {
             ],
             credit
               ? [
-                  '⭐ ছাড়',
+                  'ছাড়',
                   '−'+tk(credit),
                   'plus'
                 ]
@@ -2250,7 +2250,7 @@ const A = {
     await refresh();
 
     toast(
-      '✅ সংরক্ষণ হয়েছে'
+      'সংরক্ষণ হয়েছে'
     );
   },
 
@@ -2299,7 +2299,7 @@ const A = {
     await refresh();
 
     toast(
-      '⭐ ছাড় জমা হয়েছে'
+      'ছাড় জমা হয়েছে'
     );
   },
 
@@ -2328,14 +2328,14 @@ const A = {
     await refresh();
 
     toast(
-      '✅ প্রোফাইল সংরক্ষণ হয়েছে'
+      'প্রোফাইল সংরক্ষণ হয়েছে'
     );
   },
 
   'plus-buy':async()=>{
     if(
       !await confirmBox({
-        title:'⭐ Reroute প্লাস নেবেন?',
+        title:'Reroute প্লাস নেবেন?',
 
         body:
           bill([
@@ -2479,7 +2479,7 @@ const A = {
     await refresh();
 
     toast(
-      '✅ হালনাগাদ হয়েছে'
+      'হালনাগাদ হয়েছে'
     );
   },
 
@@ -2517,7 +2517,7 @@ const A = {
     await refresh();
 
     toast(
-      '🛻 ট্রাক যোগ হয়েছে'
+      'ট্রাক যোগ হয়েছে'
     );
   },
 
@@ -2585,7 +2585,7 @@ const A = {
       await api(`/inspections/${d.id}/cancel`,'POST');
     }
     await refresh();
-    toast('✅ হালনাগাদ হয়েছে');
+    toast('হালনাগাদ হয়েছে');
   },
 
   // Farmer proposes inspection date/time
@@ -2598,7 +2598,7 @@ const A = {
     }
     await api(`/inspections/${d.id}/propose-time`,'POST',{proposed_time:time,reply});
     await refresh();
-    toast('📅 সময় প্রস্তাব পাঠানো হয়েছে');
+    toast('সময় প্রস্তাব পাঠানো হয়েছে');
   },
 
   // Buyer confirms the proposed schedule
@@ -2611,7 +2611,7 @@ const A = {
     })) return;
     await api(`/inspections/${d.id}/confirm-schedule`,'POST');
     await refresh();
-    toast('✅ পরিদর্শনের সময় নিশ্চিত হয়েছে');
+    toast('পরিদর্শনের সময় নিশ্চিত হয়েছে');
   },
 
   // Buyer reports inspection done
@@ -2623,7 +2623,7 @@ const A = {
     })) return;
     await api(`/inspections/${d.id}/buyer-done`,'POST');
     await refresh();
-    toast('🔍 পরিদর্শন রিপোর্ট পাঠানো হয়েছে');
+    toast('পরিদর্শন রিপোর্ট পাঠানো হয়েছে');
   },
 
   // Farmer verifies inspection (confirm=1) or disputes (confirm=0)
@@ -2637,7 +2637,7 @@ const A = {
       })) return;
       await api(`/inspections/${d.id}/seller-verify`,'POST',{confirm:true,note:''});
       await refresh();
-      toast('✅ পরিদর্শন সম্পন্ন নিশ্চিত হয়েছে');
+      toast('পরিদর্শন সম্পন্ন নিশ্চিত হয়েছে');
     } else {
       const r=await confirmBox({
         title:'পরিদর্শন অস্বীকার করবেন?',
@@ -2697,7 +2697,7 @@ const A = {
     const tTotal=tn?tn.t_total:(o?o.t_total:0);
     const isBuyer=o&&o.buyer===me().id;
     modal(`<div class="body">
-      <h2>🚚 পরিবহন খরচের প্রস্তাব</h2>
+      <h2>${ic('🚚')} পরিবহন খরচের প্রস্তাব</h2>
       <p class="muted" style="margin-top:6px">মোট ট্রাক ভাড়া: <b>${tk(tTotal)}</b></p>
       <p class="muted sm" style="margin-top:4px">ক্রেতা ও বিক্রেতার শতাংশের যোগফল ১০০ হতে হবে।</p>
       <div class="grid2" style="gap:10px;margin-top:12px">
@@ -2756,7 +2756,7 @@ const A = {
     await api(`/orders/${d.oid}/transport/propose`,'POST',{buyer_pct:bp,seller_pct:sp,note});
     closeModal();
     await refresh();
-    toast('🚚 পরিবহন খরচের প্রস্তাব পাঠানো হয়েছে');
+    toast('পরিবহন খরচের প্রস্তাব পাঠানো হয়েছে');
   },
 
   'tn-accept':async d=>{
@@ -2770,7 +2770,7 @@ const A = {
     })) return;
     await api(`/orders/${oid}/transport/proposals/${pid}/respond`,'POST',{action:'accept',note:''});
     await refresh();
-    toast('✅ পরিবহন চুক্তি নিশ্চিত হয়েছে');
+    toast('পরিবহন চুক্তি নিশ্চিত হয়েছে');
   },
 
   'tn-reject':async d=>{

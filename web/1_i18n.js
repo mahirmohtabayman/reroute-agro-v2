@@ -17,6 +17,12 @@ function enDigits(v){ return String(v).replace(/[০-৯]/g,d=>String(BN_DIGITS.
 
 /* Long phrases first. These keep the English UI natural instead of word-by-word. */
 const I18N_PHRASES = [
+  ['আপনি পাচ্ছেন','Active for you'],
+  ['কীভাবে কেনাবেচা হয়','How trading works'],
+  ['সব লিস্টিং দেখুন','See all listings'],
+  ['আজ বাজারে','In the market today'],
+  ['সর্বনিম্ন অর্ডার','Minimum order'],
+  ['নমুনা ছবি','Sample photo'],
   ['কৃষকের মাল, পাইকারের বাজার','Produce from farmers, market for wholesalers'],
   ['সরাসরি কেনাবেচা ও দরদাম, নিরাপদ পেমেন্ট, আর নিজস্ব ট্রাকে কম খরচে পরিবহন।','Trade and negotiate directly, pay securely, and move goods at lower cost with Reroute transport.'],
   ['মাঝখানে দালাল নেই, কৃষক আর পাইকার নিজেরাই দাম ঠিক করেন।','No middleman — farmers and wholesalers negotiate prices directly.'],

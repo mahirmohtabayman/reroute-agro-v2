@@ -2,82 +2,33 @@ const V = {};
 
 /* ---------- minimal home (before login) ---------- */
 V.home = () => `<section class="hero"><div class="hero-in">
-  <div class="hero-emblem" aria-hidden="true"><svg width="70" height="70" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><path d="M39 67 Q9 57 17 22 Q39 20 42 47 Q47 13 70 19 Q72 48 42 63Z" fill="#58bc20"/><path d="M39 67 Q9 57 17 22 Q39 20 42 47Z" fill="#087f42"/><path d="M40 67 Q41 43 65 25" stroke="#fff" stroke-width="2.5" fill="none"/><path d="M40 67 Q36 44 22 30" stroke="#fff" stroke-width="2" fill="none"/></svg></div>
+  <span class="eyebrow">${ic('sprout')} কৃষক ও পাইকারের পাইকারি বাজার</span>
   <h1>কৃষকের মাল, পাইকারের বাজার</h1>
   <p class="lead">সরাসরি কেনাবেচা ও দরদাম, নিরাপদ পেমেন্ট, আর নিজস্ব ট্রাকে কম খরচে পরিবহন।</p>
   <div class="cta">
-    <button class="btn btn-green" data-act="pick-role" data-role="farmer">🧑‍🌾 আমি কৃষক</button>
-    <button class="btn btn-blue" data-act="pick-role" data-role="paikar">🚚 আমি পাইকার</button>
+    <button class="btn btn-green" data-act="pick-role" data-role="farmer">${ic('farmer')} আমি কৃষক</button>
+    <button class="btn btn-blue" data-act="pick-role" data-role="paikar">${ic('store')} আমি পাইকার</button>
   </div>
-  <p class="hero-link"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন</a></p>
+  <p class="hero-link"><a href="#/market">লগ ইন ছাড়াই বাজার দেখুন ${ic('arrow')}</a></p>
 </div>
-<div class="hero-leaf a" aria-hidden="true"><svg viewBox="0 0 90 45"><path d="M3 39Q34 -8 87 9Q51 48 3 39Z" fill="#75b63c"/><path d="M3 39L70 13" stroke="#317e35" fill="none" stroke-width="2"/></svg></div><div class="hero-leaf b" aria-hidden="true"><svg viewBox="0 0 90 45"><path d="M3 39Q34 -8 87 9Q51 48 3 39Z" fill="#75b63c"/><path d="M3 39L70 13" stroke="#317e35" fill="none" stroke-width="2"/></svg></div><div class="hero-leaf c" aria-hidden="true"><svg viewBox="0 0 90 45"><path d="M3 39Q34 -8 87 9Q51 48 3 39Z" fill="#75b63c"/><path d="M3 39L70 13" stroke="#317e35" fill="none" stroke-width="2"/></svg></div><div class="hero-leaf d" aria-hidden="true"><svg viewBox="0 0 90 45"><path d="M3 39Q34 -8 87 9Q51 48 3 39Z" fill="#75b63c"/><path d="M3 39L70 13" stroke="#317e35" fill="none" stroke-width="2"/></svg></div><div class="hero-field" aria-hidden="true">
-  <svg viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <style>
-        .lf{fill:none;stroke:rgba(59,135,47,.70);stroke-linecap:round;stroke-linejoin:round}
-        .lf2{stroke:none;fill:rgba(94,166,70,.22)}
-      </style>
-    </defs>
-    <!-- leaf 1 -->
-    <g style="animation:float1 4.4s ease-in-out infinite;transform-origin:150px 168px">
-      <path class="lf" stroke-width="1.6" d="M118 180 Q142 136 188 152 Q158 188 118 180Z"/>
-      <path class="lf2" d="M118 180 Q142 136 188 152 Q158 188 118 180Z"/>
-      <line class="lf" stroke-width="1.3" x1="118" y1="180" x2="156" y2="150"/>
-      <line class="lf" stroke-width=".9" x1="138" y1="165" x2="152" y2="158" opacity=".35"/>
-    </g>
-    <!-- leaf 2 -->
-    <g style="animation:float2 5.2s ease-in-out .9s infinite;transform-origin:375px 175px">
-      <path class="lf" stroke-width="1.6" d="M342 190 Q368 142 418 160 Q384 198 342 190Z"/>
-      <path class="lf2" d="M342 190 Q368 142 418 160 Q384 198 342 190Z"/>
-      <line class="lf" stroke-width="1.3" x1="342" y1="190" x2="382" y2="158"/>
-    </g>
-    <!-- leaf 3 – small -->
-    <g style="animation:float3 3.6s ease-in-out 1.8s infinite;transform-origin:500px 185px">
-      <path class="lf" stroke-width="1.2" d="M482 198 Q498 172 524 180 Q506 202 482 198Z"/>
-      <path class="lf2" d="M482 198 Q498 172 524 180 Q506 202 482 198Z"/>
-    </g>
-    <!-- leaf 4 -->
-    <g style="animation:float1 4.8s ease-in-out 2.4s infinite;transform-origin:640px 172px">
-      <path class="lf" stroke-width="1.6" d="M608 184 Q636 134 690 154 Q652 194 608 184Z"/>
-      <path class="lf2" d="M608 184 Q636 134 690 154 Q652 194 608 184Z"/>
-      <line class="lf" stroke-width="1.3" x1="608" y1="184" x2="652" y2="152"/>
-      <line class="lf" stroke-width=".9" x1="634" y1="168" x2="648" y2="160" opacity=".35"/>
-    </g>
-    <!-- leaf 5 – small -->
-    <g style="animation:float2 4.0s ease-in-out 0.6s infinite;transform-origin:790px 188px">
-      <path class="lf" stroke-width="1.2" d="M770 200 Q788 170 818 180 Q798 205 770 200Z"/>
-      <path class="lf2" d="M770 200 Q788 170 818 180 Q798 205 770 200Z"/>
-    </g>
-    <!-- leaf 6 -->
-    <g style="animation:float3 5.6s ease-in-out 1.2s infinite;transform-origin:940px 170px">
-      <path class="lf" stroke-width="1.6" d="M908 182 Q935 132 988 152 Q950 192 908 182Z"/>
-      <path class="lf2" d="M908 182 Q935 132 988 152 Q950 192 908 182Z"/>
-      <line class="lf" stroke-width="1.3" x1="908" y1="182" x2="950" y2="150"/>
-    </g>
-    <!-- leaf 7 – small -->
-    <g style="animation:float1 3.9s ease-in-out 3.0s infinite;transform-origin:1080px 182px">
-      <path class="lf" stroke-width="1.2" d="M1058 196 Q1078 164 1110 175 Q1088 200 1058 196Z"/>
-      <path class="lf2" d="M1058 196 Q1078 164 1110 175 Q1088 200 1058 196Z"/>
-    </g>
-    <!-- scattered pollen dots -->
-    <circle cx="240" cy="196" r="3.5" fill="rgba(66,156,76,.35)"/>
-    <circle cx="540" cy="202" r="2.8" fill="rgba(66,156,76,.28)"/>
-    <circle cx="740" cy="195" r="4"   fill="rgba(66,156,76,.3)"/>
-    <circle cx="1000" cy="200" r="3"  fill="rgba(66,156,76,.25)"/>
-    <circle cx="1140" cy="192" r="2.5" fill="rgba(66,156,76,.3)"/>
-    <!-- wave ground lines -->
-    <path d="M0 212 Q120 200 260 208 Q400 216 540 208 Q680 200 820 210 Q960 220 1100 210 Q1160 205 1200 212 L1200 220 L0 220Z"
-          fill="rgba(255,255,255,.08)"/>
-    <path d="M0 218 Q200 210 400 216 Q600 222 800 216 Q1000 210 1200 218 L1200 220 L0 220Z"
-          fill="rgba(255,255,255,.1)"/>
-  </svg>
+<div class="hero-visual" aria-hidden="true">
+  <figure>${cropPhoto('tomato')}</figure>
+  <figure>${cropPhoto('chili')}</figure>
+  <figure>${cropPhoto('potato')}</figure>
 </div></section>
 <section class="feat">
-  <div><span class="feat-ic" aria-hidden="true">🤝</span><h3>সরাসরি দরদাম</h3><p>মাঝখানে দালাল নেই, কৃষক আর পাইকার নিজেরাই দাম ঠিক করেন।</p></div>
-  <div><span class="feat-ic" aria-hidden="true">🔒</span><h3>নিরাপদ পেমেন্ট</h3><p>মাল বুঝে পাওয়া পর্যন্ত টাকা Reroute-এ জমা থাকে, তারপর বিক্রেতা পান।</p></div>
-  <div><span class="feat-ic" aria-hidden="true">🚚</span><h3>নিজস্ব ট্রাক</h3><p>শেয়ার্ড ট্রাকে মাল যায়, তাই বাজারের চেয়ে কম ভাড়ায় পৌঁছায়।</p></div>
-</section>`;
+  <div><span class="feat-ic" aria-hidden="true">${ic('handshake')}</span><h3>সরাসরি দরদাম</h3><p>মাঝখানে দালাল নেই, কৃষক আর পাইকার নিজেরাই দাম ঠিক করেন।</p></div>
+  <div><span class="feat-ic" aria-hidden="true">${ic('shield')}</span><h3>নিরাপদ পেমেন্ট</h3><p>মাল বুঝে পাওয়া পর্যন্ত টাকা Reroute-এ জমা থাকে, তারপর বিক্রেতা পান।</p></div>
+  <div><span class="feat-ic" aria-hidden="true">${ic('truck')}</span><h3>নিজস্ব ট্রাক</h3><p>শেয়ার্ড ট্রাকে মাল যায়, তাই বাজারের চেয়ে কম ভাড়ায় পৌঁছায়।</p></div>
+</section>
+<section class="home-sec">
+  <h2 class="sec-title">কীভাবে কেনাবেচা হয়</h2>
+  <div class="steps">${ORDER_STEPS.map(t=>`<div>${t}</div>`).join('')}</div>
+</section>
+${(S.listings||[]).some(l=>l.status==='active')?`<section class="home-sec">
+  <div class="between"><h2 class="sec-title" style="margin:0">আজ বাজারে</h2><a class="btn btn-line btn-sm" href="#/market">সব লিস্টিং দেখুন ${ic('arrow')}</a></div>
+  <div class="lgrid">${(S.listings||[]).filter(l=>l.status==='active').slice(0,4).map(lcard).join('')}</div>
+</section>`:''}`;
 
 /* ---------- login & register ---------- */
 let loginRole='farmer';
@@ -85,48 +36,48 @@ V.login = () => {
   const demo = {farmer:['f1','f2','f5'], paikar:['p1','p2','p4'], admin:['a1']}[loginRole];
   const names = {f1:['রহিম উদ্দিন','কৃষক, রাজশাহী: নতুন অফার ও পরিদর্শনের অনুরোধ আছে'],f2:['করিমা বেগম','কৃষক, নাটোর'],f5:['হালিমা খাতুন','কৃষক, রাজশাহী: জরুরি বিক্রি চলছে'],
     p1:['করিম ট্রেডার্স','পাইকার, ঢাকা: পাল্টা দামের উত্তর দিতে হবে'],p2:['ঢাকা ফ্রেশ হাব','পাইকার, ঢাকা: প্লাস সদস্য'],p4:['বগুড়া সবজি ঘর','পাইকার, বগুড়া: মাল পথে আছে'],a1:['Reroute অপারেশন টিম','ট্রাক বুকিং, বহর ও প্ল্যাটফর্মের হিসাব']};
-  return `<div style="max-width:520px;margin:10px auto">
-    <h1>লগ ইন</h1><p class="muted" style="margin:4px 0 14px">আপনি কে, বাছুন</p>
-    <div class="choice c3">${[['farmer','🧑‍🌾 কৃষক'],['paikar','🚚 পাইকার'],['admin','🛠️ অপারেশন']].map(([k,t])=>`<button class="opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${t}</strong></button>`).join('')}</div>
-    ${loginRole!=='admin'?`<div class="panel" style="margin-top:14px"><label class="field" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" inputmode="tel" placeholder="01XXXXXXXXX"></label>
-      <button class="btn btn-green btn-wide" style="margin-top:10px" data-act="login-phone">ঢুকুন</button>
-      <p class="muted sm" style="margin-top:8px">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p></div>`:''}
-    <h3 style="margin:18px 0 6px">ডেমো অ্যাকাউন্ট, এক চাপে ঢুকুন</h3>
-    ${demo.map(id=>`<button class="opt" style="width:100%;margin-top:8px" data-act="login" data-id="${id}"><strong>${names[id][0]}</strong><span class="muted">${names[id][1]}</span></button>`).join('')}
+  return `<div class="auth">
+    <h1>লগ ইন</h1><p class="muted sub">আপনি কে, বাছুন</p>
+    <div class="choice c3">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪'],['admin','অপারেশন','🛠️']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div>
+    ${loginRole!=='admin'?`<div class="panel" style="margin-top:16px"><label class="field" style="margin-top:0"><span>মোবাইল নম্বর</span><input id="lg-phone" inputmode="tel" placeholder="01XXXXXXXXX"></label>
+      <button class="btn btn-green btn-wide" style="margin-top:12px" data-act="login-phone">ঢুকুন</button>
+      <p class="muted sm" style="margin-top:12px;text-align:center">নতুন? <a href="#/register">অ্যাকাউন্ট খুলুন</a></p></div>`:''}
+    <div class="or">ডেমো অ্যাকাউন্ট, এক চাপে ঢুকুন</div>
+    <div class="demo-list">${demo.map(id=>`<button class="opt" data-act="login" data-id="${id}"><span class="av">${ic(loginRole==='paikar'?'🏪':loginRole==='admin'?'🛠️':'🧑‍🌾')}</span><span class="grow"><strong>${names[id][0]}</strong><span class="muted">${names[id][1]}</span></span>${ic('next')}</button>`).join('')}</div>
   </div>`;
 };
-V.register = () => `<div style="max-width:520px;margin:10px auto"><h1>নতুন অ্যাকাউন্ট</h1>
-  <div class="choice c2" style="margin-top:12px">${[['farmer','🧑‍🌾 কৃষক'],['paikar','🚚 পাইকার']].map(([k,t])=>`<button class="opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${t}</strong></button>`).join('')}</div>
-  <div class="panel" style="margin-top:12px">
+V.register = () => `<div class="auth"><h1>নতুন অ্যাকাউন্ট</h1>
+  <div class="choice c2" style="margin-top:16px">${[['farmer','কৃষক','🧑‍🌾'],['paikar','পাইকার','🏪']].map(([k,t,i])=>`<button class="opt role-opt ${loginRole===k?'on':''}" data-act="pick-role" data-role="${k}" data-stay="1"><strong>${ic(i)} ${t}</strong></button>`).join('')}</div>
+  <div class="panel" style="margin-top:16px">
     <label class="field" style="margin-top:0"><span>নাম</span><input id="rg-name"></label>
     ${loginRole==='paikar'?`<label class="field"><span>আড়ত / ব্যবসার নাম</span><input id="rg-biz"></label>`:''}
     <label class="field"><span>মোবাইল নম্বর</span><input id="rg-phone" inputmode="tel" placeholder="01XXXXXXXXX"></label>
     <div class="grid2" style="gap:10px"><label class="field"><span>জেলা</span><select id="rg-place">${Object.entries(PLACES).map(([k,p])=>`<option value="${k}">${p.n}</option>`).join('')}</select></label>
     <label class="field"><span>উপজেলা / বাজার</span><input id="rg-area"></label></div>
-    <button class="btn btn-green btn-wide" style="margin-top:14px" data-act="register">অ্যাকাউন্ট খুলুন</button>
-    <p class="muted sm" style="margin-top:8px">শুধু কৃষক ও পাইকারদের জন্য পাইকারি প্ল্যাটফর্ম। সর্বনিম্ন অর্ডার ${monTxt(S.config.min_order)}।</p></div></div>`;
+    <button class="btn btn-green btn-wide" style="margin-top:18px" data-act="register">অ্যাকাউন্ট খুলুন</button>
+    <p class="muted sm" style="margin-top:12px">শুধু কৃষক ও পাইকারদের জন্য পাইকারি প্ল্যাটফর্ম। সর্বনিম্ন অর্ডার ${monTxt(S.config.min_order)}।</p></div></div>`;
 
 /* ---------- market: all public listings with search & filters ---------- */
 const F = {q:'',crop:'all',place:'all',max:'',min:'',seller:'all',sold:false,sort:'new'};
 function listingPic(l){
   const c=CROPS[l.crop];
-  return `<div class="pic" style="--c:${c.c}">${l.photo_count?`<img src="/api/listings/${l.id}/photo/0" alt="${c.n}" loading="lazy">`:`<span class="emo">${c.i}</span><span class="nophoto">ছবি দেওয়া হয়নি</span>`}
-    ${l.urgent?`<span class="rib">জরুরি −${nf(l.urgent*100)}%</span>`:''}${l.status==='sold_out'?'<span class="rib r2">বিক্রি শেষ</span>':''}
-    <span class="fresh ${freshCls(l.days_left)}">⏳ ${freshTxt(l.days_left)}</span></div>`;
+  return `<div class="pic" style="--c:${c.c}">${l.photo_count?`<img src="/api/listings/${l.id}/photo/0" alt="${c.n}" loading="lazy">`:`${cropPhoto(l.crop)}<span class="sample">নমুনা ছবি<span class="sample-more"> · বিক্রেতা ছবি দেননি</span></span>`}
+    ${l.urgent?`<span class="rib">${ic('zap')} জরুরি −${nf(l.urgent*100)}%</span>`:''}${l.status==='sold_out'?'<span class="rib r2">বিক্রি শেষ</span>':''}
+    <span class="fresh ${freshCls(l.days_left)}">${ic('clock')} ${freshTxt(l.days_left)}</span></div>`;
 }
 function transportHint(l){
   const u=me(); if(!u||u.role==='admin'||u.id===l.uid) return '';
   const s=user(l.uid), q=myQuote(s.place,u.place,Math.max(l.moq,Math.min(l.available,2000)));
-  return `<div class="tline">🚚 ${PLACES[u.place].n} পর্যন্ত Reroute ট্রাকে আনুমানিক ${tk(q.total)} (${monTxt(Math.max(l.moq,Math.min(l.available,2000)))}), বাজারে ট্রাক ভাড়া ${tk(q.offline)}</div>`;
+  return `<div class="tline">${ic('truck')}<span>${PLACES[u.place].n} পর্যন্ত Reroute ট্রাকে আনুমানিক ${tk(q.total)} (${monTxt(Math.max(l.moq,Math.min(l.available,2000)))}), বাজারে ট্রাক ভাড়া ${tk(q.offline)}</span></div>`;
 }
 function lcard(l){
   const c=CROPS[l.crop], s=user(l.uid);
   return `<a class="lcard" href="#/listing/${l.id}">${listingPic(l)}<div class="info">
-    <div class="between"><b>${c.n}</b><span class="pill p-grey">গ্রেড ${l.grade}</span></div>
+    <div class="between"><span class="crop-name">${c.n}</span><span class="pill p-grey">গ্রেড ${l.grade}</span></div>
     <div class="price">${tk(l.eff_price,1)}<small>/কেজি</small>${l.urgent?`<s>${tk(l.price,1)}</s>`:''}</div>
-    <div class="muted sm">আছে ${monTxt(l.available)} · সর্বনিম্ন ${monTxt(l.moq)}</div>
-    <div class="sm">${s.role==='paikar'?'🏪':'🧑‍🌾'} ${esc(dispName(s))} ${s.verified?'<span class="ver">✔</span>':''} ${stars(s)}</div>
-    <div class="muted sm">📍 ${s.area?esc(s.area)+', ':''}${PLACES[s.place].n}</div>
+    <div class="qty-row"><div>বিক্রির জন্য আছে<b>${monTxt(l.available)}</b></div><div>সর্বনিম্ন অর্ডার<b>${monTxt(l.moq)}</b></div></div>
+    <div class="seller-line"><span class="seller-ic">${ic(s.role==='paikar'?'🏪':'🧑‍🌾')}</span><b class="seller-nm">${esc(dispName(s))}</b>${s.verified?`<span class="ver" title="যাচাইকৃত">${ic('verified')}</span>`:''}<span class="push-right">${stars(s)}</span></div>
+    <div class="meta">${ic('pin')}<span>${s.area?esc(s.area)+', ':''}${PLACES[s.place].n}</span></div>
     ${transportHint(l)}</div></a>`;
 }
 V.market = () => {
@@ -142,8 +93,8 @@ V.market = () => {
   const sorters={new:(a,b)=>b.created-a.created, cheap:(a,b)=>a.eff_price-b.eff_price, fresh:(a,b)=>b.days_left-a.days_left,
     near:(a,b)=>me()?km(user(a.uid).place,me().place)-km(user(b.uid).place,me().place):0, big:(a,b)=>b.available-a.available};
   list.sort(sorters[F.sort]);
-  return `<div class="phead"><div><h1>🛒 বাজার</h1><p class="muted sm">কৃষক ও পাইকারদের তোলা সব মাল। শুধু পাইকারি: সর্বনিম্ন অর্ডার ${monTxt(S.config.min_order)}</p></div>
-    ${isTrader()?`<a class="btn btn-green" href="#/listings/new">+ মাল বিক্রির জন্য দিন</a>`:(!me()?`<a class="btn btn-green" href="#/login">কিনতে বা বেচতে লগ ইন</a>`:'')}</div>
+  return `<div class="phead"><div><h1>${ic('cart')} বাজার</h1><p class="muted sm">কৃষক ও পাইকারদের তোলা সব মাল। শুধু পাইকারি: সর্বনিম্ন অর্ডার ${monTxt(S.config.min_order)}</p></div>
+    ${isTrader()?`<a class="btn btn-green" href="#/listings/new">${ic('plus')} মাল বিক্রির জন্য দিন</a>`:(!me()?`<a class="btn btn-green" href="#/login">কিনতে বা বেচতে লগ ইন</a>`:'')}</div>
     <div class="filters">
       <label class="q"><span>খুঁজুন</span><input data-f="q" value="${esc(F.q)}" placeholder="ফসল, বিক্রেতা, এলাকা..."></label>
       <label><span>জেলা</span><select data-f="place"><option value="all">সব জেলা</option>${Object.entries(PLACES).map(([k,p])=>`<option value="${k}" ${F.place===k?'selected':''}>${p.n}</option>`).join('')}</select></label>
@@ -154,7 +105,7 @@ V.market = () => {
     </div>
     <div class="chips">${[['all','সব ফসল'],...Object.entries(CROPS).map(([k,c])=>[k,c.i+' '+c.n])].map(([k,t])=>`<button class="chip ${F.crop===k?'on':''}" data-act="f-crop" data-v="${k}">${t}</button>`).join('')}
       <label class="chip"><input type="checkbox" data-f="sold" ${F.sold?'checked':''}> বিক্রি শেষ-ও দেখাও</label></div>
-    <p class="muted sm" style="margin-bottom:8px">${nf(list.length)}টি লিস্টিং</p>
+    <div class="result-bar"><span>${nf(list.length)}টি লিস্টিং</span></div>
     ${list.length?`<div class="lgrid">${list.map(lcard).join('')}</div>`:emptyState('search','এই খোঁজে কোনো মাল পাওয়া গেল না','অন্য ফসল, জেলা বা দাম দিয়ে আবার দেখুন।','<button class="btn btn-line" data-act="f-clear">সব ফিল্টার মুছুন</button>')}`;
 };
 
@@ -162,25 +113,25 @@ V.market = () => {
 V.listing = id => {
   const l=listing(id); if(!l) return emptyState('crate','এই লিস্টিংটা আর নেই','হয়তো সব বিক্রি হয়ে গেছে, বা বিক্রেতা বন্ধ করে দিয়েছেন।','<a class="btn btn-green" href="#/market">বাজারে ফিরুন</a>');
   const c=CROPS[l.crop], s=user(l.uid), u=me(), mine=u&&u.id===l.uid, harvest=Date.now()-(S.config?0:0);
-  const photos=Array.from({length:l.photo_count},(_,i)=>`<img src="/api/listings/${l.id}/photo/${i}" alt="${c.n} ছবি ${bd(i+1)}" style="border-radius:12px;max-height:360px;width:100%;object-fit:cover">`);
+  const photos=Array.from({length:l.photo_count},(_,i)=>`<img src="/api/listings/${l.id}/photo/${i}" alt="${c.n} ছবি ${bd(i+1)}">`);
   const market=MARKET_DEMO[s.place][l.crop];
   let tq='';
   if(u&&!mine&&u.role!=='admin'){
     const kg=Math.max(l.moq,Math.min(l.available,2000)), q=myQuote(s.place,u.place,kg);
-    tq=`<div class="panel"><h3>🚚 আপনার কাছে আনার খরচ (আনুমানিক)</h3><p class="muted sm">${PLACES[s.place].n} → ${PLACES[u.place].n}, ${nf(q.km)} কিমি, ${monTxt(kg)} ধরে</p>
+    tq=`<div class="panel"><h3 class="row" style="gap:8px">${ic('truck')} আপনার কাছে আনার খরচ (আনুমানিক)</h3><p class="muted sm" style="margin:2px 0 10px">${PLACES[s.place].n} → ${PLACES[u.place].n}, ${nf(q.km)} কিমি, ${monTxt(kg)} ধরে</p>
       ${bill([[`${q.vehicle_name}${q.shared?' (শেয়ার্ড)':''}`,tk(q.fare)],['Reroute সেবা চার্জ',tk(q.service)],['মোট ট্রাক ভাড়া',tk(q.total),'tot'],['বাজারে নিজে ট্রাক ভাড়া করলে',tk(q.offline)]])}
-      <div class="good" style="margin-top:8px">সাশ্রয় ${tk(q.saving)}, পৌঁছাতে প্রায় ${nf(q.eta,1)} ঘণ্টা। ভাড়া চাইলে বিক্রেতার সাথে অর্ধেক অর্ধেক ভাগ করা যায়।</div></div>`;
+      <div class="good" style="margin-top:12px">সাশ্রয় ${tk(q.saving)}, পৌঁছাতে প্রায় ${nf(q.eta,1)} ঘণ্টা। ভাড়া চাইলে বিক্রেতার সাথে অর্ধেক অর্ধেক ভাগ করা যায়।</div></div>`;
   }
   const insp=(S.inspections||[]).find(i=>i.listing===l.id&&u&&i.buyer===u.id&&['requested','scheduled','done'].includes(i.status));
-  return `<p><a href="#/market">← বাজার</a></p>
-  <div class="grid2" style="margin-top:10px;align-items:start">
-    <div>${photos.length?`<div class="stack">${photos.join('')}</div>`:`<div class="pic" style="--c:${c.c};height:260px;border-radius:16px"><span class="emo" style="font-size:6rem">${c.i}</span><span class="nophoto">বিক্রেতা ছবি দেননি</span></div>`}
-      <div class="panel" style="margin-top:14px"><h3>বিক্রেতা</h3><div style="margin-top:8px">${personRow(s)}</div></div></div>
+  return `<a class="back" href="#/market">${ic('back')} বাজার</a>
+  <div class="grid2 detail" style="margin-top:14px;align-items:start">
+    <div>${photos.length?`<div class="gallery">${photos.join('')}</div>`:`<div class="pic detail-pic" style="--c:${c.c}">${cropPhoto(l.crop)}<span class="sample">নমুনা ছবি<span class="sample-more"> · বিক্রেতা ছবি দেননি</span></span></div>`}
+      <div class="panel" style="margin-top:16px"><h3>বিক্রেতা</h3><div style="margin-top:10px">${personRow(s)}</div></div></div>
     <div><div class="panel">
-      <div class="between"><h1>${c.i} ${c.n}</h1><span>${pill(l.status==='active'?['চালু','p-green']:l.status==='sold_out'?['বিক্রি শেষ','p-red']:l.status==='paused'?['বন্ধ রাখা','p-grey']:['বন্ধ','p-grey'])}</span></div>
-      <div class="price" style="font-size:1.8rem;margin-top:6px">${tk(l.eff_price,1)}<small>/কেজি</small>${l.urgent?`<s>${tk(l.price,1)}</s>`:''} <span class="muted sm">(${tk(l.eff_price*MON)}/মণ)</span></div>
-      ${l.urgent?`<div class="danger" style="margin-top:8px">🚨 জরুরি বিক্রি: নষ্ট হওয়ার আগে ${nf(l.urgent*100)}% কম দামে</div>`:''}
-      <dl class="kv" style="margin-top:12px">
+      <div class="between"><h1>${c.n}</h1><span>${pill(l.status==='active'?['চালু','p-green']:l.status==='sold_out'?['বিক্রি শেষ','p-red']:l.status==='paused'?['বন্ধ রাখা','p-grey']:['বন্ধ','p-grey'])}</span></div>
+      <div class="price-xl">${tk(l.eff_price,1)}<small>/কেজি</small>${l.urgent?`<s>${tk(l.price,1)}</s>`:''} <span class="muted sm">(${tk(l.eff_price*MON)}/মণ)</span></div>
+      ${l.urgent?`<div class="danger row" style="margin-top:10px;gap:8px">${ic('zap')} জরুরি বিক্রি: নষ্ট হওয়ার আগে ${nf(l.urgent*100)}% কম দামে</div>`:''}
+      <dl class="kv" style="margin-top:14px">
         <dt>বিক্রির জন্য আছে</dt><dd>${kgMon(l.available)}</dd>
         ${l.reserved?`<dt>অর্ডারে আটকে আছে</dt><dd>${kgMon(l.reserved)}</dd>`:''}
         <dt>এ পর্যন্ত বিক্রি</dt><dd>${kgMon(l.sold)}</dd>
@@ -191,14 +142,14 @@ V.listing = id => {
         <dt>জায়গা</dt><dd>${s.area?esc(s.area)+', ':''}${PLACES[s.place].n}</dd>
         <dt>পরিবহন</dt><dd>Reroute ট্রাক বা নিজের ট্রাক</dd></dl>
       ${l.quality?`<div class="note" style="margin-top:12px" data-i18n-skip><b>মান:</b> ${esc(l.quality)}</div>`:''}
-      <p class="muted sm" style="margin-top:8px">${PLACES[s.place].n}-এ আজকের বাজার দর আনুমানিক ${tk(market)}/কেজি</p>
+      <p class="muted sm" style="margin-top:10px">${PLACES[s.place].n}-এ আজকের বাজার দর আনুমানিক ${tk(market)}/কেজি</p>
       ${mine?`<div class="row wrap-it" style="margin-top:14px"><a class="btn btn-ink" href="#/listings">লিস্টিং পরিচালনা</a></div>`
         :!u?`<a class="btn btn-green btn-wide" style="margin-top:14px" href="#/login">অফার দিতে লগ ইন করুন</a>`
         :u.role==='admin'?'':l.status!=='active'?`<div class="warn" style="margin-top:14px">এই মাল এখন বিক্রি হচ্ছে না।</div>`
         :`<button class="btn btn-green btn-wide" style="margin-top:14px" data-act="offer-open" data-id="${l.id}">অফার / অর্ডার দিন</button>
           ${insp?`<a class="btn btn-line btn-wide" style="margin-top:8px" href="#/inspection/${insp.id}">পরিদর্শন: ${INSP_ST[insp.status][0]}</a>`
-                :`<button class="btn btn-line btn-wide" style="margin-top:8px" data-act="inspect-open" data-id="${l.id}">🔍 আগে মাল দেখতে চাই (ভিডিও / সরাসরি)</button>`}
-          <p class="muted sm" style="margin-top:8px">অফার দিলে বিক্রেতা রাজি না হওয়া পর্যন্ত কিছু নিশ্চিত হয় না, টাকাও কাটে না।</p>`}
+                :`<button class="btn btn-line btn-wide" style="margin-top:8px" data-act="inspect-open" data-id="${l.id}">${ic('search')} আগে মাল দেখতে চাই (ভিডিও / সরাসরি)</button>`}
+          <p class="muted sm row" style="margin-top:12px;gap:8px;align-items:flex-start">${ic('shield')}<span>অফার দিলে বিক্রেতা রাজি না হওয়া পর্যন্ত কিছু নিশ্চিত হয় না, টাকাও কাটে না।</span></p>`}
     </div>${tq}</div></div>`;
 };
 
@@ -215,9 +166,9 @@ V.profile = id => {
       <div class="kpi"><span class="muted sm">মোট পরিমাণ</span><strong>${monTxt(p.kg)}</strong></div>
       <div class="kpi"><span class="muted sm">বাতিল করেছেন</span><strong>${nf(p.cancelled)}টি</strong></div>
       <div class="kpi"><span class="muted sm">Reroute-এ</span><strong>${nf(months)} মাস</strong></div></div>
-    <p class="muted sm" style="margin-top:10px">🔒 ফোন নম্বর ও লেনদেনের বিস্তারিত গোপন। অর্ডারের পেমেন্ট হলে দুজনে নম্বর পান।</p></div>
+    <p class="muted sm row" style="margin-top:14px;gap:8px">${ic('lock')}<span>ফোন নম্বর ও লেনদেনের বিস্তারিত গোপন। অর্ডারের পেমেন্ট হলে দুজনে নম্বর পান।</span></p></div>
   <div class="grid2" style="margin-top:14px;align-items:start">
-    <div class="panel"><h3>চালু লিস্টিং (${nf(p.listings.length)})</h3>${p.listings.map(l=>`<a class="item" href="#/listing/${l.id}" style="text-decoration:none;color:inherit">${cropIco(l.crop)}<div class="grow"><b>${CROPS[l.crop].n}</b><div class="muted sm">${monTxt(l.available)} · ${tk(l.eff_price,1)}/কেজি · ${freshTxt(l.days_left)}</div></div><span>›</span></a>`).join('')||'<p class="muted" style="margin-top:8px">এখন কোনো লিস্টিং নেই</p>'}</div>
+    <div class="panel"><h3>চালু লিস্টিং (${nf(p.listings.length)})</h3>${p.listings.map(l=>`<a class="item" href="#/listing/${l.id}" style="text-decoration:none;color:inherit">${cropIco(l.crop)}<div class="grow"><b>${CROPS[l.crop].n}</b><div class="muted sm">${monTxt(l.available)} · ${tk(l.eff_price,1)}/কেজি · ${freshTxt(l.days_left)}</div></div>${ic('next')}</a>`).join('')||'<p class="muted" style="margin-top:8px">এখন কোনো লিস্টিং নেই</p>'}</div>
     <div class="panel"><h3>রিভিউ (${nf(u.reviews)})</h3>${p.reviews.map(r=>`<div class="item" style="display:block"><span class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</span> <b>${esc(r.from_role==='paikar'?r.from_biz:r.from_name)}</b>${r.text?`<div>${esc(r.text)}</div>`:''}<div class="muted xs">${ago(r.at)}</div></div>`).join('')||'<p class="muted" style="margin-top:8px">এখনো রিভিউ নেই</p>'}</div></div>`;
 };
 
@@ -237,7 +188,7 @@ V.ai = () => {
   const bt=s.dates.map((d,i)=>s.backtest[d]!=null?`${x(i)},${y(s.backtest[d])}`:null).filter(Boolean);
   if(bt.length) g+=`<polyline fill="none" style="stroke:var(--green)" stroke-width="2.5" stroke-dasharray="6 5" points="${bt.join(' ')}"/>`;
   g+=`<circle cx="${x(all.length-1)}" cy="${y(s.forecast.price)}" r="6" style="fill:var(--red)"/></svg>`;
-  return `<div class="phead"><div><h1>🤖 AI দামের মডেল</h1><p class="muted">আসল ডেটায় প্রশিক্ষিত ও যাচাই করা: Food Commodity Price (OHLC) Dataset of Bangladesh</p></div></div>
+  return `<div class="phead"><div><h1>${ic('sparkles')} AI দামের মডেল</h1><p class="muted">আসল ডেটায় প্রশিক্ষিত ও যাচাই করা: Food Commodity Price (OHLC) Dataset of Bangladesh</p></div></div>
     <div class="grid4"><div class="kpi"><span class="muted sm">প্রশিক্ষণ</span><strong>${nf(M.markets)}টি বাজার</strong><span class="muted sm">২০০৮–২০২২</span></div>
       <div class="kpi"><span class="muted sm">অদেখা সময়ে পরীক্ষা</span><strong>২০২৩–২০২৫</strong><span class="muted sm">${nf(M.test_rows)}টি পূর্বাভাস</span></div>
       <div class="kpi"><span class="muted sm">দাম বাড়বে না কমবে</span><strong>${nf(M.direction_accuracy_pct,1)}% সঠিক</strong></div>
