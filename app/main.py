@@ -35,7 +35,7 @@ if db.needs_seed():
     from app.seed import seed
     seed()
 # demo accounts (seeded ids, not self-registered "U…" ids) can also log in with the demo password
-db.run("UPDATE users SET pw_hash=? WHERE pw_hash IS NULL AND id NOT LIKE 'U%'", (auth.hash_password(auth.DEMO_PASSWORD),))
+db.run("UPDATE users SET pw_hash=? WHERE pw_hash IS NULL AND id NOT LIKE ?", (auth.hash_password(auth.DEMO_PASSWORD), "U%"))
 AI = PriceAI()
 
 # ---------------------------------------------------------------- keep the public demo fresh
